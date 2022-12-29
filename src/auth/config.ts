@@ -8,7 +8,7 @@ const config = {
         cookieStorage: {
           domain: process.env.REACT_APP_AUTH_COOKIE_DOMAIN,
           path: "/",
-          expires: "365",
+          expires: new Date(Date.now() + 10000),
           secure: true,
         },
       }
