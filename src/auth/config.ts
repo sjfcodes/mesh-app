@@ -1,3 +1,6 @@
+const day = 60 * 60 * 24 * 1000;
+const TTL = 1 * day;
+
 const config = {
   aws_cognito_region: "us-east-1", // (required) - Region where Amazon Cognito project was created
   aws_user_pools_id: process.env.REACT_APP_USER_POOLS_ID, // (optional) -  Amazon Cognito User Pool ID
@@ -8,7 +11,7 @@ const config = {
         cookieStorage: {
           domain: process.env.REACT_APP_AUTH_COOKIE_DOMAIN,
           path: "/",
-          expires: new Date(Date.now() + 10000),
+          expires: new Date(Date.now() * TTL),
           secure: true,
         },
       }
