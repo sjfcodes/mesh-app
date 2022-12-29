@@ -1,9 +1,11 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { AmplifyUser } from "@aws-amplify/ui";
 
-test('renders learn react link', () => {
-  render(<App />);
+import App from "./App";
+
+test("renders learn react link", () => {
+  render(<App signOut={() => null} user={{} as AmplifyUser} />);
   const linkElement = screen.getByText(/learn react/i);
   expect(linkElement).toBeInTheDocument();
 });
