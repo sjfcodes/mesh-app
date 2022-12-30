@@ -1,8 +1,10 @@
 build=$1 # the path of the directory where the files and directories that need to be copied are located
-bucket=$2 # the s3 bucket path
+bucket="mesh-app" # the s3 bucket path
 
-aws s3 cp  --recursive "$build" "$bucket" --profile mesh-app-deployer
+aws s3 cp  --recursive "$build" "s3://$bucket" --profile mesh-app-deployer
 
-echo "\n deployment complete:  https://www.mesh-app.net"
+echo "\n deployment complete:  https://$bucket.net"
 
-open https://www.mesh-app.net
+sleep 10
+
+open "https://$bucket.net"
