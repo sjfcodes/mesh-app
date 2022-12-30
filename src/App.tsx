@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { AmplifyUser, AuthEventData } from "@aws-amplify/ui";
 
 import logo from "./logo.svg";
 import "./App.css";
-import { AmplifyUser, AuthEventData } from "@aws-amplify/ui";
+import useLambda from "./hooks/useLambda";
 
 type props = {
   signOut: ((data?: AuthEventData | undefined) => void) | undefined;
@@ -10,12 +11,16 @@ type props = {
 };
 
 function App({ signOut, user }: props) {
+  const [state] = useLambda();
+
+  useEffect(() => console.log(state), [state]);
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <main>
-          <h1>Hello {user?.attributes?.email}</h1>
+          <h1>New New {user?.attributes?.email}</h1>
           <button onClick={signOut}>Sign out</button>
         </main>
       </header>
