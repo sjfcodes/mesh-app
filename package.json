@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && scripts/deployToS3.sh ./build"
+    "putS3": "scripts/putS3.sh ./build",
+    "deploy": "npm run build & npm run putS3"
   },
   "eslintConfig": {
     "extends": [
