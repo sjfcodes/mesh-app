@@ -16,15 +16,13 @@ function App({ signOut, user }: props) {
   useEffect(() => console.log(state), [state]);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <main>
+    <main>
+        <header className="App-header">
           <h1>New New {user?.attributes?.email}</h1>
-          <button onClick={signOut}>Sign out</button>
-        </main>
-      </header>
-    </div>
+          <img src={logo} className="App-logo" alt="logo" />
+        </header>
+        <button onClick={signOut}>Sign out</button>
+    </main>
   );
 }
 
