@@ -8,7 +8,7 @@ const useLambda = () => {
   useEffect(() => {
     (async () => {
       const {
-        data: { body },
+        data,
       } = await axios({
         method: "POST",
         baseURL: process.env.REACT_APP_AWS_API_GATEWAY,
@@ -20,7 +20,7 @@ const useLambda = () => {
         data: { hello: "world" },
       });
 
-      setState(JSON.parse(body));
+      setState(data);
     })();
   }, []);
 
