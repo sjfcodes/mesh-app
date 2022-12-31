@@ -24,9 +24,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "putS3": "scripts/putS3.sh ./build",
-    "deploy": "npm run build && npm run putS3",
-    "lambdas:dev": "nodemon lambdas/testFunction/index.test.mjs"
+    "deploy:all": "npm run deploy:s3 && npm run deploy:Lambdas",
+    "deploy:lambdas": "scripts/putLambda.sh testFunction",
+    "deploy:s3": "npm run build && scripts/putS3.sh ./build",
+    "test:lambdas":"NODE_OPTIONS=--experimental-vm-modules npx jest --watch"
   },
   "eslintConfig": {
     "extends": [

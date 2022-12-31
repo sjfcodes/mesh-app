@@ -13,9 +13,10 @@ pwd
 zip -r $fn.zip .
 
 aws lambda update-function-code \
-    --profile mesh-app-deployer \
     --region us-east-1 \
     --function-name  $fn \
-    --zip-file fileb://$fn.zip
+    --zip-file fileb://$fn.zip \
+    --no-cli-pager \
+    --profile mesh-app-deployer
 
 rm $fn.zip
