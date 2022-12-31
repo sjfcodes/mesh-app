@@ -1,8 +1,7 @@
 import axios from "axios";
 import { config } from "./utils/config.mjs";
 
-export const handler = async (event = {}) => {
-  // TODO implement
+export const handler = async (event) => {
 
   const { data } = await axios({
     method: "get",
@@ -11,7 +10,6 @@ export const handler = async (event = {}) => {
 
   const body = {
     config,
-    from: "handler",
     data,
   };
 

@@ -1,9 +1,14 @@
 import { handler } from "./index.mjs";
 
 describe("testFunction", () => {
-  it("should return...", async () => {
+  it("should have body property", async () => {
     const response = await handler();
-    console.log(response);
-    expect(response).toHaveProperty('body')
+    expect(response).toHaveProperty("body");
+  });
+
+  it("should contain axios data", async () => {
+    const { body: stringified } = await handler();
+    const body = JSON.parse(stringified)
+    expect(body).toHaveProperty("data");
   });
 });
