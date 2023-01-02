@@ -15,7 +15,7 @@ cd -P -- "$fn"
 mkdir -p -- "utils"
 echo "export const config = {
     item1: 'value1',
-}" > utils/config.js
+}" > utils/config.mjs
 
 echo "import { config } from './utils/config.mjs';
 
