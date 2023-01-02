@@ -1,3 +1,4 @@
+#!/bin/bash
 fn=$1 # the path of the directory where the files and directories that need to be copied are located
 
 pathToJs=$fn/index.mjs
