@@ -1,0 +1,19 @@
+{
+  "name": "lambdas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "export AWS_PROFILE=mesh-app-deployer && NODE_OPTIONS=--experimental-vm-modules npx jest --watchAll --roots ${FUNCTION}",
+    "deploy:createPlaidItem": "./deployLambda.sh 'createPlaidItem'",
+    "test:createPlaidItem": "export FUNCTION=createPlaidItem && npm run test",
+    "test:testAxios": "export FUNCTION=testAxios && npm run test",
+    "test:testFunction": "export FUNCTION=testFunction && npm run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}

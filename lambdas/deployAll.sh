@@ -1,0 +1,1 @@
+./deployLambda.sh "createPlaidItem"

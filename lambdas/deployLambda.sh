@@ -1,14 +1,11 @@
 fn=$1 # the path of the directory where the files and directories that need to be copied are located
 
-fileName=index.mjs
+pathToJs=$fn/index.mjs
+pathToZip=$fn/$fn.zip
 
-dirPath=./lambdas/$fn
-pathToJs=$dirPath/$fileName
-pathToZip=$dirPath/$fn.zip
+cd "$(pwd)/$fn"
 
-cd "$(pwd)/lambdas/$fn"
-
-pwd
+npm ci
 
 zip -r $fn.zip .
 
