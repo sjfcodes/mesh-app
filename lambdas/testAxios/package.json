@@ -1,0 +1,16 @@
+{
+  "name": "test-function",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.test.js",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --watchAll"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.2.2"
+  }
+}
