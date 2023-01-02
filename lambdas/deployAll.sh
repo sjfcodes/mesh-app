@@ -1,1 +1,0 @@
-./deployLambda.sh "crudPlaidItem"
