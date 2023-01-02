@@ -8,7 +8,9 @@
     "deploy:crudPlaidItem": "./deployLambda.sh 'crudPlaidItem'",
     "test:crudPlaidItem": "export FUNCTION=crudPlaidItem && npm run test",
     "test:testAxios": "export FUNCTION=testAxios && npm run test",
-    "test:testFunction": "export FUNCTION=testFunction && npm run test"
+    "deploy:testAxios": "./deployLambda.sh 'testAxios'",
+    "test:testFunction": "export FUNCTION=testFunction && npm run test",
+    "deploy:testFunction": "./deployLambda.sh 'testFunction'"
   },
   "keywords": [],
   "author": "",
