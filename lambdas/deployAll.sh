@@ -1,1 +1,1 @@
-./deployLambda.sh "createPlaidItem"
+./deployLambda.sh "crudPlaidItem"

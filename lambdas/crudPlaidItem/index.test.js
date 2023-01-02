@@ -51,4 +51,17 @@ describe("testFunction", () => {
     expect(statusCode).toBe(200);
     expect(body.Attributes.someStatus.BOOL).toBe(true);
   });
+
+  it("should DELETE item from Table", async () => {
+    const request = {
+      httpMethod: "DELETE",
+      body: {
+        TableName: "mesh-app-plaid-items",
+        Key: { id: testData.id },
+      },
+    };
+    const { statusCode, body } = await handler(request);
+
+    expect(statusCode).toBe(200);
+  });
 });
