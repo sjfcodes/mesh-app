@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # treat unset variables as arguments
 set -o nounset 
 
@@ -36,7 +38,7 @@ export const handler = async (event) => {
 
 echo "import { handler } from './index.mjs';
 
-describe("$fn", () => {
+describe('$fn', () => {
   it('should have body property', async () => {
     const response = await handler({ body: { hello: 'world' }});
     expect(response).toHaveProperty('body');
@@ -62,3 +64,26 @@ echo "{
   \"author\": \"\",
   \"license\": \"ISC\"
 }" > package.json
+
+npm i
+
+echo "#!/bin/bash
+
+pathToJs=index.mjs
+pathToZip=$fn.zip
+
+npm ci
+
+zip -r \$pathToZip .
+
+aws lambda update-function-code \
+    --region us-east-1 \
+    --function-name  $fn \
+    --zip-file fileb://\$pathToZip \
+    --no-cli-pager \
+    --profile mesh-app-deployer
+
+rm \$pathToZip
+" > deploy.sh
+
+chmod u+x deploy.sh
