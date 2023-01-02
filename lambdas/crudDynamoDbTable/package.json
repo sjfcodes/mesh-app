@@ -1,0 +1,13 @@
+{
+  "name": "crud-dynamo-db-table",
+  "version": "1.0.0",
+  "description": "lambda function",
+  "type": "module",
+  "main": "index.test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
