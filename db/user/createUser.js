@@ -1,7 +1,7 @@
 /**
  * request body for create user
  */
-export default {
+const request = {
   body: {
     TableName: "mesh-app-users",
     Item: {
@@ -15,3 +15,5 @@ export default {
   },
   httpMethod: "PUT",
 };
+
+export default request;

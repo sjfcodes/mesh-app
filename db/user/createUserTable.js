@@ -1,7 +1,7 @@
 /**
  * request body for creating user table via dynamodb
  */
-export default {
+const request = {
   body: {
     AttributeDefinitions: [
       {
@@ -32,5 +32,7 @@ export default {
       StreamEnabled: false,
     },
   },
-  httpMethod: "PUT"
+  httpMethod: "PUT",
 };
+
+export default request;
