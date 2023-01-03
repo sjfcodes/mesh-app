@@ -1,3 +1,3 @@
 export const config = {
-    item1: 'value1',
+    region: 'us-east-1',
 }
