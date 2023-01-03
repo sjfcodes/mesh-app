@@ -58,7 +58,8 @@ echo "{
   \"type\": \"module\",
   \"main\": \"index.test.js\",
   \"scripts\": {
-    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"
+    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\",
+    \deploy\: \./deploy.sh\
   },
   \"keywords\": [],
   \"author\": \"\",
