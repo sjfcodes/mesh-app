@@ -1,4 +1,4 @@
-import { handler } from "./index.mjs";
+import { handler } from "../index.mjs";
 
 const JEST_TEST_ID = "jest-test-0";
 

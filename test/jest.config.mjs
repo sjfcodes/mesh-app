@@ -1,4 +1,6 @@
 const config = {
+  verbose: true,
+  transform: {},
   testTimeout: 20000,
 };
 
