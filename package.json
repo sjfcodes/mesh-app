@@ -29,7 +29,8 @@
     "deploy:all": "npm run deploy:s3 && npm run deploy:Lambdas",
     "deploy:lambdas": "lambdas/deployLambda.sh testFunction",
     "deploy:s3": "npm run build && scripts/putS3.sh ./build",
-    "test:lambdas": "cd lambdas && npm run test"
+    "test:lambdas": "cd lambdas && npm run test",
+    "test:integration": "cd test && npm run test:integration"
   },
   "eslintConfig": {
     "extends": [

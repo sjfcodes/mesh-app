@@ -1,0 +1,13 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test:integration": "export AWS_PROFILE=mesh-app-deployer && NODE_OPTIONS=--experimental-vm-modules npx jest --watchAll --roots integration"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
