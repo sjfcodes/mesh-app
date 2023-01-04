@@ -27,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
-    "deploy": "npm run build && ./deploy.sh ./build"
+    "deploy": "npm run format && npm run build && ./deploy.sh ./build"
   },
   "eslintConfig": {
     "extends": [
