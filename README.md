@@ -29,18 +29,78 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Project TODOs:
+
+- [ ] setup database
+- [ ] setup database table: users
+- [ ] setup database table: items
+- [ ] setup database table: transactions
+- [ ] setup Plaid integration
+- [ ] save user
+- [ ] save bank account item
+- [ ] save account transactions
+- [ ] display tx's for authenticated user
+- [ ] get new tx' on page load for authenticated user
+- [ ] add additional bank account item
+- [ ] save transactions for additional bank account
+- [ ] display merged transactions for authenticated user
+
+ui route examples:
+
+- /[username]/[accounts]
+- /[username]/[accounts]/[account]?tx=[tx_id]
+- /[username]/all
+
+api route examples:
+
+- /account
+  - GET: get accounts
+  - POST: create account
+  - DELETE: delete account
+  - PUT: edit account
+
+models:
+
+user
+```js
+{
+    id: string,
+    name: string,
+    email: string,
+    created_at: iso date string
+}
+```
+
+account
+```js
+{
+    // follow data structure from plaid?
+  id: string;,
+  alias: string,
+  at: iso date string,
+  created_at: iso date string
+}
+```
+
+transaction
+```js
+{
+    // follow data structure from plaid?
+}
+```
+
+budget
+```js
+{
+    id
+    name: string,
+    recurring: number /* seconds to repeat */,
+    created_at: iso date string,
+}
+```
