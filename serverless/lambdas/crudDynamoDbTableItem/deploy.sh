@@ -1,13 +1,15 @@
 #!/bin/bash
 
+functionName=crudDynamoDbTableItem
+
 pathToJs=index.mjs
-pathToZip=crudDynamoDbTableItem.zip
+pathToZip=$functionName.zip
 
 npm ci
 
-zip -r $pathToZip .
+echo "creating $pathToZip"
+zip -r -q $pathToZip .
 
-aws lambda update-function-code     --region us-east-1     --function-name  crudDynamoDbTableItem     --zip-file fileb://$pathToZip     --no-cli-pager     --profile mesh-app-deployer
+aws lambda update-function-code     --region us-east-1     --function-name  $functionName     --zip-file fileb://$pathToZip     --no-cli-pager     --profile mesh-app-deployer
 
 rm $pathToZip
-
