@@ -1,4 +1,4 @@
-import config from "../../../../config/dynamoDb.mjs";
+import config from "../../../config/dynamoDb.mjs";
 
 const {
   TableName,

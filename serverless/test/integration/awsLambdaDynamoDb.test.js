@@ -2,13 +2,13 @@ import {
   createTable,
   getTable,
   deleteTable,
-} from "../../aws/lambdas/crudDynamoDbTable/test/modules.mjs";
+} from "../../lambdas/crudDynamoDbTable/test/modules.mjs";
 import {
   createTableItem,
   deleteTableItem,
   getTableItem,
   updateTableItem,
-} from "../../aws/lambdas/crudDynamoDbTableItem/test/modules.mjs";
+} from "../../lambdas/crudDynamoDbTableItem/test/modules.mjs";
 
 import dynamoDb from "../../config/dynamoDb.mjs";
 
