@@ -3,31 +3,43 @@
 # treat unset variables as arguments
 set -o nounset
 
-fn=$1 # function name
+# get new version from user input
+read -p 'Enter function name: ' functionName
 
-rm -rf $fn
+# functionName=$1
 
-echo $fn
-
-mkdir -p -- "$fn"
-cd -P -- "$fn"
+mkdir -p -v -- $functionName
+cd $functionName
 
 #############################
 # Create test payloads file #
 #############################
 
-mkdir -p -- "test"
-echo "import { handler } from \"../index.mjs\";
-" >test/payloads.mjs
+mkdir -p -v -- "test"
+echo "import { handler } from '../index.mjs';
+
+export const getRequestPayload = {
+  httpMethod: 'GET',
+  body: { hello: 'world' },
+};" >test/payloads.mjs
+
+echo "import { handler } from '../index.mjs';
+import {
+  getRequestPayload,
+} from './payloads.mjs';
+
+export const getRequest = async () => handler(getRequestPayload);
+" >test/modules.mjs
 
 ######################
 # Create config file #
 ######################
 
-mkdir -p -- "utils"
+mkdir -p -v -- "utils"
 echo "export const config = {
-    item1: 'value1',
-}" >utils/config.mjs
+    awsRegion: 'us-east-1',
+};
+" >utils/config.mjs
 
 #########################
 # Create index.mjs File #
@@ -38,33 +50,52 @@ echo "import { config } from './utils/config.mjs';
 export const handler = async (event) => {
   //   console.log('Received event:', JSON.stringify(event, null, 2));
 
-  const body = {
-    config,
-  };
-
   return {
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Origin': '*', // Required for CORS support to work
       'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
     },
-    body,
+    body: {
+      ...event,
+      ...config
+    },
   };
-};" >index.mjs
+};
+" >index.mjs
+
+########################
+# Create index.test.js #
+########################
+
+echo "import { getRequest } from './test/modules.mjs';
+import { getRequestPayload } from './test/payloads.mjs';
+import { config } from './utils/config.mjs';
+
+describe('$functionName', () => {
+  it('should return expected body', async () => {
+    const { statusCode, body } = await getRequest();
+
+    expect(statusCode).toBe(200);
+    expect(body.hello).toBe(getRequestPayload.hello);
+    expect(body.awsRegion).toBe(config.awsRegion);
+  });
+});
+" >index.test.js
 
 #######################
 # Create package.json #
 #######################
 
-fnAsKebabCase=$(
-  echo "$fn" |
+functionNameAsKebabCase=$(
+  echo "$functionName" |
     sed 's/\([^A-Z]\)\([A-Z0-9]\)/\1-\2/g' |
     sed 's/\([A-Z0-9]\)\([A-Z0-9]\)\([^A-Z]\)/\1-\2\3/g' |
     tr '[:upper:]' '[:lower:]'
 )
 
 echo "{
-  \"name\": \"$fnAsKebabCase\",
+  \"name\": \"$functionNameAsKebabCase\",
   \"version\": \"1.0.0\",
   \"description\": \"lambda function\",
   \"type\": \"module\",
@@ -84,19 +115,16 @@ echo "{
 
 echo "#!/bin/bash
 
+functionName=$functionName
+
 pathToJs=index.mjs
-pathToZip=$fn.zip
+pathToZip=\$functionName.zip
 
 npm ci
 
 zip -r \$pathToZip .
 
-aws lambda update-function-code \
-    --region us-east-1 \
-    --function-name  $fn \
-    --zip-file fileb://\$pathToZip \
-    --no-cli-pager \
-    --profile mesh-app-deployer
+aws lambda update-function-code     --region us-east-1     --function-name  \$functionName     --zip-file fileb://\$pathToZip     --no-cli-pager     --profile mesh-app-deployer
 
 rm \$pathToZip
 " >deploy.sh
@@ -111,7 +139,7 @@ chmod u+x deploy.sh
 # pwd
 
 # pathToJs=index.mjs
-# pathToZip=$fn.zip
+# pathToZip=$functionName.zip
 
 # npm i
 
@@ -119,9 +147,9 @@ chmod u+x deploy.sh
 
 # aws lambda create-function \
 #   --region us-east-1 \
-#   --function-name $fn \
+#   --function-name $functionName \
 #   --runtime nodejs12.x \
 #   --zip-file fileb://$pathToZip \
-#   --handler $fn.handler \
+#   --handler $functionName.handler \
 #   --role arn:aws:iam::118185547444:role/service-role/plaidfunctions \
 #   --profile mesh-app-deployer
