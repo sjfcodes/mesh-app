@@ -48,13 +48,13 @@ export const updateTableItem = async ({
 };
 
 export const deleteTableItem = async () => {
-    const request = {
-        httpMethod: "DELETE",
-        body: {
-          TableName,
-          Key: { username: { S: original.username.S } },
-        },
-      };
+  const request = {
+    httpMethod: "DELETE",
+    body: {
+      TableName,
+      Key: { username: { S: original.username.S } },
+    },
+  };
 
-    return await handler(request);
+  return await handler(request);
 };

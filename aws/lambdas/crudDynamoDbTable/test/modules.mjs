@@ -12,13 +12,13 @@ export const createTable = async () => {
         {
           AttributeName: "username",
           AttributeType: "S",
-        }
+        },
       ],
       KeySchema: [
         {
           AttributeName: "username",
           KeyType: "HASH",
-        }
+        },
       ],
       ProvisionedThroughput: {
         ReadCapacityUnits: 1,
