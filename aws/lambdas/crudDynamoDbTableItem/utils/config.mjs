@@ -1,3 +1,3 @@
 export const config = {
-    region: 'us-east-1',
-}
+  region: "us-east-1",
+};
