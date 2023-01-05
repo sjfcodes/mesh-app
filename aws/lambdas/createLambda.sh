@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # treat unset variables as arguments
-set -o nounset 
+set -o nounset
 
 fn=$1 # function name
 
@@ -12,14 +12,26 @@ echo $fn
 mkdir -p -- "$fn"
 cd -P -- "$fn"
 
+#############################
+# Create test payloads file #
+#############################
+
 mkdir -p -- "test"
 echo "import { handler } from \"../index.mjs\";
-" > test/payloads.mjs
+" >test/payloads.mjs
+
+######################
+# Create config file #
+######################
 
 mkdir -p -- "utils"
 echo "export const config = {
     item1: 'value1',
-}" > utils/config.mjs
+}" >utils/config.mjs
+
+#########################
+# Create index.mjs File #
+#########################
 
 echo "import { config } from './utils/config.mjs';
 
@@ -38,21 +50,17 @@ export const handler = async (event) => {
     },
     body,
   };
-};" > index.mjs
+};" >index.mjs
 
-echo "import { handler } from './index.mjs';
+#######################
+# Create package.json #
+#######################
 
-describe('$fn', () => {
-  it('should have body property', async () => {
-    const response = await handler({ body: { hello: 'world' }});
-    expect(response).toHaveProperty('body');
-  });
-});" > index.test.js
-
-fnAsKebabCase=$(echo "$fn" \
-| sed 's/\([^A-Z]\)\([A-Z0-9]\)/\1-\2/g' \
-| sed 's/\([A-Z0-9]\)\([A-Z0-9]\)\([^A-Z]\)/\1-\2\3/g' \
-| tr '[:upper:]' '[:lower:]'
+fnAsKebabCase=$(
+  echo "$fn" |
+    sed 's/\([^A-Z]\)\([A-Z0-9]\)/\1-\2/g' |
+    sed 's/\([A-Z0-9]\)\([A-Z0-9]\)\([^A-Z]\)/\1-\2\3/g' |
+    tr '[:upper:]' '[:lower:]'
 )
 
 echo "{
@@ -66,11 +74,13 @@ echo "{
     \"deploy\": \"./deploy.sh\"
   },
   \"keywords\": [],
-  \"author\": \"\",
+  \"author\": \"$(git config user.email)\",
   \"license\": \"ISC\"
-}" > package.json
+}" >package.json
 
-npm i
+############################
+# Create Function Deployer #
+############################
 
 echo "#!/bin/bash
 
@@ -89,6 +99,29 @@ aws lambda update-function-code \
     --profile mesh-app-deployer
 
 rm \$pathToZip
-" > deploy.sh
+" >deploy.sh
 
 chmod u+x deploy.sh
+
+##########################
+# Create Function in AWS #
+##########################
+# https://awscli.amazonaws.com/v2/documentation/api/2.0.34/reference/lambda/create-function.html
+
+# pwd
+
+# pathToJs=index.mjs
+# pathToZip=$fn.zip
+
+# npm i
+
+# zip -r $pathToZip .
+
+# aws lambda create-function \
+#   --region us-east-1 \
+#   --function-name $fn \
+#   --runtime nodejs12.x \
+#   --zip-file fileb://$pathToZip \
+#   --handler $fn.handler \
+#   --role arn:aws:iam::118185547444:role/service-role/plaidfunctions \
+#   --profile mesh-app-deployer
