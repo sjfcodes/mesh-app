@@ -10,9 +10,6 @@
     "deploy:all": "./deployAll.sh"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "jest": "^29.3.1"
-  }
+  "author": "sjfcodes@gmail.com",
+  "license": "ISC"
 }
