@@ -19,6 +19,7 @@ const {
 describe("create and read table", () => {
   it("should create table", async () => {
     const { statusCode, body } = await createTable();
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     expect(statusCode).toBe(200);
   });
 

@@ -1,60 +1,20 @@
-import config from "../../../../config/dynamoDb.mjs";
 import { handler } from "../index.mjs";
+import {
+  createTableItemPayload,
+  deleteTableItemPayload,
+  getTableItemPayload,
+  updateTableItemPayload,
+} from "./payloads.mjs";
 
-const {
-  TableName,
-  Item: { original },
-} = config;
+export const createTableItem = async () => handler(createTableItemPayload);
 
-export const createTableItem = async () => {
-  const request = {
-    httpMethod: "PUT",
-    body: { TableName, Item: original },
-  };
+export const getTableItem = async () => handler(getTableItemPayload);
 
-  return await handler(request);
-};
+/**
+ * @param {{ UpdateExpression, ExpressionAttributeValues }} expressionArgs
+ * @returns
+ */
+export const updateTableItem = async (expressionArgs) =>
+  handler(updateTableItemPayload(expressionArgs));
 
-export const getTableItem = async () => {
-  const request = {
-    httpMethod: "GET",
-    body: {
-      TableName,
-      Key: {
-        username: { S: original.username.S },
-      },
-    },
-  };
-
-  return await handler(request);
-};
-
-export const updateTableItem = async ({
-  UpdateExpression,
-  ExpressionAttributeValues,
-}) => {
-  const request = {
-    httpMethod: "POST",
-    body: {
-      TableName,
-      Key: { username: { S: original.username.S } },
-      UpdateExpression, //   UpdateExpression: "SET verified = :v, someData = :sd",
-      ExpressionAttributeValues, //   ExpressionAttributeValues: { ":v": update.verified, ":sd": update.someData },
-      ReturnValues: "ALL_NEW", //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
-    },
-  };
-
-  return await handler(request);
-};
-
-export const deleteTableItem = async () => {
-  const request = {
-    httpMethod: "DELETE",
-    body: {
-      TableName,
-      Key: { username: { S: original.username.S } },
-    },
-  };
-
-  return await handler(request);
-};
+export const deleteTableItem = async () => handler(deleteTableItemPayload);
