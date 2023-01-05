@@ -1,4 +1,4 @@
-import config from "../../config/dynamodb.js";
+import config from "../../../../config/dynamoDb.mjs";
 import { handler } from "../index.mjs";
 
 const {

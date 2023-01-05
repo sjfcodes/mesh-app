@@ -1,5 +1,5 @@
 import { createTableItem, deleteTableItem, getTableItem, updateTableItem } from "./modules.mjs";
-import dynamoDb from "../../config/dynamodb";
+import dynamoDb from "../../../../config/dynamoDb.mjs";
 
 const {
   Item: { original, update },
