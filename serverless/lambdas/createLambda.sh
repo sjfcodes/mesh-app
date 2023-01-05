@@ -134,6 +134,16 @@ chmod u+x deploy.sh
 
 npm i
 
+cd ../../test
+
+echo "#!/bin/bash
+
+export AWS_PROFILE=mesh-app-deployer 
+NODE_OPTIONS=--experimental-vm-modules npx jest lambdas/$functionName/index.test.js --watchAll
+" >wip.sh
+
+chmod u+x wip.sh
+
 ##########################
 # Create Function in AWS #
 ##########################
@@ -156,3 +166,5 @@ npm i
 #   --handler $functionName.handler \
 #   --role arn:aws:iam::118185547444:role/service-role/plaidfunctions \
 #   --profile mesh-app-deployer
+
+npm run test:wip
