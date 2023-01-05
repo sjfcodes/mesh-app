@@ -3,8 +3,13 @@ import axios from "axios";
 
 import dynamoDb from "../../config/dynamoDb.mjs";
 import {
-  createTablePayload,
+  createTable,
+  deleteTable,
+  getTable,
+} from "../../lambdas/crudDynamoDbTable/test/modules.mjs";
+import {
   getTablePayload,
+  createTablePayload,
   deleteTablePayload,
 } from "../../lambdas/crudDynamoDbTable/test/payloads.mjs";
 import {
@@ -13,11 +18,6 @@ import {
   getTableItemPayload,
   updateTableItemPayload,
 } from "../../lambdas/crudDynamoDbTableItem/test/payloads.mjs";
-import {
-  createTable,
-  deleteTable,
-  getTable,
-} from "../../lambdas/crudDynamoDbTable/test/modules.mjs";
 import {
   createTableItem,
   deleteTableItem,
