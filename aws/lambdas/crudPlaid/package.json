@@ -1,5 +1,5 @@
 {
-  "name": "crud-plaid-item",
+  "name": "crud-plaid",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "sjfcodes@gmail.com",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.241.0"
