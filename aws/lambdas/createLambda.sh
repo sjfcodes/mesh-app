@@ -13,7 +13,8 @@ mkdir -p -- "$fn"
 cd -P -- "$fn"
 
 mkdir -p -- "test"
-echo "import { handler } from \"../index.mjs\";\\n" > test/modules.mjs
+echo "import { handler } from \"../index.mjs\";
+" > test/payloads.mjs
 
 mkdir -p -- "utils"
 echo "export const config = {
