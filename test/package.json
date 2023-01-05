@@ -5,8 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test:it:local": "export AWS_PROFILE=mesh-app-deployer && NODE_OPTIONS=--experimental-vm-modules npx jest integration/awsLambdaDynamoDb.test.js --watchAll ",
-    "test:it:api": "export AWS_PROFILE=mesh-app-deployer && NODE_OPTIONS=--experimental-vm-modules npx jest integration/awsApiGateway.test.js --watchAll"
+    "test": "export AWS_PROFILE=mesh-app-deployer && NODE_OPTIONS=--experimental-vm-modules npx jest ${TEST_FILE} --watchAll",
+    "test:it:local": "export TEST_FILE=integration/awsLambdaDynamoDb.test.js && npm run test",
+    "test:it:api": "export TEST_FILE=integration/awsApiGateway.test.js && npm run test"
   },
   "keywords": [],
   "author": "",

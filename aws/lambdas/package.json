@@ -7,14 +7,9 @@
   "scripts": {
     "test": "export AWS_PROFILE=mesh-app-deployer && NODE_OPTIONS=--experimental-vm-modules npx jest --watchAll --roots .",
     "test:lambda": "export AWS_PROFILE=mesh-app-deployer && NODE_OPTIONS=--experimental-vm-modules npx jest --watchAll --roots ${FUNCTION}",
-    "deploy:crudDynamoDbTable": "./deployLambda.sh 'crudDynamoDbTable'",
-    "test:crudDynamoDbTable": "export FUNCTION=crudDynamoDbTable && npm run test:lambda",
-    "deploy:crudDynamoDbTableItem": "./deployLambda.sh 'crudDynamoDbTableItem'",
-    "test:crudDynamoDbTableItem": "export FUNCTION=crudDynamoDbTableItem && npm run test:lambda",
-    "test:testAxios": "export FUNCTION=testAxios && npm run test:lambda",
-    "deploy:testAxios": "./deployLambda.sh 'testAxios'",
-    "test:testFunction": "export FUNCTION=testFunction && npm run test:lambda",
-    "deploy:testFunction": "./deployLambda.sh 'testFunction'"
+    "deploy:ddb-table": "cd crudDynamoDbTable && npm run deploy",
+    "deploy:ddb-table-item": "cd crudDynamoDbTableItem && npm run deploy",
+    "deploy:all": "./deployAll.sh"
   },
   "keywords": [],
   "author": "",
