@@ -10,6 +10,6 @@ export const config = {
   TableName: process.env.USER_TABLE_NAME,
   email: process.env.USER_EMAIL,
   path: {
-    createLinkToken: "/link/token/create",
+    createLinkToken: "/link-token",
   },
 };
