@@ -4,22 +4,23 @@ import ddbClient from "./utils/ddbClient.mjs";
 import plaidClient from "./utils/plaidClient.mjs";
 import { config } from "./utils/config.mjs";
 
-export const handler = async (event) => {
+export const handler = async (event, context) => {
   let response = event.body;
   let statusCode = 200;
   try {
     const {
-      httpMethod,
-      path,
-      headers: { Authentication },
+      body: { path },
+      params: {
+        header: { Authorization },
+      },
     } = event;
 
     // decode & parse jwt payload
     const { email } = JSON.parse(
-      Buffer.from(Authentication.split(".")[1], "base64")
+      Buffer.from(Authorization.split(".")[1], "base64")
     );
 
-    switch (httpMethod) {
+    switch (event.context["http-method"]) {
       case "POST":
         if (path === config.path.createLinkToken) {
           const { Item } = await ddbClient.send(
@@ -61,8 +62,7 @@ export const handler = async (event) => {
       "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
       "Content-Type": "application/json",
     },
-    httpMethod: event.httpMethod,
-    statusCode,
+    status_code: statusCode,
   };
 };
 
