@@ -1,0 +1,23 @@
+.App-logo {
+    height: 100px;
+    width: 100px;
+    pointer-events: none;
+    margin: -10px;
+    /* border: #61DBFB solid 1px; */
+    /* border-radius: 50%; */
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
+  
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
