@@ -17,7 +17,7 @@ function App() {
       {({ signOut, user }) => (
         <AppProvider user={user} signOut={signOut}>
           <Switch>
-          <Route exact path="/" component={Landing} />
+            <Route exact path="/" component={Landing} />
           </Switch>
         </AppProvider>
       )}

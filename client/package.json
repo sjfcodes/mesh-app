@@ -24,14 +24,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "build": "export REACT_APP_AWS_API_GATEWAY_STAGE=beta && react-scripts build",
+    "deploy": "npm run format && npm run build && ./deploy.sh ./build",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
     "start": "react-scripts start",
     "start:beta": "export REACT_APP_AWS_API_GATEWAY_STAGE=beta && npm run start",
     "start:dev": "export REACT_APP_AWS_API_GATEWAY_STAGE=dev && npm run start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
-    "deploy": "npm run format && npm run build && ./deploy.sh ./build"
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": [
