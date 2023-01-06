@@ -12,6 +12,10 @@
   "author": "sjfcodes@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.241.0"
+    "@aws-sdk/client-dynamodb": "^3.241.0",
+    "plaid": "^10.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
   }
 }

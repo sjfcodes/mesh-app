@@ -1,62 +1,70 @@
-import {
-  DeleteItemCommand,
-  DynamoDBClient,
-  GetItemCommand,
-  PutItemCommand,
-  UpdateItemCommand,
-} from "@aws-sdk/client-dynamodb";
+import { GetItemCommand } from "@aws-sdk/client-dynamodb";
 
-// https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html#dynamodb-example-table-read-write-writing-an-item
+import ddbClient from "./utils/ddbClient.mjs";
+import plaidClient from "./utils/plaidClient.mjs";
+import { config } from "./utils/config.mjs";
 
-const client = new DynamoDBClient({ region: "us-east-1" });
-
-/**
- * Demonstrates a simple HTTP endpoint using API Gateway. You have full
- * access to the request and response payload, including headers and
- * status code.
- *
- * To scan a DynamoDB table, make a GET request with the TableName as a
- * query string parameter. To put, update, or delete an item, make a POST,
- * PUT, or DELETE request respectively, passing in the payload to the
- * DynamoDB API as a JSON body.
- */
-export const handler = async (event, context) => {
-  //   console.log("Received event:", JSON.stringify(event, null, 2));
-
-  let body;
-  let Command;
+export const handler = async (event) => {
+  let response = event.body;
   let statusCode = 200;
-  const httpMethod = event.httpMethod || "method not provided";
-  const headers = { "Content-Type": "application/json" };
-
   try {
-    switch (event.httpMethod) {
-      case "DELETE":
-        Command = DeleteItemCommand;
-        break;
-      case "GET":
-        Command = GetItemCommand;
-        break;
+    const {
+      httpMethod,
+      path,
+      headers: { Authentication },
+    } = event;
+
+    // decode & parse jwt payload
+    const { email } = JSON.parse(
+      Buffer.from(Authentication.split(".")[1], "base64")
+    );
+
+    switch (httpMethod) {
       case "POST":
-        Command = UpdateItemCommand;
-        break;
-      case "PUT":
-        Command = PutItemCommand;
+        if (path === config.path.createLinkToken) {
+          const { Item } = await ddbClient.send(
+            new GetItemCommand({
+              TableName: config.TableName,
+              Key: { email: { S: email } },
+            })
+          );
+
+          const request = {
+            user: { client_user_id: Item.user_id.S },
+            client_name: config.appName,
+            products: ["auth"],
+            language: "en",
+            // webhook: "https://webhook.example.com",
+            country_codes: ["US"],
+          };
+
+          const { data } = await plaidClient.linkTokenCreate(request);
+          // return data to caller
+          response = data;
+        }
+
         break;
       default:
-        throw new Error(`Unsupported method "${event.httpMethod}"`);
+        throw new Error(`Unsupported method: "${event.httpMethod}"`);
     }
-    body = await client.send(new Command(event.body));
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     statusCode = 400;
-    body = err.message;
+    response = error.message;
   }
 
   return {
+    body: response,
+    path: event.path,
+    headers: {
+      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+      "Content-Type": "application/json",
+    },
+    httpMethod: event.httpMethod,
     statusCode,
-    body,
-    headers,
-    httpMethod,
   };
 };
+
+// https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json
+// https://cognito-idp.us-east-1.amazonaws.com/us-east-1_MmpeiDLFc/.well-known/jwks.json
