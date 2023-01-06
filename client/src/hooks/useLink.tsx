@@ -39,13 +39,63 @@ type LinkAction =
 
 interface LinkContextShape extends LinkState {
   dispatch: Dispatch<LinkAction>;
-  generateLinkToken: (userId: number, itemId: number | null) => void;
+  generateLinkToken: (userId: number, itemId: number | null) => Promise<void>;
   deleteLinkToken: (userId: number | null, itemId: number | null) => void;
   linkTokens: LinkState;
 }
 const LinkContext = createContext<LinkContextShape>(
   initialState as LinkContextShape
 );
+
+
+/**
+ * @desc Handles updates to the LinkTokens state as dictated by dispatched actions.
+ */
+function reducer(state: any, action: LinkAction) {
+  switch (action.type) {
+    case 'LINK_TOKEN_CREATED':
+      return {
+        ...state,
+        byUser: {
+          [action.id]: action.token,
+        },
+        error: {},
+      };
+
+    case 'LINK_TOKEN_UPDATE_MODE_CREATED':
+      return {
+        ...state,
+        error: {},
+        byItem: {
+          ...state.byItem,
+          [action.id]: action.token,
+        },
+      };
+    case 'DELETE_USER_LINK_TOKEN':
+      return {
+        ...state,
+        byUser: {
+          [action.id]: '',
+        },
+      };
+    case 'DELETE_ITEM_LINK_TOKEN':
+      return {
+        ...state,
+        byItem: {
+          ...state.byItem,
+          [action.id]: '',
+        },
+      };
+    case 'LINK_TOKEN_ERROR':
+      return {
+        ...state,
+        error: action.error,
+      };
+    default:
+      console.warn('unknown action');
+      return state;
+  }
+}
 
 /**
  * @desc Maintains the Link context state and fetches link tokens to update that state.
@@ -112,55 +162,6 @@ export function LinkProvider(props: any) {
   );
 
   return <LinkContext.Provider value={value} {...props} />;
-}
-
-/**
- * @desc Handles updates to the LinkTokens state as dictated by dispatched actions.
- */
-function reducer(state: any, action: LinkAction) {
-  switch (action.type) {
-    case 'LINK_TOKEN_CREATED':
-      return {
-        ...state,
-        byUser: {
-          [action.id]: action.token,
-        },
-        error: {},
-      };
-
-    case 'LINK_TOKEN_UPDATE_MODE_CREATED':
-      return {
-        ...state,
-        error: {},
-        byItem: {
-          ...state.byItem,
-          [action.id]: action.token,
-        },
-      };
-    case 'DELETE_USER_LINK_TOKEN':
-      return {
-        ...state,
-        byUser: {
-          [action.id]: '',
-        },
-      };
-    case 'DELETE_ITEM_LINK_TOKEN':
-      return {
-        ...state,
-        byItem: {
-          ...state.byItem,
-          [action.id]: '',
-        },
-      };
-    case 'LINK_TOKEN_ERROR':
-      return {
-        ...state,
-        error: action.error,
-      };
-    default:
-      console.warn('unknown action');
-      return state;
-  }
 }
 
 /**

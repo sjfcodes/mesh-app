@@ -6,7 +6,7 @@ import { Amplify } from 'aws-amplify';
 import Landing from './pages/Landing';
 import { AppProvider } from './services/currentUser';
 
-import './App.css';
+import './App.scss';
 
 import currentConfig from './auth/config';
 import { LinkProvider } from './hooks/useLink';

@@ -15,12 +15,16 @@ const ButtonLinkBank = () => {
   const { generateLinkToken /*, linkTokens*/ } = useLink();
 
   const initiateLink = async () => {
-    // only generate a link token upon a click from enduser to add a bank;
-    // if done earlier, it may expire before enduser actually activates Link to add a bank.
+    // only generate a link token upon a click from end-user to add a bank;
+    // if done earlier, it may expire before end-user actually activates Link to add a bank.
     await generateLinkToken(userId, null);
   };
   return (
-    <Button large inline className="add-account__button" onClick={initiateLink}>
+    <Button
+      large
+      showLoader
+      onClick={initiateLink}
+    >
       Add another bank
     </Button>
   );
