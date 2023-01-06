@@ -1,29 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Amplify } from 'aws-amplify';
-import { Authenticator } from '@aws-amplify/ui-react';
+import { Router as BrowserRouter } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 import '@aws-amplify/ui-react/styles.css';
 
-import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import currentConfig from './auth/config';
-import { UserProvider } from './services/currentUser';
-
-Amplify.configure(currentConfig);
+import App from './App';
+import './index.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Authenticator loginMechanisms={['email']}>
-      {({ signOut, user }) => (
-        <UserProvider user={user}>
-          <App signOut={signOut}  />
-        </UserProvider>
-      )}
-    </Authenticator>
+    <BrowserRouter history={createBrowserHistory()}>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 

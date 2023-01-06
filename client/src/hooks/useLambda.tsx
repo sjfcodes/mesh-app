@@ -2,6 +2,15 @@ import { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import axios from 'axios';
 
+const { REACT_APP_AWS_API_GATEWAY, REACT_APP_AWS_API_GATEWAY_STAGE } =
+  process.env;
+
+const baseURL =
+  REACT_APP_AWS_API_GATEWAY + '/' + REACT_APP_AWS_API_GATEWAY_STAGE;
+
+if (baseURL.includes('undefined'))
+  throw new Error(`missing variable detected: ${baseURL}`);
+
 const useLambda = () => {
   const [state, setState] = useState({});
 
@@ -9,7 +18,7 @@ const useLambda = () => {
     (async () => {
       const { data } = await axios({
         method: 'POST',
-        baseURL: process.env.REACT_APP_AWS_API_GATEWAY,
+        baseURL,
         headers: {
           Authorization: (await Auth.currentSession())
             .getIdToken()

@@ -1,35 +1,28 @@
-import React, { useEffect } from 'react';
-import { AuthEventData } from '@aws-amplify/ui';
+import React from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { Authenticator } from '@aws-amplify/ui-react';
+import { Amplify } from 'aws-amplify';
 
-import logo from './logo.svg';
+import Landing from './pages/Landing';
+import { AppProvider } from './services/currentUser';
+
 import './App.css';
-import useLambda from './hooks/useLambda';
-import { useUser } from './services/currentUser';
-import  Banner  from './components/Banner';
 
-type props = {
-  signOut: ((data?: AuthEventData | undefined) => void) | undefined;
-};
+import currentConfig from './auth/config';
+Amplify.configure(currentConfig);
 
-function App({ signOut }: props) {
-  const [state] = useLambda();
-  const {
-    useUser: [user],
-  } = useUser();
-
-  useEffect(() => console.log(state), [state]);
-
+function App() {
   return (
-    <main>
-      <header className="App-header">
-      <Banner />
-
-        <h1>New New {user?.attributes?.email}</h1>
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
-      <button onClick={signOut}>Sign out</button>
-    </main>
+    <Authenticator loginMechanisms={['email']}>
+      {({ signOut, user }) => (
+        <AppProvider user={user} signOut={signOut}>
+          <Switch>
+          <Route exact path="/" component={Landing} />
+          </Switch>
+        </AppProvider>
+      )}
+    </Authenticator>
   );
 }
 
-export default App;
+export default withRouter(App);

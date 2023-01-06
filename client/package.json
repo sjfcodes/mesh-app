@@ -25,6 +25,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:beta": "export REACT_APP_AWS_API_GATEWAY_STAGE=beta && npm run start",
+    "start:dev": "export REACT_APP_AWS_API_GATEWAY_STAGE=dev && npm run start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
