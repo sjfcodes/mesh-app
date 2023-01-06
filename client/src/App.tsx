@@ -14,6 +14,7 @@ function App({ signOut, user }: props) {
   const [state] = useLambda();
 
   useEffect(() => console.log(state), [state]);
+  useEffect(() => console.log(user?.attributes), [user]);
 
   return (
     <main>
