@@ -1,18 +1,25 @@
-import React, { useEffect } from 'react';
+import React /* useEffect */ from 'react';
 
-import useLambda from '../hooks/useLambda';
 import Header from '../components/Header/Header';
+import ButtonLinkBank from '../components/ButtonLinkBank/ButtonLinkBank';
+// import useApi from '../hooks/useApi';
 
 function Landing() {
-  const [state] = useLambda();
-  useEffect(() => console.log(state), [state]);
+  // const { testLambda } = useApi();
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const get = await testLambda('GET');
+  //     const post = await testLambda('POST');
+  //     // console.log({ get, post });
+  //   })();
+  // }, [testLambda]);
 
   return (
     <main>
       <Header />
-      <div>
-        <h1>Plaid Pattern</h1>
-      </div>
+      <h1>Mesh</h1>
+      <ButtonLinkBank />
     </main>
   );
 }

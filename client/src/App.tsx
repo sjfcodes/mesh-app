@@ -9,6 +9,7 @@ import { AppProvider } from './services/currentUser';
 import './App.css';
 
 import currentConfig from './auth/config';
+import { LinkProvider } from './hooks/useLink';
 Amplify.configure(currentConfig);
 
 function App() {
@@ -16,9 +17,11 @@ function App() {
     <Authenticator loginMechanisms={['email']}>
       {({ signOut, user }) => (
         <AppProvider user={user} signOut={signOut}>
-          <Switch>
-            <Route exact path="/" component={Landing} />
-          </Switch>
+          <LinkProvider>
+            <Switch>
+              <Route exact path="/" component={Landing} />
+            </Switch>
+          </LinkProvider>
         </AppProvider>
       )}
     </Authenticator>
