@@ -8,6 +8,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import currentConfig from './auth/config';
+import { UserProvider } from './services/currentUser';
 
 Amplify.configure(currentConfig);
 
@@ -17,7 +18,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Authenticator loginMechanisms={['email']}>
-      {({ signOut, user }) => <App signOut={signOut} user={user} />}
+      {({ signOut, user }) => (
+        <UserProvider user={user}>
+          <App signOut={signOut}  />
+        </UserProvider>
+      )}
     </Authenticator>
   </React.StrictMode>
 );

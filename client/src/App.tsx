@@ -1,24 +1,29 @@
 import React, { useEffect } from 'react';
-import { AmplifyUser, AuthEventData } from '@aws-amplify/ui';
+import { AuthEventData } from '@aws-amplify/ui';
 
 import logo from './logo.svg';
 import './App.css';
 import useLambda from './hooks/useLambda';
+import { useUser } from './services/currentUser';
+import  Banner  from './components/Banner';
 
 type props = {
   signOut: ((data?: AuthEventData | undefined) => void) | undefined;
-  user: AmplifyUser | undefined;
 };
 
-function App({ signOut, user }: props) {
+function App({ signOut }: props) {
   const [state] = useLambda();
+  const {
+    useUser: [user],
+  } = useUser();
 
   useEffect(() => console.log(state), [state]);
-  useEffect(() => console.log(user?.attributes), [user]);
 
   return (
     <main>
       <header className="App-header">
+      <Banner />
+
         <h1>New New {user?.attributes?.email}</h1>
         <img src={logo} className="App-logo" alt="logo" />
       </header>
