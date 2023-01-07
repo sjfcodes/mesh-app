@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import sortBy from 'lodash/sortBy';
 
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
@@ -19,7 +18,7 @@ import { AccountType, AssetType, ItemType } from '../types';
 //   ErrorMessage,
 // } from '.';
 
-import useLink, { LinkProvider } from '../hooks/useLink';
+import useLink from '../hooks/useLink';
 import useItems from '../hooks/useItems';
 import UserCard from '../components/UserCard';
 import ErrorMessage from '../components/ErrorMessage';
@@ -38,11 +37,9 @@ import Header from '../components/Header/Header';
 const UserPage = () => {
   const {
     useUser: [{ attributes }],
-    signOut,
   } = useAppContext();
-  console.log(attributes);
 
-  const [user, setUser] = useState({
+  const [user] = useState({
     id: attributes?.sub || '',
     username: '',
     created_at: '',
@@ -84,7 +81,8 @@ const UserPage = () => {
     // This gets transactions from the database only.
     // Note that calls to Plaid's transactions/get endpoint are only made in response
     // to receipt of a transactions webhook.
-    getTransactionsByUser(userId);
+    console.log('getTransactionsByUser(userId)')
+    // getTransactionsByUser(userId);
   }, [getTransactionsByUser, userId]);
 
   // useEffect(() => {
