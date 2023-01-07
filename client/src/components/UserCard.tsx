@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // import { HashLink } from 'react-router-hash-link';
-import Button from 'plaid-threads/Button';
+import Button from '../components/Button/Button';
 import Touchable from 'plaid-threads/Touchable';
 
 // import { UserDetails } from '.';
@@ -14,7 +14,7 @@ interface Props {
   user: UserType;
   removeButton: boolean;
   linkButton: boolean;
-  userId: number;
+  userId: string;
 }
 
 export default function UserCard(props: Props) {
@@ -82,9 +82,6 @@ export default function UserCard(props: Props) {
           <div className="user-card__buttons">
             {props.linkButton && numOfItems === 0 && (
               <Button
-                large
-                inline
-                className="add-account__button"
                 onClick={initiateLink}
               >
                 Add a bank

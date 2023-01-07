@@ -29,18 +29,18 @@ const initialState = {
 type LinkAction =
   | {
       type: 'LINK_TOKEN_CREATED';
-      id: number;
+      id: string;
       token: string;
     }
-  | { type: 'LINK_TOKEN_UPDATE_MODE_CREATED'; id: number; token: string }
+  | { type: 'LINK_TOKEN_UPDATE_MODE_CREATED'; id: string; token: string }
   | { type: 'LINK_TOKEN_ERROR'; error: PlaidLinkError }
-  | { type: 'DELETE_USER_LINK_TOKEN'; id: number }
-  | { type: 'DELETE_ITEM_LINK_TOKEN'; id: number };
+  | { type: 'DELETE_USER_LINK_TOKEN'; id: string }
+  | { type: 'DELETE_ITEM_LINK_TOKEN'; id: string };
 
 interface LinkContextShape extends LinkState {
   dispatch: Dispatch<LinkAction>;
-  generateLinkToken: (userId: number, itemId: number | null) => Promise<void>;
-  deleteLinkToken: (userId: number | null, itemId: number | null) => void;
+  generateLinkToken: (userId: string, itemId: string | null) => Promise<void>;
+  deleteLinkToken: (userId: string | null, itemId: string | null) => void;
   linkTokens: LinkState;
 }
 const LinkContext = createContext<LinkContextShape>(
@@ -109,7 +109,7 @@ export function LinkProvider(props: any) {
    */
 
   const generateLinkToken = useCallback(
-    async (userId: number, itemId: number | null) => {
+    async (userId: string, itemId: string | null) => {
       // if itemId is not null, update mode is triggered
       const {
         data: { body },
@@ -136,7 +136,7 @@ export function LinkProvider(props: any) {
   );
 
   const deleteLinkToken = useCallback(
-    async (userId: number, itemId: number) => {
+    async (userId: string, itemId: string) => {
       if (userId != null) {
         dispatch({
           type: 'DELETE_USER_LINK_TOKEN',

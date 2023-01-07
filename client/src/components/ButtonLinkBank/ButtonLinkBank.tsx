@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from 'plaid-threads/Button';
-import { useAppContext } from '../../services/currentUser';
+import { useAppContext } from '../../hooks/useUser';
 import useLink from '../../hooks/useLink';
 
 const ButtonLinkBank = () => {

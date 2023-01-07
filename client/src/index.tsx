@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Router as BrowserRouter } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { BrowserRouter } from 'react-router-dom';
 import '@aws-amplify/ui-react/styles.css';
 
 import reportWebVitals from './reportWebVitals';
@@ -11,9 +10,10 @@ import './index.scss';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <BrowserRouter history={createBrowserHistory()}>
+    <BrowserRouter>
       <App />
     </BrowserRouter>
   </React.StrictMode>

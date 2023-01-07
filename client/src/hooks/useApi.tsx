@@ -12,7 +12,7 @@ const url = REACT_APP_AWS_API_GATEWAY + '/' + REACT_APP_AWS_API_GATEWAY_STAGE;
 const useApi = () => {
   const getAuthToken = async () =>
     (await Auth.currentSession()).getIdToken().getJwtToken();
-  const getLinkToken = async (userId: number, itemId: number | null) => {
+  const getLinkToken = async (userId: string, itemId: string | null) => {
     // axios(`/link-token`, {
     const response = await axios({
       method: 'POST',
@@ -29,7 +29,7 @@ const useApi = () => {
     publicToken: string,
     institution: any,
     accounts: PlaidLinkOnSuccessMetadata['accounts'],
-    userId: number
+    userId: string
   ) => {
     try {
       const { data } = await axios({
@@ -60,13 +60,13 @@ const useApi = () => {
   };
 
   // accounts
-  const getAccountsByItem = async (itemId: number) =>
+  const getAccountsByItem = async (itemId: string) =>
     axios({
       method: 'GET',
       url: url + `/items/${itemId}/accounts`,
       headers: { Authorization: await getAuthToken() },
     });
-  const getAccountsByUser = async (userId: number) =>
+  const getAccountsByUser = async (userId: string) =>
     axios({
       method: 'GET',
       url: url + `/users/${userId}/accounts`,
@@ -76,7 +76,7 @@ const useApi = () => {
     });
 
   // transactions
-  const getTransactionsByAccount = async (accountId: number) =>
+  const getTransactionsByAccount = async (accountId: string) =>
     axios({
       method: 'GET',
       url: url + `/accounts/${accountId}/transactions`,
@@ -84,7 +84,7 @@ const useApi = () => {
         Authorization: await getAuthToken(),
       },
     });
-  const getTransactionsByItem = async (itemId: number) =>
+  const getTransactionsByItem = async (itemId: string) =>
     axios({
       method: 'GET',
       url: url + `/items/${itemId}/transactions`,
@@ -92,7 +92,7 @@ const useApi = () => {
         Authorization: await getAuthToken(),
       },
     });
-  const getTransactionsByUser = async (userId: number) =>
+  const getTransactionsByUser = async (userId: string) =>
     axios({
       method: 'GET',
       url: url + `/users/${userId}/transactions`,
@@ -111,7 +111,7 @@ const useApi = () => {
       },
     });
 
-  const setItemState = async (itemId: number, status: string) =>
+  const setItemState = async (itemId: string, status: string) =>
     axios({
       url: url + `items/${itemId}`,
       method: 'PUT',
@@ -122,7 +122,7 @@ const useApi = () => {
     });
 
   // This endpoint is only availble in the sandbox enviornment
-  const setItemToBadState = async (itemId: number) =>
+  const setItemToBadState = async (itemId: string) =>
     axios({
       method: 'POST',
       url: url + '/items/sandbox/item/reset_login',

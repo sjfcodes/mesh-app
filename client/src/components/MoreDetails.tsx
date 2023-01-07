@@ -11,8 +11,8 @@ import LaunchLink from './LaunchLink';
 interface Props {
   setBadStateShown: boolean;
   handleSetBadState: () => void;
-  userId: number;
-  itemId: number;
+  userId: string;
+  itemId: string;
   handleDelete: () => void;
 }
 

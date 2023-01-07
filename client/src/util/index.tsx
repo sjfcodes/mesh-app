@@ -10,14 +10,14 @@ import {
 // import { postLinkEvent as apiPostLinkEvent } from '../services/api';
 
 /**
- * @desc small helper for pluralizing words for display given a number of items
+ * @desc small helper for pluralizing words for display given a string of items
  */
 export function pluralize(noun: string, count: number) {
   return count === 1 ? noun : `${noun}s`;
 }
 
 /**
- * @desc converts number values into $ currency strings
+ * @desc converts string values into $ currency strings
  */
 export function currencyFilter(value: number) {
   if (typeof value !== 'number') {
@@ -84,7 +84,7 @@ export const logEvent = (
 
 export const logSuccess = async (
   { institution, accounts, link_session_id }: PlaidLinkOnSuccessMetadata,
-  userId: number
+  userId: string
 ) => {
   logEvent('onSuccess', {
     institution,
@@ -101,7 +101,7 @@ export const logSuccess = async (
 export const logExit = async (
   error: PlaidLinkError | null,
   { institution, status, link_session_id, request_id }: PlaidLinkOnExitMetadata,
-  userId: number
+  userId: string
 ) => {
   logEvent(
     'onExit',

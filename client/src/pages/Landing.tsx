@@ -1,26 +1,27 @@
-import React /* useEffect */ from 'react';
+import React, { useEffect /* useEffect */ } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '../components/Header/Header';
-import ButtonLinkBank from '../components/ButtonLinkBank/ButtonLinkBank';
+// import ButtonLinkBank from '../components/ButtonLinkBank/ButtonLinkBank';
+import { useAppContext } from '../hooks/useUser';
 // import useApi from '../hooks/useApi';
 
 function Landing() {
-  // const { testLambda } = useApi();
+  const {
+    useUser: [user],
+  } = useAppContext();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const get = await testLambda('GET');
-  //     const post = await testLambda('POST');
-  //     // console.log({ get, post });
-  //   })();
-  // }, [testLambda]);
+  useEffect(() => {
+    if (user?.attributes?.email) {
+      navigate(`/user/${user.attributes.email}`);
+    }
+  }, [user, navigate]);
 
   return (
-    <main>
-      <Header />
-      <h1>Mesh</h1>
-      <ButtonLinkBank />
-    </main>
+    <div>
+      <p>...redirecting</p>
+    </div>
   );
 }
 

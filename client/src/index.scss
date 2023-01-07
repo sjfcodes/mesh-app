@@ -1,6 +1,6 @@
 $threads-font-path: '~plaid-threads/fonts';
 @import '~plaid-threads/scss/typography';
-@import '~plaid-threads/scss/variables';
+// @import '~plaid-threads/scss/variables';
 
 body {
   margin: 0;
@@ -10,9 +10,18 @@ body {
   //   sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #282c34;
+  padding: 10px;
+  min-height: 100vh;
+  font-size: calc(10px + 2vmin);
+  color: grey;
 }
 
 // code {
 //   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
 //     monospace;
 // }
+
+[data-amplify-authenticator] {
+  min-height: 100vh;
+}

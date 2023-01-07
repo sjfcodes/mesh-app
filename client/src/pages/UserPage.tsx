@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
-import NavigationLink from 'plaid-threads/NavigationLink';
+
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
 import Button from 'plaid-threads/Button';
 
 import { pluralize } from '../util';
 
-import { AccountType, AssetType, ItemType, RouteInfo } from '../types';
+import { AccountType, AssetType, ItemType } from '../types';
 // import {
 //   LaunchLink,
 //   SpendingInsights,
@@ -19,23 +19,31 @@ import { AccountType, AssetType, ItemType, RouteInfo } from '../types';
 //   ErrorMessage,
 // } from '.';
 
-import useLink from '../hooks/useLink';
+import useLink, { LinkProvider } from '../hooks/useLink';
 import useItems from '../hooks/useItems';
 import UserCard from '../components/UserCard';
 import ErrorMessage from '../components/ErrorMessage';
 import LoadingCallout from '../components/LoadingCallout';
 import LaunchLink from '../components/LaunchLink';
 import ItemCard from '../components/ItemCard';
-
+import { useAppContext } from '../hooks/useUser';
+import useTransactions from '../hooks/useTransactions';
+import Header from '../components/Header/Header';
 
 // import TransactionTimeline from './TransactionTimeline';
 
 // provides view of user's net worth, spending by category and allows them to explore
 // account and transactions details for linked items
 
-const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
+const UserPage = () => {
+  const {
+    useUser: [{ attributes }],
+    signOut,
+  } = useAppContext();
+  console.log(attributes);
+
   const [user, setUser] = useState({
-    id: 0,
+    id: attributes?.sub || '',
     username: '',
     created_at: '',
     updated_at: '',
@@ -47,12 +55,13 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [accounts, setAccounts] = useState<AccountType[]>([]);
   const [assets, setAssets] = useState<AssetType[]>([]);
 
-  // const { getTransactionsByUser, transactionsByUser } = useTransactions();
+  const { getTransactionsByUser, transactionsByUser } = useTransactions();
   // const { getAccountsByUser, accountsByUser } = useAccounts();
   // const { assetsByUser, getAssetsByUser } = useAssets();
   // const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
-  const userId = Number(match.params.userId);
+  // const userId = Number(match.params.userId);
+  const userId = user.id;
   const { generateLinkToken, linkTokens } = useLink();
 
   const initiateLink = async () => {
@@ -71,12 +80,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   //   setUser(usersById[userId] || {});
   // }, [usersById, userId]);
 
-  // useEffect(() => {
-  //   // This gets transactions from the database only.
-  //   // Note that calls to Plaid's transactions/get endpoint are only made in response
-  //   // to receipt of a transactions webhook.
-  //   getTransactionsByUser(userId);
-  // }, [getTransactionsByUser, userId]);
+  useEffect(() => {
+    // This gets transactions from the database only.
+    // Note that calls to Plaid's transactions/get endpoint are only made in response
+    // to receipt of a transactions webhook.
+    getTransactionsByUser(userId);
+  }, [getTransactionsByUser, userId]);
 
   // useEffect(() => {
   //   setTransactions(transactionsByUser[userId] || []);
@@ -103,7 +112,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     const newItems: Array<ItemType> = itemsByUser[userId] || [];
     const orderedItems = sortBy(
       newItems,
-      item => new Date(item.updated_at)
+      (item) => new Date(item.updated_at)
     ).reverse();
     setItems(orderedItems);
   }, [itemsByUser, userId]);
@@ -133,9 +142,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
-      <NavigationLink component={Link} to="/">
-        BACK TO LOGIN
-      </NavigationLink>
+      <Header />
+      <h1>Mesh</h1>
 
       {linkTokens.error.error_code != null && (
         <Callout warning>
@@ -216,7 +224,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
             )}
           </div>
           <ErrorMessage />
-          {items.map(item => (
+          {items.map((item) => (
             <div id="itemCards" key={item.id}>
               <ItemCard item={item} userId={userId} />
             </div>

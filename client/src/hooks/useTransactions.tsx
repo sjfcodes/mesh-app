@@ -25,18 +25,18 @@ type TransactionsAction =
       type: 'SUCCESSFUL_GET';
       payload: TransactionType[];
     }
-  | { type: 'DELETE_BY_ITEM'; payload: number }
-  | { type: 'DELETE_BY_USER'; payload: number };
+  | { type: 'DELETE_BY_ITEM'; payload: string }
+  | { type: 'DELETE_BY_USER'; payload: string };
 
 interface TransactionsContextShape extends TransactionsState {
   dispatch: Dispatch<TransactionsAction>;
   allTransactions: Dictionary<any>;
   transactionsByAccount: Dictionary<any>;
-  getTransactionsByAccount: (accountId: number, refresh?: boolean) => void;
-  deleteTransactionsByItemId: (itemId: number) => void;
-  deleteTransactionsByUserId: (userId: number) => void;
+  getTransactionsByAccount: (accountId: string, refresh?: boolean) => void;
+  deleteTransactionsByItemId: (itemId: string) => void;
+  deleteTransactionsByUserId: (userId: string) => void;
   transactionsByUser: Dictionary<any>;
-  getTransactionsByUser: (userId: number) => void;
+  getTransactionsByUser: (userId: string) => void;
   transactionsByItem: Dictionary<any>;
 }
 const TransactionsContext = createContext<TransactionsContextShape>(
@@ -58,7 +58,7 @@ export function TransactionsProvider(props: any) {
   const [transactionsById, dispatch] = useReducer(reducer, initialState);
 
   const hasRequested = useRef<{
-    byAccount: { [accountId: number]: boolean };
+    byAccount: { [accountId: string]: boolean };
   }>({
     byAccount: {},
   });
@@ -69,7 +69,7 @@ export function TransactionsProvider(props: any) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getTransactionsByAccount = useCallback(
-    async (accountId: number, refresh: boolean) => {
+    async (accountId: string, refresh: boolean) => {
       if (!hasRequested.current.byAccount[accountId] || refresh) {
         hasRequested.current.byAccount[accountId] = true;
         const { data: payload } = await apiGetTransactionsByAccount(accountId);
@@ -82,7 +82,7 @@ export function TransactionsProvider(props: any) {
   /**
    * @desc Requests all Transactions that belong to an individual Item.
    */
-  const getTransactionsByItem = useCallback(async (itemId: number) => {
+  const getTransactionsByItem = useCallback(async (itemId: string) => {
     const { data: payload } = await apiGetTransactionsByItem(itemId);
     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
@@ -90,7 +90,7 @@ export function TransactionsProvider(props: any) {
   /**
    * @desc Requests all Transactions that belong to an individual User.
    */
-  const getTransactionsByUser = useCallback(async (userId: number) => {
+  const getTransactionsByUser = useCallback(async (userId: string) => {
     const { data: payload } = await apiGetTransactionsByUser(userId);
     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
@@ -107,7 +107,7 @@ export function TransactionsProvider(props: any) {
    * @desc Will Delete all transactions that belong to an individual User.
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
-  const deleteTransactionsByUserId = useCallback((userId: number) => {
+  const deleteTransactionsByUserId = useCallback((userId: string) => {
     dispatch({ type: 'DELETE_BY_USER', payload: userId });
   }, []);
 

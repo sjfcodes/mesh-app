@@ -19,7 +19,7 @@ const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
 interface Props {
   item: ItemType;
-  userId: number;
+  userId: string;
 }
 
 const ItemCard = (props: Props) => {

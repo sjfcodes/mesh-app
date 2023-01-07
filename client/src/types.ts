@@ -1,6 +1,6 @@
 export interface AssetType {
-    id: number;
-    user_id: number;
+    id: string;
+    user_id: string;
     value: number;
     description: string;
     created_at: string;
@@ -8,9 +8,9 @@ export interface AssetType {
   }
 
   export interface AccountType {
-    id: number;
-    item_id: number;
-    user_id: number;
+    id: string;
+    item_id: string;
+    user_id: string;
     plaid_account_id: string;
     name: string;
     mask: string;
@@ -35,9 +35,9 @@ export interface AssetType {
   }
 
   export interface ItemType {
-    id: number;
+    id: string;
     plaid_item_id: string;
-    user_id: number;
+    user_id: string;
     plaid_access_token: string;
     plaid_institution_id: string;
     status: string;
@@ -50,9 +50,9 @@ export interface AssetType {
   }
 
   export interface ItemType {
-    id: number;
+    id: string;
     plaid_item_id: string;
-    user_id: number;
+    user_id: string;
     plaid_access_token: string;
     plaid_institution_id: string;
     status: string;
@@ -61,7 +61,7 @@ export interface AssetType {
   }
 
   export interface UserType {
-    id: number;
+    id: string;
     username: string | null;
     created_at: string;
     updated_at: string;
@@ -72,10 +72,10 @@ export interface AssetType {
   }
 
   export interface TransactionType {
-    id: number;
-    account_id: number;
-    item_id: number;
-    user_id: number;
+    id: string;
+    account_id: string;
+    item_id: string;
+    user_id: string;
     plaid_transaction_id: string;
     plaid_category_id: string;
     category: string;

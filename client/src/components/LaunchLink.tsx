@@ -8,7 +8,7 @@ import {
   PlaidLinkOnEventMetadata,
   PlaidLinkStableEvent,
 } from 'react-plaid-link';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
 import useErrors from '../hooks/useErrors';
@@ -19,8 +19,8 @@ import useApi from '../hooks/useApi';
 interface Props {
   isOauth?: boolean;
   token: string;
-  userId: number;
-  itemId?: number | null;
+  userId: string;
+  itemId?: string | null;
   children?: React.ReactNode;
 }
 
@@ -33,7 +33,7 @@ export default function LaunchLink(props: Props) {
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
   const onSuccess = async (
@@ -60,7 +60,7 @@ export default function LaunchLink(props: Props) {
     }
     resetError();
     deleteLinkToken(props.userId, null);
-    history.push(`/user/${props.userId}`);
+    navigate(`/user/${props.userId}`);
   };
 
   const onExit = async (

@@ -1,5 +1,7 @@
-import { useAppContext } from '../../services/currentUser';
+
+import { useAppContext } from '../../hooks/useUser';
 import AppLogo from '../AppLogo/AppLogo';
+import Button from '../Button/Button';
 
 import './Header.css';
 
@@ -11,12 +13,15 @@ const Header = () => {
 
   return (
     <header>
-      <AppLogo />
+      <Button onClick={signOut}>
+        SIGN OUT
+      </Button>
+
       <div>
         <h4>env : {process.env.REACT_APP_PLAID_ENV}</h4>
         <h4>user: {user?.attributes?.email}</h4>
       </div>
-      <button onClick={signOut}>Sign out</button>
+      <AppLogo />
     </header>
   );
 };
