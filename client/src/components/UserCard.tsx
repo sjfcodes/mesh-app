@@ -81,11 +81,7 @@ export default function UserCard(props: Props) {
         {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
           <div className="user-card__buttons">
             {props.linkButton && numOfItems === 0 && (
-              <Button
-                onClick={initiateLink}
-              >
-                Add a bank
-              </Button>
+              <Button onClick={initiateLink}>Add a bank</Button>
             )}
             {token != null &&
               token.length > 0 &&

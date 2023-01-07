@@ -20,11 +20,7 @@ const ButtonLinkBank = () => {
     await generateLinkToken(userId, null);
   };
   return (
-    <Button
-      large
-      showLoader
-      onClick={initiateLink}
-    >
+    <Button large showLoader onClick={initiateLink}>
       Add another bank
     </Button>
   );

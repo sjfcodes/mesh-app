@@ -1,4 +1,3 @@
-
 import { useAppContext } from '../../hooks/useUser';
 import AppLogo from '../AppLogo/AppLogo';
 import Button from '../Button/Button';
@@ -13,9 +12,7 @@ const Header = () => {
 
   return (
     <header>
-      <Button onClick={signOut}>
-        SIGN OUT
-      </Button>
+      <Button onClick={signOut}>SIGN OUT</Button>
 
       <div>
         <h4>env : {process.env.REACT_APP_PLAID_ENV}</h4>

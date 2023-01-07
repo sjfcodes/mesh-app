@@ -47,7 +47,6 @@ const LinkContext = createContext<LinkContextShape>(
   initialState as LinkContextShape
 );
 
-
 /**
  * @desc Handles updates to the LinkTokens state as dictated by dispatched actions.
  */

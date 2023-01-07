@@ -31,7 +31,7 @@ export default function TransactionsTable(props: Props) {
           </tr>
         </thead>
         <tbody className="transactions-body">
-          {props.transactions.map(tx => {
+          {props.transactions.map((tx) => {
             const amount = tx.amount * -1;
             return (
               <tr key={tx.id} className="transactions-data-rows">

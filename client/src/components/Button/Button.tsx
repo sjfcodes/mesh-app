@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import './Button.scss'
+import './Button.scss';
 
 type props = {
   children: ReactNode;
@@ -7,7 +7,11 @@ type props = {
 };
 
 const Button = ({ children, onClick }: props) => {
-  return <button className='mesh-button-default' onClick={onClick}>{children}</button>;
+  return (
+    <button className="mesh-button-default" onClick={onClick}>
+      {children}
+    </button>
+  );
 };
 
 export default Button;
