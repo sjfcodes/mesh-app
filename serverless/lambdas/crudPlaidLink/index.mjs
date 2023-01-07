@@ -16,7 +16,7 @@ export const handler = async (event, context) => {
     } = event;
 
     // decode & parse jwt payload
-    const { email } = JSON.parse(
+    const token = JSON.parse(
       Buffer.from(Authorization.split(".")[1], "base64")
     );
 
@@ -25,17 +25,17 @@ export const handler = async (event, context) => {
         if (path === config.path.createLinkToken) {
           const {
             Item: {
-              email: { S },
+              user_id: { S: client_user_id },
             },
           } = await ddbClient.send(
             new GetItemCommand({
               TableName: config.TableName,
-              Key: { email: { S: email } },
+              Key: { email: { S: token.email } },
             })
           );
 
           const request = {
-            user: { client_user_id: S },
+            user: { client_user_id },
             client_name: config.appName,
             products: ["auth"],
             language: "en",
@@ -47,6 +47,7 @@ export const handler = async (event, context) => {
           // return data to caller
           response = data;
         }
+        else throw Error(`path:${path} not found!`)
 
         break;
       default:
