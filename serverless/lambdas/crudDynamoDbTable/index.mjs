@@ -13,16 +13,13 @@ import { config } from "./utils/config.mjs";
 const client = new DynamoDBClient({ region: config.region });
 
 export const handler = async (event) => {
-  //   console.log("Received event:", JSON.stringify(event, null, 2));
-
-  let body;
-  let Command;
   let statusCode = 200;
-  const httpMethod = event.httpMethod || "method not provided";
-  const headers = { "Content-Type": "application/json" };
+  let Command;
+  let response;
+  const httpMethod = event.context["http-method"];
 
   try {
-    switch (event.httpMethod) {
+    switch (httpMethod) {
       case "DELETE":
         Command = DeleteTableCommand;
         break;
@@ -33,19 +30,23 @@ export const handler = async (event) => {
         Command = CreateTableCommand;
         break;
       default:
-        throw new Error(`Unsupported method "${event.httpMethod}"`);
+        throw new Error(`Unsupported httpMethod "${httpMethod}"`);
     }
-    body = await client.send(new Command(event.body));
+    response = await client.send(new Command(event.body));
   } catch (err) {
     console.error(err);
     statusCode = 400;
-    body = err.message;
+    response = err.message;
   }
 
   return {
-    statusCode,
-    body,
-    headers,
-    httpMethod,
+    body: response,
+    headers: {
+      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+      "Content-Type": "application/json",
+    },
+    path: event.path,
+    status_code: statusCode,
   };
 };

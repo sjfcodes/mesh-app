@@ -14,5 +14,4 @@ export const createTokenLinkPayload = {
       Authorization: process.env.AUTH_TOKEN,
     },
   },
-  httpMethod: "POST",
 };

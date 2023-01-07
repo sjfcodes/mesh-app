@@ -47,66 +47,66 @@ const apiTableItem = axios.create({
 
 describe("create and read table", () => {
   it("should create table", async () => {
-    const { statusCode, body } = await (testApi
+    const { status_code, body } = await (testApi
       ? apiTable({
-          method: createTablePayload.httpMethod,
+          method: createTablePayload.context["http-method"],
           data: createTablePayload,
         }).then(({ data }) => data)
       : createTable());
 
-    if (statusCode !== 200) console.error(body);
+    if (status_code !== 200) console.error(body);
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
-    expect(statusCode).toBe(200);
+    expect(status_code).toBe(200);
     expect(body.TableDescription.TableName).toBe(TableName);
   });
 
   it("should get table", async () => {
-    const { statusCode, body } = await (testApi
+    const { status_code, body } = await (testApi
       ? apiTable({
-          method: getTablePayload.httpMethod,
+          method: getTablePayload.context["http-method"],
           data: getTablePayload,
         }).then(({ data }) => data)
       : getTable());
 
-    if (statusCode !== 200) console.error(body);
+    if (status_code !== 200) console.error(body);
 
-    expect(statusCode).toBe(200);
+    expect(status_code).toBe(200);
   });
 });
 
-describe("add, edit, & delete items from table", () => {
+describe("create, edit, & delete items from table", () => {
   it("should create Item", async () => {
-    const { statusCode, body } = await (testApi
+    const { status_code, body } = await (testApi
       ? apiTableItem({
-          method: createTableItemPayload.httpMethod,
+          method: createTableItemPayload.context["http-method"],
           data: createTableItemPayload,
         }).then(({ data }) => data)
       : createTableItem());
 
-    if (statusCode !== 200) console.error(body);
+    if (status_code !== 200) console.error(body);
 
-    expect(statusCode).toBe(200);
+    expect(status_code).toBe(200);
   });
 
   it("should get Item", async () => {
-    const { statusCode, body } = await (testApi
+    const { status_code, body } = await (testApi
       ? apiTableItem({
-          method: getTableItemPayload.httpMethod,
+          method: getTableItemPayload.context["http-method"],
           data: getTableItemPayload,
         }).then(({ data }) => data)
       : getTableItem());
 
-    if (statusCode !== 200) console.error(body);
+    if (status_code !== 200) console.error(body);
 
-    expect(statusCode).toBe(200);
+    expect(status_code).toBe(200);
     expect(body.Item.someData.S).toBe(original.someData.S);
     expect(body.Item.email.S).toBe(original.email.S);
     expect(body.Item.username.S).toBe(original.username.S);
     expect(body.Item.verified.BOOL).toBe(original.verified.BOOL);
   });
 
-  it("should update item", async () => {
+  it("should update item with existing properties", async () => {
     const updateExpression = {
       UpdateExpression: "SET verified = :v, someData = :sd",
       ExpressionAttributeValues: {
@@ -116,16 +116,16 @@ describe("add, edit, & delete items from table", () => {
     };
     const payload = updateTableItemPayload(updateExpression);
 
-    const { statusCode, body } = await (testApi
+    const { status_code, body } = await (testApi
       ? apiTableItem({
-          method: payload.httpMethod,
+          method: payload.context["http-method"],
           data: payload,
         }).then(({ data }) => data)
       : updateTableItem(updateExpression));
 
-    if (statusCode !== 200) console.error(body);
+    if (status_code !== 200) console.error(body);
 
-    expect(statusCode).toBe(200);
+    expect(status_code).toBe(200);
     // expect unchanged
     expect(body.Attributes.email.S).toBe(original.email.S);
     // expect changed
@@ -133,31 +133,57 @@ describe("add, edit, & delete items from table", () => {
     expect(body.Attributes.someData.S).toBe(update.someData.S);
   });
 
-  it("should DELETE item from Table", async () => {
-    const { statusCode, body } = await (testApi
+  it("should update item with new property", async () => {
+    const updateExpression = {
+      UpdateExpression: "SET plaidItems = :plaidItems",
+      ExpressionAttributeValues: {
+        ":plaidItems": update.plaidItems,
+      },
+    };
+    const payload = updateTableItemPayload(updateExpression);
+
+    const { status_code, body } = await (testApi
       ? apiTableItem({
-          method: deleteTableItemPayload.httpMethod,
+          method: payload.context["http-method"],
+          data: payload,
+        }).then(({ data }) => data)
+      : updateTableItem(updateExpression));
+
+    if (status_code !== 200) console.error(body);
+
+    expect(status_code).toBe(200);
+    // expect unchanged
+    expect(body.Attributes.email.S).toBe(original.email.S);
+    // expect changed
+    expect(body.Attributes.plaidItems.S).toBe(update.plaidItems.S);
+
+  });
+
+  it("should DELETE item from Table", async () => {
+    const { status_code, body } = await (testApi
+      ? apiTableItem({
+          method: deleteTableItemPayload.context["http-method"],
           data: deleteTableItemPayload,
         }).then(({ data }) => data)
       : deleteTableItem());
 
-    if (statusCode !== 200) console.error(body);
+    if (status_code !== 200) console.error(body);
 
-    expect(statusCode).toBe(200);
+    expect(status_code).toBe(200);
   });
 });
 
 describe("destroy table", () => {
   it("should delete table", async () => {
-    const { statusCode, body } = await (testApi
+    const { status_code, body } = await (testApi
       ? apiTable({
-          method: deleteTablePayload.httpMethod,
+          method: deleteTablePayload.context["http-method"],
           data: deleteTablePayload,
         }).then(({ data }) => data)
       : deleteTable());
 
-    if (statusCode !== 200) console.error(body);
+    if (status_code !== 200) console.error(body);
 
-    expect(statusCode).toBe(200);
+    expect(status_code).toBe(200);
   });
 });

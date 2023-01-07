@@ -12,27 +12,14 @@ import { config } from "./utils/config.mjs";
 
 const client = new DynamoDBClient({ region: config.region });
 
-/**
- * Demonstrates a simple HTTP endpoint using API Gateway. You have full
- * access to the request and response payload, including headers and
- * status code.
- *
- * To scan a DynamoDB table, make a GET request with the TableName as a
- * query string parameter. To put, update, or delete an item, make a POST,
- * PUT, or DELETE request respectively, passing in the payload to the
- * DynamoDB API as a JSON body.
- */
 export const handler = async (event, context) => {
-  //   console.log("Received event:", JSON.stringify(event, null, 2));
-
-  let body;
-  let Command;
   let statusCode = 200;
-  const httpMethod = event.httpMethod || "method not provided";
-  const headers = { "Content-Type": "application/json" };
+  let response;
+  let Command;
 
+  const httpMethod = event.context["http-method"]
   try {
-    switch (event.httpMethod) {
+    switch (httpMethod) {
       case "DELETE":
         Command = DeleteItemCommand;
         break;
@@ -46,19 +33,23 @@ export const handler = async (event, context) => {
         Command = PutItemCommand;
         break;
       default:
-        throw new Error(`Unsupported method "${event.httpMethod}"`);
+        throw new Error(`Unsupported method "${httpMethod}"`);
     }
-    body = await client.send(new Command(event.body));
+    response = await client.send(new Command(event.body));
   } catch (err) {
     console.error(err);
+    response = err.message;
     statusCode = 400;
-    body = err.message;
   }
 
   return {
-    statusCode,
-    body,
-    headers,
-    httpMethod,
+    body:response,
+    headers: {
+      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+      "Content-Type": "application/json",
+    },
+    path: event.path,
+    status_code: statusCode,
   };
 };

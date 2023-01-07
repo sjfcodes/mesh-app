@@ -7,13 +7,13 @@ export const createTablePayload = {
     TableName,
     AttributeDefinitions: [
       {
-        AttributeName: "username",
+        AttributeName: "email",
         AttributeType: "S",
       },
     ],
     KeySchema: [
       {
-        AttributeName: "username",
+        AttributeName: "email",
         KeyType: "HASH",
       },
     ],
@@ -25,15 +25,30 @@ export const createTablePayload = {
       StreamEnabled: false,
     },
   },
-  httpMethod: "PUT",
+  context: { ["http-method"]: "PUT" },
+  params: {
+    header: {
+      Authorization: process.env.AUTH_TOKEN,
+    },
+  },
 };
 
 export const deleteTablePayload = {
   body: { TableName },
-  httpMethod: "DELETE",
+  context: { ["http-method"]: "DELETE" },
+  params: {
+    header: {
+      Authorization: process.env.AUTH_TOKEN,
+    },
+  },
 };
 
 export const getTablePayload = {
   body: { TableName },
-  httpMethod: "GET",
+  context: { ["http-method"]: "GET" },
+  params: {
+    header: {
+      Authorization: process.env.AUTH_TOKEN,
+    },
+  },
 };

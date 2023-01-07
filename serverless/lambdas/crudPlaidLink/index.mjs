@@ -4,7 +4,7 @@ import ddbClient from "./utils/ddbClient.mjs";
 import plaidClient from "./utils/plaidClient.mjs";
 import { config } from "./utils/config.mjs";
 
-export const handler = async (event, context) => {
+export const handler = async (event) => {
   let response = event.body;
   let statusCode = 200;
   try {
@@ -55,18 +55,18 @@ export const handler = async (event, context) => {
     }
   } catch (error) {
     console.error(error);
-    statusCode = 400;
     response = error.message;
+    statusCode = 400;
   }
 
   return {
     body: response,
-    path: event.path,
     headers: {
       "Access-Control-Allow-Origin": "*", // Required for CORS support to work
       "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
       "Content-Type": "application/json",
     },
+    path: event.path,
     status_code: statusCode,
   };
 };
