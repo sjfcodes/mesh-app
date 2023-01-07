@@ -23,7 +23,11 @@ export const handler = async (event, context) => {
     switch (event.context["http-method"]) {
       case "POST":
         if (path === config.path.createLinkToken) {
-          const { Item } = await ddbClient.send(
+          const {
+            Item: {
+              email: { S },
+            },
+          } = await ddbClient.send(
             new GetItemCommand({
               TableName: config.TableName,
               Key: { email: { S: email } },
@@ -31,7 +35,7 @@ export const handler = async (event, context) => {
           );
 
           const request = {
-            user: { client_user_id: Item.user_id.S },
+            user: { client_user_id: S },
             client_name: config.appName,
             products: ["auth"],
             language: "en",
