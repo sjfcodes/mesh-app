@@ -1,8 +1,8 @@
-import { GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import { GetItemCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 
-import ddbClient from "./utils/ddbClient.mjs";
-import plaidClient from "./utils/plaidClient.mjs";
-import config from "./utils/config.mjs";
+import ddbClient from './utils/ddbClient.mjs';
+import plaidClient from './utils/plaidClient.mjs';
+import config from './utils/config.mjs';
 
 export const handler = async (event) => {
   let response = event.body;
@@ -17,11 +17,11 @@ export const handler = async (event) => {
 
     // decode & parse jwt payload
     const token = JSON.parse(
-      Buffer.from(Authorization.split(".")[1], "base64")
+      Buffer.from(Authorization.split('.')[1], 'base64')
     );
 
-    switch (event.context["http-method"]) {
-      case "POST":
+    switch (event.context['http-method']) {
+      case 'POST':
         if (body.path === config.path.linkTokenCreate) {
           const {
             Item: {
@@ -37,10 +37,10 @@ export const handler = async (event) => {
           const request = {
             user: { client_user_id },
             client_name: config.appName,
-            products: ["auth"],
-            language: "en",
+            products: ['auth'],
+            language: 'en',
             // webhook: "https://webhook.example.com",
-            country_codes: ["US"],
+            country_codes: ['US'],
           };
 
           const { data } = await plaidClient.linkTokenCreate(request);
@@ -51,18 +51,18 @@ export const handler = async (event) => {
             new UpdateItemCommand({
               TableName: config.TableName,
               Key: { email: { S: token.email } },
-              UpdateExpression: "SET plaidItems = :val",
+              UpdateExpression: 'SET plaidItems = :val',
               ExpressionAttributeValues: {
-                ":val": { S: JSON.stringify(body.payload) },
+                ':val': { S: JSON.stringify(body.payload) },
               },
-              ReturnValues: "ALL_NEW", //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
+              ReturnValues: 'ALL_NEW', //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
             })
           );
 
           response = result;
         } else {
           throw Error(`path:${body.path} not found!`);
-        } 
+        }
 
         break;
       default:
@@ -77,9 +77,9 @@ export const handler = async (event) => {
   return {
     body: response,
     headers: {
-      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-      "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
-      "Content-Type": "application/json",
+      'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+      'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
+      'Content-Type': 'application/json',
     },
     path: event.path,
     status_code: statusCode,

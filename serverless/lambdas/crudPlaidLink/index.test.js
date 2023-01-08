@@ -1,8 +1,8 @@
-import { createTokenLink } from "./test/modules.mjs";
-import config from "./utils/config.mjs";
+import { createTokenLink } from './test/modules.mjs';
+import config from './utils/config.mjs';
 
-describe("crudPlaidLink", () => {
-  it("should return plaid link token object", async () => {
+describe('crudPlaidLink', () => {
+  it('should return plaid link token object', async () => {
     const { status_code, body, path } = await createTokenLink();
     // example body:
     // {

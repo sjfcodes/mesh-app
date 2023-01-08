@@ -3,9 +3,9 @@ import {
   DeleteTableCommand,
   DescribeTableCommand,
   DynamoDBClient,
-} from "@aws-sdk/client-dynamodb";
+} from '@aws-sdk/client-dynamodb';
 
-import  config from "./utils/config.mjs";
+import config from './utils/config.mjs';
 
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/globals.html
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html#dynamodb-example-table-read-write-writing-an-item
@@ -16,17 +16,17 @@ export const handler = async (event) => {
   let statusCode = 200;
   let Command;
   let response;
-  const httpMethod = event.context["http-method"];
+  const httpMethod = event.context['http-method'];
 
   try {
     switch (httpMethod) {
-      case "DELETE":
+      case 'DELETE':
         Command = DeleteTableCommand;
         break;
-      case "GET":
+      case 'GET':
         Command = DescribeTableCommand;
         break;
-      case "PUT":
+      case 'PUT':
         Command = CreateTableCommand;
         break;
       default:
@@ -42,9 +42,9 @@ export const handler = async (event) => {
   return {
     body: response,
     headers: {
-      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-      "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
-      "Content-Type": "application/json",
+      'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+      'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
+      'Content-Type': 'application/json',
     },
     path: event.path,
     status_code: statusCode,
