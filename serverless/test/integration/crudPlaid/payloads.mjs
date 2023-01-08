@@ -1,4 +1,4 @@
-import lambdaConfig from '../../../lambdas/crudPlaidLink/utils/config.mjs';
+import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
 import dynamoDbConfig from '../../config/dynamoDb.mjs';
 
 const { TableName, path } = lambdaConfig;

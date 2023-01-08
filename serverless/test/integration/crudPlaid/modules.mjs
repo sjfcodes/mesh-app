@@ -1,4 +1,4 @@
-import { handler } from "../../../lambdas/crudPlaidLink/index.mjs";
+import { handler } from "../../../lambdas/crudPlaid/index.mjs";
 import { createTokenLinkPayload, exchangeTokenLinkPayload } from "./payloads.mjs";
 
 export const createTokenLink = async () => handler(createTokenLinkPayload);

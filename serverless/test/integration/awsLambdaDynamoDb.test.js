@@ -24,8 +24,8 @@ import {
   getTableItem,
   updateTableItemRandomItem,
 } from './crudDynamoDbTableItem/modules.mjs';
-import { exchangeTokenLinkPayload } from './crudPlaidLink/payloads.mjs';
-import { exchangeToken } from './crudPlaidLink/modules.mjs';
+import { exchangeTokenLinkPayload } from './crudPlaid/payloads.mjs';
+import { exchangeToken } from './crudPlaid/modules.mjs';
 
 dotenv.config();
 

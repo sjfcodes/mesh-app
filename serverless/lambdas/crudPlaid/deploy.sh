@@ -1,5 +1,5 @@
 #!/bin/bash
-functionName=crudPlaidLink
+functionName=crudPlaid
 
 pathToJs=index.mjs
 pathToZip=$functionName.zip
