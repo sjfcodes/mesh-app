@@ -1,0 +1,306 @@
+openapi: 3.0.3
+info:
+  title: Mesh App
+  description: |-
+    Personal finance app utilizing [Plaid](https://plaid.com/docs) to create a timeline of user transactions.
+  contact:
+    email: sjfcodes@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://e2kq1nqqck.execute-api.us-east-1.amazonaws.com
+tags:
+  - name: user
+    description: Operations about user
+  - name: link
+    description: User interctions with Plaid Link
+  - name: item
+    description: Bank login item created by a User + Link
+paths:
+  /user:
+    get:
+      tags:
+        - user
+      summary: Get user by auth token
+      description: get dynamoDb table data
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                TableName:
+                  $ref: '#/components/schemas/DDbTableName'
+                Key:
+                  $ref: '#/components/schemas/DDbItemEmail'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      Item:
+                        type: object
+                        properties:
+                          email:
+                            $ref: '#/components/schemas/DDbItemEmail/properties/email'
+                          user_id:
+                            $ref: '#/components/schemas/DDbItemUserId/properties/user_id'
+                  headers:
+                    $ref: '#/components/schemas/LambdaResponseHeaders'
+                  status_code:
+                    $ref: '#/components/schemas/LambdaStatusCode200'
+        '400':
+          description: failed operation operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LambdaResponse400'
+    put:
+      tags:
+        - user
+      summary: Update user by auth token
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Update an existent user item
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  TableName:
+                    $ref: '#/components/schemas/DDbTableName'
+                  Key:
+                    $ref: '#/components/schemas/DDbItemEmail'
+                  UpdateExpression:
+                    type: string
+                    example: SET someStatus = :ssVal, otherValue = :otherThing
+                  ExpressionAttributeValues:
+                    type: object
+                    properties:
+                      ssVal:
+                        type: object
+                        properties:
+                          BOOL:
+                            type: boolean
+                            example: true
+                      otherThing:
+                        type: object
+                        properties:
+                          S:
+                            type: string
+                            example: a new thing
+                  ReturnValues:
+                    type: string
+                    example: UPDATED_NEW
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  body:
+                    type: object
+                    properties:
+                      Attributes:
+                        type: object
+                        properties:
+                          someStatus:
+                            type: object
+                            properties:
+                              BOOL:
+                                type: boolean
+                                example: true
+                          otherValue:
+                            type: object
+                            properties:
+                              S:
+                                type: string
+                                example: a new thing
+                  headers:
+                    $ref: '#/components/schemas/LambdaResponseHeaders'
+                  status_code:
+                    $ref: '#/components/schemas/LambdaStatusCode200'
+        '400':
+          description: failed operation operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LambdaResponse400'
+  /link/token-create:
+    post:
+      tags:
+        - link
+      summary: Create link token for active user.
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      
+      requestBody:
+        description: Created link object
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                TableName:
+                  $ref: '#/components/schemas/DDbTableName'
+                path:
+                  type: string
+                  description: path matching request path
+                  example: /link/token-create
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  expiration:
+                    type: string
+                    description: generataed by plaid client.linkTokenCreate
+                    format: date-time
+                    example: 2023-01-06T02:58:09Z
+                  link_token:
+                    type: string
+                    description: generataed by plaid client.linkTokenCreate
+                    example: link-sandbox-7162a79c-8b7a-4722-a6b6-82621c0f0279
+                  request_id:
+                    type: string
+                    description: generataed by plaid client.linkTokenCreate
+                    format: string
+                    example: GL6JcUAcW8neE5x
+        '400':
+          description: Failed operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LambdaResponse400'
+  /item/token-exchange:
+    post:
+      tags:
+        - item
+      summary: Ecxchange public token for access token.
+      description: This can only be done by the logged in user. Exchange token oni backend and save to ddb
+      security:
+        - bearerAuth: []
+      
+      requestBody:
+        description: submit successful plaid link data to backend
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                public_token:
+                  type: string
+                  example: public-sandbox-e4fb4ef9-c55c-4a1d-83b5-901103193ab8
+                institution_id:
+                  type: string
+                  example: ins_115585
+                CONTINUTE_HERE:
+                  type: string
+                  example: https://plaid.com/docs/api/tokens/#itempublic_tokenexchange
+      responses:
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          example: 02f25056-fe04-49a0-8c07-c509a245ff8e
+        email:
+          type: string
+          example: john@email.com
+        plaidItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaidItem'
+      xml:
+        name: user
+
+    PlaidItem:
+      type: object
+      properties:
+        publicToken:
+          type: string
+          example: 437 Lytton
+
+    DDbTableName:
+      type: string
+      example: my-table-name
+
+    DDbItemEmail:
+      type: object
+      properties:
+        email:
+          type: object
+          properties:
+            S:
+              type: string
+              example: hello@email.com
+    DDbItemUserId:
+      type: object
+      properties:
+        user_id:
+          type: object
+          properties:
+            S:
+              type: string
+              example: 02f25056-fe04-49a0-8c07-c509a245ff8e
+    LambdaResponseHeaders:
+      type: object
+      properties:
+        Access-Control-Allow-Origin:
+          type: string
+          example: '*'
+        Access-Control-Allow-Credentials:
+          type: boolean
+          example: true
+        Content-Type:
+          type: string
+          example: application/json
+    LambdaResponse400:
+      type: object
+      properties:
+        body:
+          type: string
+          example: Requested resource not found
+        headers:
+          $ref: '#/components/schemas/LambdaResponseHeaders'
+        status_code:
+          $ref: '#/components/schemas/LambdaStatusCode400'
+    LambdaStatusCode200:
+      type: number
+      example: 200
+    LambdaStatusCode400:
+      type: number
+      example: 400
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
