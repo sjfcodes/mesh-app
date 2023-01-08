@@ -5,86 +5,12 @@ set -o nounset
 
 # get new version from user input
 read -p 'Enter function name: ' functionName
+pathToIntegrationTest="../../test/integration"
 
 # functionName=$1
 
 mkdir -p -v -- $functionName
 cd $functionName
-
-#############################
-# Create test payloads file #
-#############################
-
-mkdir -p -v -- "test"
-echo "import { handler } from '../index.mjs';
-
-export const getRequestPayload = {
-  httpMethod: 'GET',
-  body: { hello: 'world' },
-};" >test/payloads.mjs
-
-echo "import { handler } from '../index.mjs';
-import {
-  getRequestPayload,
-} from './payloads.mjs';
-
-export const getRequest = async () => handler(getRequestPayload);
-" >test/modules.mjs
-
-######################
-# Create config file #
-######################
-
-mkdir -p -v -- "utils"
-echo "const config = {
-  region:'us-east-1',
-};
-
-export default config;
-
-" >utils/config.mjs
-
-#########################
-# Create index.mjs File #
-#########################
-
-echo "import config from './utils/config.mjs';
-
-export const handler = async (event) => {
-  //   console.log('Received event:', JSON.stringify(event, null, 2));
-
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-      'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
-    },
-    body: {
-      ...event,
-      ...config
-    },
-  };
-};
-" >index.mjs
-
-########################
-# Create index.test.js #
-########################
-
-echo "import { getRequest } from './test/modules.mjs';
-import { getRequestPayload } from './test/payloads.mjs';
-import config from './utils/config.mjs';
-
-describe('$functionName', () => {
-  it('should return expected body', async () => {
-    const { statusCode, body } = await getRequest();
-
-    expect(statusCode).toBe(200);
-    expect(body.hello).toBe(getRequestPayload.hello);
-    expect(body.awsRegion).toBe(config.awsRegion);
-  });
-});
-" >index.test.js
 
 #######################
 # Create package.json #
@@ -111,6 +37,110 @@ echo "{
   \"author\": \"$(git config user.email)\",
   \"license\": \"ISC\"
 }" >package.json
+npm i
+
+#########################
+# Create index.mjs File #
+#########################
+
+echo "import config from './utils/config.mjs';
+
+export const handler = async (event) => {
+  let statusCode = 200;
+  let response;
+  const httpMethod = event.context['http-method'];
+
+  try {
+    switch (httpMethod) {
+      case 'DELETE':
+        response = httpMethod;
+        break;
+      case 'GET':
+        response = httpMethod;
+        break;
+      case 'PUT':
+        response = httpMethod;
+        break;
+      default:
+        throw new Error('Unsupported httpMethod' + 'httpMethod');
+    }
+  } catch (err) {
+    console.error(err);
+    statusCode = 400;
+    response = err.message;
+  }
+
+  return {
+    body: response,
+    headers: {
+      'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+      'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
+      'Content-Type': 'application/json',
+    },
+    path: event.path,
+    status_code: statusCode,
+  };
+};
+" >index.mjs
+
+######################
+# Create config file #
+######################
+
+mkdir -p -v -- "utils"
+echo "const config = {
+  region:'us-east-1',
+};
+
+export default config;
+" >utils/config.mjs
+
+#############################
+# Create test payloads file #
+#############################
+
+mkdir -p -v -- $pathToIntegrationTest/$functionName
+echo "import config from '../../config/dynamoDb.mjs';
+
+const { TableName, params } = config;
+
+export const getMyRequestPayload = {
+  body: {
+    path: null,
+    payload: { hello: 'world' }
+  },
+  context: { ['http-method']: 'GET' },
+  params,
+};
+" >$pathToIntegrationTest/$functionName/payloads.mjs
+
+############################
+# Create test modules file #
+############################
+
+echo "import { handler } from '../../../lambdas/$functionName/index.mjs';
+import { getMyRequestPayload } from './payloads.mjs';
+
+export const getMyRequest = async () => handler(getMyRequestPayload);
+" >$pathToIntegrationTest/$functionName/modules.mjs
+
+############################################
+# Append test to awsLambdaDynamoDb.test.js #
+############################################
+
+echo "
+// !!TEST ADDED BY ../../lambdas/createLambda.sh
+import { getMyRequest } from './$functionName/modules.mjs';
+import { getMyRequestPayload } from './$functionName/payloads.mjs';
+
+describe('$functionName', () => {
+  it('should return expected body', async () => {
+    const { status_code, body } = await getMyRequest();
+
+    expect(status_code).toBe(200);
+    expect(body.hello).toBe(getMyRequestPayload.hello);
+  });
+});" >>"$pathToIntegrationTest/awsLambdaDynamoDb.test.js"
 
 ############################
 # Create Function Deployer #
@@ -132,20 +162,14 @@ aws lambda update-function-code     --region us-east-1     --function-name  \$fu
 
 rm \$pathToZip
 " >deploy.sh
-
 chmod u+x deploy.sh
 
-npm i
+################################
+# START INTEGRATION TEST SUITE # 
+################################
 
 cd ../../test
-
-echo "#!/bin/bash
-
-export AWS_PROFILE=mesh-app-deployer 
-NODE_OPTIONS=--experimental-vm-modules npx jest lambdas/$functionName/index.test.js --watchAll
-" >wip.sh
-
-chmod u+x wip.sh
+npm run test:it:local
 
 ##########################
 # Create Function in AWS #
@@ -169,5 +193,3 @@ chmod u+x wip.sh
 #   --handler $functionName.handler \
 #   --role arn:aws:iam::118185547444:role/service-role/plaidfunctions \
 #   --profile mesh-app-deployer
-
-npm run test:wip
