@@ -16,11 +16,11 @@ const useApi = () => {
     // axios(`/link-token`, {
     const response = await axios({
       method: 'POST',
-      url: url + '/plaid',
+      url: url + '/link/token-create',
       headers: {
         Authorization: await getAuthToken(),
       },
-      data: { path: '/link-token' },
+      data: { path: '/link/token-create' },
     });
     return response;
   };
@@ -47,16 +47,19 @@ const useApi = () => {
     // },
     try {
       const { data } = await axios({
-        url: url + '/items',
+        url: url + '/item/token-exchange',
         method: 'POST',
         headers: {
           Authorization: await getAuthToken(),
         },
         data: {
-          publicToken,
-          institutionId: institution.institution_id,
-          userId,
-          accounts,
+          path: '/item/token-exchange',
+          payload: {
+            publicToken,
+            institutionId: institution.institution_id,
+            userId,
+            accounts,
+          },
         },
       });
 

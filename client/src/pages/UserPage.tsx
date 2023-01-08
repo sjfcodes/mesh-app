@@ -81,7 +81,7 @@ const UserPage = () => {
     // This gets transactions from the database only.
     // Note that calls to Plaid's transactions/get endpoint are only made in response
     // to receipt of a transactions webhook.
-    console.log('getTransactionsByUser(userId)')
+    console.log('getTransactionsByUser(userId)');
     // getTransactionsByUser(userId);
   }, [getTransactionsByUser, userId]);
 
