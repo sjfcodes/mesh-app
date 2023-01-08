@@ -7,6 +7,7 @@
   "scripts": {
     "deploy:ddb-table": "cd crudDynamoDbTable && npm run deploy",
     "deploy:ddb-table-item": "cd crudDynamoDbTableItem && npm run deploy",
+    "deploy:plaid-link": "cd crudPlaidLink && npm run deploy",
     "deploy:all": "./deployAll.sh"
   },
   "keywords": [],
