@@ -41,8 +41,10 @@ const useApi = () => {
         data: {
           path: '/item/token-exchange',
           payload: {
-            public_token: publicToken,
+            accounts,
             institution_id: institution.institution_id,
+            public_token: publicToken,
+            user_id: userId,
           },
         },
       });
