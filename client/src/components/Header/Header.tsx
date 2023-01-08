@@ -10,9 +10,15 @@ const Header = () => {
     signOut,
   } = useAppContext();
 
+  const handleSignOut = async () => {
+    if (signOut) signOut({ type: 'SIGN_OUT' });
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    window.location.href = '/';
+  };
+
   return (
     <header>
-      <Button onClick={signOut}>SIGN OUT</Button>
+      <Button onClick={handleSignOut}>SIGN OUT</Button>
 
       <div>
         <h4>env : {process.env.REACT_APP_PLAID_ENV}</h4>
