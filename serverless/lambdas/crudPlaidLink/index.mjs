@@ -47,19 +47,28 @@ export const handler = async (event) => {
           // return data to caller
           response = data;
         } else if (body.path === config.path.linkTokenExchange) {
+          const { data } = await plaidClient.itemPublicTokenExchange({
+            public_token: body.payload.public_token,
+          });
+
+          // These values should be saved to a persistent database and
+          // associated with the currently signed-in user
+          const accessToken = data.access_token;
+          const itemID = data.item_id;
+
           const result = await ddbClient.send(
             new UpdateItemCommand({
               TableName: config.TableName,
               Key: { email: { S: token.email } },
               UpdateExpression: 'SET plaidItems = :val',
               ExpressionAttributeValues: {
-                ':val': { S: JSON.stringify(body.payload) },
+                ':val': { S: JSON.stringify(data) },
               },
               ReturnValues: 'ALL_NEW', //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
             })
           );
 
-          response = result;
+          response = { public_token_exchange: 'complete' };
         } else {
           throw Error(`path:${body.path} not found!`);
         }

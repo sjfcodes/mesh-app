@@ -140,12 +140,7 @@ describe('lambda + dynamoDb integration tests', () => {
       if (status_code !== 200) console.error(body);
 
       expect(status_code).toBe(200);
-      // expect unchanged
-      expect(body.Attributes.email.S).toBe(original.email.S);
-      // expect changed
-      expect(body.Attributes.plaidItems.S).toBe(
-        JSON.stringify(exchangeTokenLinkPayload.body.payload)
-      );
+      expect(body.public_token_exchange).toBe('complete');
     });
 
     it('should DELETE item from Table', async () => {

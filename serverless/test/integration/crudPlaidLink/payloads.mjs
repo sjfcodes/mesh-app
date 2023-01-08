@@ -1,5 +1,5 @@
-import lambdaConfig from "../../../lambdas/crudPlaidLink/utils/config.mjs";
-import dynamoDbConfig from "../../config/dynamoDb.mjs";
+import lambdaConfig from '../../../lambdas/crudPlaidLink/utils/config.mjs';
+import dynamoDbConfig from '../../config/dynamoDb.mjs';
 
 const { TableName, path } = lambdaConfig;
 const { params } = dynamoDbConfig;
@@ -9,22 +9,18 @@ export const createTokenLinkPayload = {
     TableName,
     path: path.linkTokenCreate,
   },
-  context: { ["http-method"]: "PUT" },
+  context: { ['http-method']: 'PUT' },
   params,
 };
 
 export const exchangeTokenLinkPayload = {
   body: {
     path: path.linkTokenExchange,
-    payload: [
-      {
-        public_token: "public-sandbox-e4fb4ef9-c55c-4a1d-83b5-901103193ab8",
-        institution_id: "ins_115585",
-        CONTINUE_HERE:
-          "https://plaid.com/docs/api/tokens/#itempublic_tokenexchange",
-      },
-    ],
+    payload: {
+      public_token: 'public-sandbox-26241a68-d5f6-4406-86b4-d049c57dcf27',
+      institution_id: 'ins_115585',
+    },
   },
-  context: { ["http-method"]: "POST" },
+  context: { ['http-method']: 'POST' },
   params,
 };
