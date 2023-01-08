@@ -124,8 +124,10 @@ export const handler = async (event) => {
           }
 
           const plaidItems = [];
-          const existingItems = Item['plaid::items'];
+          const itemKey = 'plaid_items'
+          const existingItems = Item[itemKey]?.S;
           if (existingItems) {
+            // TODO: do not allow repeat bank logins, allow same bank, but different user logins
             plaidItems.push(...JSON.parse(existingItems));
           }
           plaidItems.push(data);
@@ -134,7 +136,7 @@ export const handler = async (event) => {
             new UpdateItemCommand({
               TableName: config.TableName,
               Key: { email: { S: token.email } },
-              UpdateExpression: 'SET plaid::items = :val',
+              UpdateExpression: `SET ${itemKey} = :val`,
               ExpressionAttributeValues: {
                 ':val': { S: JSON.stringify(plaidItems) },
               },
