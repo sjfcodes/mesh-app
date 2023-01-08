@@ -220,7 +220,7 @@ paths:
     post:
       tags:
         - item
-      summary: Ecxchange public token for access token.
+      summary: Exchange public token for access token.
       description: This can only be done by the logged in user. Exchange token oni backend and save to ddb
       security:
         - bearerAuth: []
@@ -234,7 +234,7 @@ paths:
               properties:
                 path:
                   type: string
-                  example: /link/token-create
+                  example: /item/token-exchange
                 payload:
                   type: object
                   properties:
