@@ -36,16 +36,19 @@ export const getRequest = async () => handler(getRequestPayload);
 ######################
 
 mkdir -p -v -- "utils"
-echo "export const config = {
-    awsRegion: 'us-east-1',
+echo "const config = {
+  region:'us-east-1',
 };
+
+export default config;
+
 " >utils/config.mjs
 
 #########################
 # Create index.mjs File #
 #########################
 
-echo "import { config } from './utils/config.mjs';
+echo "import config from './utils/config.mjs';
 
 export const handler = async (event) => {
   //   console.log('Received event:', JSON.stringify(event, null, 2));
@@ -70,7 +73,7 @@ export const handler = async (event) => {
 
 echo "import { getRequest } from './test/modules.mjs';
 import { getRequestPayload } from './test/payloads.mjs';
-import { config } from './utils/config.mjs';
+import config from './utils/config.mjs';
 
 describe('$functionName', () => {
   it('should return expected body', async () => {
