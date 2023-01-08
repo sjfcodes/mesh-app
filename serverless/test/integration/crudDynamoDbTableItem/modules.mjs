@@ -1,20 +1,16 @@
-import { handler } from "../index.mjs";
+import { handler } from "../../../lambdas/crudDynamoDbTableItem/index.mjs";
 import {
   createTableItemPayload,
   deleteTableItemPayload,
   getTableItemPayload,
-  updateTableItemPayload,
+  updateTableItemRandomPayload,
 } from "./payloads.mjs";
 
 export const createTableItem = async () => handler(createTableItemPayload);
 
 export const getTableItem = async () => handler(getTableItemPayload);
 
-/**
- * @param {{ UpdateExpression, ExpressionAttributeValues }} expressionArgs
- * @returns
- */
-export const updateTableItem = async (expressionArgs) =>
-  handler(updateTableItemPayload(expressionArgs));
+export const updateTableItemRandomItem = async () =>
+  handler(updateTableItemRandomPayload);
 
 export const deleteTableItem = async () => handler(deleteTableItemPayload);

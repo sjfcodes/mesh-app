@@ -1,29 +1,31 @@
 import * as dotenv from "dotenv";
 import axios from "axios";
 
-import dynamoDb from "../../config/dynamoDb.mjs";
+import dynamoDb from "../config/dynamoDb.mjs";
 import {
   createTable,
   deleteTable,
   getTable,
-} from "../../lambdas/crudDynamoDbTable/test/modules.mjs";
+} from "./crudDynamoDbTable/modules.mjs";
 import {
   getTablePayload,
   createTablePayload,
   deleteTablePayload,
-} from "../../lambdas/crudDynamoDbTable/test/payloads.mjs";
+} from "./crudDynamoDbTable/payloads.mjs";
 import {
   createTableItemPayload,
   deleteTableItemPayload,
   getTableItemPayload,
-  updateTableItemPayload,
-} from "../../lambdas/crudDynamoDbTableItem/test/payloads.mjs";
+  updateTableItemRandomPayload,
+} from "./crudDynamoDbTableItem/payloads.mjs";
 import {
   createTableItem,
   deleteTableItem,
   getTableItem,
-  updateTableItem,
-} from "../../lambdas/crudDynamoDbTableItem/test/modules.mjs";
+  updateTableItemRandomItem,
+} from "./crudDynamoDbTableItem/modules.mjs";
+import { exchangeTokenLinkPayload } from "./crudPlaidLink/payloads.mjs";
+import { exchangeToken } from "./crudPlaidLink/modules.mjs";
 
 dotenv.config();
 
@@ -32,7 +34,7 @@ console.log(`TESTING: ${testApi ? "AWS_API_GATEWAY" : "LOCAL"}`);
 
 const {
   TableName,
-  Item: { original, update },
+  Item: { original, update, writePlaidItems },
 } = dynamoDb;
 
 const apiTable = axios.create({
@@ -107,21 +109,12 @@ describe("create, edit, & delete items from table", () => {
   });
 
   it("should update item with existing properties", async () => {
-    const updateExpression = {
-      UpdateExpression: "SET verified = :v, someData = :sd",
-      ExpressionAttributeValues: {
-        ":v": update.verified,
-        ":sd": update.someData,
-      },
-    };
-    const payload = updateTableItemPayload(updateExpression);
-
     const { status_code, body } = await (testApi
       ? apiTableItem({
-          method: payload.context["http-method"],
-          data: payload,
+          method: updateTableItemRandomPayload.context["http-method"],
+          data: updateTableItemRandomPayload,
         }).then(({ data }) => data)
-      : updateTableItem(updateExpression));
+      : updateTableItemRandomItem(updateTableItemRandomPayload));
 
     if (status_code !== 200) console.error(body);
 
@@ -134,20 +127,12 @@ describe("create, edit, & delete items from table", () => {
   });
 
   it("should update item with new property", async () => {
-    const updateExpression = {
-      UpdateExpression: "SET plaidItems = :plaidItems",
-      ExpressionAttributeValues: {
-        ":plaidItems": update.plaidItems,
-      },
-    };
-    const payload = updateTableItemPayload(updateExpression);
-
     const { status_code, body } = await (testApi
       ? apiTableItem({
-          method: payload.context["http-method"],
-          data: payload,
+          method: exchangeTokenLinkPayload.context["http-method"],
+          data: exchangeTokenLinkPayload,
         }).then(({ data }) => data)
-      : updateTableItem(updateExpression));
+      : exchangeToken());
 
     if (status_code !== 200) console.error(body);
 
@@ -155,8 +140,9 @@ describe("create, edit, & delete items from table", () => {
     // expect unchanged
     expect(body.Attributes.email.S).toBe(original.email.S);
     // expect changed
-    expect(body.Attributes.plaidItems.S).toBe(update.plaidItems.S);
-
+    expect(body.Attributes.plaidItems.S).toBe(
+      JSON.stringify(exchangeTokenLinkPayload.body.payload)
+    );
   });
 
   it("should DELETE item from Table", async () => {

@@ -5,7 +5,7 @@ import {
   DynamoDBClient,
 } from "@aws-sdk/client-dynamodb";
 
-import { config } from "./utils/config.mjs";
+import  config from "./utils/config.mjs";
 
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/globals.html
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html#dynamodb-example-table-read-write-writing-an-item
@@ -32,7 +32,7 @@ export const handler = async (event) => {
       default:
         throw new Error(`Unsupported httpMethod "${httpMethod}"`);
     }
-    response = await client.send(new Command(event.body));
+    response = await client.send(new Command(event.body.payload));
   } catch (err) {
     console.error(err);
     statusCode = 400;

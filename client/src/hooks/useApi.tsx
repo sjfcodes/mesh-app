@@ -31,6 +31,20 @@ const useApi = () => {
     accounts: PlaidLinkOnSuccessMetadata['accounts'],
     userId: string
   ) => {
+    // body: {
+    //   TableName,
+    //   Key: { email: { S: original.email.S } },
+    // UpdateExpression: "SET plaidItems = :plaidItems",
+    // ExpressionAttributeValues: {
+    //   ":plaidItems": update.plaidItems,
+    // },    //   ReturnValues: "ALL_NEW", //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
+    // },
+    // context: { ["http-method"]: "POST" },
+    // params: {
+    //   header: {
+    //     Authorization: process.env.AUTH_TOKEN,
+    //   },
+    // },
     try {
       const { data } = await axios({
         url: url + '/items',

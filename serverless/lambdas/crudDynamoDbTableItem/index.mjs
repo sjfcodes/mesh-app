@@ -6,7 +6,7 @@ import {
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 
-import { config } from "./utils/config.mjs";
+import  config from "./utils/config.mjs";
 
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html#dynamodb-example-table-read-write-writing-an-item
 
@@ -35,7 +35,7 @@ export const handler = async (event, context) => {
       default:
         throw new Error(`Unsupported method "${httpMethod}"`);
     }
-    response = await client.send(new Command(event.body));
+    response = await client.send(new Command(event.body.payload));
   } catch (err) {
     console.error(err);
     response = err.message;

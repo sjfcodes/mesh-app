@@ -1,4 +1,4 @@
-import { handler } from "../index.mjs";
+import { handler } from "../../../lambdas/crudDynamoDbTable/index.mjs";
 import {
   createTablePayload,
   deleteTablePayload,

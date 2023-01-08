@@ -1,15 +1,15 @@
-import { GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { GetItemCommand, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 
 import ddbClient from "./utils/ddbClient.mjs";
 import plaidClient from "./utils/plaidClient.mjs";
-import { config } from "./utils/config.mjs";
+import config from "./utils/config.mjs";
 
 export const handler = async (event) => {
   let response = event.body;
   let statusCode = 200;
   try {
     const {
-      body: { path },
+      body,
       params: {
         header: { Authorization },
       },
@@ -22,7 +22,7 @@ export const handler = async (event) => {
 
     switch (event.context["http-method"]) {
       case "POST":
-        if (path === config.path.createLinkToken) {
+        if (body.path === config.path.linkTokenCreate) {
           const {
             Item: {
               user_id: { S: client_user_id },
@@ -46,8 +46,23 @@ export const handler = async (event) => {
           const { data } = await plaidClient.linkTokenCreate(request);
           // return data to caller
           response = data;
-        }
-        else throw Error(`path:${path} not found!`)
+        } else if (body.path === config.path.linkTokenExchange) {
+          const result = await ddbClient.send(
+            new UpdateItemCommand({
+              TableName: config.TableName,
+              Key: { email: { S: token.email } },
+              UpdateExpression: "SET plaidItems = :val",
+              ExpressionAttributeValues: {
+                ":val": { S: JSON.stringify(body.payload) },
+              },
+              ReturnValues: "ALL_NEW", //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
+            })
+          );
+
+          response = result;
+        } else {
+          throw Error(`path:${body.path} not found!`);
+        } 
 
         break;
       default:
