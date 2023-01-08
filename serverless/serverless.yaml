@@ -37,10 +37,16 @@ paths:
             schema:
               type: object
               properties:
-                TableName:
-                  $ref: '#/components/schemas/DDbTableName'
-                Key:
-                  $ref: '#/components/schemas/DDbItemEmail'
+                path:
+                  type: string
+                  example: /user
+                payload:
+                  type: object
+                  properties:
+                    TableName:
+                      $ref: '#/components/schemas/DDbTableName'
+                    Key:
+                      $ref: '#/components/schemas/DDbItemEmail'
       responses:
         '200':
           description: successful operation
@@ -83,31 +89,37 @@ paths:
             schema:
               type: object
               properties:
-                  TableName:
-                    $ref: '#/components/schemas/DDbTableName'
-                  Key:
-                    $ref: '#/components/schemas/DDbItemEmail'
-                  UpdateExpression:
-                    type: string
-                    example: SET someStatus = :ssVal, otherValue = :otherThing
-                  ExpressionAttributeValues:
-                    type: object
-                    properties:
-                      ssVal:
-                        type: object
-                        properties:
-                          BOOL:
-                            type: boolean
-                            example: true
-                      otherThing:
-                        type: object
-                        properties:
-                          S:
-                            type: string
-                            example: a new thing
-                  ReturnValues:
-                    type: string
-                    example: UPDATED_NEW
+                path:
+                  type: string
+                  example: /user
+                payload:
+                  type: object
+                  properties:
+                    TableName:
+                      $ref: '#/components/schemas/DDbTableName'
+                    Key:
+                      $ref: '#/components/schemas/DDbItemEmail'
+                    UpdateExpression:
+                      type: string
+                      example: SET someStatus = :ssVal, otherValue = :otherThing
+                    ExpressionAttributeValues:
+                      type: object
+                      properties:
+                        ssVal:
+                          type: object
+                          properties:
+                            BOOL:
+                              type: boolean
+                              example: true
+                        otherThing:
+                          type: object
+                          properties:
+                            S:
+                              type: string
+                              example: a new thing
+                    ReturnValues:
+                      type: string
+                      example: UPDATED_NEW
       responses:
         '200':
           description: successful operation
@@ -160,34 +172,44 @@ paths:
             schema:
               type: object
               properties:
-                TableName:
-                  $ref: '#/components/schemas/DDbTableName'
                 path:
                   type: string
-                  description: path matching request path
                   example: /link/token-create
+                payload:
+                  type: object
+                  properties:
+                    TableName:
+                      $ref: '#/components/schemas/DDbTableName'
       responses:
         '200':
-          description: Successful operation
+          description: successful operation
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  expiration:
-                    type: string
-                    description: generataed by plaid client.linkTokenCreate
-                    format: date-time
-                    example: 2023-01-06T02:58:09Z
-                  link_token:
-                    type: string
-                    description: generataed by plaid client.linkTokenCreate
-                    example: link-sandbox-7162a79c-8b7a-4722-a6b6-82621c0f0279
-                  request_id:
-                    type: string
-                    description: generataed by plaid client.linkTokenCreate
-                    format: string
-                    example: GL6JcUAcW8neE5x
+                  body:
+                    type: object
+                    properties:
+                      expiration:
+                        type: string
+                        description: generataed by plaid client.linkTokenCreate
+                        format: date-time
+                        example: 2023-01-06T02:58:09Z
+                      link_token:
+                        type: string
+                        description: generataed by plaid client.linkTokenCreate
+                        example: link-sandbox-7162a79c-8b7a-4722-a6b6-82621c0f0279
+                      request_id:
+                        type: string
+                        description: generataed by plaid client.linkTokenCreate
+                        format: string
+                        example: GL6JcUAcW8neE5x
+                  headers:
+                    $ref: '#/components/schemas/LambdaResponseHeaders'
+                  status_code:
+                    $ref: '#/components/schemas/LambdaStatusCode200'
+
         '400':
           description: Failed operation
           content: 
@@ -210,15 +232,21 @@ paths:
             schema:
               type: object
               properties:
-                public_token:
+                path:
                   type: string
-                  example: public-sandbox-e4fb4ef9-c55c-4a1d-83b5-901103193ab8
-                institution_id:
-                  type: string
-                  example: ins_115585
-                CONTINUTE_HERE:
-                  type: string
-                  example: https://plaid.com/docs/api/tokens/#itempublic_tokenexchange
+                  example: /link/token-create
+                payload:
+                  type: object
+                  properties:
+                    public_token:
+                      type: string
+                      example: public-sandbox-e4fb4ef9-c55c-4a1d-83b5-901103193ab8
+                    institution_id:
+                      type: string
+                      example: ins_115585
+                    CONTINUTE_HERE:
+                      type: string
+                      example: https://plaid.com/docs/api/tokens/#itempublic_tokenexchange
       responses:
 
 components:
