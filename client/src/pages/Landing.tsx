@@ -15,9 +15,7 @@ function Landing() {
     }
   }, [user, navigate]);
 
-  return (
-      <p>...redirecting</p>
-  );
+  return <p>...redirecting</p>;
 }
 
 export default Landing;
