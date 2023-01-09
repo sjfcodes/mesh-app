@@ -38,7 +38,7 @@ export const exchangeTokenLinkPayload = {
         },
       ],
       institution_id: 'ins_115585',
-      public_token: 'public-sandbox-3a78de5e-6ea8-452f-af88-0b2c09856dd5',
+      public_token: 'public-sandbox-e29f1e89-9ca8-4be5-8e3a-e182dddf3442',
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },

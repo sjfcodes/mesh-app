@@ -14,6 +14,13 @@ const config = {
     linkTokenExchange: '/item/token-exchange',
     transactionsSync: '/item/tx-sync',
   },
+  itemKeys: {
+    plaidItem: 'plaid_item',
+    txCursor: 'tx_cursor',
+    // keyTxAdded: 'tx_added',
+    // keyTxModified: 'tx_modified',
+    // keyTxRemoved: 'tx_removed',
+  },
 };
 
 export default config;

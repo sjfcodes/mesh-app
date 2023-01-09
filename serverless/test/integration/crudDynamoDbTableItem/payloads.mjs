@@ -31,10 +31,9 @@ export const updateTableItemRandomPayload = {
     payload: {
       TableName,
       Key: { email: { S: Item.original.email.S } },
-      UpdateExpression: "SET verified = :v, someData = :sd",
+      UpdateExpression: "SET verified = :verified",
       ExpressionAttributeValues: {
-        ":v": Item.update.verified,
-        ":sd": Item.update.someData,
+        ":verified": Item.update.verified,
       },
       ReturnValues: "ALL_NEW", //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
     },

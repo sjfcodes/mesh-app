@@ -4,11 +4,11 @@ import ddbClient from './utils/ddbClient.mjs';
 import plaidClient from './utils/plaidClient.mjs';
 import config from './utils/config.mjs';
 
-const keyPlaidItems = 'plaid_items';
-const keyTxCursor = 'tx_cursor';
-const keyTxAdded = 'tx_added';
-const keyTxModified = 'tx_modified';
-const keyTxRemoved = 'tx_removed';
+// const keyPlaidItems = 'plaid_item';
+// const keyTxCursor = 'tx_cursor';
+// const keyTxAdded = 'tx_added';
+// const keyTxModified = 'tx_modified';
+// const keyTxRemoved = 'tx_removed';
 
 export const handler = async (event) => {
   let response = event.body;
@@ -21,20 +21,20 @@ export const handler = async (event) => {
       },
     } = event;
 
-    // decode & parse jwt payload
-    const token = JSON.parse(
-      Buffer.from(Authorization.split('.')[1], 'base64')
+    const { userId, email } = await ddbClient.getUserByTokenEmail(
+      Authorization
     );
 
     switch (event.context['http-method']) {
       case 'PUT':
         if (body.path === config.path.transactionsSync) {
-          const { Item } = await ddbClient.send(
-            new GetItemCommand({
-              TableName: config.TableName,
-              Key: { email: { S: token.email } },
-            })
-          );
+          const Item = {};
+          // const { Item } = await ddbClient.send(
+          //   new GetItemCommand({
+          //     TableName: config.TableName,
+          //     Key: { email: { S: token.email } },
+          //   })
+          // );
           // Provide a cursor from your database if you've previously
           // received one for the Item. Leave null if this is your
           // first sync call for this Item. The first request will
@@ -106,17 +106,9 @@ export const handler = async (event) => {
         response = { tx_sync: 'complete' };
         break;
       case 'POST':
-        // get user data for shared routes
-        const { Item } = await ddbClient.send(
-          new GetItemCommand({
-            TableName: config.TableName,
-            Key: { email: { S: token.email } },
-          })
-        );
-
         if (body.path === config.path.linkTokenCreate) {
           const request = {
-            user: { client_user_id: Item.user_id.S },
+            user: { client_user_id: userId },
             client_name: config.appName,
             products: ['auth'],
             language: 'en',
@@ -128,17 +120,14 @@ export const handler = async (event) => {
           // return data to caller
           response = data;
         } else if (body.path === config.path.linkTokenExchange) {
-          let data;
-
-          const {
-            payload: { public_token, accounts, user_id },
-          } = body;
+          let tokenExchange;
 
           try {
+            //    response = { data: { access_token, user_id, request_id } }
             const response = await plaidClient.itemPublicTokenExchange({
-              public_token,
+              public_token: body.payload.public_token,
             });
-            data = response.data;
+            tokenExchange = response.data;
           } catch (error) {
             // link error data to response and break out of procedure
             if (error.response?.data) {
@@ -150,33 +139,10 @@ export const handler = async (event) => {
             break;
           }
 
-          const plaidItems = [];
-          const existingItems = Item[keyPlaidItems]?.S;
-          if (existingItems) {
-            // TODO: do not allow repeat bank logins, allow same bank, but different user logins
-            plaidItems.push(...JSON.parse(existingItems));
-          }
-          plaidItems.push({ ...data, accounts, user_id });
+          await ddbClient.addPlaidItemToUser(tokenExchange);
 
-          await ddbClient.send(
-            new UpdateItemCommand({
-              TableName: config.TableName,
-              Key: { email: { S: token.email } },
-              UpdateExpression: `SET ${keyPlaidItems} = :val`,
-              ExpressionAttributeValues: {
-                ':val': { S: JSON.stringify(plaidItems) },
-              },
-              ReturnValues: 'ALL_NEW',
-            })
-          );
-
-          response = {
-            public_token_exchange: 'complete',
-            item_id: data.item_id,
-          };
-        } else {
-          throw Error(`path:${body.path} not found!`);
-        }
+          response = { public_token_exchange: 'complete' };
+        } else throw Error(`path:${body.path} not found!`);
 
         break;
       default:
