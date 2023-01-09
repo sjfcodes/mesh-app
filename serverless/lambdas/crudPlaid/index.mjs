@@ -107,9 +107,13 @@ export const handler = async (event) => {
         } else if (body.path === config.path.linkTokenExchange) {
           let data;
 
+          const {
+            payload: { public_token, accounts, user_id },
+          } = body;
+
           try {
             const response = await plaidClient.itemPublicTokenExchange({
-              public_token: body.payload.public_token,
+              public_token,
             });
             data = response.data;
           } catch (error) {
@@ -124,13 +128,13 @@ export const handler = async (event) => {
           }
 
           const plaidItems = [];
-          const itemKey = 'plaid_items'
+          const itemKey = 'plaid_items';
           const existingItems = Item[itemKey]?.S;
           if (existingItems) {
             // TODO: do not allow repeat bank logins, allow same bank, but different user logins
             plaidItems.push(...JSON.parse(existingItems));
           }
-          plaidItems.push(data);
+          plaidItems.push({ ...data, accounts, user_id });
 
           await ddbClient.send(
             new UpdateItemCommand({
