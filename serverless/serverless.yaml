@@ -247,12 +247,28 @@ paths:
                     accounts:
                         type: array
                         items:
-                          $ref: '#/components/schemas/Account'
+                          $ref: '#/components/schemas/PlaidAccount'
       responses:
 
 components:
   schemas:
-    Account:
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          example: 02f25056-fe04-49a0-8c07-c509a245ff8e
+        email:
+          type: string
+          example: john@email.com
+        plaidItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaidItem'
+      xml:
+        name: user
+    PlaidAccount:
       type: object
       properties:
         id:
@@ -278,34 +294,15 @@ components:
           type: string
           nullable: true
           example: null
-    User:
-      type: object
-      properties:
-        user_id:
-          type: string
-          format: uuid
-          example: 02f25056-fe04-49a0-8c07-c509a245ff8e
-        email:
-          type: string
-          example: john@email.com
-        plaidItems:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlaidItem'
-      xml:
-        name: user
-
     PlaidItem:
       type: object
       properties:
         publicToken:
           type: string
           example: 437 Lytton
-
     DDbTableName:
       type: string
       example: my-table-name
-
     DDbItemEmail:
       type: object
       properties:
