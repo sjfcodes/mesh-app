@@ -4,6 +4,12 @@ import ddbClient from './utils/ddbClient.mjs';
 import plaidClient from './utils/plaidClient.mjs';
 import config from './utils/config.mjs';
 
+const keyPlaidItems = 'plaid_items';
+const keyTxCursor = 'tx_cursor';
+const keyTxAdded = 'tx_added';
+const keyTxModified = 'tx_modified';
+const keyTxRemoved = 'tx_removed';
+
 export const handler = async (event) => {
   let response = event.body;
   let statusCode = 200;
@@ -21,7 +27,7 @@ export const handler = async (event) => {
     );
 
     switch (event.context['http-method']) {
-      case 'GET':
+      case 'PUT':
         if (body.path === config.path.transactionsSync) {
           const { Item } = await ddbClient.send(
             new GetItemCommand({
@@ -33,7 +39,12 @@ export const handler = async (event) => {
           // received one for the Item. Leave null if this is your
           // first sync call for this Item. The first request will
           // return a cursor.
-          let cursor = database.getLatestCursorOrNull(itemId);
+          // let cursor = database.getLatestCursorOrNull(itemId);
+
+          let cursor = Item[keyTxCursor]?.S || null;
+          const { access_token } = JSON.parse(Item[keyPlaidItems]?.S)[0];
+
+          console.log(cursor, access_token);
 
           // New transaction updates since "cursor"
           let added = [];
@@ -41,38 +52,48 @@ export const handler = async (event) => {
           // Removed transaction ids
           let removed = [];
           let hasMore = true;
+          try {
+            // Iterate through each page of new transaction updates for item
+            while (hasMore) {
+              const request = {
+                access_token,
+                cursor,
+              };
+              const response = await plaidClient.transactionsSync(request);
+              const data = response.data;
 
-          // Iterate through each page of new transaction updates for item
-          while (hasMore) {
-            const request = {
-              access_token: accessToken,
-              cursor: cursor,
-            };
-            const response = await client.transactionsSync(request);
-            const data = response.data;
+              // Add this page of results
+              added = added.concat(data.added);
+              modified = modified.concat(data.modified);
+              removed = removed.concat(data.removed);
 
-            // Add this page of results
-            added = added.concat(data.added);
-            modified = modified.concat(data.modified);
-            removed = removed.concat(data.removed);
+              hasMore = data.has_more;
 
-            hasMore = data.has_more;
-
-            // Update cursor to the next cursor
-            cursor = data.next_cursor;
+              // Update cursor to the next cursor
+              cursor = data.next_cursor;
+            }
+          } catch (error) {
+            // link error data to response and break out of procedure
+            if (error.response?.data) {
+              response = error.response.data;
+              statusCode = error.response.status;
+            } else {
+              throw Error(error);
+            }
+            break;
           }
 
           // Persist cursor and updated data
           // database.applyUpdates(itemId, added, modified, removed, cursor);
+          // console.log(added, modified, removed, cursor);
 
           await ddbClient.send(
             new UpdateItemCommand({
               TableName: config.TableName,
               Key: { email: { S: token.email } },
-              UpdateExpression:
-                'SET tx::cursor = :cursor, tx:added =  :added, tx:modified =  :modified, tx:removed =  :removed',
+              UpdateExpression: `SET ${keyTxCursor} = :cursor, ${keyTxAdded} = :added, ${keyTxModified} = :modified, ${keyTxRemoved} = :removed`,
               ExpressionAttributeValues: {
-                ':cursor': { S: JSON.stringify(cursor) },
+                ':cursor': { S: cursor },
                 ':added': { S: JSON.stringify(added) },
                 ':modified': { S: JSON.stringify(modified) },
                 ':removed': { S: JSON.stringify(removed) },
@@ -81,6 +102,8 @@ export const handler = async (event) => {
             })
           );
         }
+
+        response = { tx_sync: 'complete' };
         break;
       case 'POST':
         // get user data for shared routes
@@ -128,8 +151,7 @@ export const handler = async (event) => {
           }
 
           const plaidItems = [];
-          const itemKey = 'plaid_items';
-          const existingItems = Item[itemKey]?.S;
+          const existingItems = Item[keyPlaidItems]?.S;
           if (existingItems) {
             // TODO: do not allow repeat bank logins, allow same bank, but different user logins
             plaidItems.push(...JSON.parse(existingItems));
@@ -140,7 +162,7 @@ export const handler = async (event) => {
             new UpdateItemCommand({
               TableName: config.TableName,
               Key: { email: { S: token.email } },
-              UpdateExpression: `SET ${itemKey} = :val`,
+              UpdateExpression: `SET ${keyPlaidItems} = :val`,
               ExpressionAttributeValues: {
                 ':val': { S: JSON.stringify(plaidItems) },
               },
@@ -148,7 +170,10 @@ export const handler = async (event) => {
             })
           );
 
-          response = { public_token_exchange: 'complete' };
+          response = {
+            public_token_exchange: 'complete',
+            item_id: data.item_id,
+          };
         } else {
           throw Error(`path:${body.path} not found!`);
         }

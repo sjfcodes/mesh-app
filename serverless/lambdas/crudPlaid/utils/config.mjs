@@ -12,7 +12,7 @@ const config = {
   path: {
     linkTokenCreate: '/link/token-create',
     linkTokenExchange: '/item/token-exchange',
-    transactionsSync: '/transactions/sync',
+    transactionsSync: '/item/tx-sync',
   },
 };
 

@@ -24,8 +24,8 @@ import {
   getTableItem,
   updateTableItemRandomItem,
 } from './crudDynamoDbTableItem/modules.mjs';
-import { exchangeTokenLinkPayload } from './crudPlaid/payloads.mjs';
-import { exchangeToken } from './crudPlaid/modules.mjs';
+import { exchangeTokenLinkPayload, syncTransactionsForItemPayload } from './crudPlaid/payloads.mjs';
+import { exchangeToken, syncTransactionsForItem } from './crudPlaid/modules.mjs';
 
 dotenv.config();
 
@@ -36,6 +36,8 @@ const {
   TableName,
   Item: { original, update, writePlaidItems },
 } = dynamoDb;
+
+let plaidTestItemId = null;
 
 const apiTable = axios.create({
   baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtable',
@@ -139,9 +141,26 @@ describe('lambda + dynamoDb integration tests', () => {
 
       if (status_code !== 200) console.error(body);
 
+      plaidTestItemId = body.item_id
+
       expect(status_code).toBe(200);
       expect(body.public_token_exchange).toBe('complete');
     });
+
+    it('should sync transactions for item', async ()=>{
+      const payload = syncTransactionsForItemPayload(plaidTestItemId)
+      const { status_code, body } = await (testApi
+        ? apiTableItem({
+            method: payload.context['http-method'],
+            data: payload,
+          }).then(({ data }) => data)
+        : syncTransactionsForItem(payload));
+
+      if (status_code !== 200) console.error(body);
+
+      expect(status_code).toBe(200);
+      expect(body.tx_sync).toBe('complete');
+    })
 
     it('should DELETE item from Table', async () => {
       const { status_code, body } = await (testApi
