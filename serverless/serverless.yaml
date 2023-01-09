@@ -244,13 +244,40 @@ paths:
                     institution_id:
                       type: string
                       example: ins_115585
-                    CONTINUTE_HERE:
-                      type: string
-                      example: https://plaid.com/docs/api/tokens/#itempublic_tokenexchange
+                    accounts:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Account'
       responses:
 
 components:
   schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          exmple: hello
+        name: 
+          type: string
+          example: Plaid Checking
+        mask: 
+          type: string
+          example: 0000
+        type: 
+          type: string
+          example: depository
+        subtype: 
+          type: string
+          example: checking
+        verification_status: 
+          type: string
+          nullable: true
+          example: null
+        class_type: 
+          type: string
+          nullable: true
+          example: null
     User:
       type: object
       properties:
