@@ -28,6 +28,7 @@ import ItemCard from '../components/ItemCard';
 import { useAppContext } from '../hooks/useUser';
 import useTransactions from '../hooks/useTransactions';
 import Header from '../components/Header/Header';
+import useAccounts from '../hooks/useAccounts';
 
 // import TransactionTimeline from './TransactionTimeline';
 
@@ -53,7 +54,7 @@ const UserPage = () => {
   const [assets, setAssets] = useState<AssetType[]>([]);
 
   const { getTransactionsByUser, transactionsByUser } = useTransactions();
-  // const { getAccountsByUser, accountsByUser } = useAccounts();
+  const { getAccountsByUser, accountsByUser } = useAccounts();
   // const { assetsByUser, getAssetsByUser } = useAssets();
   // const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
@@ -125,13 +126,13 @@ const UserPage = () => {
   }, [itemsByUser, userId]);
 
   // // update data store with the user's accounts
-  // useEffect(() => {
-  //   getAccountsByUser(userId);
-  // }, [getAccountsByUser, userId]);
+  useEffect(() => {
+    getAccountsByUser(userId);
+  }, [getAccountsByUser, userId]);
 
-  // useEffect(() => {
-  //   setAccounts(accountsByUser[userId] || []);
-  // }, [accountsByUser, userId]);
+  useEffect(() => {
+    setAccounts(accountsByUser[userId] || []);
+  }, [accountsByUser, userId]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);

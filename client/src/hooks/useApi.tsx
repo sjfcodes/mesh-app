@@ -17,14 +17,13 @@ const useApi = () => {
     const response = await axios({
       method: 'POST',
       url: url + '/link/token-create',
-      headers: {
-        Authorization: await getAuthToken(),
-      },
+      headers: { Authorization: await getAuthToken() },
       data: { path: '/link/token-create' },
     });
     return response;
   };
 
+  // @lambda-crudPlaid
   const exchangeToken = async (
     publicToken: string,
     institution: any,
@@ -66,16 +65,14 @@ const useApi = () => {
   const getAccountsByItem = async (itemId: string) =>
     axios({
       method: 'GET',
-      url: url + `/items/${itemId}/accounts`,
+      url: url + `/item/account`,
       headers: { Authorization: await getAuthToken() },
     });
   const getAccountsByUser = async (userId: string) =>
     axios({
       method: 'GET',
-      url: url + `/users/${userId}/accounts`,
-      headers: {
-        Authorization: await getAuthToken(),
-      },
+      url: url + `/item/account`,
+      headers: { Authorization: await getAuthToken() },
     });
 
   // transactions
@@ -91,17 +88,13 @@ const useApi = () => {
     axios({
       method: 'GET',
       url: url + `/items/${itemId}/transactions`,
-      headers: {
-        Authorization: await getAuthToken(),
-      },
+      headers: { Authorization: await getAuthToken() },
     });
   const getTransactionsByUser = async (userId: string) =>
     axios({
       method: 'GET',
-      url: url + `/users/${userId}/transactions`,
-      headers: {
-        Authorization: await getAuthToken(),
-      },
+      url: url + `/user/transaction`,
+      headers: { Authorization: await getAuthToken() },
     });
 
   // institutions
@@ -109,18 +102,14 @@ const useApi = () => {
     axios({
       method: 'GET',
       url: `/institutions/${instId}`,
-      headers: {
-        Authorization: await getAuthToken(),
-      },
+      headers: { Authorization: await getAuthToken() },
     });
 
   const setItemState = async (itemId: string, status: string) =>
     axios({
       url: url + `items/${itemId}`,
       method: 'PUT',
-      headers: {
-        Authorization: await getAuthToken(),
-      },
+      headers: { Authorization: await getAuthToken() },
       data: { status },
     });
 
@@ -129,9 +118,7 @@ const useApi = () => {
     axios({
       method: 'POST',
       url: url + '/items/sandbox/item/reset_login',
-      headers: {
-        Authorization: await getAuthToken(),
-      },
+      headers: { Authorization: await getAuthToken() },
       data: { itemId },
     });
 
@@ -139,9 +126,7 @@ const useApi = () => {
     const { data } = await axios({
       method,
       url,
-      headers: {
-        Authorization: await getAuthToken(),
-      },
+      headers: { Authorization: await getAuthToken() },
       data: { hello: 'world' },
     });
 
