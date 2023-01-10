@@ -151,7 +151,10 @@ const useApi = () => {
   const getInstitutionById = async (instId: string) =>
     axios({
       method: 'GET',
-      url: `/institutions/${instId}`,
+      url: url + '/item/institution/',
+      params: {
+        institution_id: instId,
+      },
       headers: { Authorization: await getAuthToken() },
     });
 
@@ -171,7 +174,7 @@ const useApi = () => {
           plaid_item_id: 'mock-plaid_item_id-' + idx,
           user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e' /** aws cognito id */,
           plaid_access_token: 'mock-plaid_access_token-' + idx,
-          plaid_institution_id: 'mock-plaid_institution_id-' + idx,
+          plaid_institution_id: 'ins_115585',
           status: 'mock-status-' + idx,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
