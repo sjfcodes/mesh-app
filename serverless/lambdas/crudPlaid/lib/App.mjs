@@ -7,7 +7,7 @@ class App {
     this.ddbClient = ddbClient;
     this.user = {};
     this.payload = event.body?.payload;
-    this.queryString = event.params?.queryString;
+    this.queryString = event.params?.querystring;
   }
 
   async setUserByToken(token) {
