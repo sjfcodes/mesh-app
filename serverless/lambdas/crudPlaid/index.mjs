@@ -1,7 +1,7 @@
 import config from './utils/config.mjs';
 import App from './lib/App.mjs';
 
-export const handler = async (event) => {
+export const handler = async (event, context) => {
   let response = event.body;
   let statusCode = 200;
 
@@ -12,9 +12,9 @@ export const handler = async (event) => {
 
     switch (event.context['http-method']) {
       case 'GET':
-        switch (body.path) {
+        switch (context?.['resource-path']) {
           case config.path.itemGetAccounts:
-            response = await app.handleGetItemAccounts();
+            response = await app.handleGetUserAccounts();
 
             break;
           default:
@@ -36,6 +36,10 @@ export const handler = async (event) => {
         break;
       case 'POST':
         switch (body.path) {
+          case config.path.itemGetAccounts:
+            response = await app.handleGetItemAccounts();
+
+            break;
           case config.path.linkTokenCreate:
             response = await app.getLinkToken();
 
@@ -51,7 +55,9 @@ export const handler = async (event) => {
 
         break;
       default:
-        throw new Error(`Unsupported method: "${event.context['http-method']}"`);
+        throw new Error(
+          `Unsupported method: "${event.context['http-method']}"`
+        );
     }
   } catch (error) {
     console.error(error);

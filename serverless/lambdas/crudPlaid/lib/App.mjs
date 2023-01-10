@@ -1,10 +1,10 @@
-import DdbClient from './DdbClient.mjs';
-import PlaidClient from './PlaidClient.mjs';
+import ddbClient from './ddbClient.mjs';
+import plaidClient from './plaidClient.mjs';
 
 class App {
   constructor(payload) {
-    this.plaidClient = PlaidClient;
-    this.ddbClient = DdbClient;
+    this.plaidClient = plaidClient;
+    this.ddbClient = ddbClient;
     this.user = {};
     this.payload = payload;
   }
@@ -26,19 +26,22 @@ class App {
     const tokenExchange = await this.plaidClient.exchangePublicToken(
       this.payload.public_token
     );
+
+    // include item_id for future api calls
+    const accounts = this.payload.accounts.map((account) => ({
+      ...account,
+      item_id: tokenExchange.item_id,
+    }));
     await this.ddbClient.addPlaidItemToUser(
       this.user.email,
       tokenExchange,
-      this.payload.accounts
+      accounts
     );
     return { item_id: tokenExchange.item_id };
   }
 
-  async handleGetItemAccounts() {
-    const { accounts } = await this.ddbClient.getItemByItemId(
-      this.user.email,
-      this.payload.item_id
-    );
+  async handleGetUserAccounts() {
+    const { accounts } = await this.ddbClient.getUserAccounts(this.user.email);
 
     return { accounts };
   }

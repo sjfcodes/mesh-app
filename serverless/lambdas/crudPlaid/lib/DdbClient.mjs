@@ -62,6 +62,30 @@ class DdbClient {
     };
   }
 
+  async getUserAccounts(email) {
+    const {
+      Item: {
+        [config.itemKeys.plaidItem]: { M: plaidItems },
+      },
+    } = await this.client.send(
+      new GetItemCommand({
+        TableName: config.TableName.user,
+        Key: { email: { S: email } },
+        ProjectionExpression: `#items`,
+        ExpressionAttributeNames: {
+          '#items': config.itemKeys.plaidItem,
+        },
+      })
+    );
+
+    const allAccounts = Object.values(plaidItems).reduce((prev, curr) => {
+      const accounts = JSON.parse(curr.M.accounts.S);
+      return [...prev, ...accounts];
+    }, []);
+
+    return { accounts: allAccounts };
+  }
+
   async setItemTxCursor(email, itemId, newTxCursor) {
     if (!email || !itemId || newTxCursor === undefined)
       throw new Error('missing required arguments!');

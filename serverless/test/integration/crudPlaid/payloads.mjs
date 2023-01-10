@@ -38,7 +38,7 @@ export const exchangeTokenLinkPayload = {
         },
       ],
       institution_id: 'ins_115585',
-      public_token: 'public-sandbox-5022c5d6-fbc0-4298-88b5-4eb021b7e8a4',
+      public_token: 'public-sandbox-f828f833-d4ff-4e4f-a673-b9d0903ace39',
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
@@ -54,3 +54,9 @@ export const syncTransactionsForItemPayload = (itemId) => ({
   context: { ['http-method']: 'PUT' },
   params,
 });
+
+export const getUserAccountsPayload = {
+  body: {},
+  context: { ['http-method']: 'GET' },
+  params,
+};

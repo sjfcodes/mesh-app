@@ -1,8 +1,17 @@
-import { handler } from "../../../lambdas/crudPlaid/index.mjs";
-import { createTokenLinkPayload, exchangeTokenLinkPayload } from "./payloads.mjs";
+import { handler } from '../../../lambdas/crudPlaid/index.mjs';
+import config from '../../../lambdas/crudPlaid/utils/config.mjs';
+import {
+  createTokenLinkPayload,
+  exchangeTokenLinkPayload,
+  getUserAccountsPayload,
+} from './payloads.mjs';
 
 export const createTokenLink = async () => handler(createTokenLinkPayload);
 
 export const exchangeToken = async () => handler(exchangeTokenLinkPayload);
 
-export const syncTransactionsForItem = async (payload) => handler(payload)
+export const syncTransactionsForItem = async (payload) => handler(payload);
+
+const mockContext = { ['resource-path']: config.path.itemGetAccounts };
+export const getUserAccounts = async () =>
+  handler(getUserAccountsPayload, mockContext);

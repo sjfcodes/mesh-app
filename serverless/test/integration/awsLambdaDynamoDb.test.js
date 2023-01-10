@@ -26,24 +26,20 @@ import {
 } from './crudDynamoDbTableItem/modules.mjs';
 import {
   exchangeTokenLinkPayload,
+  getUserAccountsPayload,
   syncTransactionsForItemPayload,
 } from './crudPlaid/payloads.mjs';
 import {
   exchangeToken,
+  getUserAccounts,
   syncTransactionsForItem,
 } from './crudPlaid/modules.mjs';
 
 dotenv.config();
 
-const rebuildTableAndItem = false;
-const destroyTableAndItem = false;
-
-let plaidTestItemId = null;
-
+const { TableName, Item } = dynamoDb;
 const testApi = process.env.USE_API_GATEWAY === 'true';
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
-
-const { TableName, Item } = dynamoDb;
 
 const apiTable = axios.create({
   baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtable',
@@ -54,6 +50,13 @@ const apiTableItem = axios.create({
   baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtableitem',
   headers: { Authorization: process.env.AUTH_TOKEN },
 });
+
+// ##################################
+// # rebuild/destroy table controls #
+// ##################################
+const rebuildTableAndItem = false;
+const destroyTableAndItem = false;
+let plaidTestItemId = null;
 
 describe('lambda + dynamoDb integration tests', () => {
   if (rebuildTableAndItem) {
@@ -66,7 +69,7 @@ describe('lambda + dynamoDb integration tests', () => {
             }).then(({ data }) => data)
           : createTable());
         if (status_code !== 200) console.error(body);
-        await new Promise((resolve) => setTimeout(resolve, 10000));
+        await new Promise((resolve) => setTimeout(resolve, 8000));
         expect(status_code).toBe(200);
         expect(body.TableDescription.TableName).toBe(TableName.user);
       });
@@ -147,41 +150,57 @@ describe('lambda + dynamoDb integration tests', () => {
 
       expect(status_code).toBe(200);
       expect(body.public_token_exchange).toBe('complete');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     });
 
-    it('should sync new transactions for item', async () => {
-      const payload = syncTransactionsForItemPayload(plaidTestItemId);
+    if (rebuildTableAndItem) {
+      it('should sync new transactions for item', async () => {
+        const payload = syncTransactionsForItemPayload(plaidTestItemId);
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: payload.context['http-method'],
+              data: payload,
+            }).then(({ data }) => data)
+          : syncTransactionsForItem(payload));
+
+        if (status_code !== 200) console.error(body);
+
+        expect(status_code).toBe(200);
+        expect(body.tx_sync).toBe('complete');
+        expect(body.summary.added).toBeGreaterThan(0);
+      });
+      it('should sync new transactions for item', async () => {
+        const payload = syncTransactionsForItemPayload(plaidTestItemId);
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: payload.context['http-method'],
+              data: payload,
+            }).then(({ data }) => data)
+          : syncTransactionsForItem(payload));
+
+        if (status_code !== 200) console.error(body);
+
+        expect(status_code).toBe(200);
+        expect(body.tx_sync).toBe('complete');
+        expect(body.summary.added).toBe(0);
+      });
+    }
+
+    it('should get accounts for user', async ()=>{
       const { status_code, body } = await (testApi
         ? apiTableItem({
-            method: payload.context['http-method'],
-            data: payload,
+            method: getUserAccountsPayload.context['http-method'],
+            data: getUserAccountsPayload,
           }).then(({ data }) => data)
-        : syncTransactionsForItem(payload));
+        : getUserAccounts(getUserAccountsPayload));
 
       if (status_code !== 200) console.error(body);
 
       expect(status_code).toBe(200);
-      expect(body.tx_sync).toBe('complete');
-      expect(body.summary.added).toBeGreaterThan(0);
+      expect(body.accounts.length).toBeGreaterThan(0)
     });
 
-    it('should sync new transactions for item', async () => {
-      const payload = syncTransactionsForItemPayload(plaidTestItemId);
-      const { status_code, body } = await (testApi
-        ? apiTableItem({
-            method: payload.context['http-method'],
-            data: payload,
-          }).then(({ data }) => data)
-        : syncTransactionsForItem(payload));
-
-      if (status_code !== 200) console.error(body);
-
-      expect(status_code).toBe(200);
-      expect(body.tx_sync).toBe('complete');
-      expect(body.summary.added).toBe(0);
-    });
-
-    if (destroyTableAndItem ) {
+    if (destroyTableAndItem) {
       it('should DELETE item from Table', async () => {
         const { status_code, body } = await (testApi
           ? apiTableItem({
@@ -195,7 +214,7 @@ describe('lambda + dynamoDb integration tests', () => {
     }
   });
 
-  if (destroyTableAndItem ) {
+  if (destroyTableAndItem) {
     describe('destroy table', () => {
       it('should delete table', async () => {
         const { status_code, body } = await (testApi
