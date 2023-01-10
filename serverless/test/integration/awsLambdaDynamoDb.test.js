@@ -16,13 +16,13 @@ import {
   createTableItemPayload,
   deleteTableItemPayload,
   getTableItemPayload,
-  updateTableItemRandomPayload,
+  updateTableItemPayload,
 } from './crudDynamoDbTableItem/payloads.mjs';
 import {
   createTableItem,
   deleteTableItem,
   getTableItem,
-  updateTableItemRandomItem,
+  updateTableItemItem,
 } from './crudDynamoDbTableItem/modules.mjs';
 import {
   exchangeTokenLinkPayload,
@@ -35,14 +35,15 @@ import {
 
 dotenv.config();
 
+const rebuildTableAndItem = false;
+const destroyTableAndItem = false;
+
+let plaidTestItemId = null;
+
 const testApi = process.env.USE_API_GATEWAY === 'true';
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
 
-const {
-  Item: { original },
-} = dynamoDb;
-
-let plaidTestItemId = null;
+const { TableName, Item } = dynamoDb;
 
 const apiTable = axios.create({
   baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtable',
@@ -55,22 +56,22 @@ const apiTableItem = axios.create({
 });
 
 describe('lambda + dynamoDb integration tests', () => {
-  // describe('create table', () => {
-  //   it('should create table', async () => {
-  //     const { status_code, body } = await (testApi
-  //       ? apiTable({
-  //           method: createTablePayload.context['http-method'],
-  //           data: createTablePayload,
-  //         }).then(({ data }) => data)
-  //       : createTable());
-
-  //     if (status_code !== 200) console.error(body);
-  //     await new Promise((resolve) => setTimeout(resolve, 10000));
-
-  //     expect(status_code).toBe(200);
-  //     expect(body.TableDescription.TableName).toBe(TableName);
-  //   });
-  // });
+  if (rebuildTableAndItem) {
+    describe('create table', () => {
+      it('should create table', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTable({
+              method: createTablePayload.context['http-method'],
+              data: createTablePayload,
+            }).then(({ data }) => data)
+          : createTable());
+        if (status_code !== 200) console.error(body);
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+        expect(status_code).toBe(200);
+        expect(body.TableDescription.TableName).toBe(TableName.user);
+      });
+    });
+  }
 
   describe('read table', () => {
     it('should get table', async () => {
@@ -88,47 +89,46 @@ describe('lambda + dynamoDb integration tests', () => {
   });
 
   describe('create, edit, & delete items from table', () => {
-    // it('should create Item', async () => {
-    //   const { status_code, body } = await (testApi
-    //     ? apiTableItem({
-    //         method: createTableItemPayload.context['http-method'],
-    //         data: createTableItemPayload,
-    //       }).then(({ data }) => data)
-    //     : createTableItem());
+    if (rebuildTableAndItem) {
+      it('should create Item', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: createTableItemPayload.context['http-method'],
+              data: createTableItemPayload,
+            }).then(({ data }) => data)
+          : createTableItem());
+        if (status_code !== 200) console.error(body);
+        expect(status_code).toBe(200);
+      });
+    }
 
-    //   if (status_code !== 200) console.error(body);
+    it('should get Item', async () => {
+      const { status_code, body } = await (testApi
+        ? apiTableItem({
+            method: getTableItemPayload.context['http-method'],
+            data: getTableItemPayload,
+          }).then(({ data }) => data)
+        : getTableItem());
 
-    //   expect(status_code).toBe(200);
-    // });
+      if (status_code !== 200) console.error(body);
 
-    // it('should get Item', async () => {
-    //   const { status_code, body } = await (testApi
-    //     ? apiTableItem({
-    //         method: getTableItemPayload.context['http-method'],
-    //         data: getTableItemPayload,
-    //       }).then(({ data }) => data)
-    //     : getTableItem());
-
-    //   if (status_code !== 200) console.error(body);
-
-    //   expect(status_code).toBe(200);
-    //   expect(body.Item.email.S).toBe(original.email.S);
-    //   expect(body.Item.verified.BOOL).toBe(original.verified.BOOL);
-    // });
+      expect(status_code).toBe(200);
+      expect(body.Item.email.S).toBe(Item.original.email.S);
+    });
 
     it('should update item with existing properties', async () => {
       const { status_code, body } = await (testApi
         ? apiTableItem({
-            method: updateTableItemRandomPayload.context['http-method'],
-            data: updateTableItemRandomPayload,
+            method: updateTableItemPayload.context['http-method'],
+            data: updateTableItemPayload,
           }).then(({ data }) => data)
-        : updateTableItemRandomItem(updateTableItemRandomPayload));
+        : updateTableItemItem(updateTableItemPayload));
 
       if (status_code !== 200) console.error(body);
 
       expect(status_code).toBe(200);
       // expect unchanged
-      expect(body.Attributes.email.S).toBe(original.email.S);
+      expect(body.Attributes.email.S).toBe(Item.original.email.S);
       // expect changed
       expect(body.Attributes.verified.BOOL).toBe(true);
     });
@@ -149,47 +149,64 @@ describe('lambda + dynamoDb integration tests', () => {
       expect(body.public_token_exchange).toBe('complete');
     });
 
-    // it('should sync transactions for item', async ()=>{
-    //   const payload = syncTransactionsForItemPayload(plaidTestItemId)
-    //   const { status_code, body } = await (testApi
-    //     ? apiTableItem({
-    //         method: payload.context['http-method'],
-    //         data: payload,
-    //       }).then(({ data }) => data)
-    //     : syncTransactionsForItem(payload));
+    it('should sync new transactions for item', async () => {
+      const payload = syncTransactionsForItemPayload(plaidTestItemId);
+      const { status_code, body } = await (testApi
+        ? apiTableItem({
+            method: payload.context['http-method'],
+            data: payload,
+          }).then(({ data }) => data)
+        : syncTransactionsForItem(payload));
 
-    //   if (status_code !== 200) console.error(body);
+      if (status_code !== 200) console.error(body);
 
-    //   expect(status_code).toBe(200);
-    //   expect(body.tx_sync).toBe('complete');
-    // })
+      expect(status_code).toBe(200);
+      expect(body.tx_sync).toBe('complete');
+      expect(body.summary.added).toBeGreaterThan(0);
+    });
 
-    // it('should DELETE item from Table', async () => {
-    //   const { status_code, body } = await (testApi
-    //     ? apiTableItem({
-    //         method: deleteTableItemPayload.context['http-method'],
-    //         data: deleteTableItemPayload,
-    //       }).then(({ data }) => data)
-    //     : deleteTableItem());
+    it('should sync new transactions for item', async () => {
+      const payload = syncTransactionsForItemPayload(plaidTestItemId);
+      const { status_code, body } = await (testApi
+        ? apiTableItem({
+            method: payload.context['http-method'],
+            data: payload,
+          }).then(({ data }) => data)
+        : syncTransactionsForItem(payload));
 
-    //   if (status_code !== 200) console.error(body);
+      if (status_code !== 200) console.error(body);
 
-    //   expect(status_code).toBe(200);
-    // });
+      expect(status_code).toBe(200);
+      expect(body.tx_sync).toBe('complete');
+      expect(body.summary.added).toBe(0);
+    });
+
+    if (destroyTableAndItem ) {
+      it('should DELETE item from Table', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: deleteTableItemPayload.context['http-method'],
+              data: deleteTableItemPayload,
+            }).then(({ data }) => data)
+          : deleteTableItem());
+        if (status_code !== 200) console.error(body);
+        expect(status_code).toBe(200);
+      });
+    }
   });
 
-  // describe('destroy table', () => {
-  //   it('should delete table', async () => {
-  //     const { status_code, body } = await (testApi
-  //       ? apiTable({
-  //           method: deleteTablePayload.context['http-method'],
-  //           data: deleteTablePayload,
-  //         }).then(({ data }) => data)
-  //       : deleteTable());
-
-  //     if (status_code !== 200) console.error(body);
-
-  //     expect(status_code).toBe(200);
-  //   });
-  // });
+  if (destroyTableAndItem ) {
+    describe('destroy table', () => {
+      it('should delete table', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTable({
+              method: deleteTablePayload.context['http-method'],
+              data: deleteTablePayload,
+            }).then(({ data }) => data)
+          : deleteTable());
+        if (status_code !== 200) console.error(body);
+        expect(status_code).toBe(200);
+      });
+    });
+  }
 });

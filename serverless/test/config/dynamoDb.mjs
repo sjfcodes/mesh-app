@@ -3,7 +3,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
-  TableName: 'mesh-app-users-test',
+  TableName: {
+    user: 'mesh-app-users-test',
+  },
   Item: {
     original: {
       email: { S: 'sjfcodes@gmail.com' },

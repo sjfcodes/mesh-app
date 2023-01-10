@@ -6,7 +6,7 @@ const { params } = dynamoDbConfig;
 
 export const createTokenLinkPayload = {
   body: {
-    TableName,
+    TableName: TableName.user,
     path: path.linkTokenCreate,
   },
   context: { ['http-method']: 'PUT' },
@@ -38,7 +38,7 @@ export const exchangeTokenLinkPayload = {
         },
       ],
       institution_id: 'ins_115585',
-      public_token: 'public-sandbox-e29f1e89-9ca8-4be5-8e3a-e182dddf3442',
+      public_token: 'public-sandbox-0951a461-0fa2-4d65-822a-7e55321980f4',
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
@@ -46,10 +46,10 @@ export const exchangeTokenLinkPayload = {
   params,
 };
 
-export const syncTransactionsForItemPayload = (item_id) => ({
+export const syncTransactionsForItemPayload = (itemId) => ({
   body: {
     path: path.transactionsSync,
-    payload: { item_id },
+    payload: { item_id: itemId },
   },
   context: { ['http-method']: 'PUT' },
   params,

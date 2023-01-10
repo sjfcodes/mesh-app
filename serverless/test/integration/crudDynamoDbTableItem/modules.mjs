@@ -3,14 +3,14 @@ import {
   createTableItemPayload,
   deleteTableItemPayload,
   getTableItemPayload,
-  updateTableItemRandomPayload,
+  updateTableItemPayload,
 } from "./payloads.mjs";
 
 export const createTableItem = async () => handler(createTableItemPayload);
 
 export const getTableItem = async () => handler(getTableItemPayload);
 
-export const updateTableItemRandomItem = async () =>
-  handler(updateTableItemRandomPayload);
+export const updateTableItemItem = async () =>
+  handler(updateTableItemPayload);
 
 export const deleteTableItem = async () => handler(deleteTableItemPayload);

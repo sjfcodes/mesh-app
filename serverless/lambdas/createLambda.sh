@@ -102,7 +102,7 @@ export default config;
 mkdir -p -v -- $pathToIntegrationTest/$functionName
 echo "import config from '../../config/dynamoDb.mjs';
 
-const { TableName, params } = config;
+const { TableName: { user }, params } = config;
 
 export const getMyRequestPayload = {
   body: {

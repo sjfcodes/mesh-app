@@ -6,7 +6,7 @@ export const createTablePayload = {
   body: {
     path: null,
     payload: {
-      TableName,
+      TableName: TableName.user,
       AttributeDefinitions: [
         {
           AttributeName: "email",
@@ -36,7 +36,7 @@ export const deleteTablePayload = {
   body: {
     path: null,
     payload: {
-      TableName,
+      TableName: TableName.user,
     },
   },
   context: { ["http-method"]: "DELETE" },
@@ -47,7 +47,7 @@ export const getTablePayload = {
   body: {
     path: null,
     payload: {
-      TableName,
+      TableName: TableName.user,
     },
   },
   context: { ["http-method"]: "GET" },
