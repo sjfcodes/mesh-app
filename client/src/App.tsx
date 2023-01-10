@@ -18,6 +18,7 @@ import { AccountsProvider } from './hooks/useAccounts';
 import { TransactionsProvider } from './hooks/useTransactions';
 import { ErrorsProvider } from './hooks/useErrors';
 import UserPage from './pages/UserPage';
+import { AssetsProvider } from './hooks/useAssets';
 Amplify.configure(currentConfig);
 
 function App() {
@@ -39,15 +40,17 @@ function App() {
                   <AccountsProvider>
                     <TransactionsProvider>
                       <ErrorsProvider>
-                        <div className="toast__body">
-                          <Routes>
-                            <Route path="/" element={<Landing />} />
-                            <Route
-                              path="/user/:userId"
-                              element={<UserPage />}
-                            />
-                          </Routes>
-                        </div>
+                        <AssetsProvider>
+                          <div className="toast__body">
+                            <Routes>
+                              <Route path="/" element={<Landing />} />
+                              <Route
+                                path="/user/:userId"
+                                element={<UserPage />}
+                              />
+                            </Routes>
+                          </div>
+                        </AssetsProvider>
                       </ErrorsProvider>
                     </TransactionsProvider>
                   </AccountsProvider>

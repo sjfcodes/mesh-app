@@ -75,6 +75,24 @@ const useApi = () => {
       headers: { Authorization: await getAuthToken() },
     });
 
+  // assets
+  const addAsset = (userId: number, description: string, value: number) =>
+    axios({
+      method: 'POST',
+      url: url + '/assets',
+      data: { userId, description, value },
+    });
+  const getAssetsByUser = (userId: number) =>
+    axios({
+      method: 'GET',
+      url: url + `/assets/${userId}`,
+    });
+  const deleteAssetByAssetId = (assetId: number) =>
+    axios({
+      method: 'DELETE',
+      url: url + `/assets/${assetId}`,
+    });
+
   // transactions
   const getTransactionsByAccount = async (accountId: string) =>
     axios({
@@ -140,6 +158,9 @@ const useApi = () => {
     getTransactionsByUser,
     getAccountsByItem,
     getAccountsByUser,
+    addAsset,
+    getAssetsByUser,
+    deleteAssetByAssetId,
     getInstitutionById,
     getLinkToken,
     setItemState,

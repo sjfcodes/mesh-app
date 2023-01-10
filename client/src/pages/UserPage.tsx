@@ -8,15 +8,6 @@ import Button from 'plaid-threads/Button';
 import { pluralize } from '../util';
 
 import { AccountType, AssetType, ItemType } from '../types';
-// import {
-//   LaunchLink,
-//   SpendingInsights,
-//   NetWorth,
-//   ItemCard,
-//   UserCard,
-//   LoadingCallout,
-//   ErrorMessage,
-// } from '.';
 
 import useLink from '../hooks/useLink';
 import useItems from '../hooks/useItems';
@@ -29,6 +20,9 @@ import { useAppContext } from '../hooks/useUser';
 import useTransactions from '../hooks/useTransactions';
 import Header from '../components/Header/Header';
 import useAccounts from '../hooks/useAccounts';
+import NetWorth from '../components/NetWorth';
+import SpendingInsights from '../components/SpendingInsights';
+import useAssets from '../hooks/useAssets';
 
 // import TransactionTimeline from './TransactionTimeline';
 
@@ -46,6 +40,7 @@ const UserPage = () => {
     created_at: '',
     updated_at: '',
   });
+  const userId = user.id;
   const [items, setItems] = useState<ItemType[]>([]);
   const [token, setToken] = useState('');
   const [numOfItems, setNumOfItems] = useState(0);
@@ -53,30 +48,17 @@ const UserPage = () => {
   const [accounts, setAccounts] = useState<AccountType[]>([]);
   const [assets, setAssets] = useState<AssetType[]>([]);
 
-  const { getTransactionsByUser, transactionsByUser } = useTransactions();
-  const { getAccountsByUser, accountsByUser } = useAccounts();
-  // const { assetsByUser, getAssetsByUser } = useAssets();
-  // const { usersById, getUserById } = useUsers();
+  const { transactionsByUser, getTransactionsByUser } = useTransactions();
+  const { accountsByUser, getAccountsByUser } = useAccounts();
+  const { assetsByUser, getAssetsByUser } = useAssets();
   const { itemsByUser, getItemsByUser } = useItems();
-  // const userId = Number(match.params.userId);
-  const userId = user.id;
-  const { generateLinkToken, linkTokens } = useLink();
+  const { linkTokens, generateLinkToken } = useLink();
 
   const initiateLink = async () => {
     // only generate a link token upon a click from enduser to add a bank;
     // if done earlier, it may expire before enduser actually activates Link to add a bank.
     await generateLinkToken(userId, null);
   };
-
-  // update data store with user
-  // useEffect(() => {
-  //   getUserById(userId, false);
-  // }, [getUserById, userId]);
-
-  // set state user from data store
-  // useEffect(() => {
-  //   setUser(usersById[userId] || {});
-  // }, [usersById, userId]);
 
   useEffect(() => {
     // This gets transactions from the database only.
@@ -86,18 +68,18 @@ const UserPage = () => {
     // getTransactionsByUser(userId);
   }, [getTransactionsByUser, userId]);
 
-  // useEffect(() => {
-  //   setTransactions(transactionsByUser[userId] || []);
-  // }, [transactionsByUser, userId]);
+  useEffect(() => {
+    setTransactions(transactionsByUser[userId] || []);
+  }, [transactionsByUser, userId]);
 
-  // // update data store with the user's assets
-  // useEffect(() => {
-  //   getAssetsByUser(userId);
-  // }, [getAssetsByUser, userId]);
+  // update data store with the user's assets
+  useEffect(() => {
+    getAssetsByUser(userId);
+  }, [getAssetsByUser, userId]);
 
-  // useEffect(() => {
-  //   setAssets(assetsByUser.assets || []);
-  // }, [assetsByUser, userId]);
+  useEffect(() => {
+    setAssets(assetsByUser.assets || []);
+  }, [assetsByUser, userId]);
 
   // update data store with the user's items
   useEffect(() => {
@@ -167,7 +149,7 @@ const UserPage = () => {
           <LoadingCallout />
         </div>
       )}
-      {/* {numOfItems > 0 && transactions.length > 0 && (
+      {numOfItems > 0 && transactions.length > 0 && (
         <>
           <NetWorth
             accounts={accounts}
@@ -181,8 +163,8 @@ const UserPage = () => {
             transactions={transactions}
           />
         </>
-      )} */}
-      {/* {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
+      )}
+      {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
         <>
           <NetWorth
             accounts={accounts}
@@ -192,7 +174,7 @@ const UserPage = () => {
             assetsOnly
           />
         </>
-      )} */}
+      )}
       {numOfItems > 0 && (
         <>
           <div className="item__header">
