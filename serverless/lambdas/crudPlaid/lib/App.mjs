@@ -32,12 +32,14 @@ class App {
       ...account,
       item_id: tokenExchange.item_id,
     }));
+
     await this.ddbClient.addPlaidItemToUser(
       this.user.email,
       tokenExchange,
       accounts
     );
-    return { item_id: tokenExchange.item_id };
+
+    return { accounts, item_id: tokenExchange.item_id };
   }
 
   async handleGetUserAccounts() {
