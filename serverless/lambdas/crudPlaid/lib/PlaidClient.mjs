@@ -1,6 +1,8 @@
 import * as dotenv from 'dotenv';
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid';
 
+import config from '../utils/config.mjs';
+
 // https://plaid.com/docs/api/tokens/#linktokencreate
 
 dotenv.config();
