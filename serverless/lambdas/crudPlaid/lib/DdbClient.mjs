@@ -36,7 +36,7 @@ class DdbClient {
         [config.itemKeys.plaidItem]: {
           M: {
             [itemId]: {
-              M: { access_token, created_at, updated_at, tx_cursor },
+              M: { access_token, accounts, created_at, updated_at, tx_cursor },
             },
           },
         },
@@ -55,6 +55,7 @@ class DdbClient {
 
     return {
       accessToken: access_token.S,
+      accounts: JSON.parse(accounts.S),
       createdAt: created_at.S,
       updatedAt: updated_at.S,
       txCursor: tx_cursor.S,

@@ -15,7 +15,7 @@ export const createTokenLinkPayload = {
 
 export const exchangeTokenLinkPayload = {
   body: {
-    path: path.linkTokenExchange,
+    path: path.itemTokenExchange,
     payload: {
       accounts: [
         {
@@ -38,7 +38,7 @@ export const exchangeTokenLinkPayload = {
         },
       ],
       institution_id: 'ins_115585',
-      public_token: 'public-sandbox-0951a461-0fa2-4d65-822a-7e55321980f4',
+      public_token: 'public-sandbox-5022c5d6-fbc0-4298-88b5-4eb021b7e8a4',
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
@@ -48,7 +48,7 @@ export const exchangeTokenLinkPayload = {
 
 export const syncTransactionsForItemPayload = (itemId) => ({
   body: {
-    path: path.transactionsSync,
+    path: path.itemTxSync,
     payload: { item_id: itemId },
   },
   context: { ['http-method']: 'PUT' },

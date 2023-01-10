@@ -11,35 +11,45 @@ export const handler = async (event) => {
     await app.setUserByToken(event.params.header.Authorization);
 
     switch (event.context['http-method']) {
-      case 'PUT':
+      case 'GET':
         switch (body.path) {
-          case config.path.transactionsSync:
-            const summary = await app.handleSyncTxsForItem();
-            response = { tx_sync: 'complete', summary };
-            break;
+          case config.path.itemGetAccounts:
+            response = await app.handleGetItemAccounts();
 
+            break;
           default:
             throw Error(`path:"${body.path}" not found!`);
         }
 
         break;
+      case 'PUT':
+        switch (body.path) {
+          case config.path.itemTxSync:
+            const summary = await app.handleSyncTxsForItem();
+            response = { tx_sync: 'complete', summary };
 
+            break;
+          default:
+            throw Error(`path:"${body.path}" not found!`);
+        }
+
+        break;
       case 'POST':
         switch (body.path) {
           case config.path.linkTokenCreate:
             response = await app.getLinkToken();
-            break;
 
-          case config.path.linkTokenExchange:
+            break;
+          case config.path.itemTokenExchange:
             const { item_id } = await app.handleTokenExchange();
             response = { public_token_exchange: 'complete', item_id };
-            break;
 
+            break;
           default:
             throw Error(`path:"${body.path}" not found!`);
         }
-        break;
 
+        break;
       default:
         throw new Error(`Unsupported method: "${event.httpMethod}"`);
     }

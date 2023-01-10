@@ -13,8 +13,9 @@ const config = {
   },
   path: {
     linkTokenCreate: '/link/token-create',
-    linkTokenExchange: '/item/token-exchange',
-    transactionsSync: '/item/tx-sync',
+    itemTokenExchange: '/item/token-exchange',
+    itemGetAccounts: '/item/account',
+    itemTxSync: '/item/tx-sync',
   },
   itemKeys: {
     plaidItem: 'plaid_item',

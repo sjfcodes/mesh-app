@@ -26,8 +26,21 @@ class App {
     const tokenExchange = await this.plaidClient.exchangePublicToken(
       this.payload.public_token
     );
-    await this.ddbClient.addPlaidItemToUser(this.user.email, tokenExchange, this.payload.accounts);
+    await this.ddbClient.addPlaidItemToUser(
+      this.user.email,
+      tokenExchange,
+      this.payload.accounts
+    );
     return { item_id: tokenExchange.item_id };
+  }
+
+  async handleGetItemAccounts() {
+    const { accounts } = await this.ddbClient.getItemByItemId(
+      this.user.email,
+      this.payload.item_id
+    );
+
+    return { accounts };
   }
 
   async handleSyncTxsForItem() {
