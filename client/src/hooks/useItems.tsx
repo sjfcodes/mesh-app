@@ -12,12 +12,7 @@ import keyBy from 'lodash/keyBy';
 import omit from 'lodash/omit';
 import omitBy from 'lodash/omitBy';
 import { ItemType } from '../types';
-
-// import {
-//   getItemsByUser as apiGetItemsByUser,
-//   getItemById as apiGetItemById,
-//   deleteItemById as apiDeleteItemById,
-// } from './api';
+import useApi from './useApi';
 
 interface ItemsState {
   [itemId: string]: ItemType;
@@ -49,6 +44,11 @@ const ItemsContext = createContext<ItemsContextShape>(
  * @desc Maintains the Items context state and provides functions to update that state.
  */
 export function ItemsProvider(props: any) {
+  const {
+    getItemsByUser: apiGetItemsByUser,
+    getItemById: apiGetItemById,
+    deleteItemById: apiDeleteItemById,
+  } = useApi();
   const [itemsById, dispatch] = useReducer(reducer, {});
   const hasRequested = useRef<{ byId: { [id: string]: boolean } }>({
     byId: {},
@@ -62,8 +62,8 @@ export function ItemsProvider(props: any) {
   const getItemById = useCallback(async (id: string, refresh: boolean) => {
     if (!hasRequested.current.byId[id] || refresh) {
       hasRequested.current.byId[id] = true;
-      // const { data: payload } = await apiGetItemById(id);
-      // dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
+      const { data: payload } = await apiGetItemById(id);
+      dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
     }
   }, []);
 
@@ -71,8 +71,8 @@ export function ItemsProvider(props: any) {
    * @desc Requests all Items that belong to an individual User.
    */
   const getItemsByUser = useCallback(async (userId: string) => {
-    // const { data: payload } = await apiGetItemsByUser(userId);
-    // dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
+    const { data: payload } = await apiGetItemsByUser(userId);
+    dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
   }, []);
 
   /**
@@ -80,8 +80,8 @@ export function ItemsProvider(props: any) {
    */
   const deleteItemById = useCallback(
     async (id: string, userId: string) => {
-      // await apiDeleteItemById(id);
-      // dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
+      await apiDeleteItemById(id);
+      dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
       // Update items list after deletion.
       await getItemsByUser(userId);
 
@@ -95,7 +95,7 @@ export function ItemsProvider(props: any) {
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
   const deleteItemsByUserId = useCallback((userId: string) => {
-    // dispatch({ type: 'DELETE_BY_USER', payload: userId });
+    dispatch({ type: 'DELETE_BY_USER', payload: userId });
   }, []);
 
   /**

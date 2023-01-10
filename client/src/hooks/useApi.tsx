@@ -76,21 +76,27 @@ const useApi = () => {
     });
 
   // assets
-  const addAsset = (userId: number, description: string, value: number) =>
+  const addAsset = async (userId: number, description: string, value: number) =>
     axios({
       method: 'POST',
       url: url + '/assets',
+      headers: { Authorization: await getAuthToken() },
       data: { userId, description, value },
     });
-  const getAssetsByUser = (userId: number) =>
-    axios({
-      method: 'GET',
-      url: url + `/assets/${userId}`,
-    });
-  const deleteAssetByAssetId = (assetId: number) =>
+  const getAssetsByUser = async (userId: number) => {
+    console.log('mock GET: /asset');
+    return { data: [] };
+    //  return  axios({
+    //     method: 'GET',
+    //     url: url + `/assets`,
+    //     headers: { Authorization: await getAuthToken() },
+    //   });
+  };
+  const deleteAssetByAssetId = async (assetId: number) =>
     axios({
       method: 'DELETE',
       url: url + `/assets/${assetId}`,
+      headers: { Authorization: await getAuthToken() },
     });
 
   // transactions
@@ -108,18 +114,44 @@ const useApi = () => {
       url: url + `/items/${itemId}/transactions`,
       headers: { Authorization: await getAuthToken() },
     });
-  const getTransactionsByUser = async (userId: string) =>
-    axios({
-      method: 'GET',
-      url: url + `/user/transaction`,
-      headers: { Authorization: await getAuthToken() },
-    });
+  const getTransactionsByUser = async (userId: string) => {
+    console.log('mock GET: /user/transaction');
+    return { data: [] };
+    //  return  axios({
+    //     method: 'GET',
+    //     url: url + `/user/transaction`,
+    //     headers: { Authorization: await getAuthToken() },
+    //   });
+  };
 
   // institutions
   const getInstitutionById = async (instId: string) =>
     axios({
       method: 'GET',
       url: `/institutions/${instId}`,
+      headers: { Authorization: await getAuthToken() },
+    });
+
+  // items
+  const getItemById = async (id: string) =>
+    axios({
+      method: 'GET',
+      url: url + `/items/${id}`,
+      headers: { Authorization: await getAuthToken() },
+    });
+  const getItemsByUser = async (userId: string) => {
+    console.log('mock GET: /user/:id/item');
+    return { data: [] };
+  //  return  axios({
+  //     method: 'GET',
+  //     url: url + `/users/${userId}/items`,
+  //     headers: { Authorization: await getAuthToken() },
+  //   });
+  }
+  const deleteItemById = async (id: string) =>
+    axios({
+      method: 'DELETE',
+      url: url + `/items/${id}`,
       headers: { Authorization: await getAuthToken() },
     });
 
@@ -130,7 +162,6 @@ const useApi = () => {
       headers: { Authorization: await getAuthToken() },
       data: { status },
     });
-
   // This endpoint is only availble in the sandbox enviornment
   const setItemToBadState = async (itemId: string) =>
     axios({
@@ -163,6 +194,9 @@ const useApi = () => {
     deleteAssetByAssetId,
     getInstitutionById,
     getLinkToken,
+    getItemById,
+    getItemsByUser,
+    deleteItemById,
     setItemState,
     setItemToBadState,
     testLambda,
