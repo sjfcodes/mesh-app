@@ -205,7 +205,7 @@ describe('lambda + dynamoDb integration tests', () => {
       expect(body.accounts.length).toBeGreaterThan(0);
     });
 
-    it('should get bank institution details by id institution_id', async()=>{
+    it('should get bank institution details by id institution_id', async () => {
       const { status_code, body } = await (testApi
         ? apiTableItem({
             method: getInstitutionByIdPayload.context['http-method'],
@@ -216,8 +216,8 @@ describe('lambda + dynamoDb integration tests', () => {
       if (status_code !== 200) console.error(body);
 
       expect(status_code).toBe(200);
-
-    })
+      expect(body.logo).not.toBe(null);
+    });
 
     if (destroyTableAndItem) {
       it('should DELETE item from Table', async () => {

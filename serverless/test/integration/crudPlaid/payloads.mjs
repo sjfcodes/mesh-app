@@ -73,6 +73,6 @@ export const getInstitutionByIdPayload = {
   },
   params: {
     ...params,
-    queryString:{ institution_id: 'hello'}
+    queryString:{ institution_id: 'ins_115585'}
   },
 };

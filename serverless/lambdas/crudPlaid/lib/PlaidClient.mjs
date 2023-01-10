@@ -62,8 +62,22 @@ class PlaidClient {
     return data;
   }
 
-  async getInstitutionById(institutionId) {
-    if (!institutionId) throw new Error('missing required arguments!');
+  async getInstitutionById(instId) {
+    if (!instId) throw new Error('missing required arguments!');
+    const request = {
+      institution_id: instId,
+      country_codes: ['US'],
+      options: {
+        include_optional_metadata: true,
+      },
+    };
+
+    const {
+      data: { institution },
+    } = await this.client.institutionsGetById(request);
+    const response = Array.isArray(institution) ? institution : [institution];
+
+    return response;
   }
 
   async syncTxsForItem(accessToken, cursor) {
