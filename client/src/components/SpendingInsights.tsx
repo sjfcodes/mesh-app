@@ -4,7 +4,6 @@ import { currencyFilter, pluralize } from '../util';
 import CategoriesChart from './CategoriesChart';
 import { TransactionType } from '../types';
 
-
 interface Props {
   transactions: TransactionType[];
   numOfItems: number;
@@ -19,7 +18,7 @@ export default function SpendingInsights(props: Props) {
   const transactions = props.transactions;
   const monthlyTransactions = useMemo(
     () =>
-      transactions.filter(tx => {
+      transactions.filter((tx) => {
         const date = new Date(tx.date);
         const today = new Date();
         const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
@@ -64,6 +63,7 @@ export default function SpendingInsights(props: Props) {
     return namesArray;
   }, [namesObject]);
 
+  console.log(categoriesObject);
   return (
     <div>
       <h2 className="monthlySpendingHeading">Monthly Spending</h2>
@@ -72,21 +72,19 @@ export default function SpendingInsights(props: Props) {
         props.numOfItems
       } bank ${pluralize('account', props.numOfItems)}`}</div>
       <div className="monthlySpendingContainer">
-        <div className="userDataBox">
+        <div className="spendingInsights">
           <CategoriesChart categories={categoriesObject} />
         </div>
-        <div className="userDataBox">
-          <div className="holdingsList">
-            <h4 className="holdingsHeading">Top 5 Vendors</h4>
-            <div className="spendingInsightData">
-              <p className="title">Vendor</p> <p className="title">Amount</p>
-              {sortedNames.map((vendor: any[], index) => (
-                <div key={index}>
-                  <p>{vendor[0]}</p>
-                  <p>{currencyFilter(vendor[1])}</p>
-                </div>
-              ))}
-            </div>
+        <div className="spendingInsights">
+          <h4 className="holdingsHeading">Top 5 Vendors</h4>
+          <div className="spendingInsightData">
+            <p className="title">Vendor</p> <p className="title">Amount</p>
+            {sortedNames.map((vendor: any[], index) => (
+              <div key={index}>
+                <p>{vendor[0]}</p>
+                <p>{currencyFilter(vendor[1])}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
