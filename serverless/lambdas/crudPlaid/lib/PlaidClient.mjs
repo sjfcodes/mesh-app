@@ -62,6 +62,10 @@ class PlaidClient {
     return data;
   }
 
+  async getInstitutionById(institutionId) {
+    if (!institutionId) throw new Error('missing required arguments!');
+  }
+
   async syncTxsForItem(accessToken, cursor) {
     if (!accessToken || cursor === undefined)
       throw new Error('missing required arguments!');

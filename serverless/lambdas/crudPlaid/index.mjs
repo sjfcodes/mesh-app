@@ -7,12 +7,16 @@ export const handler = async (event) => {
 
   try {
     const { body } = event;
-    const app = new App(body.payload);
+    const app = new App(event);
     await app.setUserByToken(event.params.header.Authorization);
 
     switch (event.context['http-method']) {
       case 'GET':
         switch (event.context['resource-path']) {
+          case config.path.itemGetInstitution:
+            response = await app.handleGetInstitutionById();
+
+            break;
           case config.path.itemGetAccounts:
             response = await app.handleGetUserAccounts();
 

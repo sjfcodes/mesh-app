@@ -64,3 +64,15 @@ export const getUserAccountsPayload = {
   },
   params,
 };
+
+export const getInstitutionByIdPayload = {
+  body: {},
+  context: {
+    ['http-method']: 'GET',
+    ['resource-path']: path.itemGetInstitution,
+  },
+  params: {
+    ...params,
+    queryString:{ institution_id: 'hello'}
+  },
+};

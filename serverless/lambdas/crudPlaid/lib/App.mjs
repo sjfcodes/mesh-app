@@ -2,11 +2,12 @@ import ddbClient from './ddbClient.mjs';
 import plaidClient from './plaidClient.mjs';
 
 class App {
-  constructor(payload) {
+  constructor(event) {
     this.plaidClient = plaidClient;
     this.ddbClient = ddbClient;
     this.user = {};
-    this.payload = payload;
+    this.payload = event.body?.payload;
+    this.queryString = event.params?.queryString;
   }
 
   async setUserByToken(token) {
@@ -48,6 +49,12 @@ class App {
     const { accounts } = await this.ddbClient.getUserAccounts(this.user.email);
 
     return { accounts };
+  }
+
+  async handleGetInstitutionById() {
+    const data = await this.plaidClient.getInstitutionById(this.queryString.institution_id);
+
+    return data;
   }
 
   async handleSyncTxsForItem() {

@@ -26,11 +26,13 @@ import {
 } from './crudDynamoDbTableItem/modules.mjs';
 import {
   exchangeTokenLinkPayload,
+  getInstitutionByIdPayload,
   getUserAccountsPayload,
   syncTransactionsForItemPayload,
 } from './crudPlaid/payloads.mjs';
 import {
   exchangeToken,
+  getInstitutionById,
   getUserAccounts,
   syncTransactionsForItem,
 } from './crudPlaid/modules.mjs';
@@ -206,15 +208,14 @@ describe('lambda + dynamoDb integration tests', () => {
     it('should get bank institution details by id institution_id', async()=>{
       const { status_code, body } = await (testApi
         ? apiTableItem({
-            method: getUserAccountsPayload.context['http-method'],
-            data: getUserAccountsPayload,
+            method: getInstitutionByIdPayload.context['http-method'],
+            data: getInstitutionByIdPayload,
           }).then(({ data }) => data)
-        : getUserAccounts(getUserAccountsPayload));
+        : getInstitutionById(getInstitutionByIdPayload));
 
       if (status_code !== 200) console.error(body);
 
       expect(status_code).toBe(200);
-      expect(body.accounts.length).toBeGreaterThan(0);
 
     })
 
