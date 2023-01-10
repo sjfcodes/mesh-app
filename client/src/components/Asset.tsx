@@ -45,7 +45,7 @@ export default function Asset(props: Props) {
                 id="id-6"
                 placeholder="Enter Asset Description (e.g. house or car)"
                 value={description}
-                onChange={e => setDescription(e.currentTarget.value)}
+                onChange={(e) => setDescription(e.currentTarget.value)}
               />
               <NumberInput
                 required
@@ -53,7 +53,7 @@ export default function Asset(props: Props) {
                 id="id-6"
                 placeholder="Enter Asset Value (in dollars $)"
                 value={value}
-                onChange={e => setValue(e.currentTarget.value)}
+                onChange={(e) => setValue(e.currentTarget.value)}
               />
               <Button wide type="submit">
                 Submit

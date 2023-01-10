@@ -32,12 +32,12 @@ export default function TransactionTimeline() {
            * if account is found, return null as tx was formatted and logged already
            */
           const source = allAccounts.filter(
-            account => account.id === tx.account_id
+            (account) => account.id === tx.account_id
           )[0];
 
           const mask = tx.name.split(' ')[4].slice(-4);
           const target = allAccounts.filter(
-            account => account.mask === mask
+            (account) => account.mask === mask
           )[0];
 
           if (target) {
@@ -52,7 +52,7 @@ export default function TransactionTimeline() {
         } else if (tx.name.includes('from')) {
           const mask = tx.name.split(' ')[4].slice(-4);
           const source = allAccounts.filter(
-            account => account.mask === mask
+            (account) => account.mask === mask
           )[0];
 
           if (source) {

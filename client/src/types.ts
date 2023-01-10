@@ -76,10 +76,10 @@ export interface TransactionType {
   account_id: string;
   item_id: string /** manually added */;
   user_id: string /** manually added */;
-  plaid_transaction_id: string; /** originally transaction_id */
-  plaid_category_id: string; /** originally category_id */
+  plaid_transaction_id: string /** originally transaction_id */;
+  plaid_category_id: string /** originally category_id */;
   category: string;
-  subcategory: string; /** QUESTION: what is this?*/
+  subcategory: string /** QUESTION: what is this?*/;
   type: string /** QUESTION: what is this? */;
   name: string;
   amount: number;

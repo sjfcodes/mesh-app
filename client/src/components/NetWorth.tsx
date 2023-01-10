@@ -22,7 +22,7 @@ export default function NetWorth(props: Props) {
     accountSubtypes: Array<AccountType['subtype']>
   ): number =>
     props.accounts
-      .filter(a => accountSubtypes.includes(a.subtype))
+      .filter((a) => accountSubtypes.includes(a.subtype))
       .reduce((acc: number, val: AccountType) => acc + val.current_balance, 0);
 
   const depository: number = addAllAccounts([
@@ -81,7 +81,7 @@ export default function NetWorth(props: Props) {
                   <p>{''}</p>
                 </div>
                 <div className="personalAssets">
-                  {props.personalAssets.map(asset => (
+                  {props.personalAssets.map((asset) => (
                     <div key={asset.id} className="personalAsset">
                       <p className="dataItem">{asset.description}</p>
                       <p className="dataItem">{currencyFilter(asset.value)}</p>
@@ -138,7 +138,7 @@ export default function NetWorth(props: Props) {
                   <p className="title">Assets</p>
                 </div>
                 <div className="personalAssets">
-                  {props.personalAssets.map(asset => (
+                  {props.personalAssets.map((asset) => (
                     <div className="personalAsset">
                       <p className="dataItem">{asset.description}</p>
                       <p className="dataItem">{currencyFilter(asset.value)}</p>
