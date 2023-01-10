@@ -33,11 +33,13 @@ class App {
       item_id: tokenExchange.item_id,
     }));
 
-    await this.ddbClient.addPlaidItemToUser(
-      this.user.email,
+    await this.ddbClient.addPlaidItemToUser({
+      email: this.user.email,
       tokenExchange,
-      accounts
-    );
+      accounts,
+      institution_id: this.payload.institution_id,
+      institution_name: this.payload.institution_name,
+    });
 
     return { accounts, item_id: tokenExchange.item_id };
   }

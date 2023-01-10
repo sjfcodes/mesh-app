@@ -12,6 +12,7 @@ const url = REACT_APP_AWS_API_GATEWAY + '/' + REACT_APP_AWS_API_GATEWAY_STAGE;
 const useApi = () => {
   const getAuthToken = async () =>
     (await Auth.currentSession()).getIdToken().getJwtToken();
+
   const getLinkToken = async (userId: string, itemId: string | null) => {
     // axios(`/link-token`, {
     const response = await axios({
@@ -34,14 +35,13 @@ const useApi = () => {
       const { data } = await axios({
         url: url + '/item/token-exchange',
         method: 'POST',
-        headers: {
-          Authorization: await getAuthToken(),
-        },
+        headers: { Authorization: await getAuthToken() },
         data: {
           path: '/item/token-exchange',
           payload: {
             accounts,
             institution_id: institution.institution_id,
+            institution_name: institution.name,
             public_token: publicToken,
             user_id: userId,
           },

@@ -109,7 +109,7 @@ class DdbClient {
     );
   }
 
-  async addPlaidItemToUser(email, tokenExchange, accounts) {
+  async addPlaidItemToUser({ email, tokenExchange, accounts, institution_id, institution_name }) {
     if (!email || !tokenExchange || !accounts)
       throw new Error('missing required arguments!');
 
@@ -127,6 +127,8 @@ class DdbClient {
             M: {
               access_token: { S: tokenExchange.access_token },
               accounts: { S: JSON.stringify(accounts) },
+              institution_name: { S: institution_name },
+              institution_id: { S: institution_id },
               [config.itemKeys.txCursor]: { S: '' },
               created_at: { S: new Date().toISOString() },
               updated_at: { S: new Date().toISOString() },

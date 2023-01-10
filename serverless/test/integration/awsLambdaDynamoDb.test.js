@@ -56,6 +56,7 @@ const apiTableItem = axios.create({
 // ##################################
 const rebuildTableAndItem = false;
 const destroyTableAndItem = false;
+
 let plaidTestItemId = null;
 
 describe('lambda + dynamoDb integration tests', () => {
@@ -168,7 +169,9 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(status_code).toBe(200);
         expect(body.tx_sync).toBe('complete');
         expect(body.summary.added).toBeGreaterThan(0);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       });
+
       it('should sync new transactions for item', async () => {
         const payload = syncTransactionsForItemPayload(plaidTestItemId);
         const { status_code, body } = await (testApi
