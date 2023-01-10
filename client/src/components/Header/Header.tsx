@@ -12,8 +12,7 @@ const Header = () => {
 
   const handleSignOut = async () => {
     if (signOut) signOut({ type: 'SIGN_OUT' });
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    window.location.href = '/';
+    window.history.pushState({}, '', '/');
   };
 
   return (

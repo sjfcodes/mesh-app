@@ -11,7 +11,9 @@ function Landing() {
 
   useEffect(() => {
     if (user?.attributes?.email) {
-      navigate(`/user/${user.attributes.email}`);
+      const url = `/user/${user.attributes.email}`;
+      navigate(url);
+      window.history.pushState({}, '', url);
     }
   }, [user, navigate]);
 
