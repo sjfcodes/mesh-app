@@ -72,15 +72,15 @@ export interface RouteInfo {
 }
 
 export interface TransactionType {
-  id: string;
+  id: string /** db added */;
   account_id: string;
-  item_id: string;
-  user_id: string;
-  plaid_transaction_id: string;
-  plaid_category_id: string;
+  item_id: string /** manually added */;
+  user_id: string /** manually added */;
+  plaid_transaction_id: string; /** originally transaction_id */
+  plaid_category_id: string; /** originally category_id */
   category: string;
-  subcategory: string;
-  type: string;
+  subcategory: string; /** QUESTION: what is this?*/
+  type: string /** QUESTION: what is this? */;
   name: string;
   amount: number;
   iso_currency_code: string;

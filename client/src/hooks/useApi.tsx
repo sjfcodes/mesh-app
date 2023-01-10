@@ -3,6 +3,7 @@ import { Auth } from 'aws-amplify';
 import { toast } from 'react-toastify';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import DuplicateItemToastMessage from '../components/DuplicateItemToast';
+import userTransactionsJson from '../mockData/transactions.json';
 
 const { REACT_APP_AWS_API_GATEWAY, REACT_APP_AWS_API_GATEWAY_STAGE } =
   process.env;
@@ -84,8 +85,17 @@ const useApi = () => {
       data: { userId, description, value },
     });
   const getAssetsByUser = async (userId: number) => {
-    console.log('mock GET: /asset');
-    return { data: [] };
+    console.log('mock with data GET: /asset');
+    return {
+      data: [{}, {}, {}].map((x, idx) => ({
+        id: 'mock-id-' + idx,
+        user_id: 'mock-user_id-' + idx,
+        value: Math.floor(Math.random() * 10),
+        description: 'mock-description-' + idx,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })),
+    };
     //  return  axios({
     //     method: 'GET',
     //     url: url + `/assets`,
@@ -115,8 +125,21 @@ const useApi = () => {
       headers: { Authorization: await getAuthToken() },
     });
   const getTransactionsByUser = async (userId: string) => {
-    console.log('mock GET: /user/transaction');
-    return { data: [] };
+    console.log('mock with data; GET: /user/transaction');
+    return {
+      data: userTransactionsJson.map((tx, idx) => {
+        return {
+          id: 'mock-id-' + idx,
+          item_id: 'mock-item_id-' + idx,
+          user_id: userId,
+          plaid_transaction_id: tx.transaction_id,
+          plaid_category_id: tx.category_id,
+          subcategory: 'mock-subcategory-' + idx,
+          type: 'mock-type-' + idx,
+          ...tx,
+        };
+      }),
+    };
     //  return  axios({
     //     method: 'GET',
     //     url: url + `/user/transaction`,
@@ -141,13 +164,26 @@ const useApi = () => {
     });
   const getItemsByUser = async (userId: string) => {
     console.log('mock GET: /user/:id/item');
-    return { data: [] };
-  //  return  axios({
-  //     method: 'GET',
-  //     url: url + `/users/${userId}/items`,
-  //     headers: { Authorization: await getAuthToken() },
-  //   });
-  }
+    return {
+      data: [{}].map((x, idx) => {
+        return {
+          id: 'mock-id-' + idx,
+          plaid_item_id: 'mock-plaid_item_id-' + idx,
+          user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e' /** aws cognito id */,
+          plaid_access_token: 'mock-plaid_access_token-' + idx,
+          plaid_institution_id: 'mock-plaid_institution_id-' + idx,
+          status: 'mock-status-' + idx,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+      }),
+    };
+    //  return  axios({
+    //     method: 'GET',
+    //     url: url + `/users/${userId}/items`,
+    //     headers: { Authorization: await getAuthToken() },
+    //   });
+  };
   const deleteItemById = async (id: string) =>
     axios({
       method: 'DELETE',
