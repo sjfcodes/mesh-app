@@ -23,6 +23,7 @@ import useAccounts from '../hooks/useAccounts';
 import NetWorth from '../components/NetWorth';
 import SpendingInsights from '../components/SpendingInsights';
 import useAssets from '../hooks/useAssets';
+import TransactionTimeline from '../components/TransactionTimeline';
 
 // import TransactionTimeline from './TransactionTimeline';
 
@@ -99,6 +100,7 @@ const UserPage = () => {
 
   // update no of items from data store
   useEffect(() => {
+    console.log(itemsByUser, userId);
     if (itemsByUser[userId] != null) {
       setNumOfItems(itemsByUser[userId].length);
     } else {
@@ -209,7 +211,7 @@ const UserPage = () => {
               <ItemCard item={item} userId={userId} />
             </div>
           ))}
-          {/* <TransactionTimeline /> */}
+          <TransactionTimeline />
         </>
       )}
     </div>
