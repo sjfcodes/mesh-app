@@ -12,6 +12,5 @@ export const exchangeToken = async () => handler(exchangeTokenLinkPayload);
 
 export const syncTransactionsForItem = async (payload) => handler(payload);
 
-const mockContext = { ['resource-path']: config.path.itemGetAccounts };
 export const getUserAccounts = async () =>
-  handler(getUserAccountsPayload, mockContext);
+  handler(getUserAccountsPayload);

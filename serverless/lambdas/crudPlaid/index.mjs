@@ -1,7 +1,7 @@
 import config from './utils/config.mjs';
 import App from './lib/App.mjs';
 
-export const handler = async (event, context) => {
+export const handler = async (event) => {
   let response = event.body;
   let statusCode = 200;
 
@@ -12,7 +12,7 @@ export const handler = async (event, context) => {
 
     switch (event.context['http-method']) {
       case 'GET':
-        switch (context?.['resource-path']) {
+        switch (event.context['resource-path']) {
           case config.path.itemGetAccounts:
             response = await app.handleGetUserAccounts();
 

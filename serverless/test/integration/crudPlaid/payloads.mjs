@@ -57,6 +57,9 @@ export const syncTransactionsForItemPayload = (itemId) => ({
 
 export const getUserAccountsPayload = {
   body: {},
-  context: { ['http-method']: 'GET' },
+  context: {
+    ['http-method']: 'GET',
+    ['resource-path']: path.itemGetAccounts,
+  },
   params,
 };
