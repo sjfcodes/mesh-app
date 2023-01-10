@@ -51,7 +51,7 @@ export const handler = async (event) => {
 
         break;
       default:
-        throw new Error(`Unsupported method: "${event.httpMethod}"`);
+        throw new Error(`Unsupported method: "${event.context['http-method']}"`);
     }
   } catch (error) {
     console.error(error);
