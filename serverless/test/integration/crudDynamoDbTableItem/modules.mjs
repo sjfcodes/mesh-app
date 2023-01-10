@@ -1,16 +1,6 @@
-import { handler } from "../../../lambdas/crudDynamoDbTableItem/index.mjs";
-import {
-  createTableItemPayload,
-  deleteTableItemPayload,
-  getTableItemPayload,
-  updateTableItemPayload,
-} from "./payloads.mjs";
+import { handler } from '../../../lambdas/crudDynamoDbTableItem/index.mjs';
 
-export const createTableItem = async () => handler(createTableItemPayload);
-
-export const getTableItem = async () => handler(getTableItemPayload);
-
-export const updateTableItemItem = async () =>
-  handler(updateTableItemPayload);
-
-export const deleteTableItem = async () => handler(deleteTableItemPayload);
+export const createTableItem = async (payload) => handler(payload);
+export const getTableItem = async (payload) => handler(payload);
+export const updateTableItemItem = async (payload) => handler(payload);
+export const deleteTableItem = async (payload) => handler(payload);

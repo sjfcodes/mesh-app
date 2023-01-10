@@ -68,7 +68,7 @@ describe('lambda + dynamoDb integration tests', () => {
               method: createTablePayload.context['http-method'],
               data: createTablePayload,
             }).then(({ data }) => data)
-          : createTable());
+          : createTable(createTablePayload));
         if (status_code !== 200) console.error(body);
         await new Promise((resolve) => setTimeout(resolve, 8000));
         expect(status_code).toBe(200);
@@ -84,7 +84,7 @@ describe('lambda + dynamoDb integration tests', () => {
             method: getTablePayload.context['http-method'],
             data: getTablePayload,
           }).then(({ data }) => data)
-        : getTable());
+        : getTable(getTablePayload));
 
       if (status_code !== 200) console.error(body);
 
@@ -100,7 +100,7 @@ describe('lambda + dynamoDb integration tests', () => {
               method: createTableItemPayload.context['http-method'],
               data: createTableItemPayload,
             }).then(({ data }) => data)
-          : createTableItem());
+          : createTableItem(createTableItemPayload));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });
@@ -112,7 +112,7 @@ describe('lambda + dynamoDb integration tests', () => {
             method: getTableItemPayload.context['http-method'],
             data: getTableItemPayload,
           }).then(({ data }) => data)
-        : getTableItem());
+        : getTableItem(getTableItemPayload));
 
       if (status_code !== 200) console.error(body);
 
@@ -137,24 +137,24 @@ describe('lambda + dynamoDb integration tests', () => {
       expect(body.Attributes.verified.BOOL).toBe(true);
     });
 
-    it('should add new plaid item', async () => {
-      const { status_code, body } = await (testApi
-        ? apiTableItem({
-            method: exchangeTokenLinkPayload.context['http-method'],
-            data: exchangeTokenLinkPayload,
-          }).then(({ data }) => data)
-        : exchangeToken());
-
-      if (status_code !== 200) console.error(body);
-
-      plaidTestItemId = body.item_id;
-
-      expect(status_code).toBe(200);
-      expect(body.public_token_exchange).toBe('complete');
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    });
-
     if (rebuildTableAndItem) {
+      it('should add new plaid item', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: exchangeTokenLinkPayload.context['http-method'],
+              data: exchangeTokenLinkPayload,
+            }).then(({ data }) => data)
+          : exchangeToken(exchangeTokenLinkPayload));
+
+        if (status_code !== 200) console.error(body);
+
+        plaidTestItemId = body.item_id;
+
+        expect(status_code).toBe(200);
+        expect(body.public_token_exchange).toBe('complete');
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      });
+
       it('should sync new transactions for item', async () => {
         const payload = syncTransactionsForItemPayload(plaidTestItemId);
         const { status_code, body } = await (testApi
@@ -189,7 +189,7 @@ describe('lambda + dynamoDb integration tests', () => {
       });
     }
 
-    it('should get accounts for user', async ()=>{
+    it('should get accounts for user', async () => {
       const { status_code, body } = await (testApi
         ? apiTableItem({
             method: getUserAccountsPayload.context['http-method'],
@@ -200,8 +200,23 @@ describe('lambda + dynamoDb integration tests', () => {
       if (status_code !== 200) console.error(body);
 
       expect(status_code).toBe(200);
-      expect(body.accounts.length).toBeGreaterThan(0)
+      expect(body.accounts.length).toBeGreaterThan(0);
     });
+
+    it('should get bank institution details by id institution_id', async()=>{
+      const { status_code, body } = await (testApi
+        ? apiTableItem({
+            method: getUserAccountsPayload.context['http-method'],
+            data: getUserAccountsPayload,
+          }).then(({ data }) => data)
+        : getUserAccounts(getUserAccountsPayload));
+
+      if (status_code !== 200) console.error(body);
+
+      expect(status_code).toBe(200);
+      expect(body.accounts.length).toBeGreaterThan(0);
+
+    })
 
     if (destroyTableAndItem) {
       it('should DELETE item from Table', async () => {
@@ -210,7 +225,7 @@ describe('lambda + dynamoDb integration tests', () => {
               method: deleteTableItemPayload.context['http-method'],
               data: deleteTableItemPayload,
             }).then(({ data }) => data)
-          : deleteTableItem());
+          : deleteTableItem(deleteTableItemPayload));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });
@@ -225,7 +240,7 @@ describe('lambda + dynamoDb integration tests', () => {
               method: deleteTablePayload.context['http-method'],
               data: deleteTablePayload,
             }).then(({ data }) => data)
-          : deleteTable());
+          : deleteTable(deleteTablePayload));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });
