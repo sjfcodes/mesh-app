@@ -232,12 +232,13 @@ describe('lambda + dynamoDb integration tests', () => {
           : crudPlaid(getUserItemsPayload));
 
         if (status_code !== 200) console.error(body);
+        
+        const item = Object.values(body.items)[0]
 
         expect(status_code).toBe(200);
-        expect(body.items.length).toBeGreaterThan(0);
-        expect(body.items[0]).not.toHaveProperty('access_token');
-        expect(body.items[0].id).toBe(mockData.tokenExchange.item_id);
-        expect(Array.isArray(body.items[0].accounts.L)).toBe(true);
+        expect(item).not.toHaveProperty('access_token');
+        expect(item.id.S).toBe(mockData.tokenExchange.item_id);
+        expect(Array.isArray(item.accounts.L)).toBe(true);
       });
 
       it('should get plaid item accounts for user', async () => {

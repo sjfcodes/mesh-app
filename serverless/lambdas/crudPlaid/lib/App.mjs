@@ -71,12 +71,15 @@ class App {
 
   async handleGetUserItems() {
     const { items } = await this.ddbClient.readUserItems(this.user.email);
-    const formatted = Object.values(items).map((item) => {
+    const formatted = Object.entries(items).reduce((prev, [item_id, item]) => {
       const copy = { ...item.M };
       delete copy.access_token;
       copy.accounts = { L: JSON.parse(copy.accounts.S) };
-      return copy;
-    });
+      return {
+        ...prev,
+        [item_id]: copy,
+      };
+    }, {});
 
     return { items: formatted };
   }
