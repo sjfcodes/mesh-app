@@ -74,8 +74,7 @@ class App {
     const formatted = Object.values(items).map((item) => {
       const copy = { ...item.M };
       delete copy.access_token;
-      
-      copy.accounts.L = JSON.parse(copy.accounts.S)
+      copy.accounts = { L: JSON.parse(copy.accounts.S) };
       return copy;
     });
 
