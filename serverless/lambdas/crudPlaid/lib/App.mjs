@@ -16,7 +16,7 @@ class App {
     const tokenPayload = token.split('.')[1];
     const decrypted = JSON.parse(Buffer.from(tokenPayload, 'base64'));
 
-    this.user = await this.ddbClient.getUserByTokenEmail(decrypted.email);
+    this.user = await this.ddbClient.readUserByTokenEmail(decrypted.email);
   }
 
   async getLinkToken() {
@@ -34,7 +34,7 @@ class App {
       item_id: tokenExchange.item_id,
     }));
 
-    await this.ddbClient.addPlaidItemToUser({
+    await this.ddbClient.writePlaidItemToUser({
       email: this.user.email,
       tokenExchange,
       accounts,
@@ -46,7 +46,7 @@ class App {
   }
 
   async handleGetUserAccounts() {
-    const { accounts } = await this.ddbClient.getUserAccounts(this.user.email);
+    const { accounts } = await this.ddbClient.readUserAccounts(this.user.email);
 
     return { accounts };
   }
@@ -58,7 +58,7 @@ class App {
   }
 
   async handleSyncTxsForItem() {
-    const { accessToken, txCursor } = await this.ddbClient.getItemByItemId(
+    const { accessToken, txCursor } = await this.ddbClient.readItemByItemId(
       this.user.email,
       this.payload.item_id
     );
@@ -68,7 +68,7 @@ class App {
     const { newTxCursor, added, modified, removed } =
       await this.plaidClient.syncTxsForItem(accessToken, txCursor);
 
-    await this.ddbClient.setItemTxCursor(
+    await this.ddbClient.writeItemTxCursor(
       this.user.email,
       this.payload.item_id,
       newTxCursor

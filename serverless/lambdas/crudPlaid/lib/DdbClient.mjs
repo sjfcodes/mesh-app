@@ -12,7 +12,7 @@ class DdbClient {
     this.client = new DynamoDBClient(configuration);
   }
 
-  async getUserByTokenEmail(email) {
+  async readUserByTokenEmail(email) {
     if (!email) throw new Error('missing required arguments!');
     const { Item } = await this.client.send(
       new GetItemCommand({
@@ -28,7 +28,7 @@ class DdbClient {
     };
   }
 
-  async getItemByItemId(email, itemId) {
+  async readItemByItemId(email, itemId) {
     if (!email || !itemId) throw new Error('missing required arguments!');
 
     const {
@@ -62,7 +62,7 @@ class DdbClient {
     };
   }
 
-  async getUserAccounts(email) {
+  async readUserAccounts(email) {
     const {
       Item: {
         [config.itemKeys.plaidItem]: { M: plaidItems },
@@ -86,7 +86,7 @@ class DdbClient {
     return { accounts: allAccounts };
   }
 
-  async setItemTxCursor(email, itemId, newTxCursor) {
+  async writeItemTxCursor(email, itemId, newTxCursor) {
     if (!email || !itemId || newTxCursor === undefined)
       throw new Error('missing required arguments!');
     const { Attributes } = await this.client.send(
@@ -109,7 +109,7 @@ class DdbClient {
     );
   }
 
-  async addPlaidItemToUser({ email, tokenExchange, accounts, institution_id, institution_name }) {
+  async writePlaidItemToUser({ email, tokenExchange, accounts, institution_id, institution_name }) {
     if (!email || !tokenExchange || !accounts)
       throw new Error('missing required arguments!');
 
@@ -126,6 +126,7 @@ class DdbClient {
           ':map': {
             M: {
               access_token: { S: tokenExchange.access_token },
+              // TODO: update solution for account storage.
               accounts: { S: JSON.stringify(accounts) },
               institution_name: { S: institution_name },
               institution_id: { S: institution_id },
