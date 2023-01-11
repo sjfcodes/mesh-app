@@ -231,10 +231,11 @@ describe('lambda + dynamoDb integration tests', () => {
           : crudPlaid(getUserItemsPayload));
 
         if (status_code !== 200) console.error(body);
-        console.log(body)
 
         expect(status_code).toBe(200);
-        expect(Object.keys(body.items).length).toBeGreaterThan(0)
+        expect(body.items.length).toBeGreaterThan(0);
+        expect(body.items[0]).not.toHaveProperty('access_token');
+        expect(Array.isArray(body.items[0].accounts.L)).toBe(true);
       });
 
       it('should get plaid item accounts for user', async () => {
