@@ -1,22 +1,31 @@
-import config from "../../config/dynamoDb.mjs";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+import config from '../../config/dynamoDb.mjs';
 
 const { TableName, params } = config;
 
-export const createTablePayload = {
+console.log(69,TableName);
+
+////////////////
+// USER TABLE /
+//////////////
+
+export const createUserTablePayload = {
   body: {
     path: null,
     payload: {
       TableName: TableName.user,
       AttributeDefinitions: [
         {
-          AttributeName: "email",
-          AttributeType: "S",
+          AttributeName: 'email',
+          AttributeType: 'S',
         },
       ],
       KeySchema: [
         {
-          AttributeName: "email",
-          KeyType: "HASH",
+          AttributeName: 'email',
+          KeyType: 'HASH',
         },
       ],
       ProvisionedThroughput: {
@@ -28,28 +37,92 @@ export const createTablePayload = {
       },
     },
   },
-  context: { ["http-method"]: "PUT" },
+  context: { ['http-method']: 'PUT' },
   params,
 };
 
-export const deleteTablePayload = {
+export const getUserTablePayload = {
   body: {
     path: null,
     payload: {
       TableName: TableName.user,
     },
   },
-  context: { ["http-method"]: "DELETE" },
+  context: { ['http-method']: 'GET' },
   params,
 };
 
-export const getTablePayload = {
+export const deleteUserTablePayload = {
   body: {
     path: null,
     payload: {
       TableName: TableName.user,
     },
   },
-  context: { ["http-method"]: "GET" },
+  context: { ['http-method']: 'DELETE' },
+  params,
+};
+
+///////////////////////
+// TRANSACTION TABLE /
+/////////////////////
+
+export const createTransactionTablePayload = {
+  body: {
+    path: null,
+    payload: {
+      TableName: TableName.transaction,
+      AttributeDefinitions: [
+        {
+          AttributeName: 'item_id::account_id',
+          AttributeType: 'S',
+        },
+        {
+          AttributeName: 'transaction_id',
+          AttributeType: 'S',
+        },
+      ],
+      KeySchema: [
+        {
+          AttributeName: 'item_id::account_id',
+          KeyType: 'HASH',
+        },
+        {
+          AttributeName: 'transaction_id',
+          KeyType: 'RANGE',
+        },
+      ],
+      ProvisionedThroughput: {
+        ReadCapacityUnits: 1,
+        WriteCapacityUnits: 1,
+      },
+      StreamSpecification: {
+        StreamEnabled: false,
+      },
+    },
+  },
+  context: { ['http-method']: 'PUT' },
+  params,
+};
+
+export const getTransactionTablePayload = {
+  body: {
+    path: null,
+    payload: {
+      TableName: TableName.transaction,
+    },
+  },
+  context: { ['http-method']: 'GET' },
+  params,
+};
+
+export const deleteTransactionTablePayload = {
+  body: {
+    path: null,
+    payload: {
+      TableName: TableName.transaction,
+    },
+  },
+  context: { ['http-method']: 'DELETE' },
   params,
 };

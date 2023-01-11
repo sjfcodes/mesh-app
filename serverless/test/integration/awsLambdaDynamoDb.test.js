@@ -3,14 +3,20 @@ import axios from 'axios';
 
 import dynamoDb from '../config/dynamoDb.mjs';
 import {
-  createTable,
-  deleteTable,
-  getTable,
+  createTransactionTable,
+  createUserTable,
+  deleteTransactionTable,
+  deleteUserTable,
+  getTransactionTable,
+  getUserTable,
 } from './crudDynamoDbTable/modules.mjs';
 import {
-  getTablePayload,
-  createTablePayload,
-  deleteTablePayload,
+  getUserTablePayload,
+  createUserTablePayload,
+  deleteUserTablePayload,
+  deleteTransactionTablePayload,
+  createTransactionTablePayload,
+  getTransactionTablePayload,
 } from './crudDynamoDbTable/payloads.mjs';
 import {
   createTableItemPayload,
@@ -38,7 +44,6 @@ import {
 } from './crudPlaid/modules.mjs';
 
 dotenv.config();
-
 const { TableName, Item } = dynamoDb;
 const testApi = process.env.USE_API_GATEWAY === 'true';
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
@@ -56,37 +61,63 @@ const apiTableItem = axios.create({
 // ##################################
 // # rebuild/destroy table controls #
 // ##################################
-const rebuildTableAndItem = false;
+const buildTableAndItem = false;
 const destroyTableAndItem = false;
 
 let plaidTestItemId = null;
 
 describe('lambda + dynamoDb integration tests', () => {
-  if (rebuildTableAndItem) {
-    describe('create table', () => {
-      it('should create table', async () => {
+  if (buildTableAndItem) {
+    describe('create tables', () => {
+      it('should create user table', async () => {
         const { status_code, body } = await (testApi
           ? apiTable({
-              method: createTablePayload.context['http-method'],
-              data: createTablePayload,
+              method: createUserTablePayload.context['http-method'],
+              data: createUserTablePayload,
             }).then(({ data }) => data)
-          : createTable(createTablePayload));
+          : createUserTable(createUserTablePayload));
         if (status_code !== 200) console.error(body);
         await new Promise((resolve) => setTimeout(resolve, 8000));
         expect(status_code).toBe(200);
         expect(body.TableDescription.TableName).toBe(TableName.user);
       });
+
+      it('should create transaction table', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTable({
+              method: createTransactionTablePayload.context['http-method'],
+              data: createTransactionTablePayload,
+            }).then(({ data }) => data)
+          : createTransactionTable(createTransactionTablePayload));
+        if (status_code !== 200) console.error(body);
+        await new Promise((resolve) => setTimeout(resolve, 8000));
+        expect(status_code).toBe(200);
+        expect(body.TableDescription.TableName).toBe(TableName.transaction);
+      });
     });
   }
 
-  describe('read table', () => {
-    it('should get table', async () => {
+  describe('read tables', () => {
+    it('should get user table', async () => {
       const { status_code, body } = await (testApi
         ? apiTable({
-            method: getTablePayload.context['http-method'],
-            data: getTablePayload,
+            method: getUserTablePayload.context['http-method'],
+            data: getUserTablePayload,
           }).then(({ data }) => data)
-        : getTable(getTablePayload));
+        : getUserTable(getUserTablePayload));
+
+      if (status_code !== 200) console.error(body);
+
+      expect(status_code).toBe(200);
+    });
+
+    it('should get transaction table', async () => {
+      const { status_code, body } = await (testApi
+        ? apiTable({
+            method: getTransactionTablePayload.context['http-method'],
+            data: getTransactionTablePayload,
+          }).then(({ data }) => data)
+        : getTransactionTable(getTransactionTablePayload));
 
       if (status_code !== 200) console.error(body);
 
@@ -95,7 +126,7 @@ describe('lambda + dynamoDb integration tests', () => {
   });
 
   describe('create, edit, & delete items from table', () => {
-    if (rebuildTableAndItem) {
+    if (buildTableAndItem) {
       it('should create Item', async () => {
         const { status_code, body } = await (testApi
           ? apiTableItem({
@@ -139,7 +170,7 @@ describe('lambda + dynamoDb integration tests', () => {
       expect(body.Attributes.verified.BOOL).toBe(true);
     });
 
-    if (rebuildTableAndItem) {
+    if (buildTableAndItem) {
       it('should add new plaid item', async () => {
         const { status_code, body } = await (testApi
           ? apiTableItem({
@@ -234,14 +265,24 @@ describe('lambda + dynamoDb integration tests', () => {
   });
 
   if (destroyTableAndItem) {
-    describe('destroy table', () => {
-      it('should delete table', async () => {
+    describe('destroy tables', () => {
+      it('should delete user table', async () => {
         const { status_code, body } = await (testApi
           ? apiTable({
-              method: deleteTablePayload.context['http-method'],
-              data: deleteTablePayload,
+              method: deleteUserTablePayload.context['http-method'],
+              data: deleteUserTablePayload,
             }).then(({ data }) => data)
-          : deleteTable(deleteTablePayload));
+          : deleteUserTable(deleteUserTablePayload));
+        if (status_code !== 200) console.error(body);
+        expect(status_code).toBe(200);
+      });
+      it('should delete transaction table', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTable({
+              method: deleteTransactionTablePayload.context['http-method'],
+              data: deleteTransactionTablePayload,
+            }).then(({ data }) => data)
+          : deleteTransactionTable(deleteTransactionTablePayload));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });

@@ -4,7 +4,8 @@ dotenv.config();
 
 const config = {
   TableName: {
-    user: 'mesh-app-users-test',
+    user: process.env.USER_TABLE_NAME /* prod or test table */,
+    transaction: process.env.TRANSACTION_TABLE_NAME /* prod or test table */,
   },
   Item: {
     original: {

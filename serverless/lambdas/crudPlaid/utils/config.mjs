@@ -10,6 +10,7 @@ const config = {
   jwks: `https://cognito-idp.${awsRegion}.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
   TableName: {
     user: process.env.USER_TABLE_NAME /* prod or test table */,
+    transaction: process.env.TRANSACTION_TABLE_NAME /* prod or test table */,
   },
   path: {
     linkTokenCreate: '/link/token-create',

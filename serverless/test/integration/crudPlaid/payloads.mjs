@@ -39,7 +39,7 @@ export const exchangeTokenLinkPayload = {
       ],
       institution_id: 'ins_115585',
       institution_name: "Boeing Employees Credit Union (BECU) - Personal Online Banking",
-      public_token: 'public-sandbox-acbc3c93-453c-4e11-a744-2c25b9bd8f2d',
+      public_token: 'public-sandbox-39f63a49-ada5-44ef-8d74-e702c9b6a6ed',
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
