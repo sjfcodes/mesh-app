@@ -52,27 +52,30 @@ class App {
   }
 
   async handleGetInstitutionById() {
-    const data = await this.plaidClient.getInstitutionById(this.queryString.institution_id);
+    const data = await this.plaidClient.getInstitutionById(
+      this.queryString.institution_id
+    );
 
     return data;
   }
 
   async handleSyncTxsForItem() {
+    const { item_id: itemId } = this.payload;
     const { accessToken, txCursor } = await this.ddbClient.readItemByItemId(
       this.user.email,
-      this.payload.item_id
+      itemId
     );
-
-    console.log({ accessToken, txCursor });
 
     const { newTxCursor, added, modified, removed } =
       await this.plaidClient.syncTxsForItem(accessToken, txCursor);
 
     await this.ddbClient.writeItemTxCursor(
       this.user.email,
-      this.payload.item_id,
+      itemId,
       newTxCursor
     );
+
+    await this.ddbClient.writeTxsForItem({ itemId, added, modified, removed });
 
     return {
       added: added.length,
