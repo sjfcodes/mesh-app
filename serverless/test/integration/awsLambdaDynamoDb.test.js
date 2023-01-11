@@ -46,7 +46,10 @@ import {
 dotenv.config();
 const { TableName, Item } = dynamoDb;
 const testApi = process.env.USE_API_GATEWAY === 'true';
-console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
+let buildTableAndItem = false;
+let destroyTableAndItem = false;
+let testPlaidItemActions = false;
+let plaidTestItemId = null;
 
 const apiTable = axios.create({
   baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtable',
@@ -58,13 +61,31 @@ const apiTableItem = axios.create({
   headers: { Authorization: process.env.AUTH_TOKEN },
 });
 
-// ##################################
-// # rebuild/destroy table controls #
-// ##################################
-const buildTableAndItem = false;
-const destroyTableAndItem = false;
+////////////////////
+// TEST CONTROLS ///
+////////////////////
+// const STAGE = 'LIFECYCLE';
+// const STAGE = 'CREATE';
+const STAGE = 'PERSIST';
+// const STAGE = 'DESTROY';
 
-let plaidTestItemId = null;
+if (STAGE === 'LIFECYCLE') {
+  buildTableAndItem = true;
+  testPlaidItemActions = true;
+  destroyTableAndItem = true;
+}
+if (STAGE === 'CREATE') {
+  buildTableAndItem = true;
+  testPlaidItemActions = true;
+}
+if (STAGE === 'PERSIST') {
+  testPlaidItemActions = true;
+}
+if (STAGE === 'DESTROY') {
+  destroyTableAndItem = true;
+}
+
+console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
 
 describe('lambda + dynamoDb integration tests', () => {
   if (buildTableAndItem) {
@@ -170,7 +191,7 @@ describe('lambda + dynamoDb integration tests', () => {
       expect(body.Attributes.verified.BOOL).toBe(true);
     });
 
-    if (buildTableAndItem) {
+    if (testPlaidItemActions) {
       it('should add new plaid item', async () => {
         const { status_code, body } = await (testApi
           ? apiTableItem({
@@ -185,7 +206,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
         expect(status_code).toBe(200);
         expect(body.public_token_exchange).toBe('complete');
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
       it('should sync new transactions for item', async () => {
@@ -202,7 +223,7 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(status_code).toBe(200);
         expect(body.tx_sync).toBe('complete');
         expect(body.summary.added).toBeGreaterThan(0);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
       it('should sync new transactions for item', async () => {
@@ -220,35 +241,35 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(body.tx_sync).toBe('complete');
         expect(body.summary.added).toBe(0);
       });
+
+      it('should get accounts for user', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: getUserAccountsPayload.context['http-method'],
+              data: getUserAccountsPayload,
+            }).then(({ data }) => data)
+          : getUserAccounts(getUserAccountsPayload));
+
+        if (status_code !== 200) console.error(body);
+
+        expect(status_code).toBe(200);
+        expect(body.accounts.length).toBeGreaterThan(0);
+      });
+
+      it('should get bank institution details by id institution_id', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: getInstitutionByIdPayload.context['http-method'],
+              data: getInstitutionByIdPayload,
+            }).then(({ data }) => data)
+          : getInstitutionById(getInstitutionByIdPayload));
+
+        if (status_code !== 200) console.error(body);
+
+        expect(status_code).toBe(200);
+        expect(body.logo).not.toBe(null);
+      });
     }
-
-    it('should get accounts for user', async () => {
-      const { status_code, body } = await (testApi
-        ? apiTableItem({
-            method: getUserAccountsPayload.context['http-method'],
-            data: getUserAccountsPayload,
-          }).then(({ data }) => data)
-        : getUserAccounts(getUserAccountsPayload));
-
-      if (status_code !== 200) console.error(body);
-
-      expect(status_code).toBe(200);
-      expect(body.accounts.length).toBeGreaterThan(0);
-    });
-
-    it('should get bank institution details by id institution_id', async () => {
-      const { status_code, body } = await (testApi
-        ? apiTableItem({
-            method: getInstitutionByIdPayload.context['http-method'],
-            data: getInstitutionByIdPayload,
-          }).then(({ data }) => data)
-        : getInstitutionById(getInstitutionByIdPayload));
-
-      if (status_code !== 200) console.error(body);
-
-      expect(status_code).toBe(200);
-      expect(body.logo).not.toBe(null);
-    });
 
     if (destroyTableAndItem) {
       it('should DELETE item from Table', async () => {
