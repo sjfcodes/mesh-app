@@ -71,8 +71,8 @@ class App {
 
   async handleGetUserItems() {
     const { items } = await this.ddbClient.readUserItems(this.user.email);
-
-    return { items };
+    const formatted = Object.values(items).map(item=>item.M)
+    return { items: formatted };
   }
 
   async handleGetUserAccounts() {
