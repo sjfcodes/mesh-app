@@ -66,9 +66,9 @@ const apiTableItem = axios.create({
 ///////////////////
 // TEST CONTROLS //
 ///////////////////
-// const STAGE = 'LIFECYCLE';
+const STAGE = 'LIFECYCLE';
 // const STAGE = 'CREATE';
-const STAGE = 'PERSIST';
+// const STAGE = 'PERSIST';
 // const STAGE = 'DESTROY';
 
 if (STAGE === 'LIFECYCLE') {
@@ -252,7 +252,6 @@ describe('lambda + dynamoDb integration tests', () => {
           : getTransactionsForAccount(getTransactionsForAccountPayload));
 
         if (status_code !== 200) console.error(body);
-        console.log(body)
 
         expect(status_code).toBe(200);
         expect(body.transactions?.length).toBe(48);
