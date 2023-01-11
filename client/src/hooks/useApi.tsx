@@ -171,10 +171,10 @@ const useApi = () => {
       data: [{}].map((x, idx) => {
         return {
           id: 'mock-id-' + idx,
-          plaid_item_id: 'mock-plaid_item_id-' + idx,
-          user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e' /** aws cognito id */,
+          user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e' /** aws cognito (sub) id */,
           plaid_access_token: 'mock-plaid_access_token-' + idx,
           plaid_institution_id: 'ins_115585',
+          plaid_item_id: 'mock-plaid_item_id-' + idx,
           status: 'mock-status-' + idx,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),

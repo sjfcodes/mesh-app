@@ -86,6 +86,7 @@ export function AssetsProvider(props: any) {
     },
     [getAssetsByUser]
   );
+
   const value = useMemo(() => {
     return {
       assetsByUser,
