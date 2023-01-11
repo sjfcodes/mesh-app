@@ -39,6 +39,7 @@ import {
   getUserItemsPayload,
 } from './crudPlaid/payloads.mjs';
 import { handler as crudPlaid } from '../../lambdas/crudPlaid/index.mjs';
+import mockData from './crudPlaid/mockData/plaid.js';
 
 dotenv.config();
 const { TableName, Item } = dynamoDb;
@@ -235,6 +236,7 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(status_code).toBe(200);
         expect(body.items.length).toBeGreaterThan(0);
         expect(body.items[0]).not.toHaveProperty('access_token');
+        expect(body.items[0].id).toBe(mockData.tokenExchange.item_id);
         expect(Array.isArray(body.items[0].accounts.L)).toBe(true);
       });
 

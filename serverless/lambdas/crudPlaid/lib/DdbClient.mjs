@@ -187,8 +187,8 @@ class DdbClient {
         ExpressionAttributeValues: {
           ':map': {
             M: {
+              id: { S: tokenExchange.item_id },
               access_token: { S: tokenExchange.access_token },
-              // TODO: update solution for account storage.
               accounts: { S: JSON.stringify(accounts) },
               institution_name: { S: institution_name },
               institution_id: { S: institution_id },
