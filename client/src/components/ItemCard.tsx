@@ -7,8 +7,8 @@ import { Institution } from 'plaid/dist/api';
 
 import { diffBetweenCurrentTime } from '../util';
 import { AccountType, ItemType } from '../types';
-import useApi from '../hooks/useApi';
-import useItems from '../hooks/useItems';
+// import useApi from '../hooks/useApi';
+// import useItems from '../hooks/useItems';
 import useAccounts from '../hooks/useAccounts';
 import useInstitutions from '../hooks/useInstitutions';
 import useTransactions from '../hooks/useTransactions';
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const ItemCard = (props: Props) => {
-  const { setItemToBadState } = useApi();
+  // const { setItemToBadState } = useApi();
   const [accounts, setAccounts] = useState<AccountType[]>([]);
   const [institution, setInstitution] = useState<Institution>({
     logo: '',
@@ -36,7 +36,7 @@ const ItemCard = (props: Props) => {
   });
   const [showAccounts, setShowAccounts] = useState(false);
   const { accountsByItem, deleteAccountsByItemId } = useAccounts();
-  const { deleteItemById } = useItems();
+  // const { deleteItemById } = useItems();
   const { deleteTransactionsByItemId } = useTransactions();
   const { institutionsById, getInstitutionById, formatLogoSrc } =
     useInstitutions();
@@ -57,11 +57,11 @@ const ItemCard = (props: Props) => {
     getInstitutionById(plaid_institution_id);
   }, [getInstitutionById, plaid_institution_id]);
 
-  const handleSetBadState = () => {
-    setItemToBadState(id);
-  };
+  // const handleSetBadState = () => {
+  //   setItemToBadState(id);
+  // };
   const handleDeleteItem = () => {
-    deleteItemById(id, props.userId);
+    // deleteItemById(id, props.userId);
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
@@ -103,9 +103,9 @@ const ItemCard = (props: Props) => {
           </div>
         </Touchable>
         <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
-          setBadStateShown={isSandbox && isGoodState}
+          isBadState={isSandbox && isGoodState}
           handleDelete={handleDeleteItem}
-          handleSetBadState={handleSetBadState}
+          handleSetBadState={/*handleSetBadState*/ () => console.log('handleSetBadState forSandboxOnly')}
           userId={props.userId}
           itemId={id}
         />

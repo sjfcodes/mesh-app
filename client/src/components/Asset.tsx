@@ -4,7 +4,7 @@ import ModalBody from 'plaid-threads/ModalBody';
 import Button from 'plaid-threads/Button';
 import TextInput from 'plaid-threads/TextInput';
 import NumberInput from 'plaid-threads/NumberInput';
-import useAssets from '../hooks/useAssets';
+// import useAssets from '../hooks/useAssets';
 
 interface Props {
   userId: string;
@@ -16,12 +16,12 @@ export default function Asset(props: Props) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
-  const { addAsset } = useAssets();
+  // const { addAsset } = useAssets();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     setShow(false);
-    addAsset(props.userId, description, parseFloat(value));
+    // addAsset(props.userId, description, parseFloat(value));
     setDescription('');
     setValue('');
   };

@@ -36,7 +36,7 @@ interface TransactionsContextShape extends TransactionsState {
   deleteTransactionsByItemId: (itemId: string) => void;
   deleteTransactionsByUserId: (userId: string) => void;
   transactionsByUser: Dictionary<any>;
-  getTransactionsByUser: (userId: string) => void;
+  // getTransactionsByUser: (userId: string) => void;
   transactionsByItem: Dictionary<any>;
 }
 const TransactionsContext = createContext<TransactionsContextShape>(
@@ -52,8 +52,8 @@ const TransactionsContext = createContext<TransactionsContextShape>(
 export function TransactionsProvider(props: any) {
   const {
     getTransactionsByAccount: apiGetTransactionsByAccount,
-    getTransactionsByItem: apiGetTransactionsByItem,
-    getTransactionsByUser: apiGetTransactionsByUser,
+    // getTransactionsByItem: apiGetTransactionsByItem,
+    // getTransactionsByUser: apiGetTransactionsByUser,
   } = useApi();
   const [transactionsById, dispatch] = useReducer(reducer, initialState);
 
@@ -79,21 +79,21 @@ export function TransactionsProvider(props: any) {
     []
   );
 
-  /**
-   * @desc Requests all Transactions that belong to an individual Item.
-   */
-  const getTransactionsByItem = useCallback(async (itemId: string) => {
-    const { data: payload } = await apiGetTransactionsByItem(itemId);
-    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
-  }, []);
+  // /**
+  //  * @desc Requests all Transactions that belong to an individual Item.
+  //  */
+  // const getTransactionsByItem = useCallback(async (itemId: string) => {
+  //   const { data: payload } = await apiGetTransactionsByItem(itemId);
+  //   dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+  // }, []);
 
-  /**
-   * @desc Requests all Transactions that belong to an individual User.
-   */
-  const getTransactionsByUser = useCallback(async (userId: string) => {
-    const { data: payload } = await apiGetTransactionsByUser(userId);
-    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
-  }, []);
+  // /**
+  //  * @desc Requests all Transactions that belong to an individual User.
+  //  */
+  // const getTransactionsByUser = useCallback(async (userId: string) => {
+  //   const { data: payload } = await apiGetTransactionsByUser(userId);
+  //   dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+  // }, []);
 
   /**
    * @desc Will Delete all transactions that belong to an individual Item.
@@ -138,8 +138,8 @@ export function TransactionsProvider(props: any) {
       transactionsByItem: groupBy(allTransactions, 'item_id'),
       transactionsByUser: groupBy(allTransactions, 'user_id'),
       getTransactionsByAccount,
-      getTransactionsByItem,
-      getTransactionsByUser,
+      // getTransactionsByItem,
+      // getTransactionsByUser,
       deleteTransactionsByItemId,
       deleteTransactionsByUserId,
     };
@@ -147,8 +147,8 @@ export function TransactionsProvider(props: any) {
     dispatch,
     transactionsById,
     getTransactionsByAccount,
-    getTransactionsByItem,
-    getTransactionsByUser,
+    // getTransactionsByItem,
+    // getTransactionsByUser,
     deleteTransactionsByItemId,
     deleteTransactionsByUserId,
   ]);

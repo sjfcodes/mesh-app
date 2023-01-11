@@ -9,7 +9,7 @@ import useLink from '../hooks/useLink';
 import LaunchLink from './LaunchLink';
 
 interface Props {
-  setBadStateShown: boolean;
+  isBadState: boolean;
   handleSetBadState: () => void;
   userId: string;
   itemId: string;
@@ -42,7 +42,7 @@ export function MoreDetails(props: Props) {
   }, [linkTokens, props.itemId]);
 
   // display choice, depending on whether item is in "good" or "bad" state
-  const linkChoice = props.setBadStateShown ? (
+  const linkChoice = props.isBadState ? (
     // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;
     // app responds to this webhook by setting item to "bad" state (server/webhookHandlers/handleItemWebhook.js)
     <Touchable className="menuOption" onClick={props.handleSetBadState}>

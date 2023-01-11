@@ -51,18 +51,17 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
   props: any
 ) => {
   const {
-    getAccountsByItem: apiGetAccountsByItem,
     getAccountsByUser: apiGetAccountsByUser,
   } = useApi();
   const [accountsById, dispatch] = useReducer(reducer, initialState);
 
-  /**
-   * @desc Requests all Accounts that belong to an individual Item.
-   */
-  const getAccountsByItem = useCallback(async (itemId: string) => {
-    const { data: payload } = await apiGetAccountsByItem(itemId);
-    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
-  }, []);
+  // /**
+  //  * @desc Requests all Accounts that belong to an individual Item.
+  //  */
+  // const getAccountsByItem = useCallback(async (itemId: string) => {
+  //   const { data: payload } = await apiGetAccountsByItem(itemId);
+  //   dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+  // }, []);
 
   /**
    * @desc Requests all Accounts that belong to an individual User.
@@ -105,14 +104,14 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
       accountsById,
       accountsByItem: groupBy(allAccounts, 'item_id'),
       accountsByUser: groupBy(allAccounts, 'user_id'),
-      getAccountsByItem,
+      // getAccountsByItem,
       getAccountsByUser,
       deleteAccountsByItemId,
       deleteAccountsByUserId,
     };
   }, [
     accountsById,
-    getAccountsByItem,
+    // getAccountsByItem,
     getAccountsByUser,
     deleteAccountsByItemId,
     deleteAccountsByUserId,

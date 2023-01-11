@@ -47,9 +47,9 @@ const UserPage = () => {
   const [transactions, setTransactions] = useState([]);
   const [assets, setAssets] = useState<AssetType[]>([]);
 
-  const { transactionsByUser, getTransactionsByUser } = useTransactions();
+  const { transactionsByUser /*getTransactionsByUser*/ } = useTransactions();
   const { allAccounts, getAccountsByUser } = useAccounts();
-  const { assetsByUser, getAssetsByUser } = useAssets();
+  const { assetsByUser /*getAssetsByUser*/ } = useAssets();
   const { itemsByUser, getItemsByUser } = useItems();
   const { linkTokens, generateLinkToken } = useLink();
 
@@ -59,21 +59,21 @@ const UserPage = () => {
     await generateLinkToken(userId, null);
   };
 
-  useEffect(() => {
-    // This gets transactions from the database only.
-    // Note that calls to Plaid's transactions/get endpoint are only made in response
-    // to receipt of a transactions webhook.
-    getTransactionsByUser(userId);
-  }, [getTransactionsByUser, userId]);
+  // useEffect(() => {
+  //   // This gets transactions from the database only.
+  //   // Note that calls to Plaid's transactions/get endpoint are only made in response
+  //   // to receipt of a transactions webhook.
+  //   getTransactionsByUser(userId);
+  // }, [getTransactionsByUser, userId]);
 
   useEffect(() => {
     setTransactions(transactionsByUser[userId] || []);
   }, [transactionsByUser, userId]);
 
-  // update data store with the user's assets
-  useEffect(() => {
-    getAssetsByUser(userId);
-  }, [getAssetsByUser, userId]);
+  // // update data store with the user's assets
+  // useEffect(() => {
+  //   getAssetsByUser(userId);
+  // }, [getAssetsByUser, userId]);
 
   useEffect(() => {
     setAssets(assetsByUser.assets || []);
@@ -95,7 +95,6 @@ const UserPage = () => {
     ).reverse();
     setItems(orderedItems);
   }, [itemsByUser, userId]);
-
 
   // // update data store with the user's accounts
   useEffect(() => {
@@ -134,7 +133,10 @@ const UserPage = () => {
           <div className="item__header">
             <div>
               <h2 className="item__header-heading">
-                {`${allAccounts.length} ${pluralize('Bank', allAccounts.length)} Linked`}
+                {`${allAccounts.length} ${pluralize(
+                  'Bank',
+                  allAccounts.length
+                )} Linked`}
               </h2>
               {!!allAccounts.length && (
                 <p className="item__header-subheading">
@@ -189,17 +191,19 @@ const UserPage = () => {
           />
         </>
       )}
-      {allAccounts.length === 0 && transactions.length === 0 && assets.length > 0 && (
-        <>
-          <NetWorth
-            accounts={allAccounts}
-            numOfItems={items.length}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly
-          />
-        </>
-      )}
+      {allAccounts.length === 0 &&
+        transactions.length === 0 &&
+        assets.length > 0 && (
+          <>
+            <NetWorth
+              accounts={allAccounts}
+              numOfItems={items.length}
+              personalAssets={assets}
+              userId={userId}
+              assetsOnly
+            />
+          </>
+        )}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, {
   createContext,
   useContext,
   useMemo,
-  useRef,
+  // useRef,
   useReducer,
   useCallback,
   Dispatch,
@@ -29,9 +29,9 @@ type ItemsAction =
 
 interface ItemsContextShape {
   dispatch: Dispatch<ItemsAction>;
-  deleteItemById: (id: string, userId: string) => void;
+  // deleteItemById: (id: string, userId: string) => void;
   getItemsByUser: (userId: string, refresh: boolean) => void;
-  getItemById: (id: string, refresh: boolean) => void;
+  // getItemById: (id: string, refresh: boolean) => void;
   itemsById: { [itemId: string]: ItemType[] };
   itemsByUser: { [userId: string]: ItemType[] };
   deleteItemsByUserId: (userId: string) => void;
@@ -46,50 +46,51 @@ const ItemsContext = createContext<ItemsContextShape>(
 export function ItemsProvider(props: any) {
   const {
     getItemsByUser: apiGetItemsByUser,
-    getItemById: apiGetItemById,
-    deleteItemById: apiDeleteItemById,
+    // getItemById: apiGetItemById,
+    // deleteItemById: apiDeleteItemById,
   } = useApi();
   const [itemsById, dispatch] = useReducer(reducer, {});
-  const hasRequested = useRef<{ byId: { [id: string]: boolean } }>({
-    byId: {},
-  });
+  // const hasRequested = useRef<{ byId: { [id: string]: boolean } }>({
+  //   byId: {},
+  // });
 
-  /**
-   * @desc Requests details for a single Item.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
-   */
-  const getItemById = useCallback(async (id: string, refresh: boolean) => {
-    if (!hasRequested.current.byId[id] || refresh) {
-      hasRequested.current.byId[id] = true;
-      const { data: payload } = await apiGetItemById(id);
-      dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
-    }
-  }, []);
+  // /**
+  //  * @desc Requests details for a single Item.
+  //  * The api request will be bypassed if the data has already been fetched.
+  //  * A 'refresh' parameter can force a request for new data even if local state exists.
+  //  */
+  // const getItemById = useCallback(async (id: string, refresh: boolean) => {
+  //   if (!hasRequested.current.byId[id] || refresh) {
+  //     hasRequested.current.byId[id] = true;
+  //     const { data: payload } = await apiGetItemById(id);
+  //     dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
+  //   }
+  // }, []);
 
   /**
    * @desc Requests all Items that belong to an individual User.
    */
   const getItemsByUser = useCallback(async (userId: string) => {
-    const { data: payload } = await apiGetItemsByUser(userId);
-    console.log(payload)
+    const {
+      data: {
+        body: { items: payload },
+      },
+    } = await apiGetItemsByUser(userId);
+    console.log(Object.values(payload).map((item: any) => item.M));
     dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
   }, []);
 
-  /**
-   * @desc Will deletes Item by itemId.
-   */
-  const deleteItemById = useCallback(
-    async (id: string, userId: string) => {
-      await apiDeleteItemById(id);
-      dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
-      // Update items list after deletion.
-      // await getItemsByUser(userId);
+  // /**
+  //  * @desc Will deletes Item by itemId.
+  //  */
+  // const deleteItemById = useCallback(async (id: string, userId: string) => {
+  //   await apiDeleteItemById(id);
+  //   dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
+  //   // Update items list after deletion.
+  //   // await getItemsByUser(userId);
 
-      delete hasRequested.current.byId[id];
-    },
-    []
-  );
+  //   delete hasRequested.current.byId[id];
+  // }, []);
 
   /**
    * @desc Will delete all items that belong to an individual User.
@@ -110,16 +111,16 @@ export function ItemsProvider(props: any) {
       allItems,
       itemsById,
       itemsByUser: groupBy(allItems, 'user_id'),
-      getItemById,
+      // getItemById,
       getItemsByUser,
-      deleteItemById,
+      // deleteItemById,
       deleteItemsByUserId,
     };
   }, [
     itemsById,
-    getItemById,
+    // getItemById,
     getItemsByUser,
-    deleteItemById,
+    // deleteItemById,
     deleteItemsByUserId,
   ]);
 
