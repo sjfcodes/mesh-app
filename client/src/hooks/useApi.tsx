@@ -88,10 +88,10 @@ const useApi = () => {
     console.log('mock with data GET: /asset');
     return {
       data: [{}, {}, {}].map((x, idx) => ({
-        id: 'mock-id-' + idx,
-        user_id: 'mock-user_id-' + idx,
+        id: 'mock-asset-id-' + idx,
+        user_id: 'mock-asset-user_id-' + idx,
         value: Math.floor(Math.random() * 10),
-        description: 'mock-description-' + idx,
+        description: 'mock-asset-description-' + idx,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })),
@@ -166,26 +166,26 @@ const useApi = () => {
       headers: { Authorization: await getAuthToken() },
     });
   const getItemsByUser = async (userId: string) => {
-    console.log('mock GET: /user/:id/item');
-    return {
-      data: [{}].map((x, idx) => {
-        return {
-          id: 'mock-id-' + idx,
-          user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e' /** aws cognito (sub) id */,
-          plaid_access_token: 'mock-plaid_access_token-' + idx,
-          plaid_institution_id: 'ins_115585',
-          plaid_item_id: 'mock-plaid_item_id-' + idx,
-          status: 'mock-status-' + idx,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-      }),
-    };
-    //  return  axios({
-    //     method: 'GET',
-    //     url: url + `/users/${userId}/items`,
-    //     headers: { Authorization: await getAuthToken() },
-    //   });
+    // console.log('mock GET: /item');
+    // return {
+    //   data: [{}].map((x, idx) => {
+    //     return {
+    //       id: 'mock-id-' + idx,
+    //       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e' /** aws cognito (sub) id */,
+    //       plaid_access_token: 'mock-plaid_access_token-' + idx,
+    //       plaid_institution_id: 'ins_115585',
+    //       plaid_item_id: 'mock-plaid_item_id-' + idx,
+    //       status: 'mock-status-' + idx,
+    //       created_at: new Date().toISOString(),
+    //       updated_at: new Date().toISOString(),
+    //     };
+    //   }),
+    // };
+     return  axios({
+        method: 'GET',
+        url: url + `/item`,
+        headers: { Authorization: await getAuthToken() },
+      });
   };
   const deleteItemById = async (id: string) =>
     axios({

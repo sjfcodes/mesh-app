@@ -7,7 +7,7 @@ import Button from 'plaid-threads/Button';
 
 import { pluralize } from '../util';
 
-import { AccountType, AssetType, ItemType } from '../types';
+import { AssetType, ItemType } from '../types';
 
 import useLink from '../hooks/useLink';
 import useItems from '../hooks/useItems';
@@ -44,13 +44,11 @@ const UserPage = () => {
   const userId = user.id;
   const [items, setItems] = useState<ItemType[]>([]);
   const [token, setToken] = useState('');
-  const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
-  const [accounts, setAccounts] = useState<AccountType[]>([]);
   const [assets, setAssets] = useState<AssetType[]>([]);
 
   const { transactionsByUser, getTransactionsByUser } = useTransactions();
-  const { accountsByUser, getAccountsByUser } = useAccounts();
+  const { allAccounts, getAccountsByUser } = useAccounts();
   const { assetsByUser, getAssetsByUser } = useAssets();
   const { itemsByUser, getItemsByUser } = useItems();
   const { linkTokens, generateLinkToken } = useLink();
@@ -98,15 +96,6 @@ const UserPage = () => {
     setItems(orderedItems);
   }, [itemsByUser, userId]);
 
-  // update no of items from data store
-  useEffect(() => {
-    console.log(itemsByUser, userId);
-    if (itemsByUser[userId] != null) {
-      setNumOfItems(itemsByUser[userId].length);
-    } else {
-      setNumOfItems(0);
-    }
-  }, [itemsByUser, userId]);
 
   // // update data store with the user's accounts
   useEffect(() => {
@@ -114,12 +103,8 @@ const UserPage = () => {
   }, [getAccountsByUser, userId]);
 
   useEffect(() => {
-    setAccounts(accountsByUser[userId] || []);
-  }, [accountsByUser, userId]);
-
-  useEffect(() => {
     setToken(linkTokens.byUser[userId]);
-  }, [linkTokens, userId, numOfItems]);
+  }, [linkTokens, userId]);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
@@ -143,47 +128,15 @@ const UserPage = () => {
         </Callout>
       )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
-      {numOfItems === 0 && <ErrorMessage />}
-      {numOfItems > 0 && transactions.length === 0 && (
-        <div className="loading">
-          <LoadingSpinner />
-          <LoadingCallout />
-        </div>
-      )}
-      {numOfItems > 0 && transactions.length > 0 && (
-        <>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={numOfItems}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly={false}
-          />
-          <SpendingInsights
-            numOfItems={numOfItems}
-            transactions={transactions}
-          />
-        </>
-      )}
-      {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
-        <>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={numOfItems}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly
-          />
-        </>
-      )}
-      {numOfItems > 0 && (
+      {allAccounts.length === 0 && <ErrorMessage />}
+      {allAccounts.length > 0 && (
         <>
           <div className="item__header">
             <div>
               <h2 className="item__header-heading">
-                {`${items.length} ${pluralize('Bank', items.length)} Linked`}
+                {`${allAccounts.length} ${pluralize('Bank', allAccounts.length)} Linked`}
               </h2>
-              {!!items.length && (
+              {!!allAccounts.length && (
                 <p className="item__header-subheading">
                   Below is a list of all your connected banks. Click on a bank
                   to view its associated accounts.
@@ -212,6 +165,39 @@ const UserPage = () => {
             </div>
           ))}
           <TransactionTimeline />
+        </>
+      )}
+
+      {allAccounts.length > 0 && transactions.length === 0 && (
+        <div className="loading">
+          <LoadingSpinner />
+          <LoadingCallout />
+        </div>
+      )}
+      {allAccounts.length > 0 && transactions.length > 0 && (
+        <>
+          <NetWorth
+            accounts={allAccounts}
+            numOfItems={items.length}
+            personalAssets={assets}
+            userId={userId}
+            assetsOnly={false}
+          />
+          <SpendingInsights
+            numOfItems={items.length}
+            transactions={transactions}
+          />
+        </>
+      )}
+      {allAccounts.length === 0 && transactions.length === 0 && assets.length > 0 && (
+        <>
+          <NetWorth
+            accounts={allAccounts}
+            numOfItems={items.length}
+            personalAssets={assets}
+            userId={userId}
+            assetsOnly
+          />
         </>
       )}
     </div>

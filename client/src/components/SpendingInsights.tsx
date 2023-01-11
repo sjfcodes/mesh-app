@@ -63,7 +63,6 @@ export default function SpendingInsights(props: Props) {
     return namesArray;
   }, [namesObject]);
 
-  console.log(categoriesObject);
   return (
     <div>
       <h2 className="monthlySpendingHeading">Monthly Spending</h2>

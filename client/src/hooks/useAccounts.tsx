@@ -68,7 +68,12 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
    * @desc Requests all Accounts that belong to an individual User.
    */
   const getAccountsByUser = useCallback(async (userId: string) => {
-    const { data: payload } = await apiGetAccountsByUser(userId);
+    const {
+      data: {
+        body: { accounts: payload },
+      },
+    } = await apiGetAccountsByUser(userId);
+    console.log('getAccounts', payload);
     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 

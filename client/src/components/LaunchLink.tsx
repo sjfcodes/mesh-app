@@ -30,7 +30,7 @@ interface Props {
 
 export default function LaunchLink(props: Props) {
   const { exchangeToken, setItemState } = useApi();
-  const { getItemsByUser, getItemById } = useItems();
+  const { /* getItemsByUser, */ getItemById } = useItems();
   const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();
   const navigate = useNavigate();
@@ -56,7 +56,6 @@ export default function LaunchLink(props: Props) {
         metadata.accounts,
         props.userId
       );
-      getItemsByUser(props.userId, true);
     }
     resetError();
     deleteLinkToken(props.userId, null);

@@ -72,6 +72,7 @@ export function ItemsProvider(props: any) {
    */
   const getItemsByUser = useCallback(async (userId: string) => {
     const { data: payload } = await apiGetItemsByUser(userId);
+    console.log(payload)
     dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
   }, []);
 
@@ -83,11 +84,11 @@ export function ItemsProvider(props: any) {
       await apiDeleteItemById(id);
       dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
       // Update items list after deletion.
-      await getItemsByUser(userId);
+      // await getItemsByUser(userId);
 
       delete hasRequested.current.byId[id];
     },
-    [getItemsByUser]
+    []
   );
 
   /**
