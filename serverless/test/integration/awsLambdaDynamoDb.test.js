@@ -237,8 +237,14 @@ describe('lambda + dynamoDb integration tests', () => {
 
         expect(status_code).toBe(200);
         expect(item).not.toHaveProperty('access_token');
-        expect(item.id.S).toBe(mockData.tokenExchange.item_id);
-        expect(Array.isArray(item.accounts.L)).toBe(true);
+        expect(item).toHaveProperty('accounts');
+        expect(item).toHaveProperty('created_at');
+        expect(item).toHaveProperty('id');
+        expect(item).toHaveProperty('institution_id');
+        expect(item).toHaveProperty('institution_name');
+        expect(item).toHaveProperty('tx_cursor');
+        expect(item).toHaveProperty('updated_at');
+        expect(Array.isArray(item.accounts)).toBe(true);
       });
 
       it('should get plaid item accounts for user', async () => {

@@ -74,7 +74,13 @@ class App {
     const formatted = Object.entries(items).reduce((prev, [item_id, item]) => {
       const copy = { ...item.M };
       delete copy.access_token;
-      copy.accounts = { L: JSON.parse(copy.accounts.S) };
+      copy.accounts = JSON.parse(copy.accounts.S);
+      copy.created_at = copy.created_at.S;
+      copy.id = item_id;
+      copy.institution_id = copy.institution_id.S;
+      copy.institution_name = copy.institution_name.S;
+      copy.tx_cursor = copy.tx_cursor.S;
+      copy.updated_at = copy.updated_at.S;
       return {
         ...prev,
         [item_id]: copy,
