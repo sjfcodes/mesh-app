@@ -13,6 +13,10 @@ export const handler = async (event) => {
     switch (event.context['http-method']) {
       case 'GET':
         switch (event.context['resource-path']) {
+          case config.path.getItems:
+            response = await app.handleGetUserItems();
+
+            break;
           case config.path.itemGetInstitution:
             response = await app.handleGetInstitutionById();
 

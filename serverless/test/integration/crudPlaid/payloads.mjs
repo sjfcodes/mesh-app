@@ -56,6 +56,15 @@ export const getTransactionsForAccountPayload = {
   },
 }
 
+export const getUserItemsPayload = {
+  body: {},
+  context: {
+    ['http-method']: 'GET',
+    ['resource-path']: path.getItems,
+  },
+  params,
+};
+
 export const getUserAccountsPayload = {
   body: {},
   context: {

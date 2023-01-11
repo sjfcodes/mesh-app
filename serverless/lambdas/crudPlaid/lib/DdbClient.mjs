@@ -68,7 +68,7 @@ class DdbClient {
     };
   }
 
-  async readUserAccounts(email) {
+  async readUserItems(email) {
     if (!email) throw new Error('missing email!');
     const {
       Item: {
@@ -85,7 +85,15 @@ class DdbClient {
       })
     );
 
-    const allAccounts = Object.values(plaidItems).reduce((prev, curr) => {
+    return { items: plaidItems };
+  }
+
+  async readUserAccounts(email) {
+    if (!email) throw new Error('missing email!');
+
+    const { items } = await this.readUserItems(email);
+
+    const allAccounts = Object.values(items).reduce((prev, curr) => {
       const accounts = JSON.parse(curr.M.accounts.S);
       return [...prev, ...accounts];
     }, []);

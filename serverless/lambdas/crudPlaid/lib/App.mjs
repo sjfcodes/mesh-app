@@ -69,6 +69,12 @@ class App {
     return { accounts, item_id: tokenExchange.item_id };
   }
 
+  async handleGetUserItems() {
+    const { items } = await this.ddbClient.readUserItems(this.user.email);
+
+    return { items };
+  }
+
   async handleGetUserAccounts() {
     const { accounts } = await this.ddbClient.readUserAccounts(this.user.email);
 

@@ -17,6 +17,7 @@ const config = {
     linkTokenCreate: '/link/token-create',
     itemTokenExchange: '/item/token-exchange',
     itemTokenExchangeTest: '/item/token-exchange/test',
+    getItems: '/item',
     itemGetAccounts: '/item/account',
     getAccountTransactions: '/item/account/transaction',
     itemGetInstitution: '/item/institution',
