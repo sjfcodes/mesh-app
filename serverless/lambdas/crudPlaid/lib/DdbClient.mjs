@@ -2,10 +2,15 @@ import {
   DynamoDBClient,
   GetItemCommand,
   UpdateItemCommand,
+  BatchWriteItemCommand,
+  QueryCommand,
 } from '@aws-sdk/client-dynamodb';
 import config from '../utils/config.mjs';
+import { splitListIntoSmallerLists } from '../utils/helpers.mjs';
 
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html#dynamodb-example-table-read-write-writing-an-item
+const PARTITION_KEY = 'item_id::account_id';
+const SORT_KEY = 'transaction_id';
 
 class DdbClient {
   constructor(configuration) {
@@ -29,7 +34,8 @@ class DdbClient {
   }
 
   async readItemByItemId(email, itemId) {
-    if (!email || !itemId) throw new Error('missing required arguments!');
+    if (!email) throw new Error('missing email!');
+    if (!itemId) throw new Error('missing itemId!');
 
     const {
       Item: {
@@ -63,6 +69,7 @@ class DdbClient {
   }
 
   async readUserAccounts(email) {
+    if (!email) throw new Error('missing email!');
     const {
       Item: {
         [config.itemKeys.plaidItem]: { M: plaidItems },
@@ -86,10 +93,51 @@ class DdbClient {
     return { accounts: allAccounts };
   }
 
+  async readAccountTransactions(itemId, accountId) {
+    if (!itemId) throw new Error('missing itemId!');
+    if (!accountId) throw new Error('missing accountId!');
+
+    const formatted = itemId + '::' + accountId;
+
+    const response = await this.client.send(
+      new QueryCommand({
+        TableName: config.TableName.transaction,
+        KeyConditionExpression: '#partitionKey = :partitionKey',
+        ExpressionAttributeNames: {
+          '#partitionKey': PARTITION_KEY,
+        },
+        ExpressionAttributeValues: {
+          ':partitionKey': { S: formatted },
+        },
+      })
+    );
+    return { transactions: response.Items };
+  }
+
+  async readAccountTransaction(itemId, accountId, transactionId) {
+    if (!itemId) throw new Error('missing itemId!');
+    if (!accountId) throw new Error('missing accountId!');
+    if (!transaction) throw new Error('missing transaction!');
+
+    const formatted = itemId + '::' + accountId;
+    const response = await this.client.send(
+      new GetItemCommand({
+        TableName: config.TableName.transaction,
+        Key: {
+          [PARTITION_KEY]: { S: formatted },
+          [SORT_KEY]: { S: transactionId },
+        },
+      })
+    );
+    console.log(response);
+    return { transaction: {} };
+  }
+
   async writeItemTxCursor(email, itemId, newTxCursor) {
     if (!email || !itemId || newTxCursor === undefined)
       throw new Error('missing required arguments!');
-    const { Attributes } = await this.client.send(
+
+    await this.client.send(
       new UpdateItemCommand({
         TableName: config.TableName.user,
         Key: { email: { S: email } },
@@ -109,7 +157,13 @@ class DdbClient {
     );
   }
 
-  async writePlaidItemToUser({ email, tokenExchange, accounts, institution_id, institution_name }) {
+  async writePlaidItemToUser({
+    email,
+    tokenExchange,
+    accounts,
+    institution_id,
+    institution_name,
+  }) {
     if (!email || !tokenExchange || !accounts)
       throw new Error('missing required arguments!');
 
@@ -139,6 +193,69 @@ class DdbClient {
         ReturnValues: 'ALL_NEW',
       })
     );
+  }
+
+  async writeTxsForItem({ itemId, added, modified, removed }) {
+    if (
+      !itemId ||
+      added === undefined ||
+      modified === undefined ||
+      removed === undefined
+    )
+      throw new Error('missing required arguments!');
+
+    const now = new Date().toISOString();
+
+    const formatTxs = (array, { isNew = false, isRemoved = false } = {}) => {
+      if (array === undefined) throw new Error('missing transaction array');
+      if (array.length === 0) return [];
+
+      return array.map((tx) => {
+        const requestItem = {
+          [PARTITION_KEY]: { S: `${itemId}::${tx.account_id}` },
+          [SORT_KEY]: { S: tx.transaction_id },
+          transaction: { S: JSON.stringify(tx) },
+          updated_at: { S: now },
+        };
+
+        if (isNew) requestItem.created_at = { S: now };
+        if (isRemoved) requestItem.transaction = { S: 'removed' };
+
+        return { PutRequest: { Item: requestItem } };
+      });
+    };
+
+    const allRequests = [
+      ...formatTxs(added, { isNew: true }),
+      ...formatTxs(modified),
+      ...formatTxs(removed, { isRemoved: true }),
+    ];
+
+    const batchWriteToTxTable = async (requestBatch) => {
+      if (!requestBatch.length) return;
+
+      const response = this.client.send(
+        new BatchWriteItemCommand({
+          RequestItems: { [config.TableName.transaction]: requestBatch },
+        })
+      );
+
+      return response;
+    };
+
+    const requestQueue = splitListIntoSmallerLists(
+      allRequests,
+      config.dynamoDbBatchRequestLength
+    );
+    const responses = [];
+    for (let i = 0; i < requestQueue.length; i++) {
+      const request = requestQueue[i];
+      const response = await batchWriteToTxTable(request);
+      new Promise((resolve) => setTimeout(resolve, 1000));
+      responses.push(response);
+    }
+
+    await Promise.all(responses);
   }
 }
 

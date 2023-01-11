@@ -21,8 +21,12 @@ export const handler = async (event) => {
             response = await app.handleGetUserAccounts();
 
             break;
+          case config.path.getAccountTransactions:
+            response = await app.handleGetAccountTransactions();
+
+            break;
           default:
-            throw Error(`path:"${body.path}" not found!`);
+            throw Error(`path:"${event.context['resource-path']}" not found!`);
         }
 
         break;
@@ -31,6 +35,11 @@ export const handler = async (event) => {
           case config.path.itemTxSync:
             const summary = await app.handleSyncTxsForItem();
             response = { tx_sync: 'complete', summary };
+
+            break;
+          case config.path.itemTxSyncTest:
+            const testSummary = await app.mockHandleSyncTxsForItem();
+            response = { tx_sync: 'complete', testSummary };
 
             break;
           default:
@@ -51,6 +60,11 @@ export const handler = async (event) => {
           case config.path.itemTokenExchange:
             const { item_id } = await app.handleTokenExchange();
             response = { public_token_exchange: 'complete', item_id };
+
+            break;
+          case config.path.itemTokenExchangeTest:
+            const { item_id: testItemId } = await app.mockHandleTokenExchange();
+            response = { public_token_exchange: 'complete', item_id: testItemId };
 
             break;
           default:

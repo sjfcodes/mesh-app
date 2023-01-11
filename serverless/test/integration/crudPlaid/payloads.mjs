@@ -1,5 +1,6 @@
 import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
 import dynamoDbConfig from '../../config/dynamoDb.mjs';
+import mockPlaid from './mockData/plaid';
 
 const { TableName, path } = lambdaConfig;
 const { params } = dynamoDbConfig;
@@ -13,33 +14,14 @@ export const createTokenLinkPayload = {
   params,
 };
 
-export const exchangeTokenLinkPayload = {
+export const mockExchangeTokenLinkPayload = {
   body: {
-    path: path.itemTokenExchange,
+    path: path.itemTokenExchangeTest,
     payload: {
-      accounts: [
-        {
-          id: 'dk9nVZ6WqnF4vGMxWlJVsWnDA7mxxLTDVAAZa',
-          name: 'Plaid Checking',
-          mask: '0000',
-          type: 'depository',
-          subtype: 'checking',
-          verification_status: null,
-          class_type: null,
-        },
-        {
-          id: 'a8GWV7bgwWtx5Qkzvd8Vu7n1Ggryyzt1yGG7D',
-          name: 'Plaid Saving',
-          mask: '1111',
-          type: 'depository',
-          subtype: 'savings',
-          verification_status: null,
-          class_type: null,
-        },
-      ],
-      institution_id: 'ins_115585',
-      institution_name: "Boeing Employees Credit Union (BECU) - Personal Online Banking",
-      public_token: 'public-sandbox-39f63a49-ada5-44ef-8d74-e702c9b6a6ed',
+      accounts: mockPlaid.accounts,
+      institution_id: mockPlaid.institutionId,
+      institution_name: mockPlaid.institutionName,
+      public_token: mockPlaid.tokenExchange, /** typically a public token that is protected and exchanged server side */
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
@@ -47,14 +29,32 @@ export const exchangeTokenLinkPayload = {
   params,
 };
 
-export const syncTransactionsForItemPayload = (itemId) => ({
+export const mockSyncTransactionsForItemPayload = {
   body: {
     path: path.itemTxSync,
-    payload: { item_id: itemId },
+    payload: {
+      item_id: mockPlaid.tokenExchange.item_id,
+      transactions: mockPlaid.transactions,
+    },
   },
   context: { ['http-method']: 'PUT' },
   params,
-});
+};
+
+export const getTransactionsForAccountPayload = {
+  body: {},
+  context: {
+    ['http-method']: 'GET',
+    ['resource-path']: path.getAccountTransactions,
+  },
+  params: {
+    ...params,
+    querystring: { 
+      account_id: mockPlaid.accounts[1].id,
+      item_id: mockPlaid.tokenExchange.item_id
+    },
+  },
+}
 
 export const getUserAccountsPayload = {
   body: {},
@@ -73,6 +73,6 @@ export const getInstitutionByIdPayload = {
   },
   params: {
     ...params,
-    querystring:{ institution_id: 'ins_115585'}
+    querystring: { institution_id: 'ins_115585' },
   },
 };

@@ -31,16 +31,18 @@ import {
   updateTableItemItem,
 } from './crudDynamoDbTableItem/modules.mjs';
 import {
-  exchangeTokenLinkPayload,
+  mockExchangeTokenLinkPayload,
   getInstitutionByIdPayload,
   getUserAccountsPayload,
-  syncTransactionsForItemPayload,
+  mockSyncTransactionsForItemPayload,
+  getTransactionsForAccountPayload,
 } from './crudPlaid/payloads.mjs';
 import {
   exchangeToken,
   getInstitutionById,
   getUserAccounts,
   syncTransactionsForItem,
+  getTransactionsForAccount,
 } from './crudPlaid/modules.mjs';
 
 dotenv.config();
@@ -49,7 +51,7 @@ const testApi = process.env.USE_API_GATEWAY === 'true';
 let buildTableAndItem = false;
 let destroyTableAndItem = false;
 let testPlaidItemActions = false;
-let plaidTestItemId = null;
+let plaidTestAccounts = null;
 
 const apiTable = axios.create({
   baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtable',
@@ -61,9 +63,9 @@ const apiTableItem = axios.create({
   headers: { Authorization: process.env.AUTH_TOKEN },
 });
 
-////////////////////
-// TEST CONTROLS ///
-////////////////////
+///////////////////
+// TEST CONTROLS //
+///////////////////
 // const STAGE = 'LIFECYCLE';
 // const STAGE = 'CREATE';
 const STAGE = 'PERSIST';
@@ -192,25 +194,24 @@ describe('lambda + dynamoDb integration tests', () => {
     });
 
     if (testPlaidItemActions) {
-      it('should add new plaid item', async () => {
+      it('should add new plaid item with mocked token exchange', async () => {
+        const payload = mockExchangeTokenLinkPayload;
         const { status_code, body } = await (testApi
           ? apiTableItem({
-              method: exchangeTokenLinkPayload.context['http-method'],
-              data: exchangeTokenLinkPayload,
+              method: payload.context['http-method'],
+              data: payload,
             }).then(({ data }) => data)
-          : exchangeToken(exchangeTokenLinkPayload));
+          : exchangeToken(payload));
 
         if (status_code !== 200) console.error(body);
-
-        plaidTestItemId = body.item_id;
 
         expect(status_code).toBe(200);
         expect(body.public_token_exchange).toBe('complete');
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
-      it('should sync new transactions for item', async () => {
-        const payload = syncTransactionsForItemPayload(plaidTestItemId);
+      it('should write transactions to db, simulating sync', async () => {
+        const payload = mockSyncTransactionsForItemPayload;
         const { status_code, body } = await (testApi
           ? apiTableItem({
               method: payload.context['http-method'],
@@ -226,22 +227,6 @@ describe('lambda + dynamoDb integration tests', () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
-      it('should sync new transactions for item', async () => {
-        const payload = syncTransactionsForItemPayload(plaidTestItemId);
-        const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: payload.context['http-method'],
-              data: payload,
-            }).then(({ data }) => data)
-          : syncTransactionsForItem(payload));
-
-        if (status_code !== 200) console.error(body);
-
-        expect(status_code).toBe(200);
-        expect(body.tx_sync).toBe('complete');
-        expect(body.summary.added).toBe(0);
-      });
-
       it('should get accounts for user', async () => {
         const { status_code, body } = await (testApi
           ? apiTableItem({
@@ -251,10 +236,27 @@ describe('lambda + dynamoDb integration tests', () => {
           : getUserAccounts(getUserAccountsPayload));
 
         if (status_code !== 200) console.error(body);
+        
+        plaidTestAccounts = body.accounts;
 
         expect(status_code).toBe(200);
         expect(body.accounts.length).toBeGreaterThan(0);
       });
+
+      it('should get transactions for one account', async ()=>{
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: getTransactionsForAccountPayload.context['http-method'],
+              data: getTransactionsForAccountPayload,
+            }).then(({ data }) => data)
+          : getTransactionsForAccount(getTransactionsForAccountPayload));
+
+        if (status_code !== 200) console.error(body);
+        console.log(body)
+
+        expect(status_code).toBe(200);
+        expect(body.transactions?.length).toBe(48);
+      })
 
       it('should get bank institution details by id institution_id', async () => {
         const { status_code, body } = await (testApi

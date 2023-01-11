@@ -84,6 +84,8 @@ class PlaidClient {
     if (!accessToken || cursor === undefined)
       throw new Error('missing required arguments!');
 
+    console.log({ accessToken, cursor });
+
     // New transaction updates since "cursor"
     let added = [];
     let modified = [];

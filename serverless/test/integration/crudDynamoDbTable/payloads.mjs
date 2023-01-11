@@ -5,11 +5,9 @@ import config from '../../config/dynamoDb.mjs';
 
 const { TableName, params } = config;
 
-console.log(69,TableName);
-
 ////////////////
-// USER TABLE /
-//////////////
+// USER TABLE //
+////////////////
 
 export const createUserTablePayload = {
   body: {
@@ -64,8 +62,8 @@ export const deleteUserTablePayload = {
 };
 
 ///////////////////////
-// TRANSACTION TABLE /
-/////////////////////
+// TRANSACTION TABLE //
+///////////////////////
 
 export const createTransactionTablePayload = {
   body: {
@@ -93,8 +91,8 @@ export const createTransactionTablePayload = {
         },
       ],
       ProvisionedThroughput: {
-        ReadCapacityUnits: 1,
-        WriteCapacityUnits: 1,
+        ReadCapacityUnits: 10,
+        WriteCapacityUnits: 10,
       },
       StreamSpecification: {
         StreamEnabled: false,
