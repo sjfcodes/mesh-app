@@ -114,7 +114,7 @@ class App {
     return data;
   }
 
-  async mockHandleSyncTxsForItem() {
+  async mockHandleItemSyncTransactions() {
     const {
       item_id: itemId,
       transactions: { added, modified, removed },
@@ -134,7 +134,7 @@ class App {
     };
   }
 
-  async handleSyncTxsForItem() {
+  async handleItemSyncTransactions() {
     const { item_id: itemId } = this.payload;
     const { accessToken, txCursor } = await this.ddbClient.readItemByItemId(
       this.user.email,
@@ -142,7 +142,7 @@ class App {
     );
 
     const { newTxCursor, added, modified, removed } =
-      await this.plaidClient.syncTxsForItem(accessToken, txCursor);
+      await this.plaidClient.itemSyncTransactions(accessToken, txCursor);
 
     await this.ddbClient.writeItemTxCursor(
       this.user.email,

@@ -21,8 +21,8 @@ const config = {
     itemGetAccounts: '/item/account',
     getAccountTransactions: '/item/account/transaction',
     itemGetInstitution: '/item/institution',
-    itemTxSync: '/item/tx-sync',
-    itemTxSyncTest: '/item/tx-sync/test',
+    itemTxSync: '/item/sync',
+    itemTxSyncTest: '/item/sync/test',
   },
   itemKeys: {
     plaidItem: 'plaid_item',

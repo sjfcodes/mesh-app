@@ -80,7 +80,7 @@ class PlaidClient {
     return response;
   }
 
-  async syncTxsForItem(accessToken, cursor) {
+  async itemSyncTransactions(accessToken, cursor) {
     if (!accessToken || cursor === undefined)
       throw new Error('missing required arguments!');
 
