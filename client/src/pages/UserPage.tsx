@@ -7,7 +7,7 @@ import Button from 'plaid-threads/Button';
 
 import { pluralize } from '../util';
 
-import { AssetType, ItemType } from '../types';
+import { ItemType } from '../types';
 
 import useLink from '../hooks/useLink';
 import useItems from '../hooks/useItems';
@@ -44,11 +44,10 @@ const UserPage = () => {
   const userId = user.id;
   const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [token, setToken] = useState('');
-  const [assets, setAssets] = useState<AssetType[]>([]);
 
   const { allTransactions } = useTransactions();
   const { allAccounts, getAllItemAccounts } = useAccounts();
-  const { assetsByUser } = useAssets();
+  const { assets } = useAssets();
   const { plaidItem, getAllItems } = useItems();
   const { linkTokens, generateLinkToken } = useLink();
 
@@ -57,10 +56,6 @@ const UserPage = () => {
     // if done earlier, it may expire before enduser actually activates Link to add a bank.
     await generateLinkToken(userId, null);
   };
-
-  useEffect(() => {
-    setAssets(assetsByUser.assets || []);
-  }, [assetsByUser, userId]);
 
   // update data store with the user's sortedItems
   useEffect(() => {

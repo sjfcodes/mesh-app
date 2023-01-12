@@ -18,7 +18,7 @@ import { AccountsProvider } from './hooks/useAccounts';
 import { TransactionsProvider } from './hooks/useTransactions';
 import { ErrorsProvider } from './hooks/useErrors';
 import UserPage from './pages/UserPage';
-import { AssetsProvider } from './hooks/useAssets';
+import { AssetsProvider } from './services/Assets/Provider';
 Amplify.configure(currentConfig);
 
 function App() {
