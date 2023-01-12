@@ -7,12 +7,7 @@ import React, {
   useCallback,
   Dispatch,
 } from 'react';
-import groupBy from 'lodash/groupBy';
-import keyBy from 'lodash/keyBy';
-import omitBy from 'lodash/omitBy';
-
-import { Dictionary } from 'lodash';
-import { PlaidTransactionType } from '../types';
+import { PlaidTransactionType, TransactionType } from '../types';
 import useApi from './useApi';
 
 interface TransactionsState {
@@ -30,18 +25,13 @@ type TransactionsAction =
 
 interface TransactionsContextShape extends TransactionsState {
   dispatch: Dispatch<TransactionsAction>;
-  // allTransactions: Dictionary<any>;
-  accountTransactions: Dictionary<any>;
+  allTransactions: TransactionType[];
+  accountTransactions: { [accountId: string]: TransactionType[] };
   getItemAccountTransactions: (
     itemId: string,
     accountId: string,
     refresh?: boolean
   ) => void;
-  deleteTransactionsByItemId: (itemId: string) => void;
-  deleteTransactionsByUserId: (userId: string) => void;
-  // transactionsByUser: Dictionary<any>;
-  // getTransactionsByUser: (userId: string) => void;
-  // transactionsByItem: Dictionary<any>;
 }
 const TransactionsContext = createContext<TransactionsContextShape>(
   initialState as TransactionsContextShape
@@ -54,11 +44,8 @@ const TransactionsContext = createContext<TransactionsContextShape>(
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props: any) {
-  const {
-    getItemAccountTransactions: apiGetItemAccountTransactions,
-    // getTransactionsByItem: apiGetTransactionsByItem,
-    // getTransactionsByUser: apiGetTransactionsByUser,
-  } = useApi();
+  const { getItemAccountTransactions: apiGetItemAccountTransactions } =
+    useApi();
   const [accountTransactions, dispatch] = useReducer(reducer, initialState);
 
   const hasRequested = useRef<{
@@ -90,79 +77,46 @@ export function TransactionsProvider(props: any) {
     []
   );
 
-  // /**
-  //  * @desc Requests all Transactions that belong to an individual Item.
-  //  */
-  // const getTransactionsByItem = useCallback(async (itemId: string) => {
-  //   const { data: payload } = await apiGetTransactionsByItem(itemId);
-  //   dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
-  // }, []);
-
-  // /**
-  //  * @desc Requests all Transactions that belong to an individual User.
-  //  */
-  // const getTransactionsByUser = useCallback(async (userId: string) => {
-  //   const { data: payload } = await apiGetTransactionsByUser(userId);
-  //   dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
-  // }, []);
-
-  /**
-   * @desc Will Delete all transactions that belong to an individual Item.
-   * There is no api request as apiDeleteItemById in items delete all related transactions
-   */
-  const deleteTransactionsByItemId = useCallback((itemId: number) => {
-    dispatch({ type: 'DELETE_BY_ITEM', payload: itemId });
-  }, []);
-
-  /**
-   * @desc Will Delete all transactions that belong to an individual User.
-   * There is no api request as apiDeleteItemById in items delete all related transactions
-   */
-  const deleteTransactionsByUserId = useCallback((userId: string) => {
-    dispatch({ type: 'DELETE_BY_USER', payload: userId });
-  }, []);
-
   /**
    * @desc Builds a more accessible state shape from the Transactions data. useMemo will prevent
    * these from being rebuilt on every render unless accountTransactions is updated in the reducer.
    */
   const value = useMemo(() => {
-    // const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
-    // const formatTransaction = (tx: PlaidTransactionType) => {
-    //   const copy = { ...tx };
-    //   removePhrases.forEach((phrase) => {
-    //     if (copy.name.includes(phrase)) {
-    //       copy.name = copy.name.split(phrase)[1].trim();
-    //     }
-    //   });
+    const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
 
-    //   return copy;
-    // };
+    const formatTransactions = (tx: PlaidTransactionType) => {
+      const copy = { ...tx };
+      removePhrases.forEach((phrase) => {
+        if (copy.name?.includes(phrase)) {
+          copy.name = copy.name.split(phrase)[1].trim();
+        }
+      });
 
-    // const allTransactions =
-    //   Object.values(accountTransactions).map(formatTransaction);
+      return copy;
+    };
+
+    console.log({ accountTransactions });
+
+    const allTransactions = Object.values(accountTransactions)
+      .reduce((prev, curr) => {
+        const formatted = curr.map(formatTransactions);
+        return [...prev, ...formatted];
+      }, [])
+      .sort(
+        (
+          { transaction: txA }: TransactionType,
+          { transaction: txB }: TransactionType
+        ) => new Date(txB?.date).getTime() - new Date(txA?.date).getTime()
+      );
+
+    console.log({ allTransactions });
     return {
       dispatch,
-      // allTransactions,
+      allTransactions,
       accountTransactions,
-      // transactionsByAccount: groupBy(allTransactions, 'account_id'),
-      // transactionsByItem: groupBy(allTransactions, 'item_id'),
-      // transactionsByUser: groupBy(allTransactions, 'user_id'),
       getItemAccountTransactions,
-      // getTransactionsByItem,
-      // getTransactionsByUser,
-      deleteTransactionsByItemId,
-      deleteTransactionsByUserId,
     };
-  }, [
-    dispatch,
-    accountTransactions,
-    getItemAccountTransactions,
-    // getTransactionsByItem,
-    // getTransactionsByUser,
-    deleteTransactionsByItemId,
-    deleteTransactionsByUserId,
-  ]);
+  }, [dispatch, accountTransactions, getItemAccountTransactions]);
 
   return <TransactionsContext.Provider value={value} {...props} />;
 }
@@ -179,21 +133,10 @@ function reducer(state: TransactionsState, action: TransactionsAction | any) {
       if (!transactions.length) {
         return state;
       }
-      console.log({ [accountId]: transactions });
       return {
         ...state,
         [accountId]: transactions,
       };
-    // case 'DELETE_BY_ITEM':
-    //   return omitBy(
-    //     state,
-    //     (transaction) => transaction.item_id === action.payload
-    //   );
-    // case 'DELETE_BY_USER':
-    //   return omitBy(
-    //     state,
-    //     (transaction) => transaction.user_id === action.payload
-    //   );
     default:
       console.warn('unknown action: ', action.type, action.payload);
       return state;

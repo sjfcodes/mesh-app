@@ -1,34 +1,30 @@
-import { useMemo, useReducer } from 'react';
+import { useMemo } from 'react';
 import useAccounts from '../hooks/useAccounts';
 import useTransactions from '../hooks/useTransactions';
-import { PlaidTransactionType } from '../types';
+import { PlaidTransactionType, TransactionType } from '../types';
 
 import { currencyFilter } from '../util';
 import TransactionsTable from './TransactionsTable';
 
 export default function TransactionTimeline() {
-  const { accountTransactions } = useTransactions();
+  const { allTransactions } = useTransactions();
   const { allAccounts } = useAccounts();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [transfers, setTransfers] = useReducer(
-    (state: object, tx: PlaidTransactionType) => {
-      return state;
-    },
-    {}
-  );
+  const formattedTxs: TransactionType[] = useMemo(() => {
+    if (!allTransactions.length) return [];
+    const processed = [] as TransactionType[];
 
-  const transactions = useMemo(() => {
-    const mapFn = (tx: PlaidTransactionType) => {
-      if (tx.name.includes('Online Banking Transfer')) {
+    const processTx = (txData: TransactionType) => {
+      const { transaction: tx } = txData;
+      if (tx?.name?.includes('Online Banking Transfer')) {
         if (tx.name.includes('To')) {
           /**
-           * if tx name containes "To" as in transfer "To xxxxxxxx<mask>"
-           * search for acount with matching 4 digit mask
+           * if tx name contains "To" as in transfer "To xxxxxxxx<mask>"
+           * search for account with matching 4 digit mask
            * if account is found, overwrite name with formatted name.
            *
            * if tx name contains "from" as in transfer "from xxxxxxxx<mask>"
-           * search for account with mastching 4 digit mask
+           * search for account with matching 4 digit mask
            * if account is found, return null as tx was formatted and logged already
            */
           const source = allAccounts.filter(
@@ -49,7 +45,7 @@ export default function TransactionTimeline() {
             )} from ${sourceLabel} to ${targetLabel}`;
             tx.amount = 0;
           }
-        } else if (tx.name.includes('from')) {
+        } else if (tx.name?.includes('from')) {
           const mask = tx.name.split(' ')[4].slice(-4);
           const source = allAccounts.filter(
             (account) => account.mask === mask
@@ -60,16 +56,19 @@ export default function TransactionTimeline() {
           }
         }
       }
-      return tx;
+      processed.push({
+        ...txData,
+        transaction: tx as PlaidTransactionType,
+      });
     };
-    return accountTransactions
-      .map(mapFn)
-      .filter((tx: PlaidTransactionType | null) => tx !== null)
-      .sort(
-        (a: PlaidTransactionType, b: PlaidTransactionType) =>
-          new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-  }, [allAccounts, accountTransactions]);
 
-  return <TransactionsTable transactions={transactions} />;
+    allTransactions.forEach(processTx);
+    return processed;
+  }, [allAccounts, allTransactions]);
+
+  return formattedTxs.length ? (
+    <TransactionsTable transactions={formattedTxs} />
+  ) : (
+    <></>
+  );
 }

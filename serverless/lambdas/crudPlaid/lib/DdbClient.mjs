@@ -137,7 +137,7 @@ class DdbClient {
         },
       })
     );
-    console.log(response);
+
     return { transaction: {} };
   }
 

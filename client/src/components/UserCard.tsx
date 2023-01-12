@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
-// import { HashLink } from 'react-router-hash-link';
 import Button from '../components/Button/Button';
 import Touchable from 'plaid-threads/Touchable';
 
-// import { UserDetails } from '.';
-
-// import { useItems, useUsers, useLink } from '../services';
 import { UserType } from '../types';
 import useLink from '../hooks/useLink';
 import LaunchLink from './LaunchLink';
@@ -18,10 +14,10 @@ interface Props {
 }
 
 export default function UserCard(props: Props) {
-  const [numOfItems, setNumOfItems] = useState(0);
+  const [numOfItems] = useState(0);
   const [token, setToken] = useState('');
-  const [hovered, setHovered] = useState(false);
-  // const { itemsByUser, getAllItems } = useItems();
+  const [_, setHovered] = useState(false);
+
   const { generateLinkToken, linkTokens } = useLink();
 
   const initiateLink = async () => {
@@ -29,22 +25,6 @@ export default function UserCard(props: Props) {
     // if done earlier, it may expire before enduser actually activates Link to add a bank.
     await generateLinkToken(props.userId, null);
   };
-
-  // // update data store with the user's items
-  // useEffect(() => {
-  //   if (props.userId) {
-  //     getAllItems(props.userId, true);
-  //   }
-  // }, [getAllItems, props.userId]);
-
-  // // update no of items from data store
-  // useEffect(() => {
-  //   if (itemsByUser[props.userId] != null) {
-  //     setNumOfItems(itemsByUser[props.userId].length);
-  //   } else {
-  //     setNumOfItems(0);
-  //   }
-  // }, [itemsByUser, props.userId]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[props.userId]);

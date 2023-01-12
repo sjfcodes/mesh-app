@@ -5,7 +5,6 @@ import Trash from 'plaid-threads/Icons/Trash';
 import { currencyFilter, pluralize } from '../util';
 import Asset from './Asset';
 import { AccountType, AssetType } from '../types';
-// import useAssets from '../hooks/useAssets';
 
 interface Props {
   numOfItems: number;
@@ -16,7 +15,6 @@ interface Props {
 }
 
 export default function NetWorth(props: Props) {
-  // const { deleteAssetByAssetId } = useAssets();
   // sums of account types
   const addAllAccounts = (
     accountSubtypes: Array<AccountType['subtype']>
@@ -41,10 +39,6 @@ export default function NetWorth(props: Props) {
 
   const assets = depository + investment + personalAssetValue;
   const liabilities = loan + credit;
-
-  // const handleDelete = (assetId: string, userId: string) => {
-  //   deleteAssetByAssetId(assetId, userId);
-  // };
 
   return (
     <div className="netWorthContainer">
@@ -89,9 +83,7 @@ export default function NetWorth(props: Props) {
                         <IconButton
                           accessibilityLabel="Navigation"
                           icon={<Trash />}
-                          onClick={() => {
-                            // handleDelete(asset.id, props.userId);
-                          }}
+                          onClick={() => null}
                         />
                       </p>
                     </div>
@@ -146,9 +138,7 @@ export default function NetWorth(props: Props) {
                         <IconButton
                           accessibilityLabel="Navigation"
                           icon={<Trash />}
-                          onClick={() => {
-                            // handleDelete(asset.id, props.userId);
-                          }}
+                          onClick={() => null}
                         />
                       </p>
                     </div>

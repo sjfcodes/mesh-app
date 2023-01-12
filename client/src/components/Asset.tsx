@@ -16,12 +16,10 @@ export default function Asset(props: Props) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
-  // const { addAsset } = useAssets();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     setShow(false);
-    // addAsset(props.userId, description, parseFloat(value));
     setDescription('');
     setValue('');
   };

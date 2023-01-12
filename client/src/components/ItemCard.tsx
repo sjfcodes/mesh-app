@@ -7,10 +7,7 @@ import { Institution } from 'plaid/dist/api';
 
 import { diffBetweenCurrentTime } from '../util';
 import { ItemType } from '../types';
-// import useApi from '../hooks/useApi';
-// import useItems from '../hooks/useItems';
 import useInstitutions from '../hooks/useInstitutions';
-import useTransactions from '../hooks/useTransactions';
 import AccountCard from './AccountCard';
 import MoreDetails from './MoreDetails';
 
@@ -22,8 +19,6 @@ interface Props {
 }
 
 const ItemCard = ({ item, userId }: Props) => {
-  // const { setItemToBadState } = useApi();
-  // const { itemAccounts, deleteAccountsByItemId } = useAccounts();
   const [institution, setInstitution] = useState<Institution>({
     logo: '',
     name: '',
@@ -34,17 +29,11 @@ const ItemCard = ({ item, userId }: Props) => {
     routing_numbers: [],
   });
   const [showAccounts, setShowAccounts] = useState(true);
-  // const { deleteItemById } = useItems();
-  const { deleteTransactionsByItemId } = useTransactions();
   const { institutionsById, getItemInstitution, formatLogoSrc } =
     useInstitutions();
   const { id, institution_id, status } = item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
-
-  useEffect(() => {
-    console.log({ item });
-  }, []);
 
   useEffect(() => {
     setInstitution(institutionsById[institution_id] || {});
@@ -53,15 +42,6 @@ const ItemCard = ({ item, userId }: Props) => {
   useEffect(() => {
     getItemInstitution(institution_id);
   }, [getItemInstitution, institution_id]);
-
-  // const handleSetBadState = () => {
-  //   setItemToBadState(id);
-  // };
-  const handleDeleteItem = () => {
-    // deleteItemById(id, userId);
-    // deleteAccountsByItemId(id);
-    deleteTransactionsByItemId(id);
-  };
 
   const cardClassNames = showAccounts
     ? 'card item-card expanded'
@@ -99,11 +79,8 @@ const ItemCard = ({ item, userId }: Props) => {
         </Touchable>
         <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
           isBadState={isSandbox && isGoodState}
-          handleDelete={handleDeleteItem}
-          handleSetBadState={
-            /*handleSetBadState*/ () =>
-              console.log('handleSetBadState forSandboxOnly')
-          }
+          handleDelete={() => console.log('handleDelete')}
+          handleSetBadState={() => console.log('forSandboxOnly')}
           userId={userId}
           itemId={id}
         />

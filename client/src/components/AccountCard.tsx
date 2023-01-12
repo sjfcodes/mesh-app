@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import startCase from 'lodash/startCase';
 import toLower from 'lodash/toLower';
-import Button from 'plaid-threads/Button';
 
 import { currencyFilter } from '../util';
 import { AccountType } from '../types';
@@ -12,13 +11,7 @@ interface Props {
   account: AccountType;
 }
 
-// TODO: update all components to look like this:
-// const ClientMetrics: React.FC<Props> = (props: Props) => ()
-
-// ClientMetrics.displayName = 'ClientMetrics';
-// export default ClientMetrics;
 export default function AccountCard({ account }: Props) {
-  const [transactions, setTransactions] = useState([]);
   const [transactionsShown, setTransactionsShown] = useState(false);
 
   const { accountTransactions, getItemAccountTransactions } = useTransactions();
@@ -31,10 +24,6 @@ export default function AccountCard({ account }: Props) {
   useEffect(() => {
     getItemAccountTransactions(itemId, accountId);
   }, [getItemAccountTransactions, accountTransactions, itemId, accountId]);
-
-  useEffect(() => {
-    setTransactions(accountTransactions[accountId] || []);
-  }, [accountTransactions, accountId]);
 
   return (
     <div>
@@ -51,7 +40,7 @@ export default function AccountCard({ account }: Props) {
           </div>
         </div>
       </div>
-      {transactionsShown && <TransactionsTable transactions={transactions} />}
+      {transactionsShown && <TransactionsTable transactions={accountTransactions[accountId]} />}
     </div>
   );
 }

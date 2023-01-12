@@ -7,14 +7,8 @@ import React, {
   Dispatch,
   ReactNode,
 } from 'react';
-import groupBy from 'lodash/groupBy';
 import keyBy from 'lodash/keyBy';
 import omitBy from 'lodash/omitBy';
-
-// import {
-//   getAccountsByItem as apiGetAccountsByItem,
-//   getAllItemAccounts as apiGetAccountsByUser,
-// } from './api';
 import { AccountType } from '../types';
 import useApi from './useApi';
 
@@ -37,7 +31,6 @@ interface AccountsContextShape extends AccountsState {
   itemAccounts: { [itemId: string]: AccountType[] };
   deleteAccountsByItemId: (itemId: string) => void;
   getAllItemAccounts: (userId: string) => void;
-  accountsByUser: { [user_id: string]: AccountType[] };
   deleteAccountsByUserId: (userId: string) => void;
 }
 const AccountsContext = createContext<AccountsContextShape>(
@@ -53,14 +46,6 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
   const { getAllItemAccounts: apiGetAccountsByUser } = useApi();
   const [itemAccounts, dispatch] = useReducer(reducer, initialState);
 
-  // /**
-  //  * @desc Requests all Accounts that belong to an individual Item.
-  //  */
-  // const getAccountsByItem = useCallback(async (itemId: string) => {
-  //   const { data: payload } = await apiGetAccountsByItem(itemId);
-  //   dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
-  // }, []);
-
   /**
    * @desc Requests all Accounts that belong to an individual User.
    */
@@ -70,7 +55,6 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
         body: { accounts: payload },
       },
     } = await apiGetAccountsByUser();
-    console.log('getAllItemAccounts', payload);
     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 
@@ -100,16 +84,12 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
     return {
       allAccounts,
       itemAccounts,
-      accountsByItem: groupBy(allAccounts, 'item_id'),
-      accountsByUser: groupBy(allAccounts, 'user_id'),
-      // getAccountsByItem,
       getAllItemAccounts,
       deleteAccountsByItemId,
       deleteAccountsByUserId,
     };
   }, [
     itemAccounts,
-    // getAccountsByItem,
     getAllItemAccounts,
     deleteAccountsByItemId,
     deleteAccountsByUserId,

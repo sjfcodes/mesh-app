@@ -44,12 +44,11 @@ const UserPage = () => {
   const userId = user.id;
   const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [token, setToken] = useState('');
-  const [transactions, setTransactions] = useState([]);
   const [assets, setAssets] = useState<AssetType[]>([]);
 
-  const { accountTransactions /*getTransactionsByUser*/ } = useTransactions();
+  const { allTransactions } = useTransactions();
   const { allAccounts, getAllItemAccounts } = useAccounts();
-  const { assetsByUser /*getAssetsByUser*/ } = useAssets();
+  const { assetsByUser } = useAssets();
   const { plaidItem, getAllItems } = useItems();
   const { linkTokens, generateLinkToken } = useLink();
 
@@ -58,23 +57,6 @@ const UserPage = () => {
     // if done earlier, it may expire before enduser actually activates Link to add a bank.
     await generateLinkToken(userId, null);
   };
-
-  // useEffect(() => {
-  //   // This gets transactions from the database only.
-  //   // Note that calls to Plaid's transactions/get endpoint are only made in response
-  //   // to receipt of a transactions webhook.
-  //   getTransactionsByUser(userId);
-  // }, [getTransactionsByUser, userId]);
-
-  useEffect(() => {
-    console.log(allAccounts);
-    // setTransactions(accountTransactions[userId] || []);
-  }, [accountTransactions, userId]);
-
-  // // update data store with the user's assets
-  // useEffect(() => {
-  //   getAssetsByUser(userId);
-  // }, [getAssetsByUser, userId]);
 
   useEffect(() => {
     setAssets(assetsByUser.assets || []);
@@ -171,13 +153,13 @@ const UserPage = () => {
         </>
       )}
 
-      {sortedItems.length > 0 && transactions.length === 0 && (
+      {sortedItems.length > 0 && allTransactions.length === 0 && (
         <div className="loading">
           <LoadingSpinner />
           <LoadingCallout />
         </div>
       )}
-      {sortedItems.length > 0 && transactions.length > 0 && (
+      {sortedItems.length > 0 && allTransactions.length > 0 && (
         <>
           <NetWorth
             accounts={allAccounts}
@@ -188,12 +170,12 @@ const UserPage = () => {
           />
           <SpendingInsights
             numOfItems={sortedItems.length}
-            transactions={transactions}
+            transactions={allTransactions}
           />
         </>
       )}
       {sortedItems.length === 0 &&
-        transactions.length === 0 &&
+        allTransactions.length === 0 &&
         assets.length > 0 && (
           <>
             <NetWorth

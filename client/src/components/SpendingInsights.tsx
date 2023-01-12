@@ -2,10 +2,10 @@ import React, { useMemo } from 'react';
 
 import { currencyFilter, pluralize } from '../util';
 import CategoriesChart from './CategoriesChart';
-import { PlaidTransactionType } from '../types';
+import { TransactionType } from '../types';
 
 interface Props {
-  transactions: PlaidTransactionType[];
+  transactions: TransactionType[];
   numOfItems: number;
 }
 
@@ -18,8 +18,9 @@ export default function SpendingInsights(props: Props) {
   const transactions = props.transactions;
   const monthlyTransactions = useMemo(
     () =>
-      transactions.filter((tx) => {
-        const date = new Date(tx.date);
+      transactions.filter((txData) => {
+        const { transaction: tx } = txData;
+        const date = new Date(tx?.date);
         const today = new Date();
         const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
         return (
@@ -33,7 +34,8 @@ export default function SpendingInsights(props: Props) {
   // create category and name objects from transactions
 
   const categoriesObject = useMemo((): Categories => {
-    return monthlyTransactions.reduce((obj: Categories, tx) => {
+    return monthlyTransactions.reduce((obj: Categories, txData) => {
+      const { transaction: tx } = txData;
       tx.category[0] in obj
         ? (obj[tx.category[0]] = tx.amount + obj[tx.category[0]])
         : (obj[tx.category[0]] = tx.amount);
@@ -42,7 +44,8 @@ export default function SpendingInsights(props: Props) {
   }, [monthlyTransactions]);
 
   const namesObject = useMemo((): Categories => {
-    return monthlyTransactions.reduce((obj: Categories, tx) => {
+    return monthlyTransactions.reduce((obj: Categories, txData) => {
+      const { transaction: tx } = txData;
       tx.name in obj
         ? (obj[tx.name] = tx.amount + obj[tx.name])
         : (obj[tx.name] = tx.amount);

@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
 import useErrors from '../hooks/useErrors';
 import useLink from '../hooks/useLink';
-// import useItems from '../hooks/useItems';
 import useApi from '../hooks/useApi';
 
 interface Props {
@@ -29,8 +28,7 @@ interface Props {
 // is generated in the link context in client/src/services/link.js.
 
 export default function LaunchLink(props: Props) {
-  const { exchangeToken /*setItemState*/ } = useApi();
-  // const { getAllItems, getItemById } = useItems();
+  const { exchangeToken } = useApi();
   const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();
   const navigate = useNavigate();
@@ -46,7 +44,6 @@ export default function LaunchLink(props: Props) {
       // update mode: no need to exchange public token
       // await setItemState(props.itemId, 'good');
       deleteLinkToken(null, props.itemId);
-      // getItemById(props.itemId, true);
       // regular link mode: exchange public token for access token
     } else {
       // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item

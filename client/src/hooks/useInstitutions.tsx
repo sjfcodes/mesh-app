@@ -45,7 +45,6 @@ export function InstitutionsProvider(props: any) {
     const {
       data: { body: institutions },
     } = await apiGetInstitutionById(id);
-    console.log({ institutions });
     dispatch({ type: 'SUCCESSFUL_GET', payload: institutions[0] });
   }, []);
 

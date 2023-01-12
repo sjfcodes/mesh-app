@@ -7,8 +7,6 @@ import {
   PlaidLinkError,
 } from 'react-plaid-link';
 
-// import { postLinkEvent as apiPostLinkEvent } from '../services/api';
-
 /**
  * @desc small helper for pluralizing words for display given a string of items
  */
@@ -91,11 +89,6 @@ export const logSuccess = async (
     accounts,
     link_session_id,
   });
-  // await apiPostLinkEvent({
-  //   userId,
-  //   link_session_id,
-  //   type: 'success',
-  // });
 };
 
 export const logExit = async (
@@ -113,14 +106,4 @@ export const logExit = async (
     },
     error
   );
-
-  // const eventError = error || {};
-  // await apiPostLinkEvent({
-  //   userId,
-  //   link_session_id,
-  //   request_id,
-  //   type: 'exit',
-  //   ...eventError,
-  //   status,
-  // });
 };
