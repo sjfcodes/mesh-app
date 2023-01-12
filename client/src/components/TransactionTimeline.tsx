@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import useAccounts from '../hooks/usePlaidAccounts';
+import usePlaidItems from '../hooks/usePlaidItems';
 import useTransactions from '../hooks/usePlaidTransactions';
 import { PlaidTransactionType, TransactionType } from '../types';
 
@@ -8,7 +8,7 @@ import TransactionsTable from './TransactionsTable';
 
 export default function TransactionTimeline() {
   const { allTransactions } = useTransactions();
-  const { allAccounts } = useAccounts();
+  const { allAccounts } = usePlaidItems();
 
   const formattedTxs: TransactionType[] = useMemo(() => {
     if (!allTransactions.length) return [];

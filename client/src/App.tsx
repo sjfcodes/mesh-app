@@ -13,7 +13,6 @@ import { AssetsProvider } from './services/Assets/Provider';
 import { ErrorsProvider } from './services/Errors/Provider';
 
 import { ItemsProvider } from './services/Plaid/Items/Provider';
-import { AccountsProvider } from './hooks/usePlaidAccounts';
 import Landing from './pages/Landing';
 import UserPage from './pages/UserPage';
 import currentConfig from './auth/config';
@@ -37,23 +36,21 @@ function App() {
             <InstitutionsProvider>
               <ItemsProvider>
                 <LinkProvider>
-                  <AccountsProvider>
-                    <TransactionsProvider>
-                      <ErrorsProvider>
-                        <AssetsProvider>
-                          <div className="toast__body">
-                            <Routes>
-                              <Route path="/" element={<Landing />} />
-                              <Route
-                                path="/user/:userId"
-                                element={<UserPage />}
-                              />
-                            </Routes>
-                          </div>
-                        </AssetsProvider>
-                      </ErrorsProvider>
-                    </TransactionsProvider>
-                  </AccountsProvider>
+                  <TransactionsProvider>
+                    <ErrorsProvider>
+                      <AssetsProvider>
+                        <div className="toast__body">
+                          <Routes>
+                            <Route path="/" element={<Landing />} />
+                            <Route
+                              path="/user/:userId"
+                              element={<UserPage />}
+                            />
+                          </Routes>
+                        </div>
+                      </AssetsProvider>
+                    </ErrorsProvider>
+                  </TransactionsProvider>
                 </LinkProvider>
               </ItemsProvider>
             </InstitutionsProvider>

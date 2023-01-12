@@ -19,7 +19,6 @@ import ItemCard from '../components/ItemCard';
 import useUser from '../hooks/useUser';
 import useTransactions from '../hooks/usePlaidTransactions';
 import Header from '../components/Header/Header';
-import useAccounts from '../hooks/usePlaidAccounts';
 import NetWorth from '../components/NetWorth';
 import SpendingInsights from '../components/SpendingInsights';
 import useAssets from '../hooks/useAssets';
@@ -46,9 +45,8 @@ const UserPage = () => {
   const [token, setToken] = useState('');
 
   const { allTransactions } = useTransactions();
-  const { allAccounts, getAllItemAccounts } = useAccounts();
   const { assets } = useAssets();
-  const { plaidItem, getAllItems } = useItems();
+  const { plaidItem, allAccounts, getAllItems } = useItems();
   const { linkTokens, generateLinkToken } = useLink();
 
   const initiateLink = async () => {
@@ -73,11 +71,6 @@ const UserPage = () => {
     ).reverse();
     setSortedItems(orderedItems);
   }, [plaidItem]);
-
-  // // update data store with the user's accounts
-  useEffect(() => {
-    getAllItemAccounts(userId);
-  }, [getAllItemAccounts, userId]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
