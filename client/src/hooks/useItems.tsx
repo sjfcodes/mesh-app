@@ -7,8 +7,6 @@ import React, {
   useCallback,
   Dispatch,
 } from 'react';
-import groupBy from 'lodash/groupBy';
-import keyBy from 'lodash/keyBy';
 import omit from 'lodash/omit';
 import omitBy from 'lodash/omitBy';
 import { ItemType } from '../types';
@@ -22,7 +20,7 @@ const initialState = {};
 type ItemsAction =
   | {
       type: 'SUCCESSFUL_REQUEST';
-      payload: ItemType[];
+      payload: { [item_d: string]: ItemType };
     }
   | { type: 'SUCCESSFUL_DELETE'; payload: string }
   | { type: 'DELETE_BY_USER'; payload: string };
@@ -32,9 +30,8 @@ interface ItemsContextShape {
   // deleteItemById: (id: string, userId: string) => void;
   getItemsByUser: (userId: string, refresh: boolean) => void;
   // getItemById: (id: string, refresh: boolean) => void;
-  itemsById: { [itemId: string]: ItemType[] };
-  itemsByUser: { [userId: string]: ItemType[] };
-  deleteItemsByUserId: (userId: string) => void;
+  plaidItem: { [item_id: string]: ItemType };
+  // deleteItemsByUserId: (userId: string) => void;
 }
 const ItemsContext = createContext<ItemsContextShape>(
   initialState as ItemsContextShape
@@ -49,7 +46,7 @@ export function ItemsProvider(props: any) {
     // getItemById: apiGetItemById,
     // deleteItemById: apiDeleteItemById,
   } = useApi();
-  const [itemsById, dispatch] = useReducer(reducer, {});
+  const [plaidItem, dispatch] = useReducer(reducer, {});
   // const hasRequested = useRef<{ byId: { [id: string]: boolean } }>({
   //   byId: {},
   // });
@@ -70,14 +67,13 @@ export function ItemsProvider(props: any) {
   /**
    * @desc Requests all Items that belong to an individual User.
    */
-  const getItemsByUser = useCallback(async (userId: string) => {
+  const getItemsByUser = useCallback(async () => {
     const {
       data: {
-        body: { items: payload },
+        body: { items },
       },
-    } = await apiGetItemsByUser(userId);
-    console.log(Object.values(payload).map((item: any) => item.M));
-    dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
+    } = await apiGetItemsByUser();
+    dispatch({ type: 'SUCCESSFUL_REQUEST', payload: items });
   }, []);
 
   // /**
@@ -86,15 +82,15 @@ export function ItemsProvider(props: any) {
   // const deleteItemById = useCallback(async (id: string, userId: string) => {
   //   await apiDeleteItemById(id);
   //   dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
-  //   // Update items list after deletion.
+  //   // Update plaidItem list after deletion.
   //   // await getItemsByUser(userId);
 
   //   delete hasRequested.current.byId[id];
   // }, []);
 
   /**
-   * @desc Will delete all items that belong to an individual User.
-   * There is no api request as apiDeleteItemById in items delete all related transactions
+   * @desc Will delete all plaidItem that belong to an individual User.
+   * There is no api request as apiDeleteItemById in plaidItem delete all related transactions
    */
   const deleteItemsByUserId = useCallback((userId: string) => {
     dispatch({ type: 'DELETE_BY_USER', payload: userId });
@@ -105,23 +101,20 @@ export function ItemsProvider(props: any) {
    * these from being rebuilt on every render unless itemsById is updated in the reducer.
    */
   const value = useMemo(() => {
-    const allItems = Object.values(itemsById);
-
     return {
-      allItems,
-      itemsById,
-      itemsByUser: groupBy(allItems, 'user_id'),
+      plaidItem,
       // getItemById,
       getItemsByUser,
       // deleteItemById,
-      deleteItemsByUserId,
+      // deleteItemsByUserId,
     };
   }, [
-    itemsById,
+    plaidItem,
+    // itemsById,
     // getItemById,
     getItemsByUser,
     // deleteItemById,
-    deleteItemsByUserId,
+    // deleteItemsByUserId,
   ]);
 
   return <ItemsContext.Provider value={value} {...props} />;
@@ -133,15 +126,15 @@ export function ItemsProvider(props: any) {
 function reducer(state: ItemsState, action: ItemsAction) {
   switch (action.type) {
     case 'SUCCESSFUL_REQUEST':
-      if (!action.payload.length) {
+      if (!Object.keys(action.payload).length) {
         return state;
       }
 
-      return { ...state, ...keyBy(action.payload, 'id') };
+      return { ...state, ...action.payload };
     case 'SUCCESSFUL_DELETE':
       return omit(state, [action.payload]);
     case 'DELETE_BY_USER':
-      return omitBy(state, (items) => items.user_id === action.payload);
+      return omitBy(state, (plaidItem) => plaidItem.user_id === action.payload);
     default:
       console.warn('unknown action');
       return state;

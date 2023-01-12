@@ -28,7 +28,7 @@ import TransactionTimeline from '../components/TransactionTimeline';
 // import TransactionTimeline from './TransactionTimeline';
 
 // provides view of user's net worth, spending by category and allows them to explore
-// account and transactions details for linked items
+// account and transactions details for linked sortedItems
 
 const UserPage = () => {
   const {
@@ -42,15 +42,15 @@ const UserPage = () => {
     updated_at: '',
   });
   const userId = user.id;
-  const [items, setItems] = useState<ItemType[]>([]);
+  const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [token, setToken] = useState('');
   const [transactions, setTransactions] = useState([]);
   const [assets, setAssets] = useState<AssetType[]>([]);
 
-  const { transactionsByUser /*getTransactionsByUser*/ } = useTransactions();
+  const { accountTransactions /*getTransactionsByUser*/ } = useTransactions();
   const { allAccounts, getAccountsByUser } = useAccounts();
   const { assetsByUser /*getAssetsByUser*/ } = useAssets();
-  const { itemsByUser, getItemsByUser } = useItems();
+  const { plaidItem, getItemsByUser } = useItems();
   const { linkTokens, generateLinkToken } = useLink();
 
   const initiateLink = async () => {
@@ -67,8 +67,9 @@ const UserPage = () => {
   // }, [getTransactionsByUser, userId]);
 
   useEffect(() => {
-    setTransactions(transactionsByUser[userId] || []);
-  }, [transactionsByUser, userId]);
+    console.log(allAccounts);
+    // setTransactions(accountTransactions[userId] || []);
+  }, [accountTransactions, userId]);
 
   // // update data store with the user's assets
   // useEffect(() => {
@@ -79,22 +80,22 @@ const UserPage = () => {
     setAssets(assetsByUser.assets || []);
   }, [assetsByUser, userId]);
 
-  // update data store with the user's items
+  // update data store with the user's sortedItems
   useEffect(() => {
     if (userId != null) {
       getItemsByUser(userId, true);
     }
   }, [getItemsByUser, userId]);
 
-  // update state items from data store
+  // update state sortedItems from data store
   useEffect(() => {
-    const newItems: Array<ItemType> = itemsByUser[userId] || [];
+    const newItems: ItemType[] = plaidItem ? Object.values(plaidItem) : [];
     const orderedItems = sortBy(
       newItems,
       (item) => new Date(item.updated_at)
     ).reverse();
-    setItems(orderedItems);
-  }, [itemsByUser, userId]);
+    setSortedItems(orderedItems);
+  }, [plaidItem]);
 
   // // update data store with the user's accounts
   useEffect(() => {
@@ -127,18 +128,18 @@ const UserPage = () => {
         </Callout>
       )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
-      {allAccounts.length === 0 && <ErrorMessage />}
-      {allAccounts.length > 0 && (
+      {sortedItems.length === 0 && <ErrorMessage />}
+      {sortedItems.length > 0 && (
         <>
           <div className="item__header">
             <div>
               <h2 className="item__header-heading">
-                {`${allAccounts.length} ${pluralize(
+                {`${sortedItems.length} ${pluralize(
                   'Bank',
-                  allAccounts.length
+                  sortedItems.length
                 )} Linked`}
               </h2>
-              {!!allAccounts.length && (
+              {!!sortedItems.length && (
                 <p className="item__header-subheading">
                   Below is a list of all your connected banks. Click on a bank
                   to view its associated accounts.
@@ -161,7 +162,7 @@ const UserPage = () => {
             )}
           </div>
           <ErrorMessage />
-          {items.map((item) => (
+          {sortedItems.map((item) => (
             <div id="itemCards" key={item.id}>
               <ItemCard item={item} userId={userId} />
             </div>
@@ -170,34 +171,34 @@ const UserPage = () => {
         </>
       )}
 
-      {allAccounts.length > 0 && transactions.length === 0 && (
+      {sortedItems.length > 0 && transactions.length === 0 && (
         <div className="loading">
           <LoadingSpinner />
           <LoadingCallout />
         </div>
       )}
-      {allAccounts.length > 0 && transactions.length > 0 && (
+      {sortedItems.length > 0 && transactions.length > 0 && (
         <>
           <NetWorth
             accounts={allAccounts}
-            numOfItems={items.length}
+            numOfItems={sortedItems.length}
             personalAssets={assets}
             userId={userId}
             assetsOnly={false}
           />
           <SpendingInsights
-            numOfItems={items.length}
+            numOfItems={sortedItems.length}
             transactions={transactions}
           />
         </>
       )}
-      {allAccounts.length === 0 &&
+      {sortedItems.length === 0 &&
         transactions.length === 0 &&
         assets.length > 0 && (
           <>
             <NetWorth
               accounts={allAccounts}
-              numOfItems={items.length}
+              numOfItems={sortedItems.length}
               personalAssets={assets}
               userId={userId}
               assetsOnly

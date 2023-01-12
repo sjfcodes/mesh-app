@@ -31,10 +31,11 @@ export default function TransactionsTable(props: Props) {
           </tr>
         </thead>
         <tbody className="transactions-body">
-          {props.transactions.map((tx) => {
+          {props.transactions.map((data) => {
+            const { transaction: tx } = data;
             const amount = tx.amount * -1;
             return (
-              <tr key={tx.id} className="transactions-data-rows">
+              <tr key={tx.transaction_id} className="transactions-data-rows">
                 <td className="table-date">{getDateDisplay(tx.date)}</td>
                 <td className="table-name">{tx.name}</td>
                 <td className="table-category">{tx.category}</td>

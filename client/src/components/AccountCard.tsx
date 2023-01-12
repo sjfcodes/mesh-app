@@ -17,41 +17,38 @@ interface Props {
 
 // ClientMetrics.displayName = 'ClientMetrics';
 // export default ClientMetrics;
-export default function AccountCard(props: Props) {
+export default function AccountCard({ account }: Props) {
   const [transactions, setTransactions] = useState([]);
   const [transactionsShown, setTransactionsShown] = useState(false);
 
-  const { transactionsByAccount, getTransactionsByAccount } = useTransactions();
-
-  const { id } = props.account;
+  const { accountTransactions, getItemAccountTransactions } = useTransactions();
+  const { id: accountId, item_id: itemId } = account;
 
   const toggleShowTransactions = () => {
     setTransactionsShown((shown) => !shown);
   };
 
   useEffect(() => {
-    getTransactionsByAccount(id);
-  }, [getTransactionsByAccount, transactionsByAccount, id]);
+    getItemAccountTransactions(itemId, accountId);
+  }, [getItemAccountTransactions, accountTransactions, itemId, accountId]);
 
   useEffect(() => {
-    setTransactions(transactionsByAccount[id] || []);
-  }, [transactionsByAccount, id]);
+    setTransactions(accountTransactions[accountId] || []);
+  }, [accountTransactions, accountId]);
 
   return (
     <div>
-      <div className="account-data-row">
-        <div className="account-data-row__left">
-          <div className="account-data-row__name">{props.account.name}</div>
-          <div className="account-data-row__balance">{`${startCase(
-            toLower(props.account.subtype)
-          )} • Balance ${currencyFilter(props.account.current_balance)}`}</div>
-        </div>
-        <div className="account-data-row__right">
-          {transactions.length !== 0 && (
-            <Button onClick={toggleShowTransactions} centered small inline>
-              {transactionsShown ? 'Hide Transactions' : 'View Transactions'}
-            </Button>
-          )}
+      <div onClick={toggleShowTransactions}>
+        <div className="account-data-row">
+          <div className="account-data-row__left">
+            <div className="account-data-row__name">{account.name}</div>
+            <div className="account-data-row__balance">{`${startCase(
+              toLower(account.subtype)
+            )} • Balance ${currencyFilter(account.current_balance)}`}</div>
+          </div>
+          <div className="account-data-row__right">
+            <p>{transactionsShown ? 'HIDE' : 'SHOW'}</p>
+          </div>
         </div>
       </div>
       {transactionsShown && <TransactionsTable transactions={transactions} />}

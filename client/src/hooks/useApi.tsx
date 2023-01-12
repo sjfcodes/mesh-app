@@ -19,7 +19,7 @@ const useApi = () => {
   ///////////////////////////////////
 
   // setup token
-  const getLinkToken = async (userId: string, itemId: string | null) => {
+  const getLinkToken = async () => {
     // axios(`/link-token`, {
     const response = await axios({
       method: 'POST',
@@ -66,7 +66,7 @@ const useApi = () => {
   };
 
   // item
-  const getItemsByUser = async (userId: string) =>
+  const getItemsByUser = async () =>
     axios({
       method: 'GET',
       url: url + `/item`,
@@ -74,7 +74,7 @@ const useApi = () => {
     });
 
   // item account
-  const getAccountsByUser = async (userId: string) =>
+  const getAccountsByUser = async () =>
     axios({
       method: 'GET',
       url: url + `/item/account`,
@@ -138,12 +138,19 @@ const useApi = () => {
 
   // TODO: add route!
   // transactions
-  const getTransactionsByAccount = async (accountId: string) =>
+  const getItemAccountTransactions = async (
+    itemId: string,
+    accountId: string
+  ) =>
     axios({
       method: 'GET',
       url: url + `/item/account/transaction`,
       headers: {
         Authorization: await getAuthToken(),
+      },
+      params: {
+        item_id: itemId,
+        account_id: accountId,
       },
     });
   // const getTransactionsByUser = async (userId: string) => {
@@ -209,7 +216,7 @@ const useApi = () => {
 
   return {
     exchangeToken,
-    getTransactionsByAccount,
+    getItemAccountTransactions,
     // getTransactionsByItem,
     // getTransactionsByUser,
     // getAccountsByItem,

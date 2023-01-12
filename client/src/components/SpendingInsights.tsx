@@ -2,10 +2,10 @@ import React, { useMemo } from 'react';
 
 import { currencyFilter, pluralize } from '../util';
 import CategoriesChart from './CategoriesChart';
-import { TransactionType } from '../types';
+import { PlaidTransactionType } from '../types';
 
 interface Props {
-  transactions: TransactionType[];
+  transactions: PlaidTransactionType[];
   numOfItems: number;
 }
 
@@ -24,9 +24,7 @@ export default function SpendingInsights(props: Props) {
         const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
         return (
           date > oneMonthAgo &&
-          tx.category !== 'Payment' &&
-          tx.category !== 'Transfer' &&
-          tx.category !== 'Interest'
+          !['Payment', 'Transfer', 'Interest'].includes(tx.category[0])
         );
       }),
     [transactions]
@@ -36,9 +34,9 @@ export default function SpendingInsights(props: Props) {
 
   const categoriesObject = useMemo((): Categories => {
     return monthlyTransactions.reduce((obj: Categories, tx) => {
-      tx.category in obj
-        ? (obj[tx.category] = tx.amount + obj[tx.category])
-        : (obj[tx.category] = tx.amount);
+      tx.category[0] in obj
+        ? (obj[tx.category[0]] = tx.amount + obj[tx.category[0]])
+        : (obj[tx.category[0]] = tx.amount);
       return obj;
     }, {});
   }, [monthlyTransactions]);

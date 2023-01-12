@@ -34,7 +34,7 @@ type AccountsAction =
 interface AccountsContextShape extends AccountsState {
   allAccounts: AccountType[];
   dispatch: Dispatch<AccountsAction>;
-  accountsByItem: { [itemId: string]: AccountType[] };
+  itemAccounts: { [itemId: string]: AccountType[] };
   deleteAccountsByItemId: (itemId: string) => void;
   getAccountsByUser: (userId: string) => void;
   accountsByUser: { [user_id: string]: AccountType[] };
@@ -53,7 +53,7 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
   const {
     getAccountsByUser: apiGetAccountsByUser,
   } = useApi();
-  const [accountsById, dispatch] = useReducer(reducer, initialState);
+  const [itemAccounts, dispatch] = useReducer(reducer, initialState);
 
   // /**
   //  * @desc Requests all Accounts that belong to an individual Item.
@@ -66,13 +66,13 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
   /**
    * @desc Requests all Accounts that belong to an individual User.
    */
-  const getAccountsByUser = useCallback(async (userId: string) => {
+  const getAccountsByUser = useCallback(async () => {
     const {
       data: {
         body: { accounts: payload },
       },
-    } = await apiGetAccountsByUser(userId);
-    console.log('getAccounts', payload);
+    } = await apiGetAccountsByUser();
+    console.log('getAccountsByUser', payload);
     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 
@@ -94,14 +94,14 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
 
   /**
    * @desc Builds a more accessible state shape from the Accounts data. useMemo will prevent
-   * these from being rebuilt on every render unless accountsById is updated in the reducer.
+   * these from being rebuilt on every render unless itemAccounts is updated in the reducer.
    */
   const value = useMemo(() => {
-    const allAccounts = Object.values(accountsById);
+    const allAccounts = Object.values(itemAccounts);
 
     return {
       allAccounts,
-      accountsById,
+      itemAccounts,
       accountsByItem: groupBy(allAccounts, 'item_id'),
       accountsByUser: groupBy(allAccounts, 'user_id'),
       // getAccountsByItem,
@@ -110,7 +110,7 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
       deleteAccountsByUserId,
     };
   }, [
-    accountsById,
+    itemAccounts,
     // getAccountsByItem,
     getAccountsByUser,
     deleteAccountsByItemId,

@@ -36,11 +36,9 @@ export interface AccountType {
 
 export interface ItemType {
   id: string;
-  plaid_item_id: string;
-  user_id: string;
-  plaid_access_token: string;
-  plaid_institution_id: string;
-  status: string;
+  accounts: AccountType[];
+  institution_id: string;
+  tx_cursor: string;
   created_at: string;
   updated_at: string;
 }
@@ -71,23 +69,58 @@ export interface RouteInfo {
   userId: string;
 }
 
-export interface TransactionType {
-  id: string /** db added */;
+export type LocationType = {
+  address: string | null;
+  city: string | null;
+  country: string | null;
+  lat: string | null;
+  lon: string | null;
+  postal_code: string | null;
+  region: string | null;
+  store_number: string | null;
+};
+
+export type PaymentMetaType = {
+  by_order_of: string | null;
+  payee: string | null;
+  payer: string | null;
+  payment_method: string | null;
+  payment_processor: string | null;
+  ppd_id: string | null;
+  reason: string | null;
+  reference_number: string | null;
+};
+
+export interface PlaidTransactionType {
   account_id: string;
-  item_id: string /** manually added */;
-  user_id: string /** manually added */;
-  plaid_transaction_id: string /** originally transaction_id */;
-  plaid_category_id: string /** originally category_id */;
-  category: string;
-  subcategory: string /** QUESTION: what is this?*/;
-  type: string /** QUESTION: what is this? */;
-  name: string;
-  amount: number;
-  iso_currency_code: string;
-  unofficial_currency_code: string;
-  date: string;
-  pending: boolean;
   account_owner: string;
+  amount: number;
+  authorized_date: string;
+  authorized_datetime: string | null;
+  category: string[];
+  category_id: string /** originally category_id */;
+  check_number: number | null;
+  date: string;
+  datetime: string | null;
+  iso_currency_code: string;
+  location: LocationType;
+  merchant_name: string;
+  name: string;
+  payment_channel: string;
+  payment_meta: PaymentMetaType;
+  pending: boolean;
+  pending_transaction_id: string | null;
+  personal_finance_category: null;
+  transaction_code: null;
+  transaction_id: string;
+  transaction_type: string;
+  unofficial_currency_code: string;
+}
+
+export type TransactionType = {
+  ['item_id::account_id']: string;
+  transaction_id: string;
+  transaction: PlaidTransactionType;
   created_at: string;
   updated_at: string;
-}
+};

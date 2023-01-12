@@ -112,7 +112,7 @@ export function LinkProvider(props: any) {
       // if itemId is not null, update mode is triggered
       const {
         data: { body },
-      } = await getLinkToken(userId, itemId);
+      } = await getLinkToken();
       if (body.link_token) {
         const token = body.link_token;
         console.log('success', body);

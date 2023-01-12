@@ -6,10 +6,9 @@ import { Callout } from 'plaid-threads/Callout';
 import { Institution } from 'plaid/dist/api';
 
 import { diffBetweenCurrentTime } from '../util';
-import { AccountType, ItemType } from '../types';
+import { ItemType } from '../types';
 // import useApi from '../hooks/useApi';
 // import useItems from '../hooks/useItems';
-import useAccounts from '../hooks/useAccounts';
 import useInstitutions from '../hooks/useInstitutions';
 import useTransactions from '../hooks/useTransactions';
 import AccountCard from './AccountCard';
@@ -22,9 +21,9 @@ interface Props {
   userId: string;
 }
 
-const ItemCard = (props: Props) => {
+const ItemCard = ({ item, userId }: Props) => {
   // const { setItemToBadState } = useApi();
-  const [accounts, setAccounts] = useState<AccountType[]>([]);
+  // const { itemAccounts, deleteAccountsByItemId } = useAccounts();
   const [institution, setInstitution] = useState<Institution>({
     logo: '',
     name: '',
@@ -34,35 +33,33 @@ const ItemCard = (props: Props) => {
     country_codes: [],
     routing_numbers: [],
   });
-  const [showAccounts, setShowAccounts] = useState(false);
-  const { accountsByItem, deleteAccountsByItemId } = useAccounts();
+  const [showAccounts, setShowAccounts] = useState(true);
   // const { deleteItemById } = useItems();
   const { deleteTransactionsByItemId } = useTransactions();
   const { institutionsById, getInstitutionById, formatLogoSrc } =
     useInstitutions();
-  const { id, plaid_institution_id, status } = props.item;
+  const { id, institution_id, status } = item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
 
   useEffect(() => {
-    const itemAccounts: AccountType[] = accountsByItem[id];
-    setAccounts(itemAccounts || []);
-  }, [accountsByItem, id]);
+    console.log({ item });
+  }, []);
 
   useEffect(() => {
-    setInstitution(institutionsById[plaid_institution_id] || {});
-  }, [institutionsById, plaid_institution_id]);
+    setInstitution(institutionsById[institution_id] || {});
+  }, [institutionsById, institution_id]);
 
   useEffect(() => {
-    getInstitutionById(plaid_institution_id);
-  }, [getInstitutionById, plaid_institution_id]);
+    getInstitutionById(institution_id);
+  }, [getInstitutionById, institution_id]);
 
   // const handleSetBadState = () => {
   //   setItemToBadState(id);
   // };
   const handleDeleteItem = () => {
-    // deleteItemById(id, props.userId);
-    deleteAccountsByItemId(id);
+    // deleteItemById(id, userId);
+    // deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
 
@@ -97,29 +94,30 @@ const ItemCard = (props: Props) => {
           </div>
           <div className="item-card__column-3">
             <h3 className="heading">LAST UPDATED</h3>
-            <p className="value">
-              {diffBetweenCurrentTime(props.item.updated_at)}
-            </p>
+            <p className="value">{diffBetweenCurrentTime(item.updated_at)}</p>
           </div>
         </Touchable>
         <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
           isBadState={isSandbox && isGoodState}
           handleDelete={handleDeleteItem}
-          handleSetBadState={/*handleSetBadState*/ () => console.log('handleSetBadState forSandboxOnly')}
-          userId={props.userId}
+          handleSetBadState={
+            /*handleSetBadState*/ () =>
+              console.log('handleSetBadState forSandboxOnly')
+          }
+          userId={userId}
           itemId={id}
         />
       </div>
-      {showAccounts && accounts.length > 0 && (
+      {showAccounts && item.accounts.length > 0 && (
         <div>
-          {accounts.map((account) => (
+          {item.accounts.map((account) => (
             <div key={account.id}>
               <AccountCard account={account} />
             </div>
           ))}
         </div>
       )}
-      {showAccounts && accounts.length === 0 && (
+      {showAccounts && item.accounts.length === 0 && (
         <Callout>
           No transactions or accounts have been retrieved for this item. See the{' '}
           <InlineLink href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md">

@@ -1,25 +1,25 @@
 import { useMemo, useReducer } from 'react';
 import useAccounts from '../hooks/useAccounts';
 import useTransactions from '../hooks/useTransactions';
-import { TransactionType } from '../types';
+import { PlaidTransactionType } from '../types';
 
 import { currencyFilter } from '../util';
 import TransactionsTable from './TransactionsTable';
 
 export default function TransactionTimeline() {
-  const { allTransactions } = useTransactions();
+  const { accountTransactions } = useTransactions();
   const { allAccounts } = useAccounts();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [transfers, setTransfers] = useReducer(
-    (state: object, tx: TransactionType) => {
+    (state: object, tx: PlaidTransactionType) => {
       return state;
     },
     {}
   );
 
   const transactions = useMemo(() => {
-    const mapFn = (tx: TransactionType) => {
+    const mapFn = (tx: PlaidTransactionType) => {
       if (tx.name.includes('Online Banking Transfer')) {
         if (tx.name.includes('To')) {
           /**
@@ -62,14 +62,16 @@ export default function TransactionTimeline() {
       }
       return tx;
     };
-    return allTransactions
-      .map(mapFn)
-      .filter((tx: TransactionType | null) => tx !== null)
-      .sort(
-        (a: TransactionType, b: TransactionType) =>
-          new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-  }, [allAccounts, allTransactions]);
+    return [<p>TODO: sync with tx shape</p>];
+    // return accountTransactions
+    //   .map(mapFn)
+    //   .filter((tx: PlaidTransactionType | null) => tx !== null)
+    //   .sort(
+    //     (a: PlaidTransactionType, b: PlaidTransactionType) =>
+    //       new Date(b.date).getTime() - new Date(a.date).getTime()
+    // );
+  }, [allAccounts, accountTransactions]);
 
-  return <TransactionsTable transactions={transactions} />;
+  // return <TransactionsTable transactions={transactions} />;
+  return <p>TODO: sync with tx shape</p>;
 }

@@ -12,32 +12,36 @@ import keyBy from 'lodash/keyBy';
 import omitBy from 'lodash/omitBy';
 
 import { Dictionary } from 'lodash';
-import { TransactionType } from '../types';
+import { PlaidTransactionType } from '../types';
 import useApi from './useApi';
 
 interface TransactionsState {
-  [transactionId: number]: TransactionType;
+  [transactionId: number]: PlaidTransactionType;
 }
 
 const initialState = {};
 type TransactionsAction =
   | {
       type: 'SUCCESSFUL_GET';
-      payload: TransactionType[];
+      payload: PlaidTransactionType[];
     }
   | { type: 'DELETE_BY_ITEM'; payload: string }
   | { type: 'DELETE_BY_USER'; payload: string };
 
 interface TransactionsContextShape extends TransactionsState {
   dispatch: Dispatch<TransactionsAction>;
-  allTransactions: Dictionary<any>;
-  transactionsByAccount: Dictionary<any>;
-  getTransactionsByAccount: (accountId: string, refresh?: boolean) => void;
+  // allTransactions: Dictionary<any>;
+  accountTransactions: Dictionary<any>;
+  getItemAccountTransactions: (
+    itemId: string,
+    accountId: string,
+    refresh?: boolean
+  ) => void;
   deleteTransactionsByItemId: (itemId: string) => void;
   deleteTransactionsByUserId: (userId: string) => void;
-  transactionsByUser: Dictionary<any>;
+  // transactionsByUser: Dictionary<any>;
   // getTransactionsByUser: (userId: string) => void;
-  transactionsByItem: Dictionary<any>;
+  // transactionsByItem: Dictionary<any>;
 }
 const TransactionsContext = createContext<TransactionsContextShape>(
   initialState as TransactionsContextShape
@@ -51,11 +55,11 @@ const TransactionsContext = createContext<TransactionsContextShape>(
  */
 export function TransactionsProvider(props: any) {
   const {
-    getTransactionsByAccount: apiGetTransactionsByAccount,
+    getItemAccountTransactions: apiGetItemAccountTransactions,
     // getTransactionsByItem: apiGetTransactionsByItem,
     // getTransactionsByUser: apiGetTransactionsByUser,
   } = useApi();
-  const [transactionsById, dispatch] = useReducer(reducer, initialState);
+  const [accountTransactions, dispatch] = useReducer(reducer, initialState);
 
   const hasRequested = useRef<{
     byAccount: { [accountId: string]: boolean };
@@ -68,12 +72,19 @@ export function TransactionsProvider(props: any) {
    * The api request will be bypassed if the data has already been fetched.
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getTransactionsByAccount = useCallback(
-    async (accountId: string, refresh: boolean) => {
+  const getItemAccountTransactions = useCallback(
+    async (itemId: string, accountId: string, refresh: boolean) => {
       if (!hasRequested.current.byAccount[accountId] || refresh) {
         hasRequested.current.byAccount[accountId] = true;
-        const { data: payload } = await apiGetTransactionsByAccount(accountId);
-        dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+        const {
+          data: {
+            body: { transactions },
+          },
+        } = await apiGetItemAccountTransactions(itemId, accountId);
+        dispatch({
+          type: 'SUCCESSFUL_GET',
+          payload: { transactions, accountId },
+        });
       }
     },
     []
@@ -113,31 +124,31 @@ export function TransactionsProvider(props: any) {
 
   /**
    * @desc Builds a more accessible state shape from the Transactions data. useMemo will prevent
-   * these from being rebuilt on every render unless transactionsById is updated in the reducer.
+   * these from being rebuilt on every render unless accountTransactions is updated in the reducer.
    */
   const value = useMemo(() => {
-    const renmovePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
-    const formatTransaction = (tx: TransactionType) => {
-      const copy = { ...tx };
-      renmovePhrases.forEach((phrase) => {
-        if (copy.name.includes(phrase)) {
-          copy.name = copy.name.split(phrase)[1].trim();
-        }
-      });
+    // const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
+    // const formatTransaction = (tx: PlaidTransactionType) => {
+    //   const copy = { ...tx };
+    //   removePhrases.forEach((phrase) => {
+    //     if (copy.name.includes(phrase)) {
+    //       copy.name = copy.name.split(phrase)[1].trim();
+    //     }
+    //   });
 
-      return copy;
-    };
+    //   return copy;
+    // };
 
-    const allTransactions =
-      Object.values(transactionsById).map(formatTransaction);
+    // const allTransactions =
+    //   Object.values(accountTransactions).map(formatTransaction);
     return {
       dispatch,
-      allTransactions,
-      transactionsById,
-      transactionsByAccount: groupBy(allTransactions, 'account_id'),
-      transactionsByItem: groupBy(allTransactions, 'item_id'),
-      transactionsByUser: groupBy(allTransactions, 'user_id'),
-      getTransactionsByAccount,
+      // allTransactions,
+      accountTransactions,
+      // transactionsByAccount: groupBy(allTransactions, 'account_id'),
+      // transactionsByItem: groupBy(allTransactions, 'item_id'),
+      // transactionsByUser: groupBy(allTransactions, 'user_id'),
+      getItemAccountTransactions,
       // getTransactionsByItem,
       // getTransactionsByUser,
       deleteTransactionsByItemId,
@@ -145,8 +156,8 @@ export function TransactionsProvider(props: any) {
     };
   }, [
     dispatch,
-    transactionsById,
-    getTransactionsByAccount,
+    accountTransactions,
+    getItemAccountTransactions,
     // getTransactionsByItem,
     // getTransactionsByUser,
     deleteTransactionsByItemId,
@@ -162,23 +173,27 @@ export function TransactionsProvider(props: any) {
 function reducer(state: TransactionsState, action: TransactionsAction | any) {
   switch (action.type) {
     case 'SUCCESSFUL_GET':
-      if (!action.payload.length) {
+      const {
+        payload: { transactions, accountId },
+      } = action;
+      if (!transactions.length) {
         return state;
       }
+      console.log({ [accountId]: transactions });
       return {
         ...state,
-        ...keyBy(action.payload, 'id'),
+        [accountId]: transactions,
       };
-    case 'DELETE_BY_ITEM':
-      return omitBy(
-        state,
-        (transaction) => transaction.item_id === action.payload
-      );
-    case 'DELETE_BY_USER':
-      return omitBy(
-        state,
-        (transaction) => transaction.user_id === action.payload
-      );
+    // case 'DELETE_BY_ITEM':
+    //   return omitBy(
+    //     state,
+    //     (transaction) => transaction.item_id === action.payload
+    //   );
+    // case 'DELETE_BY_USER':
+    //   return omitBy(
+    //     state,
+    //     (transaction) => transaction.user_id === action.payload
+    //   );
     default:
       console.warn('unknown action: ', action.type, action.payload);
       return state;
