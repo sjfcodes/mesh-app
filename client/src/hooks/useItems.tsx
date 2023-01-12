@@ -9,7 +9,7 @@ import React, {
 import omit from 'lodash/omit';
 import omitBy from 'lodash/omitBy';
 import { ItemType } from '../types';
-import useApi from './useApi';
+import { getAllItems as apiGetItemsByUser } from '../services/api';
 
 interface ItemsState {
   [itemId: string]: ItemType;
@@ -37,7 +37,6 @@ const ItemsContext = createContext<ItemsContextShape>(
  * @desc Maintains the Items context state and provides functions to update that state.
  */
 export function ItemsProvider(props: any) {
-  const { getAllItems: apiGetItemsByUser } = useApi();
   const [plaidItem, dispatch] = useReducer(reducer, {});
 
   /**

@@ -8,7 +8,7 @@ import React, {
   Dispatch,
 } from 'react';
 import { PlaidTransactionType, TransactionType } from '../types';
-import useApi from './useApi';
+import { getItemAccountTransactions as apiGetItemAccountTransactions } from '../services/api';
 
 interface TransactionsState {
   [transactionId: number]: PlaidTransactionType;
@@ -44,8 +44,6 @@ const TransactionsContext = createContext<TransactionsContextShape>(
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props: any) {
-  const { getItemAccountTransactions: apiGetItemAccountTransactions } =
-    useApi();
   const [accountTransactions, dispatch] = useReducer(reducer, initialState);
 
   const hasRequested = useRef<{

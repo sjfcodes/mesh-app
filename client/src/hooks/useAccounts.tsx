@@ -10,7 +10,7 @@ import React, {
 import keyBy from 'lodash/keyBy';
 import omitBy from 'lodash/omitBy';
 import { AccountType } from '../types';
-import useApi from './useApi';
+import { getAllItemAccounts as apiGetAccountsByUser } from '../services/api';
 
 interface AccountsState {
   [accountId: number]: AccountType;
@@ -43,7 +43,6 @@ const AccountsContext = createContext<AccountsContextShape>(
 export const AccountsProvider: React.FC<{ children: ReactNode }> = (
   props: any
 ) => {
-  const { getAllItemAccounts: apiGetAccountsByUser } = useApi();
   const [itemAccounts, dispatch] = useReducer(reducer, initialState);
 
   /**

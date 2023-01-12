@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
 import useErrors from '../hooks/useErrors';
 import useLink from '../hooks/useLink';
-import useApi from '../hooks/useApi';
+import { exchangeToken } from '../services/api';
 
 interface Props {
   isOauth?: boolean;
@@ -28,7 +28,6 @@ interface Props {
 // is generated in the link context in client/src/services/link.js.
 
 export default function LaunchLink(props: Props) {
-  const { exchangeToken } = useApi();
   const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();
   const navigate = useNavigate();

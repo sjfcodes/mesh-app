@@ -7,7 +7,7 @@ import React, {
   createContext,
 } from 'react';
 
-import useApi from './useApi';
+import { getLinkToken } from '../services/api';
 
 import { PlaidLinkError } from 'react-plaid-link';
 
@@ -101,7 +101,6 @@ function reducer(state: any, action: LinkAction) {
  */
 export function LinkProvider(props: any) {
   const [linkTokens, dispatch] = useReducer(reducer, initialState);
-  const { getLinkToken } = useApi();
 
   /**
    * @desc Creates a new link token for a given User or Item.
@@ -131,7 +130,7 @@ export function LinkProvider(props: any) {
         console.log('error', body);
       }
     },
-    [getLinkToken]
+    []
   );
 
   const deleteLinkToken = useCallback(

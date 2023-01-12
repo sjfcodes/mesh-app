@@ -7,7 +7,7 @@ import React, {
   Dispatch,
 } from 'react';
 import { Institution } from 'plaid/dist/api';
-import useApi from './useApi';
+import { getItemInstitution as apiGetInstitutionById } from '../services/api';
 
 interface InstitutionsById {
   [key: string]: Institution;
@@ -35,7 +35,6 @@ const InstitutionsContext = createContext<InstitutionsContextShape>(
  * @desc Maintains the Institutions context state and provides functions to update that state.
  */
 export function InstitutionsProvider(props: any) {
-  const { getItemInstitution: apiGetInstitutionById } = useApi();
   const [institutionsById, dispatch] = useReducer(reducer, initialState);
 
   /**
