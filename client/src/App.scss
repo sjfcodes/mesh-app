@@ -27,6 +27,9 @@ body {
 
 [data-amplify-authenticator] {
   min-height: 100vh;
+  & > div {
+    transform: scale(1.5);
+  }
 }
 
 .App {

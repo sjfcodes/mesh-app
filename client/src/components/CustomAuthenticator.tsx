@@ -10,6 +10,8 @@ import {
 } from '@aws-amplify/ui-react';
 import { UserProvider } from '../services/User/Provider';
 
+// https://ui.docs.amplify.aws/react/connected-components/authenticator/customization
+
 const components = {
   Header() {
     const { tokens } = useTheme();
@@ -39,13 +41,13 @@ const components = {
   SignIn: {
     Header() {
       const { tokens } = useTheme();
-
+      console.log(tokens)
       return (
         <Heading
           padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
           level={3}
         >
-          Sign in to your account
+          Welcome to Mesh
         </Heading>
       );
     },
@@ -236,6 +238,8 @@ const formFields = {
     },
   },
 };
+
+// https://ui.docs.amplify.aws/react/connected-components/authenticator/customization
 
 const CustomAuthenticator = ({ children }: any) => {
   return (
