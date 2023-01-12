@@ -1,4 +1,4 @@
-import { Institution } from "plaid";
+import { Institution } from 'plaid';
 
 export interface InstitutionsById {
   [key: string]: Institution;
@@ -13,6 +13,6 @@ export type InstitutionsAction = {
 };
 
 export interface InstitutionsContextShape extends InstitutionsState {
-    getItemInstitution: (id: string) => void;
-    formatLogoSrc: (src: string | null | undefined) => string;
-  }
+  getItemInstitution: (id: string) => void;
+  formatLogoSrc: (src: string | null | undefined) => string;
+}

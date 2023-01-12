@@ -1,7 +1,7 @@
-import { AssetType } from "../../types";
+import { AssetType } from '../../types';
 
 export type AssetsState = {
-    assets: AssetType[];
+  assets: AssetType[];
 };
 
 export interface AssetsContextShape extends AssetsState {}

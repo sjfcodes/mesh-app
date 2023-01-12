@@ -6,4 +6,3 @@ export interface CurrentUserContext {
   useUser: [AmplifyUser, React.Dispatch<AmplifyUser>];
   signOut: ((data?: AuthEventData | undefined) => void) | undefined;
 }
-

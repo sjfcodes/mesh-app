@@ -85,7 +85,10 @@ export const getItemInstitution = async (instId: string) =>
   });
 
 // transactions
-export const getItemAccountTransactions = async (itemId: string, accountId: string) =>
+export const getItemAccountTransactions = async (
+  itemId: string,
+  accountId: string
+) =>
   axios({
     method: 'GET',
     url: url + `/item/account/transaction`,

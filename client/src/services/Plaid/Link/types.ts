@@ -1,4 +1,4 @@
-import { PlaidLinkError } from "react-plaid-link";
+import { PlaidLinkError } from 'react-plaid-link';
 
 export interface LinkToken {
   [key: string]: string;
@@ -9,7 +9,6 @@ export interface LinkState {
   byItem: LinkToken;
   error: PlaidLinkError;
 }
-
 
 export type LinkAction =
   | {

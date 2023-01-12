@@ -1,4 +1,4 @@
-import { TransactionsAction, TransactionsState } from "./types";
+import { TransactionsAction, TransactionsState } from './types';
 
 /**
  * @desc Handles updates to the Transactions state as dictated by dispatched actions.

@@ -1,4 +1,4 @@
-import { AssetsAction, AssetsState } from "./types";
+import { AssetsAction, AssetsState } from './types';
 
 /**
  * @desc Handles updates to the propertiesByUser as dictated by dispatched actions.

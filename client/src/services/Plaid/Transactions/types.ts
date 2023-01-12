@@ -1,4 +1,4 @@
-import { PlaidTransactionType, TransactionType } from "../../../types";
+import { PlaidTransactionType, TransactionType } from '../../../types';
 
 export interface TransactionsState {
   [transactionId: number]: PlaidTransactionType;
