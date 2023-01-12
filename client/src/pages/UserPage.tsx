@@ -29,10 +29,8 @@ import TransactionTimeline from '../components/TransactionTimeline';
 // account and transactions details for linked sortedItems
 
 const UserPage = () => {
-  const {
-    user,
-  } = useUser();
-  
+  const { user } = useUser();
+
   const userId = user.sub;
   const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [token, setToken] = useState('');
@@ -40,7 +38,7 @@ const UserPage = () => {
   const { allTransactions } = useTransactions();
   const { assets } = useAssets();
   const { plaidItem, allAccounts, getAllItems } = useItems();
-  const { linkTokens, /* generateLinkToken */ } = useLink();
+  const { linkTokens /* generateLinkToken */ } = useLink();
 
   // const initiateLink = async () => {
   //   // only generate a link token upon a click from enduser to add a bank;
@@ -69,7 +67,7 @@ const UserPage = () => {
     setToken(linkTokens.byUser[userId]);
   }, [linkTokens, userId]);
 
-  console.log(sortedItems)
+  console.log(sortedItems);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>

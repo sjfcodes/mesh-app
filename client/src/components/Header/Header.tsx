@@ -5,10 +5,7 @@ import Button from '../Button/Button';
 import './Header.css';
 
 const Header = () => {
-  const {
-    user,
-    signOut,
-  } = useUser();
+  const { user, signOut } = useUser();
 
   const handleSignOut = async () => {
     if (signOut) signOut({ type: 'SIGN_OUT' });
