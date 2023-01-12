@@ -174,7 +174,7 @@ const UserPage = () => {
           />
         </>
       )}
-      {sortedItems.length === 0 &&
+      {/* {sortedItems.length === 0 &&
         allTransactions.length === 0 &&
         assets.length > 0 && (
           <>
@@ -186,7 +186,7 @@ const UserPage = () => {
               assetsOnly
             />
           </>
-        )}
+        )} */}
     </div>
   );
 };

@@ -16,16 +16,19 @@ interface Categories {
 export default function SpendingInsights(props: Props) {
   // grab transactions from most recent month and filter out transfers and payments
   const transactions = props.transactions;
-  const monthlyTransactions = useMemo(
+
+  const filteredTransactions = useMemo(
     () =>
       transactions.filter((txData) => {
         const { transaction: tx } = txData;
-        const date = new Date(tx?.date);
-        const today = new Date();
-        const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
+        // const date = new Date(tx.date);
+        // const today = new Date();
+        // const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
         return (
-          date > oneMonthAgo &&
-          !['Payment', 'Transfer', 'Interest'].includes(tx.category[0])
+          // date > oneMonthAgo &&
+          // tx.category[0] !== 'Payment' &&
+          tx.category[0] !== 'Transfer' &&
+          tx.category[0] !== 'Interest'
         );
       }),
     [transactions]
@@ -34,24 +37,24 @@ export default function SpendingInsights(props: Props) {
   // create category and name objects from transactions
 
   const categoriesObject = useMemo((): Categories => {
-    return monthlyTransactions.reduce((obj: Categories, txData) => {
+    return filteredTransactions.reduce((obj: Categories, txData) => {
       const { transaction: tx } = txData;
       tx.category[0] in obj
         ? (obj[tx.category[0]] = tx.amount + obj[tx.category[0]])
         : (obj[tx.category[0]] = tx.amount);
       return obj;
     }, {});
-  }, [monthlyTransactions]);
+  }, [filteredTransactions]);
 
   const namesObject = useMemo((): Categories => {
-    return monthlyTransactions.reduce((obj: Categories, txData) => {
+    return filteredTransactions.reduce((obj: Categories, txData) => {
       const { transaction: tx } = txData;
       tx.name in obj
         ? (obj[tx.name] = tx.amount + obj[tx.name])
         : (obj[tx.name] = tx.amount);
       return obj;
     }, {});
-  }, [monthlyTransactions]);
+  }, [filteredTransactions]);
 
   // sort names by spending totals
   const sortedNames = useMemo(() => {
