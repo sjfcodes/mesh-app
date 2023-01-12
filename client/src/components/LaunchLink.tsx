@@ -29,7 +29,7 @@ interface Props {
 // is generated in the link context in client/src/services/link.js.
 
 export default function LaunchLink(props: Props) {
-  const { exchangeToken, /*setItemState*/ } = useApi();
+  const { exchangeToken /*setItemState*/ } = useApi();
   // const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();

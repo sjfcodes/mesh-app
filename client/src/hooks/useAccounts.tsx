@@ -50,9 +50,7 @@ const AccountsContext = createContext<AccountsContextShape>(
 export const AccountsProvider: React.FC<{ children: ReactNode }> = (
   props: any
 ) => {
-  const {
-    getAccountsByUser: apiGetAccountsByUser,
-  } = useApi();
+  const { getAccountsByUser: apiGetAccountsByUser } = useApi();
   const [itemAccounts, dispatch] = useReducer(reducer, initialState);
 
   // /**

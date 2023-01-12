@@ -39,9 +39,9 @@ const AssetsContext = createContext<AssetsContextShape>(
  */
 export function AssetsProvider(props: any) {
   // const {
-    // addAsset: apiAddAsset,
-    // getAssetsByUser: apiGetAssetsByUser,
-    // deleteAssetByAssetId: apiDeleteAssetByAssetId,
+  // addAsset: apiAddAsset,
+  // getAssetsByUser: apiGetAssetsByUser,
+  // deleteAssetByAssetId: apiDeleteAssetByAssetId,
   // } = useApi();
   const [assetsByUser, dispatch] = useReducer(reducer, initialState);
 
