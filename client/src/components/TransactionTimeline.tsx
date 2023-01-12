@@ -62,16 +62,14 @@ export default function TransactionTimeline() {
       }
       return tx;
     };
-    return [<p>TODO: sync with tx shape</p>];
-    // return accountTransactions
-    //   .map(mapFn)
-    //   .filter((tx: PlaidTransactionType | null) => tx !== null)
-    //   .sort(
-    //     (a: PlaidTransactionType, b: PlaidTransactionType) =>
-    //       new Date(b.date).getTime() - new Date(a.date).getTime()
-    // );
+    return accountTransactions
+      .map(mapFn)
+      .filter((tx: PlaidTransactionType | null) => tx !== null)
+      .sort(
+        (a: PlaidTransactionType, b: PlaidTransactionType) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
   }, [allAccounts, accountTransactions]);
 
-  // return <TransactionsTable transactions={transactions} />;
-  return <p>TODO: sync with tx shape</p>;
+  return <TransactionsTable transactions={transactions} />;
 }

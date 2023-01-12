@@ -24,7 +24,7 @@ type InstitutionsAction = {
 
 interface InstitutionsContextShape extends InstitutionsState {
   dispatch: Dispatch<InstitutionsAction>;
-  getInstitutionById: (id: string) => void;
+  getItemInstitution: (id: string) => void;
   formatLogoSrc: (src: string | null | undefined) => string;
 }
 const InstitutionsContext = createContext<InstitutionsContextShape>(
@@ -35,13 +35,13 @@ const InstitutionsContext = createContext<InstitutionsContextShape>(
  * @desc Maintains the Institutions context state and provides functions to update that state.
  */
 export function InstitutionsProvider(props: any) {
-  const { getInstitutionById: apiGetInstitutionById } = useApi();
+  const { getItemInstitution: apiGetInstitutionById } = useApi();
   const [institutionsById, dispatch] = useReducer(reducer, initialState);
 
   /**
    * @desc Requests details for a single Institution.
    */
-  const getInstitutionById = useCallback(async (id: string) => {
+  const getItemInstitution = useCallback(async (id: string) => {
     const {
       data: { body: institutions },
     } = await apiGetInstitutionById(id);
@@ -58,11 +58,11 @@ export function InstitutionsProvider(props: any) {
     return {
       allInstitutions,
       institutionsById,
-      getInstitutionById,
-      getInstitutionsById: getInstitutionById,
+      getItemInstitution,
+      getInstitutionsById: getItemInstitution,
       formatLogoSrc,
     };
-  }, [institutionsById, getInstitutionById]);
+  }, [institutionsById, getItemInstitution]);
 
   return <InstitutionsContext.Provider value={value} {...props} />;
 }

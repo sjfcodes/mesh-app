@@ -36,7 +36,7 @@ const ItemCard = ({ item, userId }: Props) => {
   const [showAccounts, setShowAccounts] = useState(true);
   // const { deleteItemById } = useItems();
   const { deleteTransactionsByItemId } = useTransactions();
-  const { institutionsById, getInstitutionById, formatLogoSrc } =
+  const { institutionsById, getItemInstitution, formatLogoSrc } =
     useInstitutions();
   const { id, institution_id, status } = item;
   const isSandbox = PLAID_ENV === 'sandbox';
@@ -51,8 +51,8 @@ const ItemCard = ({ item, userId }: Props) => {
   }, [institutionsById, institution_id]);
 
   useEffect(() => {
-    getInstitutionById(institution_id);
-  }, [getInstitutionById, institution_id]);
+    getItemInstitution(institution_id);
+  }, [getItemInstitution, institution_id]);
 
   // const handleSetBadState = () => {
   //   setItemToBadState(id);

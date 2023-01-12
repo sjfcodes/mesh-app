@@ -116,7 +116,7 @@ class App {
   }
 
   async handleGetInstitutionById() {
-    const data = await this.plaidClient.getInstitutionById(
+    const data = await this.plaidClient.getItemInstitution(
       this.queryString.institution_id
     );
 

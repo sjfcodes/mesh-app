@@ -41,7 +41,6 @@ const useApi = () => {
         method: 'POST',
         headers: { Authorization: await getAuthToken() },
         data: {
-          path: '/item/token-exchange',
           payload: {
             accounts,
             institution_id: institution.institution_id,
@@ -66,7 +65,7 @@ const useApi = () => {
   };
 
   // item
-  const getItemsByUser = async () =>
+  const getAllItems = async () =>
     axios({
       method: 'GET',
       url: url + `/item`,
@@ -74,7 +73,7 @@ const useApi = () => {
     });
 
   // item account
-  const getAccountsByUser = async () =>
+  const getAllItemAccounts = async () =>
     axios({
       method: 'GET',
       url: url + `/item/account`,
@@ -82,7 +81,7 @@ const useApi = () => {
     });
 
   // institutions
-  const getInstitutionById = async (instId: string) =>
+  const getItemInstitution = async (instId: string) =>
     axios({
       method: 'GET',
       url: url + '/item/institution/',
@@ -90,6 +89,23 @@ const useApi = () => {
         institution_id: instId,
       },
       headers: { Authorization: await getAuthToken() },
+    });
+
+  // transactions
+  const getItemAccountTransactions = async (
+    itemId: string,
+    accountId: string
+  ) =>
+    axios({
+      method: 'GET',
+      url: url + `/item/account/transaction`,
+      headers: {
+        Authorization: await getAuthToken(),
+      },
+      params: {
+        item_id: itemId,
+        account_id: accountId,
+      },
     });
 
   ////////////////
@@ -136,23 +152,6 @@ const useApi = () => {
   //     headers: { Authorization: await getAuthToken() },
   //   });
 
-  // TODO: add route!
-  // transactions
-  const getItemAccountTransactions = async (
-    itemId: string,
-    accountId: string
-  ) =>
-    axios({
-      method: 'GET',
-      url: url + `/item/account/transaction`,
-      headers: {
-        Authorization: await getAuthToken(),
-      },
-      params: {
-        item_id: itemId,
-        account_id: accountId,
-      },
-    });
   // const getTransactionsByUser = async (userId: string) => {
   //   console.log('mock with data; GET: /user/transaction');
   //   return {
@@ -216,18 +215,18 @@ const useApi = () => {
 
   return {
     exchangeToken,
+    getAllItems,
+    getAllItemAccounts,
     getItemAccountTransactions,
+    getItemInstitution,
+    getLinkToken,
     // getTransactionsByItem,
     // getTransactionsByUser,
     // getAccountsByItem,
-    getAccountsByUser,
     // addAsset,
     // getAssetsByUser,
     // deleteAssetByAssetId,
-    getInstitutionById,
-    getLinkToken,
     // getItemById,
-    getItemsByUser,
     // deleteItemById,
     // setItemState,
     // setItemToBadState,

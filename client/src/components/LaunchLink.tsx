@@ -30,7 +30,7 @@ interface Props {
 
 export default function LaunchLink(props: Props) {
   const { exchangeToken /*setItemState*/ } = useApi();
-  // const { getItemsByUser, getItemById } = useItems();
+  // const { getAllItems, getItemById } = useItems();
   const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();
   const navigate = useNavigate();

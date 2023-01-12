@@ -21,7 +21,7 @@ export default function UserCard(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [token, setToken] = useState('');
   const [hovered, setHovered] = useState(false);
-  // const { itemsByUser, getItemsByUser } = useItems();
+  // const { itemsByUser, getAllItems } = useItems();
   const { generateLinkToken, linkTokens } = useLink();
 
   const initiateLink = async () => {
@@ -33,9 +33,9 @@ export default function UserCard(props: Props) {
   // // update data store with the user's items
   // useEffect(() => {
   //   if (props.userId) {
-  //     getItemsByUser(props.userId, true);
+  //     getAllItems(props.userId, true);
   //   }
-  // }, [getItemsByUser, props.userId]);
+  // }, [getAllItems, props.userId]);
 
   // // update no of items from data store
   // useEffect(() => {

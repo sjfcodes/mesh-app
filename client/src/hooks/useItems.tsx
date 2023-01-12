@@ -28,7 +28,7 @@ type ItemsAction =
 interface ItemsContextShape {
   dispatch: Dispatch<ItemsAction>;
   // deleteItemById: (id: string, userId: string) => void;
-  getItemsByUser: (userId: string, refresh: boolean) => void;
+  getAllItems: (userId: string, refresh: boolean) => void;
   // getItemById: (id: string, refresh: boolean) => void;
   plaidItem: { [item_id: string]: ItemType };
   // deleteItemsByUserId: (userId: string) => void;
@@ -42,7 +42,7 @@ const ItemsContext = createContext<ItemsContextShape>(
  */
 export function ItemsProvider(props: any) {
   const {
-    getItemsByUser: apiGetItemsByUser,
+    getAllItems: apiGetItemsByUser,
     // getItemById: apiGetItemById,
     // deleteItemById: apiDeleteItemById,
   } = useApi();
@@ -67,7 +67,7 @@ export function ItemsProvider(props: any) {
   /**
    * @desc Requests all Items that belong to an individual User.
    */
-  const getItemsByUser = useCallback(async () => {
+  const getAllItems = useCallback(async () => {
     const {
       data: {
         body: { items },
@@ -83,7 +83,7 @@ export function ItemsProvider(props: any) {
   //   await apiDeleteItemById(id);
   //   dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
   //   // Update plaidItem list after deletion.
-  //   // await getItemsByUser(userId);
+  //   // await getAllItems(userId);
 
   //   delete hasRequested.current.byId[id];
   // }, []);
@@ -104,7 +104,7 @@ export function ItemsProvider(props: any) {
     return {
       plaidItem,
       // getItemById,
-      getItemsByUser,
+      getAllItems,
       // deleteItemById,
       // deleteItemsByUserId,
     };
@@ -112,7 +112,7 @@ export function ItemsProvider(props: any) {
     plaidItem,
     // itemsById,
     // getItemById,
-    getItemsByUser,
+    getAllItems,
     // deleteItemById,
     // deleteItemsByUserId,
   ]);

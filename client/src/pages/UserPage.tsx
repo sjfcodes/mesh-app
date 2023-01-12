@@ -48,9 +48,9 @@ const UserPage = () => {
   const [assets, setAssets] = useState<AssetType[]>([]);
 
   const { accountTransactions /*getTransactionsByUser*/ } = useTransactions();
-  const { allAccounts, getAccountsByUser } = useAccounts();
+  const { allAccounts, getAllItemAccounts } = useAccounts();
   const { assetsByUser /*getAssetsByUser*/ } = useAssets();
-  const { plaidItem, getItemsByUser } = useItems();
+  const { plaidItem, getAllItems } = useItems();
   const { linkTokens, generateLinkToken } = useLink();
 
   const initiateLink = async () => {
@@ -83,9 +83,9 @@ const UserPage = () => {
   // update data store with the user's sortedItems
   useEffect(() => {
     if (userId != null) {
-      getItemsByUser(userId, true);
+      getAllItems(userId, true);
     }
-  }, [getItemsByUser, userId]);
+  }, [getAllItems, userId]);
 
   // update state sortedItems from data store
   useEffect(() => {
@@ -99,8 +99,8 @@ const UserPage = () => {
 
   // // update data store with the user's accounts
   useEffect(() => {
-    getAccountsByUser(userId);
-  }, [getAccountsByUser, userId]);
+    getAllItemAccounts(userId);
+  }, [getAllItemAccounts, userId]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);

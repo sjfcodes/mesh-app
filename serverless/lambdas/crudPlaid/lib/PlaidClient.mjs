@@ -62,7 +62,7 @@ class PlaidClient {
     return data;
   }
 
-  async getInstitutionById(instId) {
+  async getItemInstitution(instId) {
     if (!instId) throw new Error('missing required arguments!');
     const request = {
       institution_id: instId,
