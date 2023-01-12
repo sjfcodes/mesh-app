@@ -12,7 +12,7 @@ import { TransactionsProvider } from './services/Plaid/Transactions/Provider';
 import { AssetsProvider } from './services/Assets/Provider';
 import { ErrorsProvider } from './services/Errors/Provider';
 
-import { ItemsProvider } from './hooks/usePlaidItems';
+import { ItemsProvider } from './services/Plaid/Items/Provider';
 import { AccountsProvider } from './hooks/usePlaidAccounts';
 import Landing from './pages/Landing';
 import UserPage from './pages/UserPage';
