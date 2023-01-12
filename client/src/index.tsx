@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import '@aws-amplify/ui-react/styles.css';
 
 import reportWebVitals from './reportWebVitals';
 import App from './App';

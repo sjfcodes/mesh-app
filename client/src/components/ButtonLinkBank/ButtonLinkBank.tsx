@@ -5,12 +5,7 @@ import useLink from '../../hooks/useLink';
 
 const ButtonLinkBank = () => {
   const {
-    useUser: [
-      {
-        // @ts-ignore
-        attributes: { sub: userId },
-      },
-    ],
+    user: { sub: userId },
   } = useUser();
   const { generateLinkToken /*, linkTokens*/ } = useLink();
 

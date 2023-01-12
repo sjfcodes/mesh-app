@@ -4,14 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import useUser from '../hooks/useUser';
 
 function Landing() {
-  const {
-    useUser: [user],
-  } = useUser();
+  const { user } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.attributes?.email) {
-      const url = `/user/${user.attributes.email}`;
+    if (user.email) {
+      const url = `/user/${user.email}`;
       navigate(url);
       window.history.pushState({}, '', url);
     }

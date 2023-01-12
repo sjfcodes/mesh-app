@@ -6,7 +6,7 @@ import './Header.css';
 
 const Header = () => {
   const {
-    useUser: [user],
+    user,
     signOut,
   } = useUser();
 
@@ -21,7 +21,7 @@ const Header = () => {
 
       <div>
         <h4>env : {process.env.REACT_APP_PLAID_ENV}</h4>
-        <h4>user: {user?.attributes?.email}</h4>
+        <h4>user: {user.email}</h4>
       </div>
       <AppLogo />
     </header>

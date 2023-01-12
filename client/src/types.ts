@@ -1,3 +1,5 @@
+import { CognitoAttributes } from '@aws-amplify/ui';
+
 export interface AssetType {
   id: string;
   user_id: string;
@@ -58,12 +60,16 @@ export interface ItemType {
   updated_at: string;
 }
 
-export interface UserType {
-  id: string;
-  username: string | null;
-  created_at: string;
-  updated_at: string;
-}
+// export interface UserType {
+//   id: string;
+//   name: string;
+//   nickname: string | null;
+//   email: string;
+//   zoneinfo: string;
+//   updated_at: string;
+// }
+
+export type UserType = CognitoAttributes;
 
 export interface RouteInfo {
   userId: string;

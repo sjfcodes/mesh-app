@@ -5,6 +5,7 @@ import Touchable from 'plaid-threads/Touchable';
 import { UserType } from '../types';
 import useLink from '../hooks/useLink';
 import LaunchLink from './LaunchLink';
+import UserDetails from './UserDetails';
 
 interface Props {
   user: UserType;
@@ -16,7 +17,7 @@ interface Props {
 export default function UserCard(props: Props) {
   const [numOfItems] = useState(0);
   const [token, setToken] = useState('');
-  const [_, setHovered] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const { generateLinkToken, linkTokens } = useLink();
 
@@ -50,19 +51,15 @@ export default function UserCard(props: Props) {
             to={`/user/${props.userId}#itemCards`}
           >
             <div className="user-card__detail">
-              {/* <UserDetails
-                hovered={hovered}
-                user={props.user}
-                numOfItems={numOfItems}
-              /> */}
+              <UserDetails hovered={hovered} numOfItems={numOfItems} />
+              {props.linkButton && (
+                <Button onClick={initiateLink}>Add a bank</Button>
+              )}
             </div>
           </Touchable>
         </div>
         {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
           <div className="user-card__buttons">
-            {props.linkButton && numOfItems === 0 && (
-              <Button onClick={initiateLink}>Add a bank</Button>
-            )}
             {token != null &&
               token.length > 0 &&
               props.linkButton &&

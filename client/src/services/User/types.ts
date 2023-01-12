@@ -1,8 +1,8 @@
 import { AuthEventData } from '@aws-amplify/ui';
-import { AmplifyUser } from '@aws-amplify/ui';
+import { UserType } from '../../types';
 
 export type SignOut = ((data?: AuthEventData | undefined) => void) | undefined;
 export interface CurrentUserContext {
-  useUser: [AmplifyUser, React.Dispatch<AmplifyUser>];
+  user: UserType;
   signOut: ((data?: AuthEventData | undefined) => void) | undefined;
 }

@@ -3,7 +3,6 @@ import sortBy from 'lodash/sortBy';
 
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
-import Button from 'plaid-threads/Button';
 
 import { pluralize } from '../util';
 
@@ -31,29 +30,23 @@ import TransactionTimeline from '../components/TransactionTimeline';
 
 const UserPage = () => {
   const {
-    useUser: [{ attributes }],
+    user,
   } = useUser();
-
-  const [user] = useState({
-    id: attributes?.sub || '',
-    username: '',
-    created_at: '',
-    updated_at: '',
-  });
-  const userId = user.id;
+  
+  const userId = user.sub;
   const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [token, setToken] = useState('');
 
   const { allTransactions } = useTransactions();
   const { assets } = useAssets();
   const { plaidItem, allAccounts, getAllItems } = useItems();
-  const { linkTokens, generateLinkToken } = useLink();
+  const { linkTokens, /* generateLinkToken */ } = useLink();
 
-  const initiateLink = async () => {
-    // only generate a link token upon a click from enduser to add a bank;
-    // if done earlier, it may expire before enduser actually activates Link to add a bank.
-    await generateLinkToken(userId, null);
-  };
+  // const initiateLink = async () => {
+  //   // only generate a link token upon a click from enduser to add a bank;
+  //   // if done earlier, it may expire before enduser actually activates Link to add a bank.
+  //   await generateLinkToken(userId, null);
+  // };
 
   // update data store with the user's sortedItems
   useEffect(() => {
@@ -76,6 +69,7 @@ const UserPage = () => {
     setToken(linkTokens.byUser[userId]);
   }, [linkTokens, userId]);
 
+  console.log(sortedItems)
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
@@ -116,15 +110,6 @@ const UserPage = () => {
                 </p>
               )}
             </div>
-
-            <Button
-              large
-              inline
-              className="add-account__button"
-              onClick={initiateLink}
-            >
-              Add another bank
-            </Button>
 
             {token != null && token.length > 0 && (
               // Link will not render unless there is a link token
