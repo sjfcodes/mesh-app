@@ -40,7 +40,9 @@ export default function AccountCard({ account }: Props) {
           </div>
         </div>
       </div>
-      {transactionsShown && <TransactionsTable transactions={accountTransactions[accountId]} />}
+      {transactionsShown && (
+        <TransactionsTable transactions={accountTransactions[accountId]} />
+      )}
     </div>
   );
 }
