@@ -7,7 +7,7 @@ import { Institution } from 'plaid/dist/api';
 
 import { diffBetweenCurrentTime } from '../util';
 import { ItemType } from '../types';
-import useInstitutions from '../hooks/useInstitutions';
+import useInstitutions from '../hooks/usePlaidInstitutions';
 import AccountCard from './AccountCard';
 import MoreDetails from './MoreDetails';
 
