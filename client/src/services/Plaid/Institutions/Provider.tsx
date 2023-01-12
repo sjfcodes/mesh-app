@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useMemo, useReducer } from 'react';
 
-import { getItemInstitution as apiGetInstitutionById } from '../../util/api';
+import { getItemInstitution as apiGetInstitutionById } from '../../../util/api';
 import plaidInstitutionsReducer from './reducer';
 import { InstitutionsContextShape } from './types';
 

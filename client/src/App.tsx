@@ -12,10 +12,10 @@ import './App.scss';
 
 import currentConfig from './auth/config';
 import { LinkProvider } from './hooks/useLink';
-import { InstitutionsProvider } from './services/PlaidInstitutions/Provider';
-import { ItemsProvider } from './hooks/useItems';
-import { AccountsProvider } from './hooks/useAccounts';
-import { TransactionsProvider } from './hooks/useTransactions';
+import { InstitutionsProvider } from './services/Plaid/Institutions/Provider';
+import { ItemsProvider } from './hooks/usePlaidItems';
+import { AccountsProvider } from './hooks/usePlaidAccounts';
+import { TransactionsProvider } from './hooks/usePlaidTransactions';
 import UserPage from './pages/UserPage';
 import { AssetsProvider } from './services/Assets/Provider';
 import { ErrorsProvider } from './services/Errors/Provider';

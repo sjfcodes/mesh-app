@@ -5,7 +5,7 @@ import toLower from 'lodash/toLower';
 import { currencyFilter } from '../util';
 import { AccountType } from '../types';
 import TransactionsTable from './TransactionsTable';
-import useTransactions from '../hooks/useTransactions';
+import useTransactions from '../hooks/usePlaidTransactions';
 
 interface Props {
   account: AccountType;

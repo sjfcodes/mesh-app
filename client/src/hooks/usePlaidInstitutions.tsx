@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { InstitutionsContext } from '../services/PlaidInstitutions/Provider';
+import { InstitutionsContext } from '../services/Plaid/Institutions/Provider';
 
 /**
  * @desc A convenience hook to provide access to the Institutions context state in components.

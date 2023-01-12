@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import useAccounts from '../hooks/useAccounts';
-import useTransactions from '../hooks/useTransactions';
+import useAccounts from '../hooks/usePlaidAccounts';
+import useTransactions from '../hooks/usePlaidTransactions';
 import { PlaidTransactionType, TransactionType } from '../types';
 
 import { currencyFilter } from '../util';
