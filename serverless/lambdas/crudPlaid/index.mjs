@@ -8,11 +8,14 @@ export const handler = async (event) => {
   try {
     const { body } = event;
     const app = new App(event);
+    const requestMethod = event.context['http-method'];
+    const requestPath = event.context['resource-path'];
+
     await app.setUserByToken(event.params.header.Authorization);
 
-    switch (event.context['http-method']) {
+    switch (requestMethod) {
       case 'GET':
-        switch (event.context['resource-path']) {
+        switch (requestPath) {
           case config.path.getItems:
             response = await app.handleGetUserItems();
 
@@ -30,12 +33,12 @@ export const handler = async (event) => {
 
             break;
           default:
-            throw Error(`path:"${event.context['resource-path']}" not found!`);
+            throw Error(`requestPath:"${requestPath}" not found!`);
         }
 
         break;
       case 'PUT':
-        switch (body.path) {
+        switch (requestPath) {
           case config.path.itemTxSync:
             const summary = await app.handleItemSyncTransactions();
             response = { tx_sync: 'complete', summary };
@@ -47,12 +50,12 @@ export const handler = async (event) => {
 
             break;
           default:
-            throw Error(`path:"${body.path}" not found!`);
+            throw Error(`requestPath:"${requestPath}" not found!`);
         }
 
         break;
       case 'POST':
-        switch (body.path) {
+        switch (requestPath) {
           case config.path.itemGetAccounts:
             response = await app.handleGetItemAccounts();
 
@@ -68,11 +71,14 @@ export const handler = async (event) => {
             break;
           case config.path.itemTokenExchangeTest:
             const { item_id: testItemId } = await app.mockHandleTokenExchange();
-            response = { public_token_exchange: 'complete', item_id: testItemId };
+            response = {
+              public_token_exchange: 'complete',
+              item_id: testItemId,
+            };
 
             break;
           default:
-            throw Error(`path:"${body.path}" not found!`);
+            throw Error(`requestPath:"${requestPath}" not found!`);
         }
 
         break;

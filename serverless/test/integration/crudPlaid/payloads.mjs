@@ -10,7 +10,10 @@ export const createTokenLinkPayload = {
     TableName: TableName.user,
     path: path.linkTokenCreate,
   },
-  context: { ['http-method']: 'PUT' },
+  context: {
+    ['http-method']: 'PUT',
+    ['resource-path']: path.linkTokenCreate,
+  },
   params,
 };
 
@@ -25,19 +28,24 @@ export const mockExchangeTokenLinkPayload = {
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
-  context: { ['http-method']: 'POST' },
+  context: {
+    ['http-method']: 'POST',
+    ['resource-path']: path.itemTokenExchangeTest,
+  },
   params,
 };
 
 export const mockSyncTransactionsForItemPayload = {
   body: {
-    path: path.itemTxSync,
     payload: {
       item_id: mockPlaid.tokenExchange.item_id,
       transactions: mockPlaid.transactions,
     },
   },
-  context: { ['http-method']: 'PUT' },
+  context: {
+    ['http-method']: 'PUT',
+    ['resource-path']: path.itemTxSync,
+  },
   params,
 };
 
