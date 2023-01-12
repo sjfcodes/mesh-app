@@ -95,8 +95,6 @@ export function TransactionsProvider(props: any) {
       return copy;
     };
 
-    console.log({ accountTransactions });
-
     const allTransactions = Object.values(accountTransactions)
       .reduce((prev, curr) => {
         const formatted = curr.map(formatTransactions);
@@ -109,7 +107,6 @@ export function TransactionsProvider(props: any) {
         ) => new Date(txB?.date).getTime() - new Date(txA?.date).getTime()
       );
 
-    console.log({ allTransactions });
     return {
       dispatch,
       allTransactions,
