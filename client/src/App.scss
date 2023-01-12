@@ -2,29 +2,27 @@ $threads-font-path: '~plaid-threads/fonts';
 @import '~plaid-threads/scss/typography';
 @import '~plaid-threads/scss/variables';
 
-// $black100: grey;
 $black1000: grey;
 $border: 1px solid $black200;
 /*
-
 
 Base
 
 */
 
 body {
-  background: $white;
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #282c34;
-  min-height: 100vh;
-  max-width: 97vw;
-  margin: 0 auto;
-  overflow: hidden;
-  font-size: calc(10px + 2vmin);
-  color: grey;
+  // background: $white;
+  // margin: 0;
+  // padding: 0;
+  // -webkit-font-smoothing: antialiased;
+  // -moz-osx-font-smoothing: grayscale;
+  background: #282c34;
+  // min-height: 100vh;
+  // max-width: 97vw;
+  // margin: 0 auto;
+  // overflow: hidden;
+  // font-size: calc(10px + 2vmin);
+  // color: grey !important;
 }
 
 [data-amplify-authenticator] {
@@ -161,7 +159,12 @@ input::placeholder {
 
 UserList
 
+
 */
+
+div.box.user-card__box > div > div.hoverable > button > div {
+  color: grey;
+}
 
 .user-list-heading {
   font-weight: normal;
@@ -188,13 +191,13 @@ UserCard
 
 .user-card__detail {
   display: flex;
-  justify-content: space-around;
-  margin-left: 3 * $unit;
+  justify-content: space-between;
+  // margin-left: 3 * $unit;
 }
 
 .hoverable {
   width: 100%;
-  flex: 3;
+  // flex: 3;
   display: flex;
 }
 
@@ -203,6 +206,7 @@ UserCard
   display: grid;
   grid-row-gap: $unit;
   justify-content: center;
+  align-items: center;
   flex: 1;
 }
 
