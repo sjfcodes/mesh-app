@@ -8,11 +8,12 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { UserProvider } from './services/User/Provider';
 import { LinkProvider } from './services/Plaid/Link/Provider';
 import { InstitutionsProvider } from './services/Plaid/Institutions/Provider';
-import { ItemsProvider } from './hooks/usePlaidItems';
-import { AccountsProvider } from './hooks/usePlaidAccounts';
-import { TransactionsProvider } from './hooks/usePlaidTransactions';
+import { TransactionsProvider } from './services/Plaid/Transactions/Provider';
 import { AssetsProvider } from './services/Assets/Provider';
 import { ErrorsProvider } from './services/Errors/Provider';
+
+import { ItemsProvider } from './hooks/usePlaidItems';
+import { AccountsProvider } from './hooks/usePlaidAccounts';
 import Landing from './pages/Landing';
 import UserPage from './pages/UserPage';
 import currentConfig from './auth/config';
