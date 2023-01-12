@@ -28,14 +28,14 @@ body {
 }
 
 [data-amplify-authenticator] {
-    min-height: 100vh;
-  }
+  min-height: 100vh;
+}
 
 .App {
   max-width: 100vw;
   margin-right: auto;
   margin-left: auto;
-//   padding: 10 * $unit 5 * $unit;
+  //   padding: 10 * $unit 5 * $unit;
 }
 
 /*
@@ -51,9 +51,9 @@ shared styles
 }
 
 .box {
-  border: $border;
+  // border: $border;
   border-radius: $border-radius;
-  margin-bottom: 3 * $unit;
+  // margin-bottom: 3 * $unit;
   box-shadow: $shadow-xsmall;
 }
 
@@ -264,6 +264,7 @@ Account row
 
 */
 .account-data-row {
+  max-width: 80vw;
   border-bottom: $border;
   padding: 3 * $unit;
   display: grid;
@@ -283,6 +284,9 @@ Account row
   font-weight: 500;
 }
 
+.account-data-row__right {
+  text-align: end;
+}
 /*
 
 Add User Form
@@ -326,7 +330,7 @@ Add User Form
 
 .add-user__button {
   margin: 0 2 * $unit;
-//   min-width: 10 * $unit;
+  //   min-width: 10 * $unit;
 }
 
 /*
@@ -336,6 +340,10 @@ transactions-table
 */
 .transactions {
   border-bottom: $border;
+  border-right: $border;
+  max-height: 70vh;
+  max-width: 80vw;
+  overflow-y: scroll;
 }
 
 .transactions-table {
@@ -441,10 +449,10 @@ net worth
 // }
 
 .userDataBox {
-//   width: 69 * $unit;
+  //   width: 69 * $unit;
   min-height: 40 * $unit;
   border: $border;
-//   margin-right: 2 * $unit;
+  //   margin-right: 2 * $unit;
 }
 
 .spendingInsights {
