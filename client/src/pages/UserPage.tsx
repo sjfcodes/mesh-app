@@ -16,7 +16,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import LoadingCallout from '../components/LoadingCallout';
 import LaunchLink from '../components/LaunchLink';
 import ItemCard from '../components/ItemCard';
-import { useAppContext } from '../hooks/useUser';
+import useUser from '../hooks/useUser';
 import useTransactions from '../hooks/usePlaidTransactions';
 import Header from '../components/Header/Header';
 import useAccounts from '../hooks/usePlaidAccounts';
@@ -33,7 +33,7 @@ import TransactionTimeline from '../components/TransactionTimeline';
 const UserPage = () => {
   const {
     useUser: [{ attributes }],
-  } = useAppContext();
+  } = useUser();
 
   const [user] = useState({
     id: attributes?.sub || '',

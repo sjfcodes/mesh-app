@@ -5,20 +5,19 @@ import { Amplify } from 'aws-amplify';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import Landing from './pages/Landing';
-import { AppProvider } from './hooks/useUser';
-
-import './App.scss';
-
-import currentConfig from './auth/config';
+import { UserProvider } from './services/User/Provider';
 import { LinkProvider } from './hooks/useLink';
 import { InstitutionsProvider } from './services/Plaid/Institutions/Provider';
 import { ItemsProvider } from './hooks/usePlaidItems';
 import { AccountsProvider } from './hooks/usePlaidAccounts';
 import { TransactionsProvider } from './hooks/usePlaidTransactions';
-import UserPage from './pages/UserPage';
 import { AssetsProvider } from './services/Assets/Provider';
 import { ErrorsProvider } from './services/Errors/Provider';
+import Landing from './pages/Landing';
+import UserPage from './pages/UserPage';
+import currentConfig from './auth/config';
+import './App.scss';
+
 Amplify.configure(currentConfig);
 
 function App() {
@@ -33,7 +32,7 @@ function App() {
     <Authenticator loginMechanisms={['email']}>
       {({ signOut, user }) => {
         return (
-          <AppProvider user={user} signOut={signOut}>
+          <UserProvider user={user} signOut={signOut}>
             <InstitutionsProvider>
               <ItemsProvider>
                 <LinkProvider>
@@ -57,7 +56,7 @@ function App() {
                 </LinkProvider>
               </ItemsProvider>
             </InstitutionsProvider>
-          </AppProvider>
+          </UserProvider>
         );
       }}
     </Authenticator>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from 'plaid-threads/Button';
-import { useAppContext } from '../../hooks/useUser';
+import useUser from '../../hooks/useUser';
 import useLink from '../../hooks/useLink';
 
 const ButtonLinkBank = () => {
@@ -11,7 +11,7 @@ const ButtonLinkBank = () => {
         attributes: { sub: userId },
       },
     ],
-  } = useAppContext();
+  } = useUser();
   const { generateLinkToken /*, linkTokens*/ } = useLink();
 
   const initiateLink = async () => {

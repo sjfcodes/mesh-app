@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAppContext } from '../hooks/useUser';
+import useUser from '../hooks/useUser';
 
 function Landing() {
   const {
     useUser: [user],
-  } = useAppContext();
+  } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {

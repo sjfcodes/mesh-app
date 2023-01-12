@@ -1,26 +1,14 @@
-import React, { useContext, createContext, useMemo, useState } from 'react';
-import { AuthEventData } from '@aws-amplify/ui';
-import { AmplifyUser } from '@aws-amplify/ui';
+import { useContext } from 'react';
+import { UserContext } from '../services/User/Provider';
 
-type SignOut = ((data?: AuthEventData | undefined) => void) | undefined;
-interface CurrentUserContext {
-  useUser: [AmplifyUser, React.Dispatch<AmplifyUser>];
-  signOut: ((data?: AuthEventData | undefined) => void) | undefined;
-}
+const useUser = () => {
+  const context = useContext(UserContext);
 
-const UserContext = createContext({} as CurrentUserContext);
+  if (!context) {
+    throw new Error(`useUser must be used within UserProvider`);
+  }
 
-type props = {
-  children: any;
-  user: AmplifyUser | undefined;
-  signOut: SignOut;
+  return context;
 };
 
-// @ts-ignore
-export const AppProvider = ({ user, children, signOut }: props) => {
-  const useUser = useState(user as AmplifyUser);
-  const value = useMemo(() => ({ useUser, signOut }), [useUser, signOut]);
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
-};
-
-export const useAppContext = () => useContext(UserContext);
+export default useUser;

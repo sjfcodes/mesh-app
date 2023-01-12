@@ -1,4 +1,4 @@
-import { useAppContext } from '../../hooks/useUser';
+import useUser from '../../hooks/useUser';
 import AppLogo from '../AppLogo/AppLogo';
 import Button from '../Button/Button';
 
@@ -8,7 +8,7 @@ const Header = () => {
   const {
     useUser: [user],
     signOut,
-  } = useAppContext();
+  } = useUser();
 
   const handleSignOut = async () => {
     if (signOut) signOut({ type: 'SIGN_OUT' });
