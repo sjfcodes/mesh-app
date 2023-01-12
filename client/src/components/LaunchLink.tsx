@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
 import useErrors from '../hooks/useErrors';
 import useLink from '../hooks/useLink';
-import { exchangeToken } from '../services/api';
+import { exchangeToken } from '../util/api';
 
 interface Props {
   isOauth?: boolean;

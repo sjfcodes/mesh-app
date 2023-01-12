@@ -8,7 +8,7 @@ import React, {
   Dispatch,
 } from 'react';
 import { PlaidTransactionType, TransactionType } from '../types';
-import { getItemAccountTransactions as apiGetItemAccountTransactions } from '../services/api';
+import { getItemAccountTransactions as apiGetItemAccountTransactions } from '../util/api';
 
 interface TransactionsState {
   [transactionId: number]: PlaidTransactionType;

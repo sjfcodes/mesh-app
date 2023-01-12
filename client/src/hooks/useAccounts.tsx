@@ -10,7 +10,7 @@ import React, {
 import keyBy from 'lodash/keyBy';
 import omitBy from 'lodash/omitBy';
 import { AccountType } from '../types';
-import { getAllItemAccounts as apiGetAccountsByUser } from '../services/api';
+import { getAllItemAccounts as apiGetAccountsByUser } from '../util/api';
 
 interface AccountsState {
   [accountId: number]: AccountType;

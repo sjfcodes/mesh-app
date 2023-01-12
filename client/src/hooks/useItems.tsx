@@ -9,7 +9,7 @@ import React, {
 import omit from 'lodash/omit';
 import omitBy from 'lodash/omitBy';
 import { ItemType } from '../types';
-import { getAllItems as apiGetItemsByUser } from '../services/api';
+import { getAllItems as apiGetItemsByUser } from '../util/api';
 
 interface ItemsState {
   [itemId: string]: ItemType;
