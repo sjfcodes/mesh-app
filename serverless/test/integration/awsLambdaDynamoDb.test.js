@@ -47,7 +47,6 @@ const testApi = process.env.USE_API_GATEWAY === 'true';
 let buildTableAndItem = false;
 let destroyTableAndItem = false;
 let testPlaidItemActions = false;
-let plaidTestAccounts = null;
 
 const apiTable = axios.create({
   baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtable',
@@ -232,8 +231,8 @@ describe('lambda + dynamoDb integration tests', () => {
           : crudPlaid(getUserItemsPayload));
 
         if (status_code !== 200) console.error(body);
-        
-        const item = Object.values(body.items)[0]
+
+        const item = Object.values(body.items)[0];
 
         expect(status_code).toBe(200);
         expect(item).not.toHaveProperty('access_token');
@@ -257,8 +256,6 @@ describe('lambda + dynamoDb integration tests', () => {
 
         if (status_code !== 200) console.error(body);
 
-        plaidTestAccounts = body.accounts;
-
         expect(status_code).toBe(200);
         expect(body.accounts.length).toBeGreaterThan(0);
       });
@@ -272,9 +269,22 @@ describe('lambda + dynamoDb integration tests', () => {
           : crudPlaid(getTransactionsForAccountPayload));
 
         if (status_code !== 200) console.error(body);
-
+        const transaction = body.transactions[0];
         expect(status_code).toBe(200);
         expect(body.transactions?.length).toBe(48);
+        expect(transaction).toHaveProperty('created_at');
+        expect(transaction).toHaveProperty('updated_at');
+        expect(transaction).toHaveProperty('transaction_id');
+        expect(transaction).toHaveProperty('item_id::account_id');
+        expect(transaction).toHaveProperty('transaction');
+        expect(typeof transaction.created_at === 'string').toBe(true);
+        expect(typeof transaction.updated_at === 'string').toBe(true);
+        expect(typeof transaction.transaction_id === 'string').toBe(true);
+        expect(typeof transaction['item_id::account_id'] === 'string').toBe(
+          true
+        );
+        expect(typeof transaction.transaction === 'object').toBe(true);
+        expect(Object.keys(transaction.transaction).length).toBe(23);
       });
 
       it('should get bank institution details by id institution_id', async () => {
