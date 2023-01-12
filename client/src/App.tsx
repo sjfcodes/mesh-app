@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 import { UserProvider } from './services/User/Provider';
-import { LinkProvider } from './hooks/useLink';
+import { LinkProvider } from './services/Plaid/Link/Provider';
 import { InstitutionsProvider } from './services/Plaid/Institutions/Provider';
 import { ItemsProvider } from './hooks/usePlaidItems';
 import { AccountsProvider } from './hooks/usePlaidAccounts';

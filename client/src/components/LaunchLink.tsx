@@ -23,8 +23,8 @@ interface Props {
   children?: React.ReactNode;
 }
 
-// Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
-// The link token passed to usePlaidLink cannot be null.  It must be generated outside of this component.  In this sample app, the link token
+// Uses the useLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
+// The link token passed to useLink cannot be null.  It must be generated outside of this component.  In this sample app, the link token
 // is generated in the link context in client/src/services/link.js.
 
 export default function LaunchLink(props: Props) {
