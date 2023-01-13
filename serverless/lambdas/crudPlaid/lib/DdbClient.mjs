@@ -12,6 +12,8 @@ import { splitListIntoSmallerLists } from '../utils/helpers.mjs';
 const PARTITION_KEY = 'item_id::account_id';
 const SORT_KEY = 'transaction_id';
 
+const getTimestamp = () => new Date().toISOString();
+
 class DdbClient {
   constructor(configuration) {
     this.client = new DynamoDBClient(configuration);
@@ -36,7 +38,7 @@ class DdbClient {
   async readItemByItemId(email, itemId) {
     if (!email) throw new Error('missing email!');
     if (!itemId) throw new Error('missing itemId!');
-
+    console.log(`readItemByItemId(${email}, ${itemId})`);
     const {
       Item: {
         [config.itemKeys.plaidItem]: {
@@ -145,24 +147,31 @@ class DdbClient {
     if (!email || !itemId || newTxCursor === undefined)
       throw new Error('missing required arguments!');
 
+    console.log(`writeItemTxCursor(${email}, ${itemId}, ${newTxCursor})`);
+
+    const now = getTimestamp();
+
     await this.client.send(
       new UpdateItemCommand({
         TableName: config.TableName.user,
         Key: { email: { S: email } },
-        UpdateExpression: `SET #items.#item.#cursor = :cursor, #items.#item.#updated = :updated`,
+        UpdateExpression: `SET #items.#item.#cursor = :cursor, #items.#item.#cursorUpdated = :cursorUpdated, #items.#item.#updated = :updated`,
         ExpressionAttributeNames: {
           '#items': config.itemKeys.plaidItem,
           '#item': itemId,
           '#cursor': config.itemKeys.txCursor,
+          '#cursorUpdated': config.itemKeys.txCursorUpdatedAt,
           '#updated': 'updated_at',
         },
         ExpressionAttributeValues: {
           ':cursor': { S: newTxCursor },
-          ':updated': { S: new Date().toISOString() },
+          ':cursorUpdated': { S: now },
+          ':updated': { S: now },
         },
         ReturnValues: 'UPDATED_NEW',
       })
     );
+    return { tx_cursor_updated_at: now };
   }
 
   async writePlaidItemToUser({
@@ -174,6 +183,8 @@ class DdbClient {
   }) {
     if (!email || !tokenExchange || !accounts)
       throw new Error('missing required arguments!');
+
+    const now = getTimestamp();
 
     await this.client.send(
       new UpdateItemCommand({
@@ -193,8 +204,9 @@ class DdbClient {
               institution_name: { S: institution_name },
               institution_id: { S: institution_id },
               [config.itemKeys.txCursor]: { S: '' },
-              created_at: { S: new Date().toISOString() },
-              updated_at: { S: new Date().toISOString() },
+              [config.itemKeys.txCursorUpdatedAt]: { S: '' },
+              created_at: { S: now },
+              updated_at: { S: now },
             },
           },
         },
@@ -211,8 +223,11 @@ class DdbClient {
       removed === undefined
     )
       throw new Error('missing required arguments!');
+    console.log(
+      `writeTxsForItem(${JSON.stringify({ itemId, added, modified, removed })})`
+    );
 
-    const now = new Date().toISOString();
+    const now = getTimestamp();
 
     const formatTxs = (array, { isNew = false, isRemoved = false } = {}) => {
       if (array === undefined) throw new Error('missing transaction array');
@@ -242,7 +257,7 @@ class DdbClient {
     const batchWriteToTxTable = async (requestBatch) => {
       if (!requestBatch.length) return;
 
-      const response = this.client.send(
+      const response = await this.client.send(
         new BatchWriteItemCommand({
           RequestItems: { [config.TableName.transaction]: requestBatch },
         })
@@ -259,7 +274,6 @@ class DdbClient {
     for (let i = 0; i < requestQueue.length; i++) {
       const request = requestQueue[i];
       const response = await batchWriteToTxTable(request);
-      new Promise((resolve) => setTimeout(resolve, 1000));
       responses.push(response);
     }
 

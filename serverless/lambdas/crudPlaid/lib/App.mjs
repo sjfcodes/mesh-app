@@ -1,3 +1,4 @@
+import config from '../utils/config.mjs';
 import ddbClient from './ddbClient.mjs';
 import plaidClient from './plaidClient.mjs';
 
@@ -79,7 +80,9 @@ class App {
       copy.id = item_id;
       copy.institution_id = copy.institution_id.S;
       copy.institution_name = copy.institution_name.S;
-      copy.tx_cursor = copy.tx_cursor.S;
+      copy[config.itemKeys.txCursor] = copy[config.itemKeys.txCursor].S;
+      copy[config.itemKeys.txCursorUpdatedAt] =
+        copy[config.itemKeys.txCursorUpdatedAt].S;
       copy.updated_at = copy.updated_at.S;
       return {
         ...prev,
@@ -124,27 +127,33 @@ class App {
   }
 
   async mockHandleItemSyncTransactions() {
+    // mock getting newTxCursor & transactions from db
     const {
       item_id: itemId,
       transactions: { added, modified, removed },
+      tx_cursor: newTxCursor,
     } = this.payload;
 
-    const { accessToken } = await this.ddbClient.readItemByItemId(
-      this.user.email,
-      itemId
-    );
-
     await this.ddbClient.writeTxsForItem({ itemId, added, modified, removed });
+
+    const { tx_cursor_updated_at } = await this.ddbClient.writeItemTxCursor(
+      this.user.email,
+      itemId,
+      newTxCursor
+    );
 
     return {
       added: added.length,
       modified: modified.length,
       removed: removed.length,
+      tx_cursor_updated_at,
     };
   }
 
   async handleItemSyncTransactions() {
     const { item_id: itemId } = this.payload;
+    console.log('handleItemSyncTransactions()');
+    // get current txCursor value from db,
     const { accessToken, txCursor } = await this.ddbClient.readItemByItemId(
       this.user.email,
       itemId
@@ -153,18 +162,20 @@ class App {
     const { newTxCursor, added, modified, removed } =
       await this.plaidClient.itemSyncTransactions(accessToken, txCursor);
 
-    await this.ddbClient.writeItemTxCursor(
+    // write items to db before writing cursor to db
+    await this.ddbClient.writeTxsForItem({ itemId, added, modified, removed });
+
+    const { tx_cursor_updated_at } = await this.ddbClient.writeItemTxCursor(
       this.user.email,
       itemId,
       newTxCursor
     );
 
-    await this.ddbClient.writeTxsForItem({ itemId, added, modified, removed });
-
     return {
       added: added.length,
       modified: modified.length,
       removed: removed.length,
+      tx_cursor_updated_at,
     };
   }
 }

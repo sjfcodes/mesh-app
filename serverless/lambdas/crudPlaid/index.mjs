@@ -41,12 +41,12 @@ export const handler = async (event) => {
         switch (requestPath) {
           case config.path.itemTxSync:
             const summary = await app.handleItemSyncTransactions();
-            response = { tx_sync: 'complete', summary };
+            response = { tx_sync: 'complete', ...summary };
 
             break;
           case config.path.itemTxSyncTest:
             const testSummary = await app.mockHandleItemSyncTransactions();
-            response = { tx_sync: 'complete', testSummary };
+            response = { tx_sync: 'complete', ...testSummary };
 
             break;
           default:

@@ -27,6 +27,9 @@ const config = {
   itemKeys: {
     plaidItem: 'plaid_item',
     txCursor: 'tx_cursor',
+    txCursorUpdatedAt: 'tx_cursor_updated_at',
+    updatedAt: 'updated_at',
+    createdAt: 'created_at',
   },
 };
 

@@ -205,7 +205,7 @@ describe('lambda + dynamoDb integration tests', () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
-      it('should write transactions to db, simulating sync', async () => {
+      it('should simulating  item sync & write transactions to db', async () => {
         const payload = mockSyncTransactionsForItemPayload;
         const { status_code, body } = await (testApi
           ? apiTableItem({
@@ -218,7 +218,8 @@ describe('lambda + dynamoDb integration tests', () => {
 
         expect(status_code).toBe(200);
         expect(body.tx_sync).toBe('complete');
-        expect(body.summary.added).toBeGreaterThan(0);
+        expect(body.tx_cursor_updated_at).not.toBe(undefined);
+        expect(body.added).toBeGreaterThan(0);
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
@@ -242,6 +243,7 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(item).toHaveProperty('institution_id');
         expect(item).toHaveProperty('institution_name');
         expect(item).toHaveProperty('tx_cursor');
+        expect(item).toHaveProperty('tx_cursor_updated_at');
         expect(item).toHaveProperty('updated_at');
         expect(Array.isArray(item.accounts)).toBe(true);
       });

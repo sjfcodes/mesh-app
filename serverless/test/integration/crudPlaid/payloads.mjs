@@ -24,7 +24,8 @@ export const mockExchangeTokenLinkPayload = {
       accounts: mockPlaid.accounts,
       institution_id: mockPlaid.institutionId,
       institution_name: mockPlaid.institutionName,
-      public_token: mockPlaid.tokenExchange, /** typically a public token that is protected and exchanged server side */
+      public_token:
+        mockPlaid.tokenExchange /** typically a public token that is protected and exchanged server side */,
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
@@ -40,11 +41,12 @@ export const mockSyncTransactionsForItemPayload = {
     payload: {
       item_id: mockPlaid.tokenExchange.item_id,
       transactions: mockPlaid.transactions,
+      tx_cursor: mockPlaid.txCursor,
     },
   },
   context: {
     ['http-method']: 'PUT',
-    ['resource-path']: path.itemTxSync,
+    ['resource-path']: path.itemTxSyncTest,
   },
   params,
 };
@@ -57,12 +59,12 @@ export const getTransactionsForAccountPayload = {
   },
   params: {
     ...params,
-    querystring: { 
+    querystring: {
       account_id: mockPlaid.accounts[1].id,
-      item_id: mockPlaid.tokenExchange.item_id
+      item_id: mockPlaid.tokenExchange.item_id,
     },
   },
-}
+};
 
 export const getUserItemsPayload = {
   body: {},

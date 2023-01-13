@@ -83,7 +83,7 @@ class PlaidClient {
   async itemSyncTransactions(accessToken, cursor) {
     if (!accessToken || cursor === undefined)
       throw new Error('missing required arguments!');
-
+    console.log(`itemSyncTransactions(${accessToken}, ${cursor})`);
     // New transaction updates since "cursor"
     let added = [];
     let modified = [];
