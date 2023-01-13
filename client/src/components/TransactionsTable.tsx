@@ -7,7 +7,7 @@ interface Props {
   transactions: TransactionType[];
 }
 
-export default function TransactionsTable(props: Props) {
+export default function TransactionsTable({ transactions }: Props) {
   let { current } = useRef('');
 
   const getDateDisplay = (dateStr: string) => {
@@ -18,6 +18,10 @@ export default function TransactionsTable(props: Props) {
 
     return toDisplay;
   };
+
+  if (!transactions?.length) {
+    return <></>;
+  }
 
   return (
     <div className="transactions">
@@ -31,7 +35,7 @@ export default function TransactionsTable(props: Props) {
           </tr>
         </thead>
         <tbody className="transactions-body">
-          {props.transactions.map((txData) => {
+          {transactions.map((txData) => {
             const { transaction: tx } = txData;
             if (!tx) return null;
             const amount = tx.amount * -1;

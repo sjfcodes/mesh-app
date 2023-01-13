@@ -82,12 +82,11 @@ export function TransactionsProvider(props: any) {
       );
 
     return {
-      dispatch,
       allTransactions,
       accountTransactions,
       getItemAccountTransactions,
     };
-  }, [dispatch, accountTransactions, getItemAccountTransactions]);
+  }, [accountTransactions, getItemAccountTransactions]);
 
   return <TransactionsContext.Provider value={value} {...props} />;
 }

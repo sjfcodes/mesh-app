@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Callout } from 'plaid-threads/Callout';
 import InlineLink from 'plaid-threads/InlineLink';
 
-//  Allows user to input their personal assets such as a house or car.
-
 export default function LoadingCallout() {
   const [show, setShow] = useState(false);
 

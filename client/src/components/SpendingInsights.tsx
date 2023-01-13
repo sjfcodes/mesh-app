@@ -21,13 +21,14 @@ export default function SpendingInsights(props: Props) {
     () =>
       transactions.filter((txData) => {
         const { transaction: tx } = txData;
-        // const date = new Date(tx.date);
-        // const today = new Date();
-        // const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
+        const date = new Date(tx.date);
+        const today = new Date();
+        const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
         return (
-          // date > oneMonthAgo &&
-          // tx.category[0] !== 'Payment' &&
-          tx.category[0] !== 'Transfer' && tx.category[0] !== 'Interest'
+          date > oneMonthAgo &&
+          tx.category[0] !== 'Payment' &&
+          tx.category[0] !== 'Transfer' &&
+          tx.category[0] !== 'Interest'
         );
       }),
     [transactions]

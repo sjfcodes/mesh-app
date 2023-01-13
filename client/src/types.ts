@@ -41,6 +41,7 @@ export interface ItemType {
   accounts: AccountType[];
   institution_id: string;
   tx_cursor: string;
+  tx_cursor_updated_at: string;
   created_at: string;
   updated_at: string;
 }
@@ -48,26 +49,6 @@ export interface ItemType {
 export interface RouteInfo {
   userId: string;
 }
-
-export interface ItemType {
-  id: string;
-  plaid_item_id: string;
-  user_id: string;
-  plaid_access_token: string;
-  plaid_institution_id: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
-
-// export interface UserType {
-//   id: string;
-//   name: string;
-//   nickname: string | null;
-//   email: string;
-//   zoneinfo: string;
-//   updated_at: string;
-// }
 
 export type UserType = CognitoAttributes;
 

@@ -64,6 +64,17 @@ export const getAllItems = async () =>
     url: url + `/item`,
     headers: { Authorization: await getAuthToken() },
   });
+export const syncItemTransactions = async (itemId: string) =>
+  axios({
+    method: 'PUT',
+    url: url + `/item/sync`,
+    headers: { Authorization: await getAuthToken() },
+    data: {
+      payload: {
+        item_id: itemId,
+      },
+    },
+  });
 
 // item account
 export const getAllItemAccounts = async () =>

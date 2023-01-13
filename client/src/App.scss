@@ -260,6 +260,26 @@ Item overview
   margin-top: $unit;
 }
 
+.item-card__column-3 {
+  margin-top: $unit;
+  display: flex;
+  & > div {
+    margin-left: 2em;
+    text-align: center;
+    min-height: 100%;
+    .item_sync {
+      // border: solid red 1px;
+      display: flex;
+      min-width: 100px;
+      align-items: center;
+      justify-content: space-between;
+      & > button:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
 .item-card__img {
   height: 4 * $unit;
   padding-right: 1rem;

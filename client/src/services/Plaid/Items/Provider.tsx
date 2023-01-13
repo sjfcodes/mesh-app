@@ -1,6 +1,9 @@
 import { createContext, useCallback, useMemo, useReducer } from 'react';
 
-import { getAllItems as apiGetItemsByUser } from '../../../util/api';
+import {
+  getAllItems as apiGetItemsByUser,
+  syncItemTransactions as apiSyncItemTransactions,
+} from '../../../util/api';
 import plaidItemsReducer from './reducer';
 import { ItemsContextShape, ItemsState } from './types';
 
@@ -23,7 +26,13 @@ export function ItemsProvider(props: any) {
         body: { items },
       },
     } = await apiGetItemsByUser();
-    dispatch({ type: 'SUCCESSFUL_REQUEST_ITEM', payload: items });
+    dispatch({ type: 'SUCCESSFUL_ITEM_GET', payload: items });
+  }, []);
+
+  const syncItemTransactions = useCallback(async (itemId: string) => {
+    const { data } = await apiSyncItemTransactions(itemId);
+    console.log(data);
+    dispatch({ type: 'SUCCESSFUL_ITEM_SYNC', payload: data });
   }, []);
 
   /**
@@ -33,7 +42,7 @@ export function ItemsProvider(props: any) {
   const deleteAccountsByUserId = useCallback(
     (itemId: string, accountId: string) => {
       dispatch({
-        type: 'SUCCESSFUL_DELETE_ACCOUNT',
+        type: 'SUCCESSFUL_ACCOUNT_DELETE',
         payload: { itemId, accountId },
       });
     },
@@ -50,8 +59,9 @@ export function ItemsProvider(props: any) {
       allAccounts: Object.values(plaidItem).map((item) => item.accounts),
       getAllItems,
       deleteAccountsByUserId,
+      syncItemTransactions,
     };
-  }, [plaidItem, getAllItems, deleteAccountsByUserId]);
+  }, [plaidItem, getAllItems, deleteAccountsByUserId, syncItemTransactions]);
 
   return <ItemsContext.Provider value={value} {...props} />;
 }

@@ -13,7 +13,6 @@ interface Props {
 
 export default function AccountCard({ account }: Props) {
   const [transactionsShown, setTransactionsShown] = useState(false);
-
   const { accountTransactions, getItemAccountTransactions } = useTransactions();
   const { id: accountId, item_id: itemId } = account;
 

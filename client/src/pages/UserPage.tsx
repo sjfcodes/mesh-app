@@ -67,7 +67,6 @@ const UserPage = () => {
     setToken(linkTokens.byUser[userId]);
   }, [linkTokens, userId]);
 
-  console.log(sortedItems);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>

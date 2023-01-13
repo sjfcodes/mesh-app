@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import Note from 'plaid-threads/Note';
 import Touchable from 'plaid-threads/Touchable';
 import { InlineLink } from 'plaid-threads/InlineLink';
@@ -10,6 +10,8 @@ import { ItemType } from '../types';
 import useInstitutions from '../hooks/usePlaidInstitutions';
 import AccountCard from './AccountCard';
 import MoreDetails from './MoreDetails';
+import Button from './Button/Button';
+import usePlaidItems from '../hooks/usePlaidItems';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
@@ -31,9 +33,9 @@ const ItemCard = ({ item, userId }: Props) => {
   const [showAccounts, setShowAccounts] = useState(true);
   const { institutionsById, getItemInstitution, formatLogoSrc } =
     useInstitutions();
-  const { id, institution_id, status } = item;
+  const { syncItemTransactions } = usePlaidItems();
+  const { id, institution_id, tx_cursor_updated_at, updated_at } = item;
   const isSandbox = PLAID_ENV === 'sandbox';
-  const isGoodState = status === 'good';
 
   useEffect(() => {
     setInstitution(institutionsById[institution_id] || {});
@@ -46,6 +48,16 @@ const ItemCard = ({ item, userId }: Props) => {
   const cardClassNames = showAccounts
     ? 'card item-card expanded'
     : 'card item-card';
+
+  const itemLastSyncDate = !!tx_cursor_updated_at
+    ? diffBetweenCurrentTime(tx_cursor_updated_at)
+    : 'never';
+
+  const handleSyncItem = (e: MouseEvent) => {
+    e.stopPropagation();
+    syncItemTransactions(item.id);
+  };
+
   return (
     <div className="box">
       <div className={cardClassNames}>
@@ -62,23 +74,29 @@ const ItemCard = ({ item, userId }: Props) => {
             <p>{institution && institution.name}</p>
           </div>
           <div className="item-card__column-2">
-            {isGoodState ? (
-              <Note info solid>
-                Updated
-              </Note>
-            ) : (
-              <Note error solid>
-                Login Required
-              </Note>
-            )}
+            <Note info solid>
+              I am a note.
+            </Note>
+            <Note error solid>
+              I am an error
+            </Note>
           </div>
           <div className="item-card__column-3">
-            <h3 className="heading">LAST UPDATED</h3>
-            <p className="value">{diffBetweenCurrentTime(item.updated_at)}</p>
+            <div>
+              <h3 className="heading">LAST ACTIVITY</h3>
+              <p className="value">{diffBetweenCurrentTime(updated_at)}</p>
+            </div>
+            <div>
+              <h3 className="heading">LAST TX SYNC</h3>
+              <div className="item_sync">
+                <p className="value">{itemLastSyncDate}</p>
+                <Button onClick={handleSyncItem}>Sync</Button>
+              </div>
+            </div>
           </div>
         </Touchable>
         <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
-          isBadState={isSandbox && isGoodState}
+          isBadState={isSandbox}
           handleDelete={() => console.log('handleDelete')}
           handleSetBadState={() => console.log('forSandboxOnly')}
           userId={userId}

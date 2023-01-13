@@ -5,12 +5,16 @@ export interface ItemsState {
 
 export type ItemsAction =
   | {
-      type: 'SUCCESSFUL_REQUEST_ITEM';
+      type: 'SUCCESSFUL_ITEM_GET';
       payload: { [item_d: string]: ItemType };
+    }
+  | {
+      type: 'SUCCESSFUL_ITEM_SYNC';
+      payload: { tx_cursor_updated_at: string };
     }
   | { type: 'SUCCESSFUL_DELETE_ITEM'; payload: string }
   | {
-      type: 'SUCCESSFUL_DELETE_ACCOUNT';
+      type: 'SUCCESSFUL_ACCOUNT_DELETE';
       payload: { itemId: string; accountId: string };
     };
 
@@ -19,4 +23,5 @@ export interface ItemsContextShape {
   allAccounts: AccountType[];
   getAllItems: (userId: string, refresh: boolean) => void;
   deleteAccountsByUserId: (userId: string) => void;
+  syncItemTransactions: (itemId: string) => void;
 }
