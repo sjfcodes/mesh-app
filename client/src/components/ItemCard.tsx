@@ -33,8 +33,8 @@ const ItemCard = ({ item, userId }: Props) => {
   const [showAccounts, setShowAccounts] = useState(true);
   const { institutionsById, getItemInstitution, formatLogoSrc } =
     useInstitutions();
-  const { syncItemTransactions } = usePlaidItems();
-  const { id, institution_id, tx_cursor_updated_at, updated_at } = item;
+  const { syncItemTransactions, lastActivity } = usePlaidItems();
+  const { id, institution_id, tx_cursor_updated_at } = item;
   const isSandbox = PLAID_ENV === 'sandbox';
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const ItemCard = ({ item, userId }: Props) => {
           <div className="item-card__column-3">
             <div>
               <h3 className="heading">LAST ACTIVITY</h3>
-              <p className="value">{diffBetweenCurrentTime(updated_at)}</p>
+              <p className="value">{diffBetweenCurrentTime(lastActivity)}</p>
             </div>
             <div>
               <h3 className="heading">LAST TX SYNC</h3>

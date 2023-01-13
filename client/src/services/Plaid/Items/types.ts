@@ -19,8 +19,9 @@ export type ItemsAction =
     };
 
 export interface ItemsContextShape {
-  plaidItem: { [item_id: string]: ItemType };
   allAccounts: AccountType[];
+  lastActivity: string;
+  plaidItem: { [item_id: string]: ItemType };
   getAllItems: (userId: string, refresh: boolean) => void;
   deleteAccountsByUserId: (userId: string) => void;
   syncItemTransactions: (itemId: string) => void;

@@ -1,4 +1,10 @@
-import { createContext, useCallback, useMemo, useReducer } from 'react';
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 
 import {
   getAllItems as apiGetItemsByUser,
@@ -16,6 +22,7 @@ export const ItemsContext = createContext<ItemsContextShape>(
  */
 export function ItemsProvider(props: any) {
   const [plaidItem, dispatch] = useReducer(plaidItemsReducer, {} as ItemsState);
+  const [lastActivity, setLastActivity] = useState('');
 
   /**
    * @desc Requests all Items that belong to an individual User.
@@ -23,10 +30,14 @@ export function ItemsProvider(props: any) {
   const getAllItems = useCallback(async () => {
     const {
       data: {
-        body: { items },
+        body: { items, last_activity },
       },
     } = await apiGetItemsByUser();
-    dispatch({ type: 'SUCCESSFUL_ITEM_GET', payload: items });
+    setLastActivity(last_activity);
+    dispatch({
+      type: 'SUCCESSFUL_ITEM_GET',
+      payload: items,
+    });
   }, []);
 
   const syncItemTransactions = useCallback(async (itemId: string) => {
@@ -55,13 +66,20 @@ export function ItemsProvider(props: any) {
    */
   const value = useMemo(() => {
     return {
-      plaidItem,
       allAccounts: Object.values(plaidItem).map((item) => item.accounts),
+      lastActivity,
+      plaidItem,
       getAllItems,
       deleteAccountsByUserId,
       syncItemTransactions,
     };
-  }, [plaidItem, getAllItems, deleteAccountsByUserId, syncItemTransactions]);
+  }, [
+    lastActivity,
+    plaidItem,
+    getAllItems,
+    deleteAccountsByUserId,
+    syncItemTransactions,
+  ]);
 
   return <ItemsContext.Provider value={value} {...props} />;
 }
