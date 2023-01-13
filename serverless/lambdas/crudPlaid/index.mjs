@@ -6,7 +6,6 @@ export const handler = async (event) => {
   let statusCode = 200;
 
   try {
-    const { body } = event;
     const app = new App(event);
     const requestMethod = event.context['http-method'];
     const requestPath = event.context['resource-path'];

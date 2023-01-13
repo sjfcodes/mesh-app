@@ -7,6 +7,7 @@ class App {
     this.plaidClient = plaidClient;
     this.ddbClient = ddbClient;
     this.user = {};
+    this.requestPath = event.context['resource-path'];
     this.payload = event.body?.payload;
     this.queryString = event.params?.querystring;
   }
@@ -17,7 +18,7 @@ class App {
     const tokenPayload = token.split('.')[1];
     const decrypted = JSON.parse(Buffer.from(tokenPayload, 'base64'));
 
-    this.user = await this.ddbClient.readUserByTokenEmail(decrypted.email);
+    this.user = await this.ddbClient.readUserByTokenEmail(decrypted.email, this.requestPath);
   }
 
   async getLinkToken() {
@@ -71,7 +72,9 @@ class App {
   }
 
   async handleGetUserItems() {
-    const { items } = await this.ddbClient.readUserItems(this.user.email);
+    const { items, lastActivity } = await this.ddbClient.readUserItems(
+      this.user.email
+    );
     const formatted = Object.entries(items).reduce((prev, [item_id, item]) => {
       const copy = { ...item.M };
       delete copy.access_token;
@@ -90,7 +93,7 @@ class App {
       };
     }, {});
 
-    return { items: formatted };
+    return { items: formatted, last_activity: lastActivity };
   }
 
   async handleGetUserAccounts() {

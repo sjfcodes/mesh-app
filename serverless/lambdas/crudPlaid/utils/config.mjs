@@ -25,6 +25,7 @@ const config = {
     itemTxSyncTest: '/item/sync/test',
   },
   itemKeys: {
+    lastActivity: 'last_activity',
     plaidItem: 'plaid_item',
     txCursor: 'tx_cursor',
     txCursorUpdatedAt: 'tx_cursor_updated_at',

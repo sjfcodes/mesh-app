@@ -165,9 +165,8 @@ describe('lambda + dynamoDb integration tests', () => {
           }).then(({ data }) => data)
         : getTableItem(getTableItemPayload));
 
-      if (status_code !== 200) console.error(body);
-
       expect(status_code).toBe(200);
+      expect(body.Item.email.S).toBe(Item.original.email.S);
       expect(body.Item.email.S).toBe(Item.original.email.S);
     });
 
@@ -232,10 +231,11 @@ describe('lambda + dynamoDb integration tests', () => {
           : crudPlaid(getUserItemsPayload));
 
         if (status_code !== 200) console.error(body);
-
+        
         const item = Object.values(body.items)[0];
-
+        
         expect(status_code).toBe(200);
+        expect(body.last_activity).not.toBe(undefined);
         expect(item).not.toHaveProperty('access_token');
         expect(item).toHaveProperty('accounts');
         expect(item).toHaveProperty('created_at');

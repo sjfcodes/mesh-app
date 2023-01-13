@@ -19,14 +19,51 @@ class DdbClient {
     this.client = new DynamoDBClient(configuration);
   }
 
-  async readUserByTokenEmail(email) {
-    if (!email) throw new Error('missing required arguments!');
+  async writeUserLastActivity(email) {
+    if (!email) throw new Error('missing argument email!');
+    await this.client.send(
+      new UpdateItemCommand({
+        TableName: config.TableName.user,
+        Key: { email: { S: email } },
+        UpdateExpression: `SET #last = :date`,
+        ExpressionAttributeNames: {
+          '#last': config.itemKeys.lastActivity,
+        },
+        ExpressionAttributeValues: {
+          ':date': { S: getTimestamp() },
+        },
+        ReturnValues: 'ALL_NEW',
+      })
+    );
+  }
+
+  async readUserByTokenEmail(email, requestPath) {
+    if (!email) throw new Error('missing argument email!');
+    if (!requestPath) throw new Error('missing argument requestPath!');
     const { Item } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.user,
         Key: { email: { S: email } },
       })
     );
+
+    let shouldWriteUserLastActivity = false;
+    const lastActivity = new Date(
+      Item[config.itemKeys.lastActivity].S
+    ).getTime();
+
+    if (!isNaN(lastActivity)) {
+      const currentTime = new Date().getTime();
+      if (currentTime - lastActivity > 5000) {
+        shouldWriteUserLastActivity = true;
+      }
+    } else {
+      shouldWriteUserLastActivity = true;
+    }
+
+    if (shouldWriteUserLastActivity) {
+      await this.writeUserLastActivity(email);
+    }
 
     return {
       userId: Item.user_id.S,
@@ -74,20 +111,22 @@ class DdbClient {
     if (!email) throw new Error('missing email!');
     const {
       Item: {
+        [config.itemKeys.lastActivity]: { S: lastActivity },
         [config.itemKeys.plaidItem]: { M: plaidItems },
       },
     } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.user,
         Key: { email: { S: email } },
-        ProjectionExpression: `#items`,
+        ProjectionExpression: `#items, #activity`,
         ExpressionAttributeNames: {
           '#items': config.itemKeys.plaidItem,
+          '#activity': config.itemKeys.lastActivity,
         },
       })
     );
 
-    return { items: plaidItems };
+    return { items: plaidItems, lastActivity };
   }
 
   async readUserAccounts(email) {
@@ -224,7 +263,12 @@ class DdbClient {
     )
       throw new Error('missing required arguments!');
     console.log(
-      `writeTxsForItem(${JSON.stringify({ itemId, added, modified, removed })})`
+      `writeTxsForItem(${JSON.stringify({
+        itemId,
+        added: added.length,
+        modified: modified.length,
+        removed: removed.length,
+      })})`
     );
 
     const now = getTimestamp();
@@ -272,8 +316,12 @@ class DdbClient {
     );
     const responses = [];
     for (let i = 0; i < requestQueue.length; i++) {
-      const request = requestQueue[i];
+      const request = requestQueue.pop();
       const response = await batchWriteToTxTable(request);
+      if (requestQueue.length) {
+        console.log('pausing for 3000 ms');
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      }
       responses.push(response);
     }
 
