@@ -47,22 +47,30 @@ class DdbClient {
       })
     );
 
-    let shouldWriteUserLastActivity = false;
-    const lastActivity = new Date(
-      Item[config.itemKeys.lastActivity].S
-    ).getTime();
+    /**
+     * Get items is the first request our app makes.
+     * This request will be responsible for
+     * for getting user last activity.
+     * Skip this check for said route.
+     */
+    if (requestPath !== config.path.getItems) {
+      let shouldWriteUserLastActivity = false;
+      const lastActivity = new Date(
+        Item[config.itemKeys.lastActivity].S
+      ).getTime();
 
-    if (!isNaN(lastActivity)) {
-      const currentTime = new Date().getTime();
-      if (currentTime - lastActivity > 5000) {
+      if (!isNaN(lastActivity)) {
+        const currentTime = new Date().getTime();
+        if (currentTime - lastActivity > 5000) {
+          shouldWriteUserLastActivity = true;
+        }
+      } else {
         shouldWriteUserLastActivity = true;
       }
-    } else {
-      shouldWriteUserLastActivity = true;
-    }
 
-    if (shouldWriteUserLastActivity) {
-      await this.writeUserLastActivity(email);
+      if (shouldWriteUserLastActivity) {
+        await this.writeUserLastActivity(email);
+      }
     }
 
     return {
