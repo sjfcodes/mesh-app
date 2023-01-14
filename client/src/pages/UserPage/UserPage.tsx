@@ -19,7 +19,7 @@ import SpendingInsights from '../../components/SpendingInsights';
 import useAssets from '../../hooks/useAssets';
 import TransactionTimeline from '../../components/TransactionTimeline';
 
-import './style.scss'
+import './style.scss';
 
 // import TransactionTimeline from './TransactionTimeline';
 

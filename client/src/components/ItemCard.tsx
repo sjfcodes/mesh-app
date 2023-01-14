@@ -45,9 +45,7 @@ const ItemCard = ({ item, userId }: Props) => {
     getItemInstitution(institution_id);
   }, [getItemInstitution, institution_id]);
 
-  const cardClassNames = showAccounts
-    ? 'expanded'
-    : '';
+  const cardClassNames = showAccounts ? 'expanded' : '';
 
   const itemLastSyncDate = !!tx_cursor_updated_at
     ? diffBetweenCurrentTime(tx_cursor_updated_at)
@@ -60,7 +58,7 @@ const ItemCard = ({ item, userId }: Props) => {
 
   return (
     <>
-      <div 
+      <div
         className={`ma-item-card ${cardClassNames}`}
         onClick={() => setShowAccounts((current) => !current)}
       >
