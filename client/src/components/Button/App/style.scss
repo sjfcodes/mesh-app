@@ -1,0 +1,32 @@
+.ma-button-app {
+  // border: 1px solid red;
+  height: 100%;
+  padding-block: 0.2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  & button {
+    // border: 1px solid blue;
+    height: 3em;
+    width: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ca6c6c00;
+    color: #808080;
+    border: solid #808080 1px;
+    border-radius: 10px;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.05);
+    }
+  }
+  & label {
+    // border: 1px solid green;
+    display: block;
+    font-size: 0.75em;
+    text-align: center;
+    line-height: 1rem;
+  }
+}
