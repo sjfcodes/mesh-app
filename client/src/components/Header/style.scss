@@ -1,0 +1,23 @@
+header {
+//   border: 1px solid red;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.ma-header-left {
+  display: flex;
+  align-items: center;
+}
+
+.ma-header-right {
+  & > h1 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0 0 0 0;
+    font-size: 24px;
+  }
+}

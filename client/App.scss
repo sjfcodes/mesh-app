@@ -163,10 +163,6 @@ UserList
 
 */
 
-div.box.user-card__box > div > div.hoverable > button > div {
-  color: grey;
-}
-
 .user-list-heading {
   font-weight: normal;
 }
@@ -229,9 +225,9 @@ Item overview
   font-weight: normal;
 }
 
-.item-card {
+.ma-item-card {
   padding: 0 $unit 0 0;
-  background-color: $black100;
+  //   background-color: $black100;
   border-bottom: $border;
   box-shadow: $shadow-medium;
   // display: grid;
@@ -242,10 +238,19 @@ Item overview
   }
 }
 
-.item-details {
+.sjf-item-details {
   display: flex;
   align-items: center;
   padding-inline: 1em;
+}
+
+.sjf-item-sync {
+  display: flex;
+  align-items: center;
+  padding-inline: 1em;
+  justify-content: space-between;
+  border: solid red 1px;
+  background: red;
 }
 
 .item-card__clickable {
@@ -295,7 +300,6 @@ Account row
 
 */
 .account-data-row {
-  max-width: 80vw;
   border-bottom: $border;
   padding: 3 * $unit;
   display: grid;

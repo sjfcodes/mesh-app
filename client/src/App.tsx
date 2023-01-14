@@ -13,7 +13,7 @@ import { ErrorsProvider } from './services/Errors/Provider';
 
 import { ItemsProvider } from './services/Plaid/Items/Provider';
 import Landing from './pages/Landing';
-import UserPage from './pages/UserPage';
+import UserPage from './pages/UserPage/UserPage';
 import currentConfig from './auth/config';
 import './App.scss';
 import CustomAuthenticator from './components/CustomAuthenticator';

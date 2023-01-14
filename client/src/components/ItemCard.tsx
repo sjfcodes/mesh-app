@@ -46,8 +46,8 @@ const ItemCard = ({ item, userId }: Props) => {
   }, [getItemInstitution, institution_id]);
 
   const cardClassNames = showAccounts
-    ? 'card item-card expanded'
-    : 'card item-card';
+    ? 'expanded'
+    : '';
 
   const itemLastSyncDate = !!tx_cursor_updated_at
     ? diffBetweenCurrentTime(tx_cursor_updated_at)
@@ -59,49 +59,30 @@ const ItemCard = ({ item, userId }: Props) => {
   };
 
   return (
-    <div className="box">
-      <div className={cardClassNames}>
-        <Touchable
-          className="item-card__clickable"
-          onClick={() => setShowAccounts((current) => !current)}
-        >
-          <div className="item-card__column-1">
-            <img
-              className="item-card__img"
-              src={formatLogoSrc(institution.logo)}
-              alt={institution && institution.name}
-            />
-            <p>{institution && institution.name}</p>
+    <>
+      <div 
+        className={`ma-item-card ${cardClassNames}`}
+        onClick={() => setShowAccounts((current) => !current)}
+      >
+        <div className="sjf-item-details">
+          <img
+            className="item-card__img"
+            src={formatLogoSrc(institution.logo)}
+            alt={institution && institution.name}
+          />
+          <p>{institution && institution.name}</p>
+        </div>
+        <div className="sjf-item-sync">
+          <div>
+            <h3 className="heading">LAST ACTIVITY</h3>
+            <p className="value">{diffBetweenCurrentTime(lastActivity)}</p>
           </div>
-          <div className="item-card__column-2">
-            <Note info solid>
-              I am a note.
-            </Note>
-            <Note error solid>
-              I am an error
-            </Note>
+          <div>
+            <h3 className="heading">LAST TX SYNC</h3>
+            <p className="value">{itemLastSyncDate}</p>
           </div>
-          <div className="item-card__column-3">
-            <div>
-              <h3 className="heading">LAST ACTIVITY</h3>
-              <p className="value">{diffBetweenCurrentTime(lastActivity)}</p>
-            </div>
-            <div>
-              <h3 className="heading">LAST TX SYNC</h3>
-              <div className="item_sync">
-                <p className="value">{itemLastSyncDate}</p>
-                <Button onClick={handleSyncItem}>Sync</Button>
-              </div>
-            </div>
-          </div>
-        </Touchable>
-        <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
-          isBadState={isSandbox}
-          handleDelete={() => console.log('handleDelete')}
-          handleSetBadState={() => console.log('forSandboxOnly')}
-          userId={userId}
-          itemId={id}
-        />
+          <Button onClick={handleSyncItem}>Sync</Button>
+        </div>
       </div>
       {showAccounts && item.accounts.length > 0 && (
         <div>
@@ -112,17 +93,7 @@ const ItemCard = ({ item, userId }: Props) => {
           ))}
         </div>
       )}
-      {showAccounts && item.accounts.length === 0 && (
-        <Callout>
-          No transactions or accounts have been retrieved for this item. See the{' '}
-          <InlineLink href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md">
-            {' '}
-            troubleshooting guide{' '}
-          </InlineLink>{' '}
-          to learn about receiving transactions webhooks with this sample app.
-        </Callout>
-      )}
-    </div>
+    </>
   );
 };
 

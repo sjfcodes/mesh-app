@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import './AppLogo.css';
+import './style.scss';
 
 const AppLogo = () => {
   return <img src={logo} className="App-logo" alt="logo" />;

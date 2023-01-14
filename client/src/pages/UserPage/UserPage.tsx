@@ -1,27 +1,25 @@
 import { useEffect, useState } from 'react';
 import sortBy from 'lodash/sortBy';
-
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
 
-import { pluralize } from '../util';
+import { pluralize } from '../../util';
+import { ItemType } from '../../types';
+import useLink from '../../hooks/useLink';
+import useItems from '../../hooks/usePlaidItems';
+import ErrorMessage from '../../components/ErrorMessage';
+import LoadingCallout from '../../components/LoadingCallout';
+import LaunchLink from '../../components/LaunchLink';
+import ItemCard from '../../components/ItemCard';
+import useUser from '../../hooks/useUser';
+import useTransactions from '../../hooks/usePlaidTransactions';
+import Header from '../../components/Header/Header';
+import NetWorth from '../../components/NetWorth';
+import SpendingInsights from '../../components/SpendingInsights';
+import useAssets from '../../hooks/useAssets';
+import TransactionTimeline from '../../components/TransactionTimeline';
 
-import { ItemType } from '../types';
-
-import useLink from '../hooks/useLink';
-import useItems from '../hooks/usePlaidItems';
-import UserCard from '../components/UserCard';
-import ErrorMessage from '../components/ErrorMessage';
-import LoadingCallout from '../components/LoadingCallout';
-import LaunchLink from '../components/LaunchLink';
-import ItemCard from '../components/ItemCard';
-import useUser from '../hooks/useUser';
-import useTransactions from '../hooks/usePlaidTransactions';
-import Header from '../components/Header/Header';
-import NetWorth from '../components/NetWorth';
-import SpendingInsights from '../components/SpendingInsights';
-import useAssets from '../hooks/useAssets';
-import TransactionTimeline from '../components/TransactionTimeline';
+import './style.scss'
 
 // import TransactionTimeline from './TransactionTimeline';
 
@@ -69,9 +67,8 @@ const UserPage = () => {
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
-    <div>
+    <>
       <Header />
-      <h1>Mesh</h1>
 
       {linkTokens.error.error_code != null && (
         <Callout warning>
@@ -88,7 +85,6 @@ const UserPage = () => {
           <div>Error Message: {linkTokens.error.error_message}</div>
         </Callout>
       )}
-      <UserCard user={user} userId={userId} removeButton={false} linkButton />
       {sortedItems.length === 0 && <ErrorMessage />}
       {sortedItems.length > 0 && (
         <>
@@ -144,7 +140,7 @@ const UserPage = () => {
           />
         </>
       )}
-      {/* {sortedItems.length === 0 &&
+      {sortedItems.length === 0 &&
         allTransactions.length === 0 &&
         assets.length > 0 && (
           <>
@@ -156,8 +152,8 @@ const UserPage = () => {
               assetsOnly
             />
           </>
-        )} */}
-    </div>
+        )}
+    </>
   );
 };
 
