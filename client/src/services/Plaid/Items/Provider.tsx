@@ -1,10 +1,12 @@
 import {
   createContext,
   useCallback,
+  useEffect,
   useMemo,
   useReducer,
   useState,
 } from 'react';
+import useUser from '../../../hooks/useUser';
 
 import {
   getAllItems as apiGetItemsByUser,
@@ -23,6 +25,10 @@ export const ItemsContext = createContext<ItemsContextShape>(
 export function ItemsProvider(props: any) {
   const [plaidItem, dispatch] = useReducer(plaidItemsReducer, {} as ItemsState);
   const [lastActivity, setLastActivity] = useState('');
+
+  useEffect(() => {
+    getAllItems();
+  }, []);
 
   /**
    * @desc Requests all Items that belong to an individual User.
