@@ -1,0 +1,21 @@
+footer {
+  border: 1px solid greenyellow;
+  height: 12vh;
+  padding-top: 1em;
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    & > .sections {
+      border: 1px solid purple;
+      width: 82%;
+      display: flex;
+      align-items: center;
+      overflow-x: scroll;
+    }
+    & > .sign-out {
+      border: 1px solid orange;
+      width: 18%;
+    }
+  }
+}
