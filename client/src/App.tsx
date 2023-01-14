@@ -18,7 +18,7 @@ import currentConfig from './auth/config';
 import './App.scss';
 import CustomAuthenticator from './components/CustomAuthenticator';
 import Header from './components/Header/Header';
-import NavBar from './components/NavBar/NavBar';
+import NavBar from './components/FooterNav/FooterNav';
 
 Amplify.configure(currentConfig);
 
