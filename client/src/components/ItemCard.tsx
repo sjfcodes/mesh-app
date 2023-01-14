@@ -1,19 +1,12 @@
 import React, { MouseEvent, useEffect, useState } from 'react';
-import Note from 'plaid-threads/Note';
-import Touchable from 'plaid-threads/Touchable';
-import { InlineLink } from 'plaid-threads/InlineLink';
-import { Callout } from 'plaid-threads/Callout';
 import { Institution } from 'plaid/dist/api';
 
 import { diffBetweenCurrentTime } from '../util';
 import { ItemType } from '../types';
 import useInstitutions from '../hooks/usePlaidInstitutions';
 import AccountCard from './AccountCard';
-import MoreDetails from './MoreDetails';
-import Button from './Button/Button';
+import DefaultButton from './Button/Default/DefaultButton';
 import usePlaidItems from '../hooks/usePlaidItems';
-
-const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
 interface Props {
   item: ItemType;
@@ -34,8 +27,7 @@ const ItemCard = ({ item, userId }: Props) => {
   const { institutionsById, getItemInstitution, formatLogoSrc } =
     useInstitutions();
   const { syncItemTransactions, lastActivity } = usePlaidItems();
-  const { id, institution_id, tx_cursor_updated_at } = item;
-  const isSandbox = PLAID_ENV === 'sandbox';
+  const { institution_id, tx_cursor_updated_at } = item;
 
   useEffect(() => {
     setInstitution(institutionsById[institution_id] || {});
@@ -79,7 +71,7 @@ const ItemCard = ({ item, userId }: Props) => {
             <h3 className="heading">LAST TX SYNC</h3>
             <p className="value">{itemLastSyncDate}</p>
           </div>
-          <Button onClick={handleSyncItem}>Sync</Button>
+          <DefaultButton onClick={handleSyncItem}>Sync</DefaultButton>
         </div>
       </div>
       {showAccounts && item.accounts.length > 0 && (
