@@ -65,8 +65,13 @@ export function ItemsProvider(props: any) {
    * these from being rebuilt on every render unless itemsById is updated in the reducer.
    */
   const value = useMemo(() => {
+    const itemsAccounts = Object.values(plaidItem).map((item) => item.accounts);
+    const allAccounts = itemsAccounts.reduce(
+      (list, accounts) => [...list, ...accounts],
+      []
+    );
     return {
-      allAccounts: Object.values(plaidItem).map((item) => item.accounts),
+      allAccounts,
       lastActivity,
       plaidItem,
       getAllItems,

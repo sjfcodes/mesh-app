@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import usePlaidItems from '../../hooks/usePlaidItems';
 
 import useUser from '../../hooks/useUser';
+import { pluralize } from '../../util';
 import AppLogo from '../AppLogo/AppLogo';
 
 import './styles.scss';
@@ -9,16 +10,17 @@ import './styles.scss';
 export default function UserCard() {
   const { user } = useUser();
   const { plaidItem, allAccounts } = usePlaidItems();
-  const [itemCount, setItemCount] = useState({
-    items: 0,
-    accounts: allAccounts.length,
-  });
+  const [connections, setConnections] = useState('');
 
   useEffect(() => {
-    setItemCount({
-      items: Object.keys(plaidItem).length,
-      accounts: allAccounts.length,
-    });
+    const itemCount = Object.keys(plaidItem).length;
+    const itemKey = pluralize('item', itemCount);
+    const accountCount = allAccounts.length;
+    const accountKey = pluralize('account', accountCount);
+
+    setConnections(
+      `{ ${itemKey}: ${itemCount}, ${accountKey}: ${accountCount} }`
+    );
   }, [plaidItem, allAccounts]);
 
   return (
@@ -37,11 +39,7 @@ export default function UserCard() {
         </li>
         <li>
           <h3>connection</h3>
-          <p>
-            {JSON.stringify(itemCount)
-              .replaceAll('"', ' ')
-              .replaceAll(':', ': ')}
-          </p>
+          <p>{connections}</p>
         </li>
       </ul>
     </div>
