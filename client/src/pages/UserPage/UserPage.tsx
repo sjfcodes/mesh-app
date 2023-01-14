@@ -13,7 +13,6 @@ import LaunchLink from '../../components/LaunchLink';
 import ItemCard from '../../components/ItemCard';
 import useUser from '../../hooks/useUser';
 import useTransactions from '../../hooks/usePlaidTransactions';
-import Header from '../../components/Header/Header';
 import NetWorth from '../../components/NetWorth';
 import SpendingInsights from '../../components/SpendingInsights';
 import useAssets from '../../hooks/useAssets';
@@ -67,9 +66,7 @@ const UserPage = () => {
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
-    <>
-      <Header />
-
+    <main>
       {linkTokens.error.error_code != null && (
         <Callout warning>
           <div>
@@ -153,7 +150,7 @@ const UserPage = () => {
             />
           </>
         )}
-    </>
+    </main>
   );
 };
 
