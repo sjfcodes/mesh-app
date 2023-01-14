@@ -5,20 +5,20 @@ import { toast } from 'react-toastify';
 import '@aws-amplify/ui-react/styles.css';
 import 'react-toastify/dist/ReactToastify.min.css';
 
+import currentConfig from './auth/config';
 import { LinkProvider } from './services/Plaid/Link/Provider';
 import { InstitutionsProvider } from './services/Plaid/Institutions/Provider';
 import { TransactionsProvider } from './services/Plaid/Transactions/Provider';
 import { AssetsProvider } from './services/Assets/Provider';
 import { ErrorsProvider } from './services/Errors/Provider';
-
 import { ItemsProvider } from './services/Plaid/Items/Provider';
-import Landing from './pages/Landing';
-import UserPage from './pages/UserPage/UserPage';
-import currentConfig from './auth/config';
-import './App.scss';
+import HomePage from './pages/Home/HomePage';
 import CustomAuthenticator from './components/CustomAuthenticator';
 import Header from './components/Header/Header';
 import NavBar from './components/FooterNav/FooterNav';
+import PlaidItemsPage from './pages/PlaidItems/PlaidItemsPage';
+
+import './App.scss';
 
 Amplify.configure(currentConfig);
 
@@ -41,8 +41,8 @@ function App() {
                   <div className="toast__body"></div>
                   <Header />
                   <Routes>
-                    <Route path="/" element={<Landing />} />
-                    <Route path="/user/:userId" element={<UserPage />} />
+                    <Route path="/items" element={<PlaidItemsPage />} />
+                    <Route path="/" element={<HomePage />} />
                   </Routes>
                   <NavBar />
                 </AssetsProvider>

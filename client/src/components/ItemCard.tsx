@@ -10,10 +10,12 @@ import usePlaidItems from '../hooks/usePlaidItems';
 
 interface Props {
   item: ItemType;
-  userId: string;
 }
 
-const ItemCard = ({ item, userId }: Props) => {
+const ItemCard = ({ item }: Props) => {
+  const { institutionsById, getItemInstitution, formatLogoSrc } =
+    useInstitutions();
+  const { syncItemTransactions, lastActivity } = usePlaidItems();
   const [institution, setInstitution] = useState<Institution>({
     logo: '',
     name: '',
@@ -24,9 +26,6 @@ const ItemCard = ({ item, userId }: Props) => {
     routing_numbers: [],
   });
   const [showAccounts, setShowAccounts] = useState(true);
-  const { institutionsById, getItemInstitution, formatLogoSrc } =
-    useInstitutions();
-  const { syncItemTransactions, lastActivity } = usePlaidItems();
   const { institution_id, tx_cursor_updated_at } = item;
 
   useEffect(() => {

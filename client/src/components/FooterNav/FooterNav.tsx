@@ -6,15 +6,17 @@ import { GiExitDoor } from 'react-icons/gi';
 import { BsBank, BsBoxSeam } from 'react-icons/bs';
 
 import './style.scss';
+import { useNavigate } from 'react-router-dom';
 
 const iconSize = '2em';
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const { user, signOut } = useUser();
   const { generateLinkToken } = useLink();
-  const handleInitiateLink = async () => {
-    await generateLinkToken(user.sub, null);
-  };
+  // const handleInitiateLink = async () => {
+  //   await generateLinkToken(user.sub, null);
+  // };
 
   const handleSignOut = async () => {
     if (signOut) signOut({ type: 'SIGN_OUT' });
@@ -25,7 +27,10 @@ const NavBar = () => {
     <footer>
       <div>
         <div className="sections">
-          <AppButton label="banks" onClick={handleInitiateLink}>
+          {/* <AppButton label="banks" onClick={handleInitiateLink}>
+            <BsBank size={iconSize} />
+          </AppButton> */}
+          <AppButton label="banks" onClick={() => navigate('/items')}>
             <BsBank size={iconSize} />
           </AppButton>
           <AppButton label="demo 1" onClick={() => null}>

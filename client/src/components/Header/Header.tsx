@@ -1,10 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import UserCard from '../UserCard/UserCard';
 
 import './style.scss';
 
 const Header = () => {
+  const navigate = useNavigate();
   return (
-    <header>
+    <header onClick={() => navigate('/')}>
       <div className="ma-header-left">
         <UserCard />
       </div>

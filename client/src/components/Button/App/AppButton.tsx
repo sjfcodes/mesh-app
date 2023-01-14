@@ -9,10 +9,10 @@ type props = {
 
 const AppButton = ({ children, label, onClick }: props) => {
   return (
-      <div className="ma-button-app">
-        <button onClick={onClick}>{children}</button>
-        <label>{label}</label>
-      </div>
+    <div className="ma-button-app">
+      <button onClick={onClick}>{children}</button>
+      <label>{label}</label>
+    </div>
   );
 };
 
