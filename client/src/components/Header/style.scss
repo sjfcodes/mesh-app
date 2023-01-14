@@ -1,10 +1,12 @@
 header {
 //   border: 1px solid red;
+height: 8vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
+  border-bottom: 1px solid grey;
 }
 
 // .ma-header-left {
@@ -16,6 +18,6 @@ header {
     bottom: -.1em;
     right: 0em;
     margin: 0 0 0 0;
-    font-size: 24px;
+    font-size: 36px;
   }
 }
