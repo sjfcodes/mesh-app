@@ -17,6 +17,8 @@ import UserPage from './pages/UserPage/UserPage';
 import currentConfig from './auth/config';
 import './App.scss';
 import CustomAuthenticator from './components/CustomAuthenticator';
+import Header from './components/Header/Header';
+import NavBar from './components/NavBar/NavBar';
 
 Amplify.configure(currentConfig);
 
@@ -36,12 +38,13 @@ function App() {
             <TransactionsProvider>
               <ErrorsProvider>
                 <AssetsProvider>
-                  <div className="toast__body">
-                    <Routes>
-                      <Route path="/" element={<Landing />} />
-                      <Route path="/user/:userId" element={<UserPage />} />
-                    </Routes>
-                  </div>
+                  <div className="toast__body"></div>
+                  <Header />
+                  <Routes>
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/user/:userId" element={<UserPage />} />
+                  </Routes>
+                  <NavBar />
                 </AssetsProvider>
               </ErrorsProvider>
             </TransactionsProvider>
