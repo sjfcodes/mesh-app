@@ -9,15 +9,20 @@ $border: 1px solid $black200;
 Base
 
 */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
 
 html {
-  margin: 0 0 0 0;
   padding-block: 0;
   padding-inline: 1em;
   width: 100vw;
 
   body {
-    margin: 0 0 0 0;
     padding: 0 0 0 0;
     & div#root main {
       height: 80vh;
