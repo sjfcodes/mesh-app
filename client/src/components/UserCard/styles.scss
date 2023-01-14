@@ -1,7 +1,16 @@
-.ma-user-card {
+div.ma-user-card {
+  // border: 1px solid red;
+  position: relative;
+  &  > div > img {
+    position: absolute;
+    top: .7em;
+    left: .8em;
+    height: 50px;
+    width: 50px;
+  }
   & ul {
-    // border: 1px solid red;
-    margin: 0 0 0 1em;
+    // border: 1px solid yellow;
+    margin: 0 0 0 0;
     padding: 0;
     height: 100%;
     & li {
@@ -12,7 +21,7 @@
         // border: 1px solid cyan;
         line-height: inherit;
         text-align: end;
-        width: 10em;
+        width: 7em;
         margin: 0;
 
         font-weight: bold;

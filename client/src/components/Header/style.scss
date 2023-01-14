@@ -7,16 +7,14 @@ header {
   position: relative;
 }
 
-.ma-header-left {
-  display: flex;
-  align-items: center;
-}
+// .ma-header-left {
+// }
 
 .ma-header-right {
   & > h1 {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: -.1em;
+    right: 0em;
     margin: 0 0 0 0;
     font-size: 24px;
   }
