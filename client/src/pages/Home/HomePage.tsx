@@ -10,15 +10,15 @@ import useItems from '../../hooks/usePlaidItems';
 import ErrorMessage from '../../components/ErrorMessage';
 import LoadingCallout from '../../components/LoadingCallout';
 import LaunchLink from '../../components/LaunchLink';
-import ItemCard from '../../components/ItemCard';
 import useUser from '../../hooks/useUser';
 import useTransactions from '../../hooks/usePlaidTransactions';
 import NetWorth from '../../components/NetWorth';
-import SpendingInsights from '../../components/SpendingInsights';
+import SpendingInsights from '../SpendingInsights/SpendingInsights';
 import useAssets from '../../hooks/useAssets';
 import TransactionTimeline from '../../components/TransactionTimeline';
 
 import './style.scss';
+import ItemCard from '../../components/ItemCard';
 
 // import TransactionTimeline from './TransactionTimeline';
 
@@ -109,7 +109,7 @@ const UserPage = () => {
           <ErrorMessage />
           {sortedItems.map((item) => (
             <div id="itemCards" key={item.id}>
-              <ItemCard item={item} userId={userId} />
+              <ItemCard item={item} />
             </div>
           ))}
           <TransactionTimeline />
