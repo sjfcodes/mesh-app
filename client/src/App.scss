@@ -1,7 +1,7 @@
 $threads-font-path: '~plaid-threads/fonts';
 @import '~plaid-threads/scss/typography';
 @import '~plaid-threads/scss/variables';
-
+@import './variables.scss';
 $black1000: grey;
 $border: 1px solid $black200;
 /*
@@ -26,7 +26,7 @@ html {
     padding: 0 0 0 0;
     & div#root main {
       height: 80vh;
-      border: 1px solid red;
+      // border: 1px solid $theme-color-0-0;
       overflow: scroll;
     }
     // background: $white;
