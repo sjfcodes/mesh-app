@@ -15,10 +15,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ca6c6c00;
-    color: #808080;
-    border: solid #808080 1px;
+    background-color: inherit;
+    color: $theme-color-0-0;
+    border: solid $theme-color-0-0 1px;
     border-radius: 10px;
+    &.ma-border-1-0 {
+      border-color: $theme-color-1-0;
+    }
     & > svg {
       color: $theme-color-1-0;
     }

@@ -43,7 +43,7 @@ function App() {
                   <Header />
                   <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/items" element={<PlaidItemsPage />} />
+                    <Route path="/accounts" element={<PlaidItemsPage />} />
                     <Route path="/spending" element={<SpendingInsights />} />
                   </Routes>
                   <NavBar />
