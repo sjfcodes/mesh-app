@@ -1,3 +1,5 @@
+@import '../../variables.scss';
+
 div.ma-user-card {
   // border: 1px solid red;
   position: relative;
@@ -35,6 +37,7 @@ div.ma-user-card {
         // border: 1px solid cyan;
         margin: 0 0 0 0.5em;
         line-height: inherit;
+        color: $theme-color-1-0;
       }
     }
   }

@@ -1,3 +1,5 @@
+@import '../../../variables.scss';
+
 .ma-button-app {
   // border: 1px solid red;
   height: 100%;
@@ -17,6 +19,9 @@
     color: #808080;
     border: solid #808080 1px;
     border-radius: 10px;
+    & > svg {
+      color: $theme-color-1-0;
+    }
     &:hover {
       cursor: pointer;
       transform: scale(1.05);
@@ -27,5 +32,6 @@
     display: block;
     font-size: 0.75em;
     text-align: center;
+    color: $theme-color-1-0;
   }
 }
