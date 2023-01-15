@@ -3,6 +3,10 @@ import usePlaidItems from '../../hooks/usePlaidItems';
 
 const PlaidItemsPage = () => {
   const { sortedItems } = usePlaidItems();
+  // const { generateLinkToken } = useLink();
+  // const handleInitiateLink = async () => {
+  //   await generateLinkToken(user.sub, null);
+  // };
 
   return (
     <main>
