@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import sortBy from 'lodash/sortBy';
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
 
 import { pluralize } from '../../util';
-import { ItemType } from '../../types';
 import useLink from '../../hooks/useLink';
 import useItems from '../../hooks/usePlaidItems';
 import ErrorMessage from '../../components/ErrorMessage';
@@ -13,7 +11,6 @@ import LaunchLink from '../../components/LaunchLink';
 import useUser from '../../hooks/useUser';
 import useTransactions from '../../hooks/usePlaidTransactions';
 import NetWorth from '../../components/NetWorth';
-import SpendingInsights from '../SpendingInsights/SpendingInsights';
 import useAssets from '../../hooks/useAssets';
 import TransactionTimeline from '../../components/TransactionTimeline';
 
@@ -29,12 +26,11 @@ const UserPage = () => {
   const { user } = useUser();
 
   const userId = user.sub;
-  const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [token, setToken] = useState('');
 
   const { allTransactions } = useTransactions();
   const { assets } = useAssets();
-  const { plaidItem, allAccounts, getAllItems } = useItems();
+  const { sortedItems, allAccounts } = useItems();
   const { linkTokens /* generateLinkToken */ } = useLink();
 
   // const initiateLink = async () => {
@@ -42,23 +38,6 @@ const UserPage = () => {
   //   // if done earlier, it may expire before enduser actually activates Link to add a bank.
   //   await generateLinkToken(userId, null);
   // };
-
-  // update data store with the user's sortedItems
-  useEffect(() => {
-    if (userId != null) {
-      getAllItems(userId, true);
-    }
-  }, [getAllItems, userId]);
-
-  // update state sortedItems from data store
-  useEffect(() => {
-    const newItems: ItemType[] = plaidItem ? Object.values(plaidItem) : [];
-    const orderedItems = sortBy(
-      newItems,
-      (item) => new Date(item.updated_at)
-    ).reverse();
-    setSortedItems(orderedItems);
-  }, [plaidItem]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
@@ -130,10 +109,6 @@ const UserPage = () => {
             personalAssets={assets}
             userId={userId}
             assetsOnly={false}
-          />
-          <SpendingInsights
-            numOfItems={sortedItems.length}
-            transactions={allTransactions}
           />
         </>
       )}

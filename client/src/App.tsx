@@ -17,6 +17,7 @@ import CustomAuthenticator from './components/CustomAuthenticator';
 import Header from './components/Header/Header';
 import NavBar from './components/FooterNav/FooterNav';
 import PlaidItemsPage from './pages/PlaidItems/PlaidItemsPage';
+import SpendingInsights from './pages/SpendingInsights/SpendingInsightsPage';
 
 import './App.scss';
 
@@ -41,8 +42,9 @@ function App() {
                   <div className="toast__body"></div>
                   <Header />
                   <Routes>
-                    <Route path="/items" element={<PlaidItemsPage />} />
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/items" element={<PlaidItemsPage />} />
+                    <Route path="/spending" element={<SpendingInsights />} />
                   </Routes>
                   <NavBar />
                 </AssetsProvider>

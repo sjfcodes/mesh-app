@@ -1,5 +1,5 @@
 import React from 'react';
-import useLink from '../../hooks/useLink';
+
 import useUser from '../../hooks/useUser';
 import AppButton from '../Button/App/AppButton';
 import { GiExitDoor } from 'react-icons/gi';
@@ -12,8 +12,8 @@ const iconSize = '2em';
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useUser();
-  const { generateLinkToken } = useLink();
+  const { signOut } = useUser();
+  // const { generateLinkToken } = useLink();
   // const handleInitiateLink = async () => {
   //   await generateLinkToken(user.sub, null);
   // };
@@ -33,22 +33,22 @@ const NavBar = () => {
           <AppButton label="banks" onClick={() => navigate('/items')}>
             <BsBank size={iconSize} />
           </AppButton>
-          <AppButton label="demo 1" onClick={() => null}>
+          <AppButton label="spending" onClick={() => navigate('/spending')}>
             <BsBoxSeam size={iconSize} />
           </AppButton>
-          <AppButton label="demo 2" onClick={() => null}>
+          <AppButton label="demo 2" onClick={() => navigate('/')}>
             <BsBoxSeam size={iconSize} />
           </AppButton>
-          <AppButton label="demo 3" onClick={() => null}>
+          <AppButton label="demo 3" onClick={() => navigate('/')}>
             <BsBoxSeam size={iconSize} />
           </AppButton>
-          <AppButton label="demo 4" onClick={() => null}>
+          <AppButton label="demo 4" onClick={() => navigate('/')}>
             <BsBoxSeam size={iconSize} />
           </AppButton>
-          <AppButton label="demo 5" onClick={() => null}>
+          <AppButton label="demo 5" onClick={() => navigate('/')}>
             <BsBoxSeam size={iconSize} />
           </AppButton>
-          <AppButton label="demo 6" onClick={() => null}>
+          <AppButton label="demo 6" onClick={() => navigate('/')}>
             <BsBoxSeam size={iconSize} />
           </AppButton>
         </div>
