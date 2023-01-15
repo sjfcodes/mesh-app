@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import AppButton from '../Button/App/AppButton';
 import { GiExitDoor } from 'react-icons/gi';
-import { BsBank, BsBoxSeam, BsHouse } from 'react-icons/bs';
+import { BsBank, BsHouse } from 'react-icons/bs';
 import { HiOutlinePresentationChartLine } from 'react-icons/hi';
 
 import './style.scss';
@@ -19,9 +19,8 @@ const FooterNav = () => {
   );
 
   useEffect(() => {
-    console.log(selected);
     navigate(selected);
-  }, [selected]);
+  }, [navigate, selected]);
 
   const handleSelection = async (toRoute: string) => {
     let route = toRoute;

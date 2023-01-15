@@ -1,4 +1,4 @@
-import ItemCard from '../../components/ItemCard';
+import ItemCard from '../../components/ItemCard/ItemCard';
 import usePlaidItems from '../../hooks/usePlaidItems';
 
 const PlaidItemsPage = () => {

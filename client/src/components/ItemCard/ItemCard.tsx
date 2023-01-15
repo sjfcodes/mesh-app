@@ -1,12 +1,14 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { Institution } from 'plaid/dist/api';
 
-import { diffBetweenCurrentTime } from '../util';
-import { ItemType } from '../types';
-import useInstitutions from '../hooks/usePlaidInstitutions';
-import AccountCard from './AccountCard';
-import DefaultButton from './Button/Default/DefaultButton';
-import usePlaidItems from '../hooks/usePlaidItems';
+import { diffBetweenCurrentTime } from '../../util';
+import { ItemType } from '../../types';
+import useInstitutions from '../../hooks/usePlaidInstitutions';
+import AccountCard from '../AccountCard';
+import DefaultButton from '../Button/Default/DefaultButton';
+import usePlaidItems from '../../hooks/usePlaidItems';
+
+import './style.scss';
 
 interface Props {
   item: ItemType;
@@ -29,14 +31,16 @@ const ItemCard = ({ item }: Props) => {
   const { institution_id, tx_cursor_updated_at } = item;
 
   useEffect(() => {
+    console.log(institution);
+  }, [institution]);
+
+  useEffect(() => {
     setInstitution(institutionsById[institution_id] || {});
   }, [institutionsById, institution_id]);
 
   useEffect(() => {
     getItemInstitution(institution_id);
   }, [getItemInstitution, institution_id]);
-
-  const cardClassNames = showAccounts ? 'expanded' : '';
 
   const itemLastSyncDate = !!tx_cursor_updated_at
     ? diffBetweenCurrentTime(tx_cursor_updated_at)
@@ -50,27 +54,30 @@ const ItemCard = ({ item }: Props) => {
   return (
     <>
       <div
-        className={`ma-item-card ${cardClassNames}`}
+        className="ma-item-card"
         onClick={() => setShowAccounts((current) => !current)}
       >
-        <div className="sjf-item-details">
+        <div>
           <img
-            className="item-card__img"
             src={formatLogoSrc(institution.logo)}
             alt={institution && institution.name}
           />
-          <p>{institution && institution.name}</p>
-        </div>
-        <div className="sjf-item-sync">
-          <div>
-            <h3 className="heading">LAST ACTIVITY</h3>
-            <p className="value">{diffBetweenCurrentTime(lastActivity)}</p>
-          </div>
-          <div>
-            <h3 className="heading">LAST TX SYNC</h3>
-            <p className="value">{itemLastSyncDate}</p>
-          </div>
-          <DefaultButton onClick={handleSyncItem}>Sync</DefaultButton>
+          <ul>
+            <li>
+              <p>{institution && institution.name}</p>
+            </li>
+            <li>
+              <h3>last activity</h3>
+              <p>{diffBetweenCurrentTime(lastActivity)}</p>
+            </li>
+            <li>
+              <h3>last tx sync</h3>
+              <p>{itemLastSyncDate}</p>
+            </li>
+            <li>
+              <DefaultButton onClick={handleSyncItem}>Sync</DefaultButton>
+            </li>
+          </ul>
         </div>
       </div>
       {showAccounts && item.accounts.length > 0 && (

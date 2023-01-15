@@ -15,7 +15,7 @@ import useAssets from '../../hooks/useAssets';
 import TransactionTimeline from '../../components/TransactionTimeline';
 
 import './style.scss';
-import ItemCard from '../../components/ItemCard';
+import ItemCard from '../../components/ItemCard/ItemCard';
 import LinkTokenError from '../../components/LinkTokenError';
 
 // import TransactionTimeline from './TransactionTimeline';
