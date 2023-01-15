@@ -16,6 +16,7 @@ import TransactionTimeline from '../../components/TransactionTimeline';
 
 import './style.scss';
 import ItemCard from '../../components/ItemCard';
+import LinkTokenError from '../../components/LinkTokenError';
 
 // import TransactionTimeline from './TransactionTimeline';
 
@@ -47,19 +48,7 @@ const UserPage = () => {
   return (
     <main>
       {linkTokens.error.error_code != null && (
-        <Callout warning>
-          <div>
-            Unable to fetch link_token: please make sure your backend server is
-            running and that your .env file has been configured correctly.
-          </div>
-          <div>
-            Error Code: <code>{linkTokens.error.error_code}</code>
-          </div>
-          <div>
-            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
-          </div>
-          <div>Error Message: {linkTokens.error.error_message}</div>
-        </Callout>
+        <LinkTokenError error={linkTokens.error} />
       )}
       {sortedItems.length === 0 && <ErrorMessage />}
       {sortedItems.length > 0 && (
