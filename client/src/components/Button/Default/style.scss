@@ -1,10 +1,19 @@
+@import '../../../variables.scss';
+
 .ma-button-default {
-    padding-block: 10px;
-    background-color: rgba(202, 108, 108, 0);
-    color: #808080;
-    border: solid #808080 1px;
-    border-radius: 10px;
-    &:hover {
-        cursor: pointer;
-    }
+  padding-block: 10px;
+  background-color: rgba(202, 108, 108, 0);
+  color: $theme-color-0-0;
+  border: 1px solid $theme-color-0-0;
+  border-radius: 10px;
+  &:hover {
+    color: $theme-color-1-0;
+    border: 1px solid $theme-color-1-0;
+    cursor: pointer;
+    -ms-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -webkit-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    transform: scale(1.025);
+  }
 }

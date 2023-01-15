@@ -19,13 +19,15 @@ const ItemCard = ({ item }: Props) => {
     useInstitutions();
   const { syncItemTransactions, lastActivity } = usePlaidItems();
   const [institution, setInstitution] = useState<Institution>({
+    country_codes: [],
+    institution_id: '',
     logo: '',
     name: '',
-    institution_id: '',
     oauth: false,
+    primary_color: '',
     products: [],
-    country_codes: [],
     routing_numbers: [],
+    url: '',
   });
   const [showAccounts, setShowAccounts] = useState(true);
   const { institution_id, tx_cursor_updated_at } = item;
@@ -57,27 +59,45 @@ const ItemCard = ({ item }: Props) => {
         className="ma-item-card"
         onClick={() => setShowAccounts((current) => !current)}
       >
-        <div>
-          <img
-            src={formatLogoSrc(institution.logo)}
-            alt={institution && institution.name}
-          />
-          <ul>
-            <li>
-              <p>{institution && institution.name}</p>
-            </li>
-            <li>
-              <h3>last activity</h3>
-              <p>{diffBetweenCurrentTime(lastActivity)}</p>
-            </li>
-            <li>
-              <h3>last tx sync</h3>
-              <p>{itemLastSyncDate}</p>
-            </li>
-            <li>
-              <DefaultButton onClick={handleSyncItem}>Sync</DefaultButton>
-            </li>
-          </ul>
+        <div className="ma-item-card-header">
+          <h3 style={{ color: institution.primary_color || '' }}>
+            {institution && institution.name}
+          </h3>
+        </div>
+        <div className="ma-item-card-body">
+          <a href={institution.url || ''} target="_blank" rel="noreferrer">
+            <img
+              src={formatLogoSrc(institution.logo)}
+              alt={institution && institution.name}
+            />
+          </a>
+          <div className="ma-item-card-details">
+            <ul>
+              <li>
+                <h3>last activity</h3>
+                <p>{diffBetweenCurrentTime(lastActivity)}</p>
+              </li>
+              <li>
+                <h3>routing #</h3>
+                <p>{institution.routing_numbers}</p>
+              </li>
+              <li>
+                <h3>key</h3>
+                <p>value</p>
+              </li>
+            </ul>
+            <ul>
+              <li>
+                <h3>last sync</h3>
+                <p>{itemLastSyncDate}</p>
+              </li>
+              <li>
+                <DefaultButton onClick={handleSyncItem}>
+                  sync transactions
+                </DefaultButton>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       {showAccounts && item.accounts.length > 0 && (
