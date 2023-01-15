@@ -2,24 +2,21 @@ import React, { useMemo } from 'react';
 
 import { currencyFilter, pluralize } from '../../util';
 import CategoriesChart from '../../components/CategoriesChart';
-import { TransactionType } from '../../types';
-
-interface Props {
-  transactions: TransactionType[];
-  numOfItems: number;
-}
+import useTransactions from '../../hooks/usePlaidTransactions';
+import usePlaidItems from '../../hooks/usePlaidItems';
 
 interface Categories {
   [key: string]: number;
 }
 
-export default function SpendingInsights(props: Props) {
+export default function SpendingInsights() {
   // grab transactions from most recent month and filter out transfers and payments
-  const transactions = props.transactions;
+  const { allTransactions } = useTransactions();
+  const { sortedItems } = usePlaidItems();
 
   const filteredTransactions = useMemo(
     () =>
-      transactions.filter((txData) => {
+      allTransactions.filter((txData) => {
         const { transaction: tx } = txData;
         const date = new Date(tx.date);
         const today = new Date();
@@ -31,7 +28,7 @@ export default function SpendingInsights(props: Props) {
           tx.category[0] !== 'Interest'
         );
       }),
-    [transactions]
+    [allTransactions]
   );
 
   // create category and name objects from transactions
@@ -68,12 +65,12 @@ export default function SpendingInsights(props: Props) {
   }, [namesObject]);
 
   return (
-    <div>
+    <main>
       <h2 className="monthlySpendingHeading">Monthly Spending</h2>
       <h4 className="tableSubHeading">A breakdown of your monthly spending</h4>
       <div className="monthlySpendingText">{`Monthly breakdown across ${
-        props.numOfItems
-      } bank ${pluralize('account', props.numOfItems)}`}</div>
+        sortedItems.length
+      } bank ${pluralize('account', sortedItems.length)}`}</div>
       <div className="monthlySpendingContainer">
         <div className="spendingInsights">
           <CategoriesChart categories={categoriesObject} />
@@ -91,6 +88,6 @@ export default function SpendingInsights(props: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
