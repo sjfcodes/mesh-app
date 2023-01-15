@@ -22,6 +22,7 @@ export interface ItemsContextShape {
   allAccounts: AccountType[];
   lastActivity: string;
   plaidItem: { [item_id: string]: ItemType };
+  sortedItems: ItemType[];
   getAllItems: (userId: string, refresh: boolean) => void;
   deleteAccountsByUserId: (userId: string) => void;
   syncItemTransactions: (itemId: string) => void;

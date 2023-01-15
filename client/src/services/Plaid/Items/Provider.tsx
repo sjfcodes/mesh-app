@@ -6,8 +6,9 @@ import {
   useReducer,
   useState,
 } from 'react';
-import useUser from '../../../hooks/useUser';
+import sortBy from 'lodash/sortBy';
 
+import { ItemType } from '../../../types';
 import {
   getAllItems as apiGetItemsByUser,
   syncItemTransactions as apiSyncItemTransactions,
@@ -24,11 +25,8 @@ export const ItemsContext = createContext<ItemsContextShape>(
  */
 export function ItemsProvider(props: any) {
   const [plaidItem, dispatch] = useReducer(plaidItemsReducer, {} as ItemsState);
+  const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [lastActivity, setLastActivity] = useState('');
-
-  useEffect(() => {
-    getAllItems();
-  }, []);
 
   /**
    * @desc Requests all Items that belong to an individual User.
@@ -66,6 +64,20 @@ export function ItemsProvider(props: any) {
     []
   );
 
+  useEffect(() => {
+    getAllItems();
+  }, [getAllItems]);
+
+  // update state sortedItems from data store
+  useEffect(() => {
+    const newItems: ItemType[] = plaidItem ? Object.values(plaidItem) : [];
+    const orderedItems = sortBy(
+      newItems,
+      (item) => new Date(item.updated_at)
+    ).reverse();
+    setSortedItems(orderedItems);
+  }, [plaidItem]);
+
   /**
    * @desc Builds a more accessible state shape from the Items data. useMemo will prevent
    * these from being rebuilt on every render unless itemsById is updated in the reducer.
@@ -80,6 +92,7 @@ export function ItemsProvider(props: any) {
       allAccounts,
       lastActivity,
       plaidItem,
+      sortedItems,
       getAllItems,
       deleteAccountsByUserId,
       syncItemTransactions,
@@ -87,6 +100,7 @@ export function ItemsProvider(props: any) {
   }, [
     lastActivity,
     plaidItem,
+    sortedItems,
     getAllItems,
     deleteAccountsByUserId,
     syncItemTransactions,
