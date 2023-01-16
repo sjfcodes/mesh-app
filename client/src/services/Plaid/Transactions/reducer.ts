@@ -1,3 +1,4 @@
+import { TransactionType } from '../../../types';
 import { TransactionsAction, TransactionsState } from './types';
 
 /**
@@ -15,9 +16,15 @@ const transactionsReducer = (
       if (!transactions.length) {
         return state;
       }
+      const sorted = transactions.sort(
+        (
+          { transaction: txA }: TransactionType,
+          { transaction: txB }: TransactionType
+        ) => new Date(txB?.date).getTime() - new Date(txA?.date).getTime()
+      );
       return {
         ...state,
-        [accountId]: transactions,
+        [accountId]: sorted,
       };
     default:
       console.warn('unknown action: ', action.type, action.payload);
