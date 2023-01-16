@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import AppButton from '../Button/App/AppButton';
 import { GiExitDoor } from 'react-icons/gi';
-import { BsBank, BsHouse } from 'react-icons/bs';
+import { BsBank, BsHouse, BsListOl } from 'react-icons/bs';
 import { HiOutlinePresentationChartLine } from 'react-icons/hi';
 
 import './style.scss';
@@ -52,18 +52,18 @@ const FooterNav = () => {
             <BsBank size={iconSize} />
           </AppButton>
           <AppButton
+            label="timeline"
+            className={selected === '/timeline' ? 'ma-border-1-0' : ''}
+            onClick={() => handleSelection('/timeline')}
+          >
+            <BsListOl size={iconSize} />
+          </AppButton>
+          <AppButton
             label="spending"
             className={selected === '/spending' ? 'ma-border-1-0' : ''}
             onClick={() => handleSelection('/spending')}
           >
             <HiOutlinePresentationChartLine size={iconSize} />
-          </AppButton>
-          <AppButton
-            label="home"
-            className={selected === '/' ? 'ma-border-1-0' : ''}
-            onClick={() => handleSelection('/')}
-          >
-            <BsHouse size={iconSize} />
           </AppButton>
         </div>
       </div>

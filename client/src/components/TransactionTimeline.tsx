@@ -66,9 +66,13 @@ export default function TransactionTimeline() {
     return processed;
   }, [allAccounts, allTransactions]);
 
-  return formattedTxs.length ? (
-    <TransactionsTable transactions={formattedTxs} />
-  ) : (
-    <></>
+  return (
+    <main>
+      {formattedTxs.length ? (
+        <TransactionsTable transactions={formattedTxs} />
+      ) : (
+        ''
+      )}
+    </main>
   );
 }

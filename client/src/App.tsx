@@ -20,6 +20,7 @@ import PlaidItemsPage from './pages/PlaidItems/PlaidItemsPage';
 import SpendingInsights from './pages/SpendingInsights/SpendingInsightsPage';
 
 import './App.scss';
+import TransactionTimeline from './components/TransactionTimeline';
 
 Amplify.configure(currentConfig);
 
@@ -43,6 +44,7 @@ function App() {
                   <Header />
                   <Routes>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/timeline" element={<TransactionTimeline />} />
                     <Route path="/accounts" element={<PlaidItemsPage />} />
                     <Route path="/spending" element={<SpendingInsights />} />
                   </Routes>

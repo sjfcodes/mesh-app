@@ -80,7 +80,6 @@ const UserPage = () => {
               <ItemCard item={item} />
             </div>
           ))}
-          <TransactionTimeline />
         </>
       )}
 
