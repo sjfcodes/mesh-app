@@ -7,15 +7,19 @@ import './style.scss';
 
 interface Props {
   transactions: TransactionType[];
+  fullHeight?: boolean;
 }
 
-const TransactionsTable = ({ transactions }: Props) => {
+const TransactionsTable = ({ transactions, fullHeight = false }: Props) => {
   let { current } = useRef('');
 
-  const getDateDisplay = (dateStr: string) => {
-    let toDisplay = new Date(dateStr).toLocaleDateString();
+  const formatDate = (date: string) => new Date(date).toLocaleDateString();
+  const dateIsCurrent = (date: string) => date === current;
 
-    if (current === toDisplay) toDisplay = '';
+  const getDateDisplay = (dateStr: string) => {
+    let toDisplay = formatDate(dateStr);
+
+    if (dateIsCurrent(toDisplay)) toDisplay = '';
     else current = toDisplay;
 
     return toDisplay;
@@ -30,25 +34,39 @@ const TransactionsTable = ({ transactions }: Props) => {
       <table className="ma-transactions-table">
         <thead className="ma-transactions-table-header">
           <tr>
-            <th className="table-date">Date</th>
-            <th className="table-name">Description</th>
-            <th className="table-category">Category</th>
-            <th className="table-amount">Amount</th>
+            <th className="ma-table-name">Description</th>
+            <th className="ma-table-amount">Amount</th>
           </tr>
         </thead>
 
-        <tbody className="ma-transactions-table-body">
+        <tbody
+          className={`ma-transactions-table-body ${
+            fullHeight ? 'full-height' : ''
+          }`}
+        >
           {transactions.map((txData) => {
             const { transaction: tx } = txData;
             if (!tx) return null;
+            const toRender = [];
             const amount = tx.amount * -1;
-            return (
-              <tr key={tx.transaction_id} className="transactions-data-rows">
-                <td className="table-date">{getDateDisplay(tx.date)}</td>
-                <td className="table-name">{tx.name}</td>
-                <td className="table-category">{tx.category}</td>
+            const toDisplay = formatDate(tx.date);
+            if (!dateIsCurrent(toDisplay)) {
+              toRender.push(
+                <tr key={`tr-date-${toDisplay}`}>
+                  <td className="ma-table-date-row" colSpan={3}>
+                    {getDateDisplay(tx.date)}
+                  </td>
+                </tr>
+              );
+            }
+            toRender.push(
+              <tr key={tx.transaction_id}>
+                <td className="ma-table-name">
+                  <p className="ma-table-category">{tx.category.join(', ')}</p>
+                  <p className="ma-table-name">{tx.name}</p>
+                </td>
                 <td
-                  className={`table-amount ${
+                  className={`ma-table-amount ${
                     amount > 0 ? 'deposit' : 'withdrawal'
                   }`}
                 >
@@ -56,6 +74,8 @@ const TransactionsTable = ({ transactions }: Props) => {
                 </td>
               </tr>
             );
+
+            return toRender;
           })}
         </tbody>
       </table>

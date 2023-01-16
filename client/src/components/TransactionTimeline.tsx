@@ -69,7 +69,7 @@ export default function TransactionTimeline() {
   return (
     <main>
       {formattedTxs.length ? (
-        <TransactionsTable transactions={formattedTxs} />
+        <TransactionsTable transactions={formattedTxs} fullHeight />
       ) : (
         ''
       )}

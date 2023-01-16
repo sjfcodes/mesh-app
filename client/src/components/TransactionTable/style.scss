@@ -1,11 +1,53 @@
 @import '../../variables.scss';
 
 div.ma-transactions {
-  font-size: .5rem;
-  & .ma-transactions-table {
-    & .ma-transactions-table-header {
+  font-size: 0.75rem;
+  & table.ma-transactions-table {
+    // border: 1px solid red;
+    width: 100%;
+    display: block;
+    & thead > tr {
+      border: 1px solid red;
+      & th.ma-table-amount {
+        // border: 1px solid green;
+        width: 10%;
+      }
     }
-    & .ma-transactions-table-body {
+    & tbody {
+      // border: 1px solid yellow;
+      display: block;
+      border-collapse: collapse;
+      height: 40vh;
+      overflow-y: scroll;
+      &.full-height {
+        height: calc($body-height - 25px);
+      }
+      & tr:nth-child(even) {
+        background-color: $theme-color-0-1;
+      }
+      & tr {
+        & td {
+          &.ma-table-date-row {
+            border-top: 1px solid $theme-color-1-0;
+          }
+          & p {
+            font-size: inherit;
+            &.ma-table-category {
+              padding-left: 1.5rem;
+            }
+            &.ma-table-name {
+              padding-left: 3rem;
+            }
+          }
+          vertical-align: text-top;
+          &.deposit {
+            color: greenyellow;
+          }
+          &.withdrawal {
+            color: red;
+          }
+        }
+      }
     }
   }
 }
