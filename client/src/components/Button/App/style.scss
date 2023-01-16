@@ -10,20 +10,20 @@
 
   & button {
     // border: 1px solid blue;
-    height: 3em;
-    width: 3em;
+    height: 3rem;
+    width: 3rem;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: inherit;
-    color: $theme-color-0-0;
-    border: solid $theme-color-0-0 1px;
+    color: $theme-color-1-0;
+    border: solid $theme-color-1-0 1px;
     border-radius: 10px;
     &.ma-border-1-0 {
-      border-color: $theme-color-1-0;
+      border-color: $theme-color-2-0;
     }
     & > svg {
-      color: $theme-color-1-0;
+      color: $theme-color-2-0;
     }
     &:hover {
       cursor: pointer;
@@ -37,8 +37,8 @@
   & label {
     // border: 1px solid green;
     display: block;
-    font-size: 0.75em;
+    font-size: 0.75rem;
     text-align: center;
-    color: $theme-color-1-0;
+    color: $theme-color-2-0;
   }
 }

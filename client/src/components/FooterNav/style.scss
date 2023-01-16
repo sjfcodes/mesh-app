@@ -2,14 +2,14 @@
 
 footer {
   // border: 1px solid greenyellow;
-  border-top: 1px solid $theme-color-0-0;
-  height: 12vh;
+  border-top: 1px solid $theme-color-1-0;
+  height: $footer-height;
   & > div {
     display: flex;
     align-items: center;
     justify-content: space-between;
     & > div {
-      padding: 1em;
+      padding: 1rem;
     }
     & > .sections {
       // border: 1px solid purple;
@@ -20,7 +20,7 @@ footer {
       flex-direction: row-reverse;
       align-items: center;
       overflow-x: scroll;
-      gap: 1em;
+      gap: 1rem;
     }
     & > .sign-out {
       // border: 1px solid orange;

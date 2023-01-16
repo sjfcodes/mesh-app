@@ -1,26 +1,24 @@
 @import '../../variables.scss';
 
 header {
-  //   border: 1px solid red;
-  height: 8vh;
+  // border: 1px solid red;
+  height: $header-height;
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   position: relative;
-  border-bottom: 1px solid $theme-color-0-0;
-}
-
-// .ma-header-left {
-// }
-
-.ma-header-right {
+  border-bottom: 1px solid $theme-color-1-0;
+  & div.ma-header-left {
+    min-height: 100%;
+    width: 100%;
+  }
   & > h1 {
     position: absolute;
-    bottom: -0.1em;
-    right: 0em;
+    bottom: -0.1rem;
+    right: 0rem;
     margin: 0 0 0 0;
     font-size: 36px;
-    color: $theme-color-1-0;
+    color: $theme-color-2-0;
   }
 }

@@ -14,34 +14,25 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
 }
 
 html {
-  padding-block: 0;
-  padding-inline: 1em;
-  width: 100vw;
+  font-size: 12px;
+  color: $theme-color-1-0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   body {
-    padding: 0 0 0 0;
-    & div#root main {
-      height: 80vh;
-      // border: 1px solid $theme-color-0-0;
-      overflow: scroll;
-    }
-    // background: $white;
-    // margin: 0;
-    // padding: 0;
-    // -webkit-font-smoothing: antialiased;
-    // -moz-osx-font-smoothing: grayscale;
-    background: #282c34;
-    min-height: 100vh;
-    // max-width: 97vw;
-    // margin: 0 auto;
-    // overflow: hidden;
-    // font-size: calc(10px + 2vmin);
-    color: grey;
+    background: $theme-color-0-0;
+    max-width: 97vw;
+    margin: 1.5vw 1.5vw 0 1.5vw;
+  }
+  & div#root main {
+    // border: 1px solid $theme-color-1-0;
+    height: 80vh;
+    overflow: scroll;
   }
 }
 
@@ -265,7 +256,7 @@ Item overview
 .item-details {
   display: flex;
   align-items: center;
-  padding-inline: 1em;
+  padding-inline: 1rem;
 }
 
 .item-card__clickable {
@@ -288,7 +279,7 @@ Item overview
   margin-top: $unit;
   display: flex;
   & > div {
-    margin-left: 2em;
+    margin-left: 2rem;
     text-align: center;
     min-height: 100%;
     .item_sync {

@@ -3,12 +3,12 @@
 .ma-button-default {
   padding-block: 10px;
   background-color: rgba(202, 108, 108, 0);
-  color: $theme-color-0-0;
-  border: 1px solid $theme-color-0-0;
+  color: $theme-color-1-0;
+  border: 1px solid $theme-color-1-0;
   border-radius: 10px;
   &:hover {
-    color: $theme-color-1-0;
-    border: 1px solid $theme-color-1-0;
+    color: $theme-color-2-0;
+    border: 1px solid $theme-color-2-0;
     cursor: pointer;
     -ms-transform: scale(1.05);
     -moz-transform: scale(1.05);

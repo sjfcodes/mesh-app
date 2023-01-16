@@ -10,9 +10,7 @@ const Header = () => {
       <div className="ma-header-left">
         <UserCard />
       </div>
-      <div className="ma-header-right">
-        <h1>mesh</h1>
-      </div>
+      <h1>mesh</h1>
     </header>
   );
 };
