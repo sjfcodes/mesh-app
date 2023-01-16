@@ -23,7 +23,7 @@ html {
   }
   & div#root main {
     // border: 1px solid $theme-color-1-0;
-    height: 80vh;
+    height: $body-height;
     overflow: scroll;
   }
 }
