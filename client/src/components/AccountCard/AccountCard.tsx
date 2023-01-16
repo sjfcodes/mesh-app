@@ -27,7 +27,7 @@ export default function AccountCard({ account }: Props) {
   }, [getItemAccountTransactions, accountTransactions, itemId, accountId]);
 
   return (
-    <div key={account.id} className="ma-account-card">
+    <div className="ma-account-card">
       <div className="ma-account-header" onClick={toggleShowTransactions}>
         <div className="ma-account-details">
           <h3>[{account.name}]</h3>
