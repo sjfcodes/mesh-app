@@ -39,10 +39,3 @@ p {
   margin: 0 0 0 0;
   padding: 0 0 0 0;
 }
-
-[data-amplify-authenticator] {
-  min-height: 100vh;
-  & > div {
-    transform: scale(1.5);
-  }
-}

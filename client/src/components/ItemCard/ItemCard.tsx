@@ -101,7 +101,9 @@ const ItemCard = ({ item }: Props) => {
       <div className="ma-item-card-footer">
         {showAccounts &&
           item.accounts.length > 0 &&
-          item.accounts.map((account) => <AccountCard key={account.id} account={account} />)}
+          item.accounts.map((account) => (
+            <AccountCard key={account.id} account={account} />
+          ))}
       </div>
     </div>
   );
