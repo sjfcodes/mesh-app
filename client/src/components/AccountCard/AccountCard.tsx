@@ -4,7 +4,7 @@ import toLower from 'lodash/toLower';
 
 import { currencyFilter } from '../../util';
 import { AccountType } from '../../types';
-import TransactionsTable from '../TransactionsTable';
+import TransactionsTable from '../TransactionTable/TransactionsTable';
 import useTransactions from '../../hooks/usePlaidTransactions';
 
 import './style.scss';
@@ -40,7 +40,7 @@ export default function AccountCard({ account }: Props) {
         </div>
         <p>{transactionsShown ? 'HIDE' : 'SHOW'}</p>
       </div>
-      <div className="ma-account-transactions">
+      <div className="ma-account-footer">
         {transactionsShown && (
           <TransactionsTable transactions={accountTransactions[accountId]} />
         )}

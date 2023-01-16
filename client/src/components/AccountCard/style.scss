@@ -4,9 +4,8 @@ div.ma-account-card {
   border: 1px solid red;
   border: 1px solid $theme-color-1-0;
   border-radius: $border-radius-0;
-  margin: 1rem;
-  padding: 1rem;
   & div.ma-account-header {
+    margin: 1rem;
     display: flex;
     justify-content: space-between;
     & div.ma-account-details {
@@ -29,11 +28,9 @@ div.ma-account-card {
     }
   }
   &:hover {
-    cursor: pointer;
-    -ms-transform: scale(1.05);
-    -moz-transform: scale(1.05);
-    -webkit-transform: scale(1.05);
-    -o-transform: scale(1.05);
-    transform: scale(1.01);
+    border: 1px solid $theme-color-2-0;
+  }
+  & div.ma-account-footer {
+    border: 1px solid cyan;
   }
 }
