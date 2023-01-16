@@ -4,7 +4,7 @@ div.ma-item-card {
   border: 1px solid $theme-color-1-0;
 
   font-size: 1rem;
-  
+
   & h3,
   p {
     margin: 0 0 0 0;
@@ -61,7 +61,6 @@ div.ma-item-card {
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-end;
-        gap: 1rem;
         padding: 0;
         & > li {
           // border: 1px solid green;
@@ -72,14 +71,15 @@ div.ma-item-card {
           & h3 {
             // border: 1px solid cyan;
             line-height: inherit;
-            width: 8rem;
+            width: 6rem;
             padding-right: 0.25rem;
             text-align: end;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: inherit;
+            font-size: 0.75rem;
           }
           & p {
+            // border: 1px solid purple;
             margin: 0 0 0 0;
             line-height: inherit;
           }
