@@ -1,0 +1,11 @@
+@import '../../variables.scss';
+
+div.ma-transactions {
+  font-size: .5rem;
+  & .ma-transactions-table {
+    & .ma-transactions-table-header {
+    }
+    & .ma-transactions-table-body {
+    }
+  }
+}

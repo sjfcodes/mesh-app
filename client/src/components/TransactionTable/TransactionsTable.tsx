@@ -1,13 +1,15 @@
 import React, { useRef } from 'react';
-import { TransactionType } from '../types';
 
-import { currencyFilter } from '../util';
+import { TransactionType } from '../../types';
+import { currencyFilter } from '../../util';
+
+import './style.scss';
 
 interface Props {
   transactions: TransactionType[];
 }
 
-export default function TransactionsTable({ transactions }: Props) {
+const TransactionsTable = ({ transactions }: Props) => {
   let { current } = useRef('');
 
   const getDateDisplay = (dateStr: string) => {
@@ -24,9 +26,9 @@ export default function TransactionsTable({ transactions }: Props) {
   }
 
   return (
-    <div className="transactions">
-      <table className="transactions-table">
-        <thead className="transactions-header">
+    <div className="ma-transactions">
+      <table className="ma-transactions-table">
+        <thead className="ma-transactions-table-header">
           <tr>
             <th className="table-date">Date</th>
             <th className="table-name">Description</th>
@@ -34,7 +36,8 @@ export default function TransactionsTable({ transactions }: Props) {
             <th className="table-amount">Amount</th>
           </tr>
         </thead>
-        <tbody className="transactions-body">
+
+        <tbody className="ma-transactions-table-body">
           {transactions.map((txData) => {
             const { transaction: tx } = txData;
             if (!tx) return null;
@@ -58,4 +61,6 @@ export default function TransactionsTable({ transactions }: Props) {
       </table>
     </div>
   );
-}
+};
+
+export default TransactionsTable;

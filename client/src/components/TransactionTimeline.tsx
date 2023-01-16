@@ -4,7 +4,7 @@ import useTransactions from '../hooks/usePlaidTransactions';
 import { PlaidTransactionType, TransactionType } from '../types';
 
 import { currencyFilter } from '../util';
-import TransactionsTable from './TransactionsTable';
+import TransactionsTable from './TransactionTable/TransactionsTable';
 
 export default function TransactionTimeline() {
   const { allTransactions } = useTransactions();
