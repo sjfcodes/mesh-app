@@ -4,7 +4,7 @@ import { Institution } from 'plaid/dist/api';
 import { diffBetweenCurrentTime } from '../../util';
 import { ItemType } from '../../types';
 import useInstitutions from '../../hooks/usePlaidInstitutions';
-import AccountCard from '../AccountCard';
+import AccountCard from '../AccountCard/AccountCard';
 import DefaultButton from '../Button/Default/DefaultButton';
 import usePlaidItems from '../../hooks/usePlaidItems';
 
@@ -54,62 +54,56 @@ const ItemCard = ({ item }: Props) => {
   };
 
   return (
-    <>
-      <div
-        className="ma-item-card"
-        onClick={() => setShowAccounts((current) => !current)}
-      >
-        <div className="ma-item-card-header">
-          <h3 style={{ color: institution.primary_color || '' }}>
-            {institution && institution.name}
-          </h3>
-        </div>
-        <div className="ma-item-card-body">
-          <a href={institution.url || ''} target="_blank" rel="noreferrer">
-            <img
-              src={formatLogoSrc(institution.logo)}
-              alt={institution && institution.name}
-            />
-          </a>
-          <div className="ma-item-card-details">
-            <ul>
-              <li>
-                <h3>last activity</h3>
-                <p>{diffBetweenCurrentTime(lastActivity)}</p>
-              </li>
-              <li>
-                <h3>routing #</h3>
-                <p>{institution.routing_numbers}</p>
-              </li>
-              <li>
-                <h3>key</h3>
-                <p>value</p>
-              </li>
-            </ul>
-            <ul>
-              <li>
-                <h3>last sync</h3>
-                <p>{itemLastSyncDate}</p>
-              </li>
-              <li>
-                <DefaultButton onClick={handleSyncItem}>
-                  sync transactions
-                </DefaultButton>
-              </li>
-            </ul>
-          </div>
+    <div
+      className="ma-item-card"
+      // onClick={() => setShowAccounts((current) => !current)}
+    >
+      <div className="ma-item-card-header">
+        <h3 style={{ color: institution.primary_color || '' }}>
+          {institution && institution.name}
+        </h3>
+      </div>
+      <div className="ma-item-card-body">
+        <a href={institution.url || ''} target="_blank" rel="noreferrer">
+          <img
+            src={formatLogoSrc(institution.logo)}
+            alt={institution && institution.name}
+          />
+        </a>
+        <div className="ma-item-card-details">
+          <ul>
+            <li>
+              <h3>last activity</h3>
+              <p>{diffBetweenCurrentTime(lastActivity)}</p>
+            </li>
+            <li>
+              <h3>routing #</h3>
+              <p>{institution.routing_numbers}</p>
+            </li>
+            <li>
+              <h3>key</h3>
+              <p>value</p>
+            </li>
+          </ul>
+          <ul>
+            <li>
+              <h3>last sync</h3>
+              <p>{itemLastSyncDate}</p>
+            </li>
+            <li>
+              <DefaultButton onClick={handleSyncItem}>
+                sync transactions
+              </DefaultButton>
+            </li>
+          </ul>
         </div>
       </div>
-      {showAccounts && item.accounts.length > 0 && (
-        <div>
-          {item.accounts.map((account) => (
-            <div key={account.id}>
-              <AccountCard account={account} />
-            </div>
-          ))}
-        </div>
-      )}
-    </>
+      <div className="ma-item-card-footer">
+        {showAccounts &&
+          item.accounts.length > 0 &&
+          item.accounts.map((account) => <AccountCard account={account} />)}
+      </div>
+    </div>
   );
 };
 
