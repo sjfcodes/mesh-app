@@ -70,7 +70,7 @@ const TransactionsTable = ({ transactions, fullHeight = false }: Props) => {
                     amount > 0 ? 'deposit' : 'withdrawal'
                   }`}
                 >
-                  {currencyFilter(amount)}
+                  {amount !== 0 && currencyFilter(amount)}
                 </td>
               </tr>
             );

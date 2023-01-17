@@ -31,15 +31,17 @@ export default function TransactionTimeline() {
             (account) => account.id === tx.account_id
           )[0];
 
-          const mask = tx.name.split(' ')[4].slice(-4);
-          const target = allAccounts.filter(
-            (account) => account.mask === mask
-          )[0];
+          const mask = tx.name.split(' ').filter((str) => {
+            const last4Chars = str.slice(-4);
+            return !isNaN(parseInt(last4Chars));
+          })[0].slice(-4);
 
+          const target = allAccounts.filter((account) => {
+            return account.mask === mask;
+          })[0];
           if (target) {
-            const sourceLabel = `[${source.official_name}-${source.mask}]`;
-            const targetLabel = `[${target.official_name}-${target.mask}]`;
-
+            const sourceLabel = `[${source.subtype}-${source.mask}]`;
+            const targetLabel = `[${target.subtype}-${target.mask}]`;
             tx.name = `Transfer ${currencyFilter(
               Math.abs(tx.amount)
             )} from ${sourceLabel} to ${targetLabel}`;

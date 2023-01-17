@@ -58,11 +58,11 @@ export function TransactionsProvider(props: any) {
   const value = useMemo(() => {
     const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
 
-    const formatTransactions = (tx: PlaidTransactionType) => {
+    const formatTransactions = (tx: TransactionType) => {
       const copy = { ...tx };
       removePhrases.forEach((phrase) => {
-        if (copy.name?.includes(phrase)) {
-          copy.name = copy.name.split(phrase)[1].trim();
+        if (copy.transaction.name?.includes(phrase)) {
+          copy.transaction.name = copy.transaction.name.split(phrase)[1].trim();
         }
       });
 

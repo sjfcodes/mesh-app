@@ -32,9 +32,9 @@ const ItemCard = ({ item }: Props) => {
   const [showAccounts, setShowAccounts] = useState(true);
   const { institution_id, tx_cursor_updated_at } = item;
 
-  useEffect(() => {
-    console.log(institution);
-  }, [institution]);
+  // useEffect(() => {
+  //   console.log(institution);
+  // }, [institution]);
 
   useEffect(() => {
     setInstitution(institutionsById[institution_id] || {});
