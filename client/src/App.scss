@@ -16,8 +16,10 @@ html {
   -moz-osx-font-smoothing: grayscale;
 
   body {
-    max-width: 97vw;
-    margin: 1.5vw 1.5vw 0 1.5vw;
+    max-width: 650px;
+    margin: 0 auto;
+    margin-top: 1.5vw;
+
     font-size: 1rem;
     background: $theme-color-0-0;
   }

@@ -29,11 +29,14 @@ div.ma-transactions {
         & td {
           &.ma-table-date-row {
             border-top: 1px solid $theme-color-1-0;
+            color: $theme-color-2-0
           }
           & p {
             font-size: inherit;
             &.ma-table-category {
               padding-left: 1.5rem;
+              font-size: .6rem;
+              // color: $theme-color-2-0
             }
             &.ma-table-name {
               padding-left: 3rem;

@@ -29,12 +29,7 @@ const ItemCard = ({ item }: Props) => {
     routing_numbers: [],
     url: '',
   });
-  const [showAccounts, setShowAccounts] = useState(true);
   const { institution_id, tx_cursor_updated_at } = item;
-
-  // useEffect(() => {
-  //   console.log(institution);
-  // }, [institution]);
 
   useEffect(() => {
     setInstitution(institutionsById[institution_id] || {});
@@ -54,10 +49,7 @@ const ItemCard = ({ item }: Props) => {
   };
 
   return (
-    <div
-      className="ma-item-card"
-      // onClick={() => setShowAccounts((current) => !current)}
-    >
+    <div className="ma-item-card">
       <div className="ma-item-card-header">
         <h3 style={{ color: institution.primary_color || '' }}>
           {institution && institution.name}
@@ -99,8 +91,7 @@ const ItemCard = ({ item }: Props) => {
         </div>
       </div>
       <div className="ma-item-card-footer">
-        {showAccounts &&
-          item.accounts.length > 0 &&
+        {item.accounts.length > 0 &&
           item.accounts.map((account) => (
             <AccountCard key={account.id} account={account} />
           ))}

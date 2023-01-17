@@ -31,10 +31,13 @@ export default function TransactionTimeline() {
             (account) => account.id === tx.account_id
           )[0];
 
-          const mask = tx.name.split(' ').filter((str) => {
-            const last4Chars = str.slice(-4);
-            return !isNaN(parseInt(last4Chars));
-          })[0].slice(-4);
+          const mask = tx.name
+            .split(' ')
+            .filter((str) => {
+              const last4Chars = str.slice(-4);
+              return !isNaN(parseInt(last4Chars));
+            })[0]
+            .slice(-4);
 
           const target = allAccounts.filter((account) => {
             return account.mask === mask;
