@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 import { currencyFilter, pluralize } from '../../util';
-import CategoriesChart from '../../components/CategoriesChart';
+import CategoriesChart from '../../components/CategoriesChart/CategoriesChart';
 import useTransactions from '../../hooks/usePlaidTransactions';
 import usePlaidItems from '../../hooks/usePlaidItems';
 
@@ -43,6 +43,8 @@ export default function SpendingInsights() {
     }, {});
   }, [filteredTransactions]);
 
+  console.log(categoriesObject)
+
   const namesObject = useMemo((): Categories => {
     return filteredTransactions.reduce((obj: Categories, txData) => {
       const { transaction: tx } = txData;
@@ -66,16 +68,12 @@ export default function SpendingInsights() {
 
   return (
     <main>
-      <h2 className="monthlySpendingHeading">Monthly Spending</h2>
-      <h4 className="tableSubHeading">A breakdown of your monthly spending</h4>
-      <div className="monthlySpendingText">{`Monthly breakdown across ${
+      <h2 className="">Monthly Spending</h2>
+      <div className="">{`Monthly breakdown across ${
         sortedItems.length
       } bank ${pluralize('account', sortedItems.length)}`}</div>
-      <div className="monthlySpendingContainer">
-        <div className="spendingInsights">
-          <CategoriesChart categories={categoriesObject} />
-        </div>
-        <div className="spendingInsights">
+      <CategoriesChart categories={categoriesObject} />
+      {/* <div className="spendingInsights">
           <h4 className="holdingsHeading">Top 5 Vendors</h4>
           <div className="spendingInsightData">
             <p className="title">Vendor</p> <p className="title">Amount</p>
@@ -86,8 +84,7 @@ export default function SpendingInsights() {
               </div>
             ))}
           </div>
-        </div>
-      </div>
+        </div> */}
     </main>
   );
 }
