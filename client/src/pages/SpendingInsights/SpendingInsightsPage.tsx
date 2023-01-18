@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react';
 
-import { currencyFilter, pluralize } from '../../util';
-import CategoriesChart from '../../components/CategoriesChart';
+import { currencyFilter } from '../../util';
+import CategoriesChart from '../../components/CategoriesChart/CategoriesChart';
 import useTransactions from '../../hooks/usePlaidTransactions';
-import usePlaidItems from '../../hooks/usePlaidItems';
 
 interface Categories {
   [key: string]: number;
@@ -12,7 +11,6 @@ interface Categories {
 export default function SpendingInsights() {
   // grab transactions from most recent month and filter out transfers and payments
   const { allTransactions } = useTransactions();
-  const { sortedItems } = usePlaidItems();
 
   const filteredTransactions = useMemo(
     () =>
@@ -66,19 +64,15 @@ export default function SpendingInsights() {
 
   return (
     <main>
-      <h2 className="monthlySpendingHeading">Monthly Spending</h2>
-      <h4 className="tableSubHeading">A breakdown of your monthly spending</h4>
-      <div className="monthlySpendingText">{`Monthly breakdown across ${
-        sortedItems.length
-      } bank ${pluralize('account', sortedItems.length)}`}</div>
-      <div className="monthlySpendingContainer">
-        <div className="spendingInsights">
-          <CategoriesChart categories={categoriesObject} />
-        </div>
-        <div className="spendingInsights">
-          <h4 className="holdingsHeading">Top 5 Vendors</h4>
-          <div className="spendingInsightData">
-            <p className="title">Vendor</p> <p className="title">Amount</p>
+      <h2>Monthly Spending</h2>
+      <h4>A breakdown of your monthly spending</h4>
+      <div>
+        <CategoriesChart categories={categoriesObject} />
+        <div>
+          <h4>Top 5 Vendors</h4>
+          <div>
+            <p>Vendor</p>
+            <p>Amount</p>
             {sortedNames.map((vendor: any[], index) => (
               <div key={index}>
                 <p>{vendor[0]}</p>
