@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
-import Callout from 'plaid-threads/Callout';
 
 import { pluralize } from '../../util';
 import useLink from '../../hooks/useLink';
@@ -12,7 +11,6 @@ import useUser from '../../hooks/useUser';
 import useTransactions from '../../hooks/usePlaidTransactions';
 import NetWorth from '../../components/NetWorth';
 import useAssets from '../../hooks/useAssets';
-import TransactionTimeline from '../../components/TransactionTimeline';
 
 import './style.scss';
 import ItemCard from '../../components/ItemCard/ItemCard';

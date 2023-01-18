@@ -1,5 +1,5 @@
 import { createContext, useCallback, useMemo, useReducer, useRef } from 'react';
-import { PlaidTransactionType, TransactionType } from '../../../types';
+import { TransactionType } from '../../../types';
 import { getItemAccountTransactions as apiGetItemAccountTransactions } from '../../../util/api';
 import transactionsReducer from './reducer';
 import { TransactionsContextShape } from './types';
