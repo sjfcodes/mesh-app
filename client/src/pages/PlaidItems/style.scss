@@ -1,0 +1,14 @@
+@import '../../variables.scss';
+
+main {
+  & div.add-item {
+    // border: 1px solid red;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-block: 1rem;
+    & button {
+      width: 90%;
+    }
+  }
+}

@@ -9,7 +9,9 @@ import TopVendors from '../../components/TopTransactions/TopTransactions';
 export default function SpendingInsights() {
   // grab transactions from most recent month and filter out transfers and payments
   const { allTransactions } = useTransactions();
-  const [filterOptions, setFilterOptions] = useState([ /*'Payment', 'Transfer',*/ 'Interest']);
+  const [filterOptions, setFilterOptions] = useState([
+    /*'Payment', 'Transfer',*/ 'Interest',
+  ]);
 
   const filteredTransactions = useMemo(
     () =>
@@ -18,9 +20,7 @@ export default function SpendingInsights() {
         const date = new Date(tx.date);
         const today = new Date();
         const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
-        return (
-          date > oneMonthAgo && !filterOptions.includes(tx.category[0])
-        );
+        return date > oneMonthAgo && !filterOptions.includes(tx.category[0]);
       }),
     [allTransactions, filterOptions]
   );

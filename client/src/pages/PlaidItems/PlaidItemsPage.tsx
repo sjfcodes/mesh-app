@@ -1,12 +1,11 @@
+import ButtonLinkBank from '../../components/ButtonLinkBank/ButtonLinkBank';
 import ItemCard from '../../components/ItemCard/ItemCard';
 import usePlaidItems from '../../hooks/usePlaidItems';
 
+import './style.scss';
+
 const PlaidItemsPage = () => {
   const { sortedItems } = usePlaidItems();
-  // const { generateLinkToken } = useLink();
-  // const handleInitiateLink = async () => {
-  //   await generateLinkToken(user.sub, null);
-  // };
 
   return (
     <main>
@@ -15,6 +14,9 @@ const PlaidItemsPage = () => {
           <ItemCard item={item} />
         </div>
       ))}
+      <div className="add-item">
+        <ButtonLinkBank />
+      </div>
     </main>
   );
 };
