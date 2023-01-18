@@ -1,1 +1,30 @@
 @import '../../variables.scss';
+
+div.top-vendors {
+  & > div.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    & > h2 {
+      margin-block: 1rem;
+      color: $theme-color-2-0;
+    }
+    & > select {
+    }
+  }
+  & ol {
+    width: 100%;
+    padding-inline: 2rem;
+    & li {
+      // border: 1px solid salmon;
+      & p.vendor {
+        text-transform: lowercase;
+      }
+      & p.amount {
+        text-align: end;
+        // margin-block: .5rem;
+        color: red;
+      }
+    }
+  }
+}

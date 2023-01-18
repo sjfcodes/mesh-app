@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Categories, TransactionType } from '../../types';
-import { currencyFilter } from '../../util';
+import { currencyFilter, pluralize } from '../../util';
 
 import './style.scss';
 
@@ -10,6 +10,7 @@ interface Props {
 }
 
 const TopVendors = ({ filteredTransactions }: Props) => {
+  const [vendorCount, setVendorCount] = useState(5);
   const namesObject = useMemo((): Categories => {
     return filteredTransactions.reduce((obj: Categories, txData) => {
       const { transaction: tx } = txData;
@@ -27,23 +28,32 @@ const TopVendors = ({ filteredTransactions }: Props) => {
       namesArray.push([name, namesObject[name]]);
     }
     namesArray.sort((a: any[], b: any[]) => b[1] - a[1]);
-    namesArray.splice(5); // top 5
+    namesArray.splice(vendorCount);
     return namesArray;
-  }, [namesObject]);
+  }, [namesObject, vendorCount]);
+
+  const handleSelectVendorCount = (e: any) => setVendorCount(e.target.value);
   return (
-    <div>
-      <h4>Top 5 Vendors</h4>
-      <div>
-        <p>Vendor</p>
-        <p>Amount</p>
-        <ol></ol>
+    <div className="top-vendors">
+      <div className="header">
+        <h2>
+          Top {vendorCount} {pluralize('vendor', vendorCount)}
+        </h2>
+        <select value={vendorCount} onChange={handleSelectVendorCount}>
+          <option value={5}>5 vendors</option>
+          <option value={10}>10 vendors</option>
+          <option value={15}>15 vendors</option>
+          <option value={20}>20 vendors</option>
+        </select>
+      </div>
+      <ol>
         {sortedNames.map((vendor: any[], index) => (
           <li key={index}>
-            <p>{vendor[0]}</p>
-            <p>{currencyFilter(vendor[1])}</p>
+            <p className="vendor">{vendor[0]}</p>
+            <p className="amount">{currencyFilter(vendor[1])}</p>
           </li>
         ))}
-      </div>
+      </ol>
     </div>
   );
 };
