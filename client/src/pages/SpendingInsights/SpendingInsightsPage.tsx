@@ -1,14 +1,15 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import CategoriesChart from '../../components/CategoriesChart/CategoriesChart';
 import useTransactions from '../../hooks/usePlaidTransactions';
 
 import './style.scss';
-import TopVendors from '../../components/TopVendors/TopVendors';
+import TopVendors from '../../components/TopTransactions/TopTransactions';
 
 export default function SpendingInsights() {
   // grab transactions from most recent month and filter out transfers and payments
   const { allTransactions } = useTransactions();
+  const [filterOptions, setFilterOptions] = useState([ /*'Payment', 'Transfer',*/ 'Interest']);
 
   const filteredTransactions = useMemo(
     () =>
@@ -18,13 +19,10 @@ export default function SpendingInsights() {
         const today = new Date();
         const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
         return (
-          date > oneMonthAgo &&
-          // tx.category[0] !== 'Payment' &&
-          tx.category[0] !== 'Transfer' &&
-          tx.category[0] !== 'Interest'
+          date > oneMonthAgo && !filterOptions.includes(tx.category[0])
         );
       }),
-    [allTransactions]
+    [allTransactions, filterOptions]
   );
 
   return (

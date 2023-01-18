@@ -8,10 +8,10 @@ const Header = () => {
   const handleClick = () => {
     // navigate('/accounts');
     /**
-     * navigate to accounts and reload does not work. 
+     * navigate to accounts and reload does not work.
      * FooterNav contains local state responsible for
      * keeping page url & selected app synced.
-     * 
+     *
      * Would need to move local state to shared state
      * to allow other components to set selected app/url.
      */

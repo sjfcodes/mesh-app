@@ -34,16 +34,16 @@ const TopVendors = ({ filteredTransactions }: Props) => {
 
   const handleSelectVendorCount = (e: any) => setVendorCount(e.target.value);
   return (
-    <div className="top-vendors">
+    <div className="top-transactions">
       <div className="header">
         <h2>
-          Top {vendorCount} {pluralize('vendor', vendorCount)}
+          Top {vendorCount} {pluralize('transactions', vendorCount)}
         </h2>
         <select value={vendorCount} onChange={handleSelectVendorCount}>
-          <option value={5}>5 vendors</option>
-          <option value={10}>10 vendors</option>
-          <option value={15}>15 vendors</option>
-          <option value={20}>20 vendors</option>
+          <option value={5}>5 transactions</option>
+          <option value={10}>10 transactions</option>
+          <option value={15}>15 transactions</option>
+          <option value={20}>20 transactions</option>
         </select>
       </div>
       <ol>
