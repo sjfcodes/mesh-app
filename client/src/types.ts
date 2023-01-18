@@ -111,3 +111,7 @@ export type TransactionType = {
   created_at: string;
   updated_at: string;
 };
+
+export type Categories = {
+  [key: string]: number;
+};

@@ -1,5 +1,12 @@
-div.spending-insights {
+@import '../../variables.scss';
+
+div.spending-categories {
   // border: 1px solid red;
-  height: 25vh;
-  width: 100%;
+  & > h4 {
+    color: $theme-color-2-0;
+  }
+  & div.chart-wrapper {
+    height: 25vh;
+    width: 100%;
+  }
 }

@@ -1,29 +1,41 @@
 import { useMemo } from 'react';
 import { Cell, ResponsiveContainer, Pie, PieChart, Legend } from 'recharts';
 
+import { Categories, TransactionType } from '../../types';
+
 import './style.scss';
 
 interface Props {
-  categories: {
-    [key: string]: number;
-  };
+  filteredTransactions: TransactionType[];
 }
 
-export default function CategoriesChart(props: Props) {
+export default function CategoriesChart({ filteredTransactions }: Props) {
+  // create category and name objects from transactions
+
+  const categoriesObject = useMemo((): Categories => {
+    return filteredTransactions.reduce((obj: Categories, txData) => {
+      const { transaction: tx } = txData;
+      tx.category[0] in obj
+        ? (obj[tx.category[0]] = tx.amount + obj[tx.category[0]])
+        : (obj[tx.category[0]] = tx.amount);
+      return obj;
+    }, {});
+  }, [filteredTransactions]);
+
   const data = useMemo(() => {
     const data = [];
-    const labels = Object.keys(props.categories);
-    const values = Object.values(props.categories);
+    const labels = Object.keys(categoriesObject);
+    const values = Object.values(categoriesObject);
     for (let i = 0; i < labels.length; i++) {
       data.push({ name: labels[i], value: Math.abs(Math.round(values[i])) });
     }
-    return Object.entries(props.categories)
+    return Object.entries(categoriesObject)
       .map(([label, value]) => ({
         name: label,
         value: Math.abs(Math.round(value)),
       }))
       .sort((a, b) => b.value - a.value);
-  }, [props.categories]);
+  }, [categoriesObject]);
 
   const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF42A1'];
 
@@ -32,9 +44,9 @@ export default function CategoriesChart(props: Props) {
   };
 
   return (
-    <>
-      <h4 className="holdingsHeading">Spending Categories</h4>
-      <div className="spending-insights">
+    <div className="spending-categories">
+      <h4 className="holdingsHeading">Categories</h4>
+      <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Legend verticalAlign="top" />
@@ -59,6 +71,6 @@ export default function CategoriesChart(props: Props) {
           </PieChart>
         </ResponsiveContainer>
       </div>
-    </>
+    </div>
   );
 }
