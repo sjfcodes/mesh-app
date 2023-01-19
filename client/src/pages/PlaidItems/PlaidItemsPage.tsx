@@ -8,12 +8,14 @@ const PlaidItemsPage = () => {
   const { sortedItems } = usePlaidItems();
 
   return (
-    <main>
-      {sortedItems.map((item) => (
-        <div id="itemCards" key={item.id}>
-          <ItemCard item={item} />
-        </div>
-      ))}
+    <main id="ma-plaid-items-page">
+      <div>
+        {sortedItems.map((item) => (
+          <div id="itemCards" key={item.id}>
+            <ItemCard item={item} />
+          </div>
+        ))}
+      </div>
       <div className="add-item">
         <ButtonLinkBank />
       </div>

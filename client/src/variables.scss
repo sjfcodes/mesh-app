@@ -6,4 +6,4 @@ $border-radius-0: .5rem;
 
 $header-height: 7vh;
 $footer-height: 12vh;
-$body-height: calc(100vh - ($header-height + $footer-height));
+$body-height: calc((100vh - ($header-height + $footer-height)) - 2rem);

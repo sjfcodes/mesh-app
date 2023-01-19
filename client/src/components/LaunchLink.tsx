@@ -92,13 +92,13 @@ export default function LaunchLink(props: Props) {
   };
 
   if (props.isOauth) {
-    config.receivedRedirectUri = window.location.href; // add additional receivedRedirectUri config when handling an OAuth reidrect
+    config.receivedRedirectUri = window.location.href; // add additional receivedRedirectUri config when handling an OAuth redirect
   }
 
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
-    // initiallizes Link automatically
+    // initializes Link automatically
     if (props.isOauth && ready) {
       open();
     } else if (ready) {

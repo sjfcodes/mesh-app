@@ -1,9 +1,10 @@
 @import '../../variables.scss';
 
 div.ma-account-card {
-  border: 1px solid red;
+  // border: 1px solid red;
   border: 1px solid $theme-color-1-0;
   border-radius: $border-radius-0;
+  margin: .5rem;
   & div.ma-account-header {
     margin: 1rem;
     display: flex;
