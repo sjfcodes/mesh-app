@@ -20,6 +20,7 @@ const config = {
     itemTokenExchangeTest: '/item/token-exchange/test',
     getItems: '/item',
     itemGetAccounts: '/item/account',
+    getAccountBalances: '/item/account/balance',
     getAccountTransactions: '/item/account/transaction',
     itemGetInstitution: '/item/institution',
     itemTxSync: '/item/sync',

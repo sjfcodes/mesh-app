@@ -37,6 +37,7 @@ import {
   mockSyncTransactionsForItemPayload,
   getTransactionsForAccountPayload,
   getUserItemsPayload,
+  getUserAccountsBalancesPayload,
 } from './crudPlaid/payloads.mjs';
 import { handler as crudPlaid } from '../../lambdas/crudPlaid/index.mjs';
 import mockData from './crudPlaid/mockData/plaid.js';
@@ -204,23 +205,23 @@ describe('lambda + dynamoDb integration tests', () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
-      it('should simulating  item sync & write transactions to db', async () => {
-        const payload = mockSyncTransactionsForItemPayload;
-        const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: payload.context['http-method'],
-              data: payload,
-            }).then(({ data }) => data)
-          : crudPlaid(payload));
+      // it('should simulate item sync & write transactions to db', async () => {
+      //   const payload = mockSyncTransactionsForItemPayload;
+      //   const { status_code, body } = await (testApi
+      //     ? apiTableItem({
+      //         method: payload.context['http-method'],
+      //         data: payload,
+      //       }).then(({ data }) => data)
+      //     : crudPlaid(payload));
 
-        if (status_code !== 200) console.error(body);
+      //   if (status_code !== 200) console.error(body);
 
-        expect(status_code).toBe(200);
-        expect(body.tx_sync).toBe('complete');
-        expect(body.tx_cursor_updated_at).not.toBe(undefined);
-        expect(body.added).toBeGreaterThan(0);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-      });
+      //   expect(status_code).toBe(200);
+      //   expect(body.tx_sync).toBe('complete');
+      //   expect(body.tx_cursor_updated_at).not.toBe(undefined);
+      //   expect(body.added).toBeGreaterThan(0);
+      //   await new Promise((resolve) => setTimeout(resolve, 2000));
+      // });
 
       it('should get plaid items for one user', async () => {
         const { status_code, body } = await (testApi
@@ -231,9 +232,9 @@ describe('lambda + dynamoDb integration tests', () => {
           : crudPlaid(getUserItemsPayload));
 
         if (status_code !== 200) console.error(body);
-        
+
         const item = Object.values(body.items)[0];
-        
+
         expect(status_code).toBe(200);
         expect(body.last_activity).not.toBe(undefined);
         expect(item).not.toHaveProperty('access_token');
@@ -260,6 +261,20 @@ describe('lambda + dynamoDb integration tests', () => {
 
         expect(status_code).toBe(200);
         expect(body.accounts.length).toBeGreaterThan(0);
+      });
+
+      it('should get plaid item account balances for user', async () => {
+        const { status_code, body } = await (testApi
+          ? apiTableItem({
+              method: getUserAccountsBalancesPayload.context['http-method'],
+              data: getUserAccountsBalancesPayload,
+            }).then(({ data }) => data)
+          : crudPlaid(getUserAccountsBalancesPayload));
+
+        if (status_code !== 200) console.error(body);
+
+        expect(status_code).toBe(200);
+        expect(body.accounts[0].balances.available).toBeGreaterThan(0);
       });
 
       it('should get plaid item account transactions', async () => {

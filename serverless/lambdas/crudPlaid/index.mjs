@@ -27,6 +27,10 @@ export const handler = async (event) => {
             response = await app.handleGetUserAccounts();
 
             break;
+          case config.path.getAccountBalances:
+            response = await app.handleGetAccountBalances();
+
+            break;
           case config.path.getAccountTransactions:
             response = await app.handleGetAccountTransactions();
 

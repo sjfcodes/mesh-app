@@ -18,7 +18,10 @@ class App {
     const tokenPayload = token.split('.')[1];
     const decrypted = JSON.parse(Buffer.from(tokenPayload, 'base64'));
 
-    this.user = await this.ddbClient.readUserByTokenEmail(decrypted.email, this.requestPath);
+    this.user = await this.ddbClient.readUserByTokenEmail(
+      decrypted.email,
+      this.requestPath
+    );
   }
 
   async getLinkToken() {
@@ -102,6 +105,20 @@ class App {
     return { accounts };
   }
 
+  async handleGetAccountBalances() {
+    const { item_id: itemId } = this.queryString;
+    const { accessToken } = await this.ddbClient.readItemByItemId(
+      this.user.email,
+      itemId
+    );
+
+    const { accounts } = await this.plaidClient.getItemAccountBalances(
+      accessToken
+    );
+
+    return { accounts };
+  }
+
   async handleGetAccountTransactions() {
     const { account_id, item_id } = this.queryString;
     const { transactions } = await this.ddbClient.readAccountTransactions(
@@ -155,7 +172,6 @@ class App {
 
   async handleItemSyncTransactions() {
     const { item_id: itemId } = this.payload;
-    console.log('handleItemSyncTransactions()');
     // get current txCursor value from db,
     const { accessToken, txCursor } = await this.ddbClient.readItemByItemId(
       this.user.email,

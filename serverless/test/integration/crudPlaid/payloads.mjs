@@ -84,6 +84,20 @@ export const getUserAccountsPayload = {
   params,
 };
 
+export const getUserAccountsBalancesPayload = {
+  body: {},
+  context: {
+    ['http-method']: 'GET',
+    ['resource-path']: path.getAccountBalances,
+  },
+  params: {
+    ...params,
+    querystring: {
+      item_id: mockPlaid.tokenExchange.item_id,
+    },
+  },
+};
+
 export const getInstitutionByIdPayload = {
   body: {},
   context: {

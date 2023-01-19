@@ -46,7 +46,7 @@ class PlaidClient {
       language: 'en',
       // webhook: "https://webhook.example.com",
       country_codes: ['US'],
-      redirect_uri: config.redirectUri
+      redirect_uri: config.redirectUri,
     };
 
     const { data } = await this.client.linkTokenCreate(request);
@@ -61,6 +61,16 @@ class PlaidClient {
 
     // { access_token, user_id, request_id }
     return data;
+  }
+
+  async getItemAccountBalances(accessToken) {
+    if (!accessToken) throw new Error('missing required arguments!');
+
+    const request = { access_token: accessToken };
+    const response = await this.client.accountsBalanceGet(request);
+    const accounts = response.data.accounts;
+
+    return { accounts };
   }
 
   async getItemInstitution(instId) {
