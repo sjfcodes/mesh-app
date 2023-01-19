@@ -116,7 +116,14 @@ class App {
       accessToken
     );
 
-    return { accounts };
+    const formatted = accounts.reduce((prev, curr) => {
+      return {
+        ...prev,
+        [curr.account_id]: curr,
+      };
+    }, {});
+
+    return { account: formatted };
   }
 
   async handleGetAccountTransactions() {

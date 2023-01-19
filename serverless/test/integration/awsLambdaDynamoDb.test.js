@@ -273,8 +273,10 @@ describe('lambda + dynamoDb integration tests', () => {
 
         if (status_code !== 200) console.error(body);
 
+        const account = Object.values(body.account)[0];
+
         expect(status_code).toBe(200);
-        expect(body.accounts[0].balances.available).toBeGreaterThan(0);
+        expect(account.balances.available).toBeGreaterThan(0);
       });
 
       it('should get plaid item account transactions', async () => {
