@@ -8,6 +8,7 @@ const config = {
   awsRegion,
   dynamoDbBatchRequestLength: 25,
   appName: 'Mesh App',
+  redirectUri: 'https://www.mesh-app.net',
   jwks: `https://cognito-idp.${awsRegion}.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
   TableName: {
     user: process.env.USER_TABLE_NAME /* prod or test table */,

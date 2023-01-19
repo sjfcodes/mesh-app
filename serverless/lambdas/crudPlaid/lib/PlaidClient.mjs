@@ -46,6 +46,7 @@ class PlaidClient {
       language: 'en',
       // webhook: "https://webhook.example.com",
       country_codes: ['US'],
+      redirect_uri: config.redirectUri
     };
 
     const { data } = await this.client.linkTokenCreate(request);
