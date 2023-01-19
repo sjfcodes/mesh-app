@@ -29,26 +29,29 @@ div.ma-transactions {
         & td {
           &.ma-table-date-row {
             border-top: 1px solid $theme-color-1-0;
-            color: $theme-color-2-0
+            color: $theme-color-2-0;
           }
           & p {
             font-size: inherit;
             &.ma-table-category {
               padding-left: 1.5rem;
-              font-size: .6rem;
+              font-size: 0.6rem;
               // color: $theme-color-2-0
             }
             &.ma-table-name {
               padding-left: 3rem;
             }
+            &.ma-table-amount {
+              border: 1px solid orange;
+              &.deposit {
+                color: greenyellow;
+              }
+              &.withdrawal {
+                color: red;
+              }
+            }
           }
           vertical-align: text-top;
-          &.deposit {
-            color: greenyellow;
-          }
-          &.withdrawal {
-            color: red;
-          }
         }
       }
     }

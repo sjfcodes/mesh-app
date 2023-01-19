@@ -61,16 +61,18 @@ const TransactionsTable = ({ transactions, fullHeight = false }: Props) => {
             }
             toRender.push(
               <tr key={tx.transaction_id}>
-                <td className="ma-table-name">
+                <td>
                   <p className="ma-table-category">{tx.category.join(', ')}</p>
                   <p className="ma-table-name">{tx.name}</p>
                 </td>
-                <td
-                  className={`ma-table-amount ${
-                    amount > 0 ? 'deposit' : 'withdrawal'
-                  }`}
-                >
-                  {amount !== 0 && currencyFilter(amount)}
+                <td>
+                  <p
+                    className={`ma-table-amount ${
+                      amount > 0 ? 'deposit' : 'withdrawal'
+                    }`}
+                  >
+                    {amount !== 0 && currencyFilter(amount)}
+                  </p>
                 </td>
               </tr>
             );
