@@ -41,7 +41,6 @@ const components = {
   SignIn: {
     Header() {
       const { tokens } = useTheme();
-      console.log(tokens);
       return (
         <Heading
           padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}

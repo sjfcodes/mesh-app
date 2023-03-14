@@ -72,10 +72,6 @@ const ItemCard = ({ item }: Props) => {
               <h3>routing #</h3>
               <p>{institution.routing_numbers}</p>
             </li>
-            <li>
-              <h3>key</h3>
-              <p>value</p>
-            </li>
           </ul>
           <ul>
             <li>
