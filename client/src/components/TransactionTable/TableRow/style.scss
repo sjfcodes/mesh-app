@@ -1,0 +1,30 @@
+@import '../../../variables.scss';
+
+div.ma-transactions-table-row {
+  // border: 1px solid red;
+  display: flex;
+  justify-content: space-between;
+  &:nth-child(even) {
+    background-color: $theme-color-0-1;
+  }
+  & div {
+    & .ma-table-category {
+      padding-left: 1.5rem;
+      font-size: 0.6rem;
+      // color: $theme-color-2-0
+    }
+    & .ma-table-name {
+      // border: 1px solid green;
+      padding-left: 3rem;
+    }
+    & .ma-table-amount {
+      // border: 1px solid orange;
+      &.deposit {
+        color: greenyellow;
+      }
+      &.withdrawal {
+        color: red;
+      }
+    }
+  }
+}

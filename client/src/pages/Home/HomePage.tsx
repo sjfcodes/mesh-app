@@ -14,14 +14,14 @@ import ItemCard from '../../components/ItemCard/ItemCard';
 
 const UserPage = () => {
   const { user } = useUser();
-
-  const userId = user.sub;
-
   const { allTransactions } = useTransactions();
   const { assets } = useAssets();
   const { sortedItems, allAccounts } = useItems();
 
+  const userId = user.sub;
+
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
+
   return (
     <main>
       {sortedItems.length === 0 && <ErrorMessage />}

@@ -1,59 +1,18 @@
 @import '../../variables.scss';
 
-div.ma-transactions {
+div.ma-transactions-table {
   font-size: 0.75rem;
-  & table.ma-transactions-table {
-    // border: 1px solid red;
-    width: 100%;
-    display: block;
-    & thead > tr {
-      border: 1px solid red;
-      & th.ma-table-amount {
-        // border: 1px solid green;
-        width: 13%;
-      }
-    }
-    & tbody {
-      // border: 1px solid yellow;
-      display: block;
-      border-collapse: collapse;
-      height: 40vh;
-      overflow-y: scroll;
-      &.full-height {
-        height: calc($body-height - 25px);
-      }
-      & tr:nth-child(even) {
-        background-color: $theme-color-0-1;
-      }
-      & tr {
-        & td {
-          &.ma-table-date-row {
-            border-top: 1px solid $theme-color-1-0;
-            color: $theme-color-2-0;
-          }
-          & p {
-            font-size: inherit;
-            &.ma-table-category {
-              padding-left: 1.5rem;
-              font-size: 0.6rem;
-              // color: $theme-color-2-0
-            }
-            &.ma-table-name {
-              padding-left: 3rem;
-            }
-            &.ma-table-amount {
-              border: 1px solid orange;
-              &.deposit {
-                color: greenyellow;
-              }
-              &.withdrawal {
-                color: red;
-              }
-            }
-          }
-          vertical-align: text-top;
-        }
-      }
+  width: 100%;
+  overflow-y: scroll;
+  height: calc($body-height - 25px);
+  vertical-align: text-top;
+  font-size: inherit;
+
+  & div.ma-table-row-date {
+    // border: 1px solid yellow;
+    & p {
+      border-top: 1px solid $theme-color-1-0;
+      color: $theme-color-2-0;
     }
   }
 }

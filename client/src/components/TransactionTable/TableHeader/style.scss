@@ -1,0 +1,15 @@
+@import '../../../variables.scss';
+
+div.ma-transactions-table-header {
+  // border: 1px solid red;
+  display: flex;
+  justify-content: space-between;
+  // & div {
+  //   & .ma-table-name {
+  //     // border: 1px solid green;
+  //   }
+  //   & .ma-table-amount {
+  //     // border: 1px solid green;
+  //   }
+  // }
+}

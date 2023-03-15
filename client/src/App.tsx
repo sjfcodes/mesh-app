@@ -12,7 +12,6 @@ import { TransactionsProvider } from './services/Plaid/Transactions/Provider';
 import { AssetsProvider } from './services/Assets/Provider';
 import { ErrorsProvider } from './services/Errors/Provider';
 import { ItemsProvider } from './services/Plaid/Items/Provider';
-import HomePage from './pages/Home/HomePage';
 import CustomAuthenticator from './components/CustomAuthenticator';
 import Header from './components/Header/Header';
 import NavBar from './components/FooterNav/FooterNav';
@@ -43,7 +42,7 @@ function App() {
                   <div className="toast__body"></div>
                   <Header />
                   <Routes>
-                    <Route path="/" element={<HomePage />} />
+                    <Route path="/" element={<PlaidItemsPage />} />
                     <Route path="/accounts" element={<PlaidItemsPage />} />
                     <Route path="/timeline" element={<TransactionTimeline />} />
                     <Route path="/spending" element={<SpendingInsights />} />
