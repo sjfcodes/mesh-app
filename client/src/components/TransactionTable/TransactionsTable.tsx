@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
-
 import { TransactionType } from '../../types';
-import { currencyFilter } from '../../util';
+import TableHeader from './TableHeader/TableHeader';
+import TableRow from './TableRow/TableRow';
 
 import './style.scss';
 
-interface Props {
+type Props = {
   transactions: TransactionType[];
   fullHeight?: boolean;
 }
@@ -30,57 +30,34 @@ const TransactionsTable = ({ transactions, fullHeight = false }: Props) => {
   }
 
   return (
-    <div className="ma-transactions">
-      <table className="ma-transactions-table">
-        <thead className="ma-transactions-table-header">
-          <tr>
-            <th className="ma-table-name">Description</th>
-            <th className="ma-table-amount">Amount</th>
-          </tr>
-        </thead>
+    <div className="ma-transactions-table">
+      <TableHeader />
+      {transactions.map((txData) => {
+        const { transaction: tx } = txData;
+        if (!tx) return null;
+        const toRender = [];
+        const amount = tx.amount * -1;
+        const toDisplay = formatDate(tx.date);
 
-        <tbody
-          className={`ma-transactions-table-body ${
-            fullHeight ? 'full-height' : ''
-          }`}
-        >
-          {transactions.map((txData) => {
-            const { transaction: tx } = txData;
-            if (!tx) return null;
-            const toRender = [];
-            const amount = tx.amount * -1;
-            const toDisplay = formatDate(tx.date);
-            if (!dateIsCurrent(toDisplay)) {
-              toRender.push(
-                <tr key={`tr-date-${toDisplay}`}>
-                  <td className="ma-table-date-row" colSpan={3}>
-                    {getDateDisplay(tx.date)}
-                  </td>
-                </tr>
-              );
-            }
-            toRender.push(
-              <tr key={tx.transaction_id}>
-                <td>
-                  <p className="ma-table-category">{tx.category.join(', ')}</p>
-                  <p className="ma-table-name">{tx.name}</p>
-                </td>
-                <td>
-                  <p
-                    className={`ma-table-amount ${
-                      amount > 0 ? 'deposit' : 'withdrawal'
-                    }`}
-                  >
-                    {amount !== 0 && currencyFilter(amount)}
-                  </p>
-                </td>
-              </tr>
-            );
+        if (!dateIsCurrent(toDisplay)) {
+          toRender.push(
+            <div key={`tr-date-${toDisplay}`} className="ma-table-row-date">
+              <p>{getDateDisplay(tx.date)}</p>
+            </div>
+          );
+        }
 
-            return toRender;
-          })}
-        </tbody>
-      </table>
+        toRender.push(
+          <TableRow
+            key={tx.transaction_id}
+            category={tx.category}
+            name={tx.name}
+            amount={amount}
+          />
+        );
+
+        return toRender;
+      })}
     </div>
   );
 };
