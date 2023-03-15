@@ -106,14 +106,21 @@ class App {
   }
 
   async handleGetAccountBalances() {
-    const { item_id: itemId } = this.queryString;
+    const { item_id: itemId, account_id: accountId } = this.queryString;
+    const accountIds = [];
+
+    if (accountId) {
+      accountIds.push(accountId);
+    }
+
     const { accessToken } = await this.ddbClient.readItemByItemId(
       this.user.email,
       itemId
     );
 
     const { accounts } = await this.plaidClient.getItemAccountBalances(
-      accessToken
+      accessToken,
+      accountIds
     );
 
     const formatted = accounts.reduce((prev, curr) => {
@@ -122,6 +129,8 @@ class App {
         [curr.account_id]: curr,
       };
     }, {});
+
+    console.log(JSON.stringify(formatted));
 
     return { account: formatted };
   }

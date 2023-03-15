@@ -63,10 +63,12 @@ class PlaidClient {
     return data;
   }
 
-  async getItemAccountBalances(accessToken) {
+  async getItemAccountBalances(accessToken, accountIds) {
     if (!accessToken) throw new Error('missing required arguments!');
 
-    const request = { access_token: accessToken };
+    const request = { access_token: accessToken, options: {} };
+    if (accountIds.length) request.options.account_ids = accountIds;
+
     const response = await this.client.accountsBalanceGet(request);
     const accounts = response.data.accounts;
 
