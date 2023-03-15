@@ -8,6 +8,7 @@ import TransactionsTable from '../TransactionTable/TransactionsTable';
 import useTransactions from '../../hooks/usePlaidTransactions';
 
 import './style.scss';
+import useInstitutions from '../../hooks/usePlaidInstitutions';
 
 interface Props {
   account: AccountType;
@@ -15,6 +16,7 @@ interface Props {
 
 export default function AccountCard({ account }: Props) {
   const [transactionsShown, setTransactionsShown] = useState(false);
+  const { getItemAccountBalances } = useInstitutions();
   const { accountTransactions, getItemAccountTransactions } = useTransactions();
   const { id: accountId, item_id: itemId } = account;
 
@@ -25,6 +27,13 @@ export default function AccountCard({ account }: Props) {
   useEffect(() => {
     getItemAccountTransactions(itemId, accountId);
   }, [getItemAccountTransactions, accountTransactions, itemId, accountId]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getItemAccountBalances(itemId, accountId);
+      console.log({ response });
+    })();
+  }, [getItemAccountBalances, itemId, accountId]);
 
   return (
     <div className="ma-account-card">

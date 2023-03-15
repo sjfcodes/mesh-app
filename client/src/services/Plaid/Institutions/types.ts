@@ -14,5 +14,6 @@ export type InstitutionsAction = {
 
 export interface InstitutionsContextShape extends InstitutionsState {
   getItemInstitution: (id: string) => void;
+  getItemAccountBalances: (itemId: string, accountId: string) => void;
   formatLogoSrc: (src: string | null | undefined) => string;
 }
