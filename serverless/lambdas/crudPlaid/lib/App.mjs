@@ -213,6 +213,19 @@ class App {
       tx_cursor_updated_at,
     };
   }
+  async handleUpdateItemLogin() {
+    const { accessToken } = await this.ddbClient.readItemByItemId(
+      this.user.email,
+      this.payload.item_id
+    );
+
+    const response = await this.plaidClient.updateItemLogin(
+      this.user.userId,
+      accessToken
+    );
+
+    return response;
+  }
 }
 
 export default App;

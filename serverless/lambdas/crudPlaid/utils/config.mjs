@@ -23,6 +23,7 @@ const config = {
     getAccountBalances: '/item/account/balance',
     getAccountTransactions: '/item/account/transaction',
     itemGetInstitution: '/item/institution',
+    itemUpdateLogin: '/item/update_login',
     itemTxSync: '/item/sync',
     itemTxSyncTest: '/item/sync/test',
   },

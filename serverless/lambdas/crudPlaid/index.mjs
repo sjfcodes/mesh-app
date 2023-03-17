@@ -52,6 +52,10 @@ export const handler = async (event) => {
             response = { tx_sync: 'complete', ...testSummary };
 
             break;
+          case config.path.itemUpdateLogin:
+            response = await app.handleUpdateItemLogin();
+
+            break;
           default:
             throw Error(`requestPath:"${requestPath}" not found!`);
         }
@@ -92,7 +96,10 @@ export const handler = async (event) => {
     }
   } catch (error) {
     console.error(error);
-    response = error.message;
+    response = error;
+    if (error?.response?.data) {
+      response = error.response.data;
+    }
     statusCode = 400;
   }
 
