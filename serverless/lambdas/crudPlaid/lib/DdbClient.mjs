@@ -56,7 +56,7 @@ class DdbClient {
     if (requestPath !== config.path.getItems) {
       let shouldWriteUserLastActivity = false;
       const lastActivity = new Date(
-        Item[config.itemKeys.lastActivity].S
+        Item[config.itemKeys.lastActivity]?.S
       ).getTime();
 
       if (!isNaN(lastActivity)) {
@@ -168,27 +168,28 @@ class DdbClient {
         },
       })
     );
+
     return { transactions: response.Items };
   }
 
-  async readAccountTransaction(itemId, accountId, transactionId) {
-    if (!itemId) throw new Error('missing itemId!');
-    if (!accountId) throw new Error('missing accountId!');
-    if (!transaction) throw new Error('missing transaction!');
+  // async readAccountTransaction(itemId, accountId, transactionId) {
+  //   if (!itemId) throw new Error('missing itemId!');
+  //   if (!accountId) throw new Error('missing accountId!');
+  //   if (!transaction) throw new Error('missing transaction!');
 
-    const formatted = itemId + '::' + accountId;
-    const response = await this.client.send(
-      new GetItemCommand({
-        TableName: config.TableName.transaction,
-        Key: {
-          [PARTITION_KEY]: { S: formatted },
-          [SORT_KEY]: { S: transactionId },
-        },
-      })
-    );
+  //   const formatted = itemId + '::' + accountId;
+  //   const response = await this.client.send(
+  //     new GetItemCommand({
+  //       TableName: config.TableName.transaction,
+  //       Key: {
+  //         [PARTITION_KEY]: { S: formatted },
+  //         [SORT_KEY]: { S: transactionId },
+  //       },
+  //     })
+  //   );
 
-    return { transaction: {} };
-  }
+  //   return { transaction: {} };
+  // }
 
   async writeItemTxCursor(email, itemId, newTxCursor) {
     if (!email || !itemId || newTxCursor === undefined)
@@ -263,12 +264,7 @@ class DdbClient {
   }
 
   async writeTxsForItem({ itemId, added, modified, removed }) {
-    if (
-      !itemId ||
-      added === undefined ||
-      modified === undefined ||
-      removed === undefined
-    )
+    if (!itemId || !added || !modified || !removed)
       throw new Error('missing required arguments!');
     console.log(
       `writeTxsForItem(${JSON.stringify({
@@ -322,8 +318,10 @@ class DdbClient {
       allRequests,
       config.dynamoDbBatchRequestLength
     );
+
     const responses = [];
-    for (let i = 0; i < requestQueue.length; i++) {
+    const loopCount = requestQueue.length;
+    for (let i = 0; i < loopCount; i++) {
       const request = requestQueue.pop();
       const response = await batchWriteToTxTable(request);
       if (requestQueue.length) {

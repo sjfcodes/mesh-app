@@ -130,7 +130,6 @@ class App {
       };
     }, {});
 
-    console.log(JSON.stringify(formatted));
 
     return { account: formatted };
   }
