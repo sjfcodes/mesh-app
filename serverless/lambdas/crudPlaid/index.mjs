@@ -95,11 +95,11 @@ export const handler = async (event) => {
         );
     }
   } catch (error) {
-    console.error(error);
     response = error;
     if (error?.response?.data) {
       response = error.response.data;
     }
+    console.error(response);
     statusCode = 400;
   }
 
