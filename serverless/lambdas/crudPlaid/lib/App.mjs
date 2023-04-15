@@ -130,7 +130,6 @@ class App {
       };
     }, {});
 
-
     return { account: formatted };
   }
 
