@@ -61,10 +61,10 @@ const apiTableItem = axios.create({
 let buildTableAndItem = false;
 let destroyTableAndItem = false;
 let testPlaidItemActions = false;
-// const STAGE = 'CREATE';
+const STAGE = 'CREATE';
 // const STAGE = 'PERSIST';
 // const STAGE = 'DESTROY';
-const STAGE = 'LIFECYCLE';
+// const STAGE = 'LIFECYCLE';
 
 switch (STAGE) {
   case 'LIFECYCLE':
@@ -92,6 +92,11 @@ switch (STAGE) {
 
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
 
+const handleError = (err) => {
+  let message = err.data || err.response.data || err;
+  console.error(message);
+};
+
 describe('lambda + dynamoDb integration tests', () => {
   if (buildTableAndItem) {
     describe('create tables', () => {
@@ -102,7 +107,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: createUserTablePayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : createUserTable(createUserTablePayload));
 
         if (status_code !== 200) console.error(body);
@@ -118,7 +123,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: createTransactionTablePayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : createTransactionTable(createTransactionTablePayload));
         if (status_code !== 200) console.error(body);
         await new Promise((resolve) => setTimeout(resolve, 8000));
@@ -136,7 +141,7 @@ describe('lambda + dynamoDb integration tests', () => {
             data: getUserTablePayload,
           })
             .then(({ data }) => data)
-            .catch((err) => console.error(err.data))
+            .catch(handleError)
         : getUserTable(getUserTablePayload));
 
       if (status_code !== 200) console.error(body);
@@ -151,7 +156,7 @@ describe('lambda + dynamoDb integration tests', () => {
             data: getTransactionTablePayload,
           })
             .then(({ data }) => data)
-            .catch((err) => console.error(err.data))
+            .catch(handleError)
         : getTransactionTable(getTransactionTablePayload));
 
       if (status_code !== 200) console.error(body);
@@ -169,7 +174,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: createTableItemPayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : createTableItem(createTableItemPayload));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
@@ -183,7 +188,7 @@ describe('lambda + dynamoDb integration tests', () => {
             data: getTableItemPayload,
           })
             .then(({ data }) => data)
-            .catch((err) => console.error(err.data))
+            .catch(handleError)
         : getTableItem(getTableItemPayload));
 
       expect(status_code).toBe(200);
@@ -198,7 +203,7 @@ describe('lambda + dynamoDb integration tests', () => {
             data: updateTableItemPayload,
           })
             .then(({ data }) => data)
-            .catch((err) => console.error(err.data))
+            .catch(handleError)
         : updateTableItemItem(updateTableItemPayload));
 
       if (status_code !== 200) console.error(body);
@@ -219,7 +224,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: payload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : crudPlaid(payload));
 
         if (status_code !== 200) console.error(body);
@@ -237,7 +242,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: payload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err))
+              .catch(handleError)
           : crudPlaid(payload));
 
         if (status_code !== 200) console.error(body);
@@ -256,7 +261,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: getUserItemsPayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : crudPlaid(getUserItemsPayload));
 
         if (status_code !== 200) console.error(body);
@@ -284,7 +289,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: getUserAccountsPayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : crudPlaid(getUserAccountsPayload));
 
         if (status_code !== 200) console.error(body);
@@ -300,7 +305,7 @@ describe('lambda + dynamoDb integration tests', () => {
       //         data: getUserAccountsBalancesPayload,
       //       })
       //         .then(({ data }) => data)
-      //         .catch((err) => console.error(err.data))
+      //         .catch(handleError)
       //     : crudPlaid(getUserAccountsBalancesPayload));
 
       //   if (status_code !== 200) console.error(body);
@@ -318,7 +323,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: getTransactionsForAccountPayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : crudPlaid(getTransactionsForAccountPayload));
 
         if (status_code !== 200) console.error(body);
@@ -348,7 +353,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: getInstitutionByIdPayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : crudPlaid(getInstitutionByIdPayload));
 
         if (status_code !== 200) console.error(body);
@@ -366,7 +371,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: deleteTableItemPayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : deleteTableItem(deleteTableItemPayload));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
@@ -383,7 +388,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: deleteUserTablePayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : deleteUserTable(deleteUserTablePayload));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
@@ -395,7 +400,7 @@ describe('lambda + dynamoDb integration tests', () => {
               data: deleteTransactionTablePayload,
             })
               .then(({ data }) => data)
-              .catch((err) => console.error(err.data))
+              .catch(handleError)
           : deleteTransactionTable(deleteTransactionTablePayload));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
