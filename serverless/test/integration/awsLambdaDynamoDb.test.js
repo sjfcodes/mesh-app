@@ -104,7 +104,7 @@ describe('lambda + dynamoDb integration tests', () => {
         const { status_code, body } = await (testApi
           ? apiTable({
               method: createUserTablePayload.context['http-method'],
-              data: createUserTablePayload,
+              data: createUserTablePayload.body,
             })
               .then(({ data }) => data)
               .catch(handleError)
@@ -120,7 +120,7 @@ describe('lambda + dynamoDb integration tests', () => {
         const { status_code, body } = await (testApi
           ? apiTable({
               method: createTransactionTablePayload.context['http-method'],
-              data: createTransactionTablePayload,
+              data: createTransactionTablePayload.body,
             })
               .then(({ data }) => data)
               .catch(handleError)
@@ -138,7 +138,7 @@ describe('lambda + dynamoDb integration tests', () => {
       const { status_code, body } = await (testApi
         ? apiTable({
             method: getUserTablePayload.context['http-method'],
-            data: getUserTablePayload,
+            data: getUserTablePayload.body,
           })
             .then(({ data }) => data)
             .catch(handleError)
@@ -153,7 +153,7 @@ describe('lambda + dynamoDb integration tests', () => {
       const { status_code, body } = await (testApi
         ? apiTable({
             method: getTransactionTablePayload.context['http-method'],
-            data: getTransactionTablePayload,
+            data: getTransactionTablePayload.body,
           })
             .then(({ data }) => data)
             .catch(handleError)
@@ -171,7 +171,7 @@ describe('lambda + dynamoDb integration tests', () => {
         const { status_code, body } = await (testApi
           ? apiTableItem({
               method: createTableItemPayload.context['http-method'],
-              data: createTableItemPayload,
+              data: createTableItemPayload.body,
             })
               .then(({ data }) => data)
               .catch(handleError)
@@ -185,7 +185,7 @@ describe('lambda + dynamoDb integration tests', () => {
       const { status_code, body } = await (testApi
         ? apiTableItem({
             method: getTableItemPayload.context['http-method'],
-            data: getTableItemPayload,
+            data: getTableItemPayload.body,
           })
             .then(({ data }) => data)
             .catch(handleError)
@@ -200,7 +200,7 @@ describe('lambda + dynamoDb integration tests', () => {
       const { status_code, body } = await (testApi
         ? apiTableItem({
             method: updateTableItemPayload.context['http-method'],
-            data: updateTableItemPayload,
+            data: updateTableItemPayload.body,
           })
             .then(({ data }) => data)
             .catch(handleError)
