@@ -106,7 +106,7 @@ export const createTransactionTableRequest = {
   },
   context: { 
     ['http-method']: 'PUT',
-    ['resource-path']: path.something
+    ['resource-path']: path.dynamoDbTable
   },
 };
 
@@ -119,7 +119,7 @@ export const getTransactionTableRequest = {
   },
   context: { 
     ['http-method']: 'GET',
-    ['resource-path']: path.something
+    ['resource-path']: path.dynamoDbTable
   },
 };
 
@@ -132,6 +132,6 @@ export const deleteTransactionTableRequest = {
   },
   context: { 
     ['http-method']: 'DELETE',
-    ['resource-path']: path.something
+    ['resource-path']: path.dynamoDbTable
   },
 };

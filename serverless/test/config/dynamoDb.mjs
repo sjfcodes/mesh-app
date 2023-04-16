@@ -4,6 +4,11 @@ import mockData from '../integration/crudPlaid/mockData/plaid';
 dotenv.config();
 
 const config = {
+  params: {
+    header: {
+      Authorization: process.env.AUTH_TOKEN
+    }
+  },
   TableName: {
     user: process.env.USER_TABLE_NAME /* prod or test table */,
     transaction: process.env.TRANSACTION_TABLE_NAME /* prod or test table */,
