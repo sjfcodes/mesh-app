@@ -19,8 +19,7 @@ const config = {
     update: {
       verified: { BOOL: true },
     },
-  },
-  params: { header: { Authorization: process.env.AUTH_TOKEN } },
+  }
 };
 
 export default config;

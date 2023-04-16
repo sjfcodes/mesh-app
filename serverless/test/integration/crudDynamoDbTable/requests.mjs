@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import config from '../../config/dynamoDb.mjs';
 
-const { TableName, params } = config;
+const { TableName } = config;
 
 ////////////////
 // USER TABLE //
@@ -36,7 +36,6 @@ export const createUserTableRequest = {
     },
   },
   context: { ['http-method']: 'PUT' },
-  params,
 };
 
 export const getUserTableRequest = {
@@ -47,7 +46,6 @@ export const getUserTableRequest = {
     },
   },
   context: { ['http-method']: 'GET' },
-  params,
 };
 
 export const deleteUserTableRequest = {
@@ -58,7 +56,6 @@ export const deleteUserTableRequest = {
     },
   },
   context: { ['http-method']: 'DELETE' },
-  params,
 };
 
 ///////////////////////
@@ -100,7 +97,6 @@ export const createTransactionTableRequest = {
     },
   },
   context: { ['http-method']: 'PUT' },
-  params,
 };
 
 export const getTransactionTableRequest = {
@@ -111,7 +107,6 @@ export const getTransactionTableRequest = {
     },
   },
   context: { ['http-method']: 'GET' },
-  params,
 };
 
 export const deleteTransactionTableRequest = {
@@ -122,5 +117,4 @@ export const deleteTransactionTableRequest = {
     },
   },
   context: { ['http-method']: 'DELETE' },
-  params,
 };
