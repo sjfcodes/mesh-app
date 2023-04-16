@@ -325,8 +325,8 @@ class DdbClient {
       const request = requestQueue.pop();
       const response = await batchWriteToTxTable(request);
       if (requestQueue.length) {
-        console.log('pausing for 3000 ms');
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        console.log('pausing for 1000 ms');
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
       responses.push(response);
     }
