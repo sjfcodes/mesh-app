@@ -1,14 +1,18 @@
 import dynamoDbConfig from '../../config/dynamoDb.mjs';
+import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
 
-const { TableName, Item, params } = dynamoDbConfig;
+const { path } = lambdaConfig;
+const { TableName, Item } = dynamoDbConfig;
 
 export const createTableItemRequest = {
   body: {
     path: null,
     payload: { TableName: TableName.user, Item: Item.original },
   },
-  context: { ['http-method']: 'PUT' },
-  params,
+  context: {
+    ['http-method']: 'PUT',
+    ['resource-path']: path.something,
+  },
 };
 
 export const getTableItemRequest = {
@@ -21,8 +25,10 @@ export const getTableItemRequest = {
       },
     },
   },
-  context: { ['http-method']: 'GET' },
-  params,
+  context: {
+    ['http-method']: 'GET',
+    ['resource-path']: path.userItem,
+  },
 };
 
 export const updateTableItemRequest = {
@@ -38,8 +44,10 @@ export const updateTableItemRequest = {
       ReturnValues: 'ALL_NEW', //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
     },
   },
-  context: { ['http-method']: 'POST' },
-  params,
+  context: {
+    ['http-method']: 'POST',
+    ['resource-path']: path.updateTableItemRequest,
+  },
 };
 
 export const deleteTableItemRequest = {
@@ -50,8 +58,10 @@ export const deleteTableItemRequest = {
       Key: { email: { S: Item.original.email.S } },
     },
   },
-  context: { ['http-method']: 'DELETE' },
-  params,
+  context: {
+    ['http-method']: 'DELETE',
+    ['resource-path']: path.something,
+  },
 };
 
 export const createPlaidItemPayload = {
@@ -62,6 +72,8 @@ export const createPlaidItemPayload = {
       Item: Item.original,
     },
   },
-  context: { ['http-method']: 'PUT' },
-  params,
+  context: {
+    ['http-method']: 'PUT',
+    ['resource-path']: path.something,
+  },
 };

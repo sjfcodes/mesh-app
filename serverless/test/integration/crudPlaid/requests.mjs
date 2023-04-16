@@ -46,7 +46,7 @@ export const mockSyncTransactionsForItemRequest = {
   },
   context: {
     ['http-method']: 'PUT',
-    ['resource-path']: path.itemTxSyncTest,
+    ['resource-path']: path.itemTransactionSyncTest,
   },
   params,
 };
@@ -55,7 +55,7 @@ export const getTransactionsForAccountRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.getAccountTransactions,
+    ['resource-path']: path.itemAccountTransaction,
   },
   params: {
     ...params,
@@ -70,7 +70,7 @@ export const getUserItemsRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.getItems,
+    ['resource-path']: path.userItem,
   },
   params,
 };
@@ -79,7 +79,7 @@ export const getUserAccountsRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.itemGetAccounts,
+    ['resource-path']: path.itemAccount,
   },
   params,
 };
@@ -88,7 +88,7 @@ export const getUserAccountsBalancesRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.getAccountBalances,
+    ['resource-path']: path.itemAccountBalance,
   },
   params: {
     ...params,
@@ -102,7 +102,7 @@ export const getInstitutionByIdRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.itemGetInstitution,
+    ['resource-path']: path.itemInstitution,
   },
   params: {
     ...params,

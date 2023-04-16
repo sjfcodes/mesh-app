@@ -1,9 +1,8 @@
-import * as dotenv from 'dotenv';
+import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
+import dynamoDbConfig from '../../config/dynamoDb.mjs';
 
-dotenv.config();
-import config from '../../config/dynamoDb.mjs';
-
-const { TableName } = config;
+const { path } = lambdaConfig
+const { TableName } = dynamoDbConfig;
 
 ////////////////
 // USER TABLE //
@@ -35,7 +34,10 @@ export const createUserTableRequest = {
       },
     },
   },
-  context: { ['http-method']: 'PUT' },
+  context: { 
+    ['http-method']: 'PUT',
+    ['resource-path']: path.dynamoDbTable
+  },
 };
 
 export const getUserTableRequest = {
@@ -45,7 +47,10 @@ export const getUserTableRequest = {
       TableName: TableName.user,
     },
   },
-  context: { ['http-method']: 'GET' },
+  context: { 
+    ['http-method']: 'GET',
+    ['resource-path']: path.dynamoDbTable
+  },
 };
 
 export const deleteUserTableRequest = {
@@ -55,7 +60,10 @@ export const deleteUserTableRequest = {
       TableName: TableName.user,
     },
   },
-  context: { ['http-method']: 'DELETE' },
+  context: { 
+    ['http-method']: 'DELETE',
+    ['resource-path']: path.dynamoDbTable
+  },
 };
 
 ///////////////////////
@@ -96,7 +104,10 @@ export const createTransactionTableRequest = {
       },
     },
   },
-  context: { ['http-method']: 'PUT' },
+  context: { 
+    ['http-method']: 'PUT',
+    ['resource-path']: path.something
+  },
 };
 
 export const getTransactionTableRequest = {
@@ -106,7 +117,10 @@ export const getTransactionTableRequest = {
       TableName: TableName.transaction,
     },
   },
-  context: { ['http-method']: 'GET' },
+  context: { 
+    ['http-method']: 'GET',
+    ['resource-path']: path.something
+  },
 };
 
 export const deleteTransactionTableRequest = {
@@ -116,5 +130,8 @@ export const deleteTransactionTableRequest = {
       TableName: TableName.transaction,
     },
   },
-  context: { ['http-method']: 'DELETE' },
+  context: { 
+    ['http-method']: 'DELETE',
+    ['resource-path']: path.something
+  },
 };
