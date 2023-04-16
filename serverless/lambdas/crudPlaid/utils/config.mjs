@@ -16,6 +16,7 @@ const config = {
   },
   path: {
     dynamoDbTable: '/dynamodbtable',
+    dynamoDbTableItem: '/dynamodbtableitem',
     linkTokenCreate: '/link/token-create',
     itemTokenExchange: '/item/token-exchange',
     itemTokenExchangeTest: '/item/token-exchange/test',
@@ -26,7 +27,7 @@ const config = {
     itemInstitution: '/item/institution',
     itemUpdateLogin: '/item/update_login',
     itemTransactionSync: '/item/sync',
-    itemTransactionSyncTest: '/item/sync/test',
+    testItemTransactionSync: '/test/item/sync',
   },
   itemKeys: {
     lastActivity: 'last_activity',

@@ -47,7 +47,7 @@ export const handler = async (event) => {
             response = { tx_sync: 'complete', ...summary };
 
             break;
-          case config.path.itemTransactionSyncTest:
+          case config.path.testItemTransactionSync:
             const testSummary = await app.handleUserItemSyncTransactionsTest();
             response = { tx_sync: 'complete', ...testSummary };
 

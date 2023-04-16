@@ -46,9 +46,14 @@ export const mockSyncTransactionsForItemRequest = {
   },
   context: {
     ['http-method']: 'PUT',
-    ['resource-path']: path.itemTransactionSyncTest,
+    ['resource-path']: path.testItemTransactionSync,
   },
-  params,
+  params: {
+    ...params,
+    querystring: {
+      item_id: mockPlaid.tokenExchange.item_id,
+    },
+  },
 };
 
 export const getTransactionsForAccountRequest = {

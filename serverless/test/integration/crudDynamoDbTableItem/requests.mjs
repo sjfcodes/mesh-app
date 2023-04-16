@@ -11,7 +11,7 @@ export const createTableItemRequest = {
   },
   context: {
     ['http-method']: 'PUT',
-    ['resource-path']: path.something,
+    ['resource-path']: path.dynamoDbTableItem,
   },
 };
 
@@ -27,7 +27,7 @@ export const getTableItemRequest = {
   },
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.userItem,
+    ['resource-path']: path.dynamoDbTableItem,
   },
 };
 
@@ -46,7 +46,7 @@ export const updateTableItemRequest = {
   },
   context: {
     ['http-method']: 'POST',
-    ['resource-path']: path.updateTableItemRequest,
+    ['resource-path']: path.dynamoDbTableItem,
   },
 };
 
@@ -60,7 +60,7 @@ export const deleteTableItemRequest = {
   },
   context: {
     ['http-method']: 'DELETE',
-    ['resource-path']: path.something,
+    ['resource-path']: path.dynamoDbTableItem,
   },
 };
 
@@ -74,6 +74,6 @@ export const createPlaidItemPayload = {
   },
   context: {
     ['http-method']: 'PUT',
-    ['resource-path']: path.something,
+    ['resource-path']: path.dynamoDbTableItem,
   },
 };
