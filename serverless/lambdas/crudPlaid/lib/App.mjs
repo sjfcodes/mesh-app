@@ -24,11 +24,11 @@ class App {
     );
   }
 
-  async getLinkToken() {
+  async handleLinkTokenCreate() {
     return await this.plaidClient.createLinkTokenByUserId(this.user.userId);
   }
 
-  async handleTokenExchange() {
+  async handleItemTokenExchange() {
     const tokenExchange = await this.plaidClient.exchangePublicToken(
       this.payload.public_token
     );
@@ -39,7 +39,9 @@ class App {
       item_id: tokenExchange.item_id,
     }));
 
-    await this.ddbClient.writePlaidItemToUser({
+    await this.writeUserLastActivity(this.user.email);
+
+    await this.ddbClient.writeUserPlaidItem({
       email: this.user.email,
       tokenExchange,
       accounts,
@@ -50,12 +52,14 @@ class App {
     return { accounts, item_id: tokenExchange.item_id };
   }
 
-  async itemTokenExchangeTest() {
+  async handleItemTokenExchangeTest() {
     const {
       public_token: tokenExchange,
       institution_id,
       institution_name,
     } = this.payload;
+
+    await this.writeUserLastActivity(this.user.email);
 
     // include item_id for future api calls
     const accounts = this.payload.accounts.map((account) => ({
@@ -63,7 +67,7 @@ class App {
       item_id: tokenExchange.item_id,
     }));
 
-    await this.ddbClient.writePlaidItemToUser({
+    await this.ddbClient.writeUserPlaidItem({
       email: this.user.email,
       tokenExchange,
       accounts,
@@ -105,7 +109,7 @@ class App {
     return { accounts };
   }
 
-  async handleGetAccountBalances() {
+  async handleGetUserAccountBalances() {
     const { item_id: itemId, account_id: accountId } = this.queryString;
     const accountIds = [];
 
@@ -133,7 +137,7 @@ class App {
     return { account: formatted };
   }
 
-  async handleGetAccountTransactions() {
+  async handleGetUserAccountTransactions() {
     const { account_id, item_id } = this.queryString;
     const { transactions } = await this.ddbClient.readAccountTransactions(
       item_id,
@@ -152,7 +156,7 @@ class App {
     return { transactions: formatted };
   }
 
-  async handleGetInstitutionById() {
+  async handleGetItemInstitutionById() {
     const data = await this.plaidClient.getItemInstitution(
       this.queryString.institution_id
     );
@@ -160,7 +164,7 @@ class App {
     return data;
   }
 
-  async mockHandleItemSyncTransactions() {
+  async handleUserItemSyncTransactionsTest() {
     // mock getting newTxCursor & transactions from db
     const {
       item_id: itemId,
@@ -168,9 +172,9 @@ class App {
       tx_cursor: newTxCursor,
     } = this.payload;
 
-    await this.ddbClient.writeTxsForItem({ itemId, added, modified, removed });
+    await this.ddbClient.writeUserItemTransaction({ itemId, added, modified, removed });
 
-    const { tx_cursor_updated_at } = await this.ddbClient.writeItemTxCursor(
+    const { tx_cursor_updated_at } = await this.ddbClient.writeUserItemTxCursor(
       this.user.email,
       itemId,
       newTxCursor
@@ -184,7 +188,7 @@ class App {
     };
   }
 
-  async handleItemSyncTransactions() {
+  async handleUserItemSyncTransactions() {
     const { item_id: itemId } = this.payload;
     // get current txCursor value from db,
     const { accessToken, txCursor } = await this.ddbClient.readItemByItemId(
@@ -196,9 +200,9 @@ class App {
       await this.plaidClient.itemSyncTransactions(accessToken, txCursor);
 
     // write items to db before writing cursor to db
-    await this.ddbClient.writeTxsForItem({ itemId, added, modified, removed });
+    await this.ddbClient.writeUserItemTransaction({ itemId, added, modified, removed });
 
-    const { tx_cursor_updated_at } = await this.ddbClient.writeItemTxCursor(
+    const { tx_cursor_updated_at } = await this.ddbClient.writeUserItemTxCursor(
       this.user.email,
       itemId,
       newTxCursor
@@ -211,7 +215,7 @@ class App {
       tx_cursor_updated_at,
     };
   }
-  async handleUpdateItemLogin() {
+  async handleUpdateUserItemLogin() {
     const { accessToken } = await this.ddbClient.readItemByItemId(
       this.user.email,
       this.payload.item_id

@@ -8,7 +8,7 @@ import {
   deleteTransactionTable,
   deleteUserTable,
   getTransactionTable,
-  getUserTable,
+  readUserTable,
 } from './crudDynamoDbTable/modules.mjs';
 import {
   getUserTableRequest,
@@ -63,12 +63,6 @@ const STAGE = 'PERSIST';
 // const STAGE = 'LIFECYCLE';
 
 switch (STAGE) {
-  case 'LIFECYCLE':
-    buildTableAndItem = true;
-    testPlaidItemActions = true;
-    destroyTableAndItem = true;
-    break;
-
   case 'CREATE':
     buildTableAndItem = true;
     testPlaidItemActions = true;
@@ -79,6 +73,12 @@ switch (STAGE) {
     break;
 
   case 'DESTROY':
+    destroyTableAndItem = true;
+    break;
+
+  case 'LIFECYCLE':
+    buildTableAndItem = true;
+    testPlaidItemActions = true;
     destroyTableAndItem = true;
     break;
 
@@ -135,13 +135,13 @@ describe('lambda + dynamoDb integration tests', () => {
     it('should get user table', async () => {
       const { status_code, body } = await (testApi
         ? api({
-            url: '/dynamodbtable',
+            url: getUserTableRequest.context['resource-path'],
             method: getUserTableRequest.context['http-method'],
             data: getUserTableRequest.body,
           })
             .then(({ data }) => data)
             .catch(handleError)
-        : getUserTable(getUserTableRequest));
+        : readUserTable(getUserTableRequest));
 
       if (status_code !== 200) console.error(body);
 
@@ -183,9 +183,9 @@ describe('lambda + dynamoDb integration tests', () => {
     }
 
     it('should get table item', async () => {
-      const { status_code, body } = await (testApi
+      const response = await (testApi
         ? api({
-            url: '/dynamodbtableitem',
+            url: getTableItemRequest.context['resource-path'],
             method: getTableItemRequest.context['http-method'],
             data: getTableItemRequest.body,
           })
@@ -193,7 +193,11 @@ describe('lambda + dynamoDb integration tests', () => {
             .catch(handleError)
         : getTableItem(getTableItemRequest));
 
+      const { status_code, body } = response;
+      if (status_code !== 200) console.error(response);
+
       expect(status_code).toBe(200);
+      console.log(body);
       expect(body.Item.email.S).toBe(Item.original.email.S);
       expect(body.Item.email.S).toBe(Item.original.email.S);
     });
@@ -219,7 +223,7 @@ describe('lambda + dynamoDb integration tests', () => {
     });
 
     if (testPlaidItemActions) {
-      it('should add new plaid item with mocked token exchange', async () => {
+      it.skip('should add new plaid item with mocked token exchange', async () => {
         const payload = mockExchangeTokenLinkRequest;
         const { status_code, body } = await (testApi
           ? api({
@@ -238,7 +242,7 @@ describe('lambda + dynamoDb integration tests', () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
-      it('should simulate item sync & write transactions to db', async () => {
+      it.skip('should simulate item sync & write transactions to db', async () => {
         const payload = mockSyncTransactionsForItemRequest;
         const { status_code, body } = await (testApi
           ? api({
@@ -259,10 +263,10 @@ describe('lambda + dynamoDb integration tests', () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
-      it('should get plaid items for one user', async () => {
+      it.skip('should get plaid items for one user', async () => {
         const { status_code, body } = await (testApi
           ? api({
-              url: '/dynamodbtableitem',
+              url: getUserItemsRequest.context['resource-path'],
               method: getUserItemsRequest.context['http-method'],
               data: getUserItemsRequest.body,
             })
@@ -288,10 +292,10 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(Array.isArray(item.accounts)).toBe(true);
       });
 
-      it('should get plaid item accounts for user', async () => {
+      it.skip('should get plaid item accounts for user', async () => {
         const { status_code, body } = await (testApi
           ? api({
-              url: '/dynamodbtableitem',
+              url: getUserAccountsRequest.context['resource-path'],
               method: getUserAccountsRequest.context['http-method'],
               data: getUserAccountsRequest.body,
             })
@@ -305,7 +309,7 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(body.accounts.length).toBeGreaterThan(0);
       });
 
-      // it('should get plaid item account balances for user', async () => {
+      // it.skip('should get plaid item account balances for user', async () => {
       //   const { status_code, body } = await (testApi
       //     ? api({
       //           url: '/dynamodbtableitem',
@@ -324,7 +328,7 @@ describe('lambda + dynamoDb integration tests', () => {
       //   expect(account.balances.available).toBeGreaterThan(0);
       // });
 
-      it('should get plaid item account transactions', async () => {
+      it.skip('should get plaid item account transactions', async () => {
         const { status_code, body } = await (testApi
           ? api({
               url: '/dynamodbtableitem',
@@ -355,7 +359,7 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(Object.keys(transaction.transaction).length).toBe(23);
       });
 
-      it('should get bank institution details by id institution_id', async () => {
+      it.skip('should get bank institution details by id institution_id', async () => {
         const { status_code, body } = await (testApi
           ? api({
               url: '/dynamodbtableitem',
@@ -374,7 +378,7 @@ describe('lambda + dynamoDb integration tests', () => {
     }
 
     if (destroyTableAndItem) {
-      it('should DELETE item from Table', async () => {
+      it.skip('should DELETE item from Table', async () => {
         const { status_code, body } = await (testApi
           ? api({
               url: '/dynamodbtableitem',

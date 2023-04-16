@@ -53,7 +53,7 @@ class DdbClient {
      * for getting user last activity.
      * Skip this check for said route.
      */
-    if (requestPath !== config.path.getItems) {
+    if (requestPath !== config.path.userItem) {
       let shouldWriteUserLastActivity = false;
       const lastActivity = new Date(
         Item[config.itemKeys.lastActivity]?.S
@@ -191,11 +191,11 @@ class DdbClient {
   //   return { transaction: {} };
   // }
 
-  async writeItemTxCursor(email, itemId, newTxCursor) {
+  async writeUserItemTxCursor(email, itemId, newTxCursor) {
     if (!email || !itemId || newTxCursor === undefined)
       throw new Error('missing required arguments!');
 
-    console.log(`writeItemTxCursor(${email}, ${itemId}, ${newTxCursor})`);
+    console.log(`writeUserItemTxCursor(${email}, ${itemId}, ${newTxCursor})`);
 
     const now = getTimestamp();
 
@@ -222,7 +222,7 @@ class DdbClient {
     return { tx_cursor_updated_at: now };
   }
 
-  async writePlaidItemToUser({
+  async writeUserPlaidItem({
     email,
     tokenExchange,
     accounts,
@@ -263,11 +263,11 @@ class DdbClient {
     );
   }
 
-  async writeTxsForItem({ itemId, added, modified, removed }) {
+  async writeUserItemTransaction({ itemId, added, modified, removed }) {
     if (!itemId || !added || !modified || !removed)
       throw new Error('missing required arguments!');
     console.log(
-      `writeTxsForItem(${JSON.stringify({
+      `writeUserItemTransaction(${JSON.stringify({
         itemId,
         added: added.length,
         modified: modified.length,
