@@ -2,7 +2,7 @@ import dynamoDbConfig from '../../config/dynamoDb.mjs';
 
 const { TableName, Item, params } = dynamoDbConfig;
 
-export const createTableItemPayload = {
+export const createTableItemRequest = {
   body: {
     path: null,
     payload: { TableName: TableName.user, Item: Item.original },
@@ -11,7 +11,7 @@ export const createTableItemPayload = {
   params,
 };
 
-export const getTableItemPayload = {
+export const getTableItemRequest = {
   body: {
     path: null,
     payload: {
@@ -25,7 +25,7 @@ export const getTableItemPayload = {
   params,
 };
 
-export const updateTableItemPayload = {
+export const updateTableItemRequest = {
   body: {
     path: null,
     payload: {
@@ -42,7 +42,7 @@ export const updateTableItemPayload = {
   params,
 };
 
-export const deleteTableItemPayload = {
+export const deleteTableItemRequest = {
   body: {
     path: null,
     payload: {

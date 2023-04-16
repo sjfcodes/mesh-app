@@ -9,7 +9,7 @@ const { TableName, params } = config;
 // USER TABLE //
 ////////////////
 
-export const createUserTablePayload = {
+export const createUserTableRequest = {
   body: {
     path: null,
     payload: {
@@ -39,7 +39,7 @@ export const createUserTablePayload = {
   params,
 };
 
-export const getUserTablePayload = {
+export const getUserTableRequest = {
   body: {
     path: null,
     payload: {
@@ -50,7 +50,7 @@ export const getUserTablePayload = {
   params,
 };
 
-export const deleteUserTablePayload = {
+export const deleteUserTableRequest = {
   body: {
     path: null,
     payload: {
@@ -65,7 +65,7 @@ export const deleteUserTablePayload = {
 // TRANSACTION TABLE //
 ///////////////////////
 
-export const createTransactionTablePayload = {
+export const createTransactionTableRequest = {
   body: {
     path: null,
     payload: {
@@ -103,7 +103,7 @@ export const createTransactionTablePayload = {
   params,
 };
 
-export const getTransactionTablePayload = {
+export const getTransactionTableRequest = {
   body: {
     path: null,
     payload: {
@@ -114,7 +114,7 @@ export const getTransactionTablePayload = {
   params,
 };
 
-export const deleteTransactionTablePayload = {
+export const deleteTransactionTableRequest = {
   body: {
     path: null,
     payload: {
