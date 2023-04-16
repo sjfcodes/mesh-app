@@ -39,7 +39,7 @@ class App {
       item_id: tokenExchange.item_id,
     }));
 
-    await this.writeUserLastActivity(this.user.email);
+    await this.ddbClient.writeUserLastActivity(this.user.email);
 
     await this.ddbClient.writeUserPlaidItem({
       email: this.user.email,
@@ -59,7 +59,7 @@ class App {
       institution_name,
     } = this.payload;
 
-    await this.writeUserLastActivity(this.user.email);
+    await this.ddbClient.writeUserLastActivity(this.user.email);
 
     // include item_id for future api calls
     const accounts = this.payload.accounts.map((account) => ({
