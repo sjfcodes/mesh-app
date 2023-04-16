@@ -77,7 +77,7 @@ export const handler = async (event) => {
 
             break;
           case config.path.itemTokenExchangeTest:
-            const { item_id: testItemId } = await app.mockHandleTokenExchange();
+            const { item_id: testItemId } = await app.itemTokenExchangeTest();
             response = {
               public_token_exchange: 'complete',
               item_id: testItemId,

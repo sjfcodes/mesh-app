@@ -5,7 +5,7 @@ import mockPlaid from './mockData/plaid';
 const { TableName, path } = lambdaConfig;
 const { params } = dynamoDbConfig;
 
-export const createTokenLinkPayload = {
+export const createTokenLinkRequest = {
   body: {
     TableName: TableName.user,
     path: path.linkTokenCreate,
@@ -17,15 +17,15 @@ export const createTokenLinkPayload = {
   params,
 };
 
-export const mockExchangeTokenLinkPayload = {
+export const mockExchangeTokenLinkRequest = {
   body: {
     path: path.itemTokenExchangeTest,
     payload: {
       accounts: mockPlaid.accounts,
       institution_id: mockPlaid.institutionId,
       institution_name: mockPlaid.institutionName,
-      public_token:
-        mockPlaid.tokenExchange /** typically a public token that is protected and exchanged server side */,
+      /** typically a public token that is protected and exchanged server side */
+      public_token: mockPlaid.tokenExchange,
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
@@ -36,7 +36,7 @@ export const mockExchangeTokenLinkPayload = {
   params,
 };
 
-export const mockSyncTransactionsForItemPayload = {
+export const mockSyncTransactionsForItemRequest = {
   body: {
     payload: {
       item_id: mockPlaid.tokenExchange.item_id,
@@ -51,7 +51,7 @@ export const mockSyncTransactionsForItemPayload = {
   params,
 };
 
-export const getTransactionsForAccountPayload = {
+export const getTransactionsForAccountRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
@@ -66,7 +66,7 @@ export const getTransactionsForAccountPayload = {
   },
 };
 
-export const getUserItemsPayload = {
+export const getUserItemsRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
@@ -75,7 +75,7 @@ export const getUserItemsPayload = {
   params,
 };
 
-export const getUserAccountsPayload = {
+export const getUserAccountsRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
@@ -84,7 +84,7 @@ export const getUserAccountsPayload = {
   params,
 };
 
-export const getUserAccountsBalancesPayload = {
+export const getUserAccountsBalancesRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
@@ -98,7 +98,7 @@ export const getUserAccountsBalancesPayload = {
   },
 };
 
-export const getInstitutionByIdPayload = {
+export const getInstitutionByIdRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',

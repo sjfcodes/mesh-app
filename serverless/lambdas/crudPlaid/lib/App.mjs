@@ -50,7 +50,7 @@ class App {
     return { accounts, item_id: tokenExchange.item_id };
   }
 
-  async mockHandleTokenExchange() {
+  async itemTokenExchangeTest() {
     const {
       public_token: tokenExchange,
       institution_id,
