@@ -135,10 +135,9 @@ describe('lambda + dynamoDb integration tests', () => {
     it('should get user table', async () => {
       const { status_code, body } = await (testApi
         ? api({
-            url: 'dynamodbtable',
+            url: '/dynamodbtable',
             method: getUserTableRequest.context['http-method'],
             data: getUserTableRequest.body,
-            headers: { Authorization: process.env.AUTH_TOKEN },
           })
             .then(({ data }) => data)
             .catch(handleError)
