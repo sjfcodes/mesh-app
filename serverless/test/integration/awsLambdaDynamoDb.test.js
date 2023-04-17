@@ -359,7 +359,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
-        expect(body.transactions?.length).toBe(48);
+        expect(body.transactions?.length).toBe(3);
 
         const transaction = body.transactions[0];
         expect(transaction).toHaveProperty('created_at');

@@ -130,10 +130,12 @@ class App {
   }
 
   async handleGetUserAccountTransactions() {
-    const { account_id, item_id } = this.queryString;
+    const { account_id, item_id, lower_band, upper_band } = this.queryString;
     const { transactions } = await this.ddbClient.readAccountTransactions(
       item_id,
-      account_id
+      account_id,
+      lower_band,
+      upper_band
     );
 
     return { transactions };

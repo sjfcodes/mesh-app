@@ -150,21 +150,35 @@ class DdbClient {
     return { accounts: allAccounts };
   }
 
-  async readAccountTransactions(itemId, accountId) {
+  async readAccountTransactions(
+    itemId,
+    accountId,
+    lowerBand,
+    upperBand
+  ) {
     if (!itemId) throw new Error('missing itemId!');
     if (!accountId) throw new Error('missing accountId!');
+    if (!lowerBand) throw new Error('missing lowerBand!');
+    if (!upperBand) throw new Error('missing upperBand!');
 
     const formatted = itemId + '::' + accountId;
+    console.log(formatted);
 
     const response = await this.client.send(
       new QueryCommand({
         TableName: config.TableName.transaction,
-        KeyConditionExpression: '#partitionKey = :partitionKey',
+        IndexName: 'item_id-account_id-created_at-index',
+        Select: 'ALL_ATTRIBUTES',
+        KeyConditionExpression:
+          '#partitionKey = :partitionValue AND #createdAt BETWEEN :lowerBand AND :upperBand',
         ExpressionAttributeNames: {
           '#partitionKey': PARTITION_KEY,
+          '#createdAt': 'created_at',
         },
         ExpressionAttributeValues: {
-          ':partitionKey': marshall(formatted),
+          ':partitionValue': marshall(formatted),
+          ':lowerBand': marshall(lowerBand),
+          ':upperBand': marshall(upperBand),
         },
       })
     );

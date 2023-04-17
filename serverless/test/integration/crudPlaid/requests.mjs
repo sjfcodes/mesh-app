@@ -67,6 +67,8 @@ export const getTransactionsForAccountRequest = {
     querystring: {
       account_id: mockPlaid.accounts[1].id,
       item_id: mockPlaid.tokenExchange.item_id,
+      lower_band: '2022-12-01',
+      upper_band: '2022-12-31',
     },
   },
 };

@@ -1,7 +1,7 @@
 import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
 import dynamoDbConfig from '../../config/dynamoDb.mjs';
 
-const { path } = lambdaConfig
+const { path } = lambdaConfig;
 const { TableName } = dynamoDbConfig;
 
 ////////////////
@@ -34,9 +34,9 @@ export const createUserTableRequest = {
       },
     },
   },
-  context: { 
+  context: {
     ['http-method']: 'PUT',
-    ['resource-path']: path.dynamoDbTable
+    ['resource-path']: path.dynamoDbTable,
   },
 };
 
@@ -47,9 +47,9 @@ export const getUserTableRequest = {
       TableName: TableName.user,
     },
   },
-  context: { 
+  context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.dynamoDbTable
+    ['resource-path']: path.dynamoDbTable,
   },
 };
 
@@ -60,9 +60,9 @@ export const deleteUserTableRequest = {
       TableName: TableName.user,
     },
   },
-  context: { 
+  context: {
     ['http-method']: 'DELETE',
-    ['resource-path']: path.dynamoDbTable
+    ['resource-path']: path.dynamoDbTable,
   },
 };
 
@@ -84,6 +84,10 @@ export const createTransactionTableRequest = {
           AttributeName: 'transaction_id',
           AttributeType: 'S',
         },
+        {
+          AttributeName: 'created_at',
+          AttributeType: 'S',
+        },
       ],
       KeySchema: [
         {
@@ -95,6 +99,31 @@ export const createTransactionTableRequest = {
           KeyType: 'RANGE',
         },
       ],
+      GlobalSecondaryIndexes: [
+        // GlobalSecondaryIndexList
+        {
+          // GlobalSecondaryIndex
+          IndexName: 'item_id-account_id-created_at-index', // required
+          KeySchema: [
+            // required
+            {
+              AttributeName: 'item_id::account_id',
+              KeyType: 'HASH',
+            },
+            {
+              AttributeName: 'created_at',
+              KeyType: 'RANGE',
+            },
+          ],
+          Projection: {
+            ProjectionType: 'ALL',
+          },
+          ProvisionedThroughput: {
+            ReadCapacityUnits: 10,
+            WriteCapacityUnits: 10,
+          },
+        },
+      ],
       ProvisionedThroughput: {
         ReadCapacityUnits: 10,
         WriteCapacityUnits: 10,
@@ -104,9 +133,9 @@ export const createTransactionTableRequest = {
       },
     },
   },
-  context: { 
+  context: {
     ['http-method']: 'PUT',
-    ['resource-path']: path.dynamoDbTable
+    ['resource-path']: path.dynamoDbTable,
   },
 };
 
@@ -117,9 +146,9 @@ export const getTransactionTableRequest = {
       TableName: TableName.transaction,
     },
   },
-  context: { 
+  context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.dynamoDbTable
+    ['resource-path']: path.dynamoDbTable,
   },
 };
 
@@ -130,8 +159,8 @@ export const deleteTransactionTableRequest = {
       TableName: TableName.transaction,
     },
   },
-  context: { 
+  context: {
     ['http-method']: 'DELETE',
-    ['resource-path']: path.dynamoDbTable
+    ['resource-path']: path.dynamoDbTable,
   },
 };
