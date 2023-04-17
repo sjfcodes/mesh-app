@@ -289,7 +289,7 @@ class DdbClient {
           updated_at: { S: now },
         };
 
-        if (isNew) requestItem.created_at = { S: now };
+        if (isNew) requestItem.created_at = { S:  tx.date || now };
         if (isRemoved) requestItem.transaction = { S: 'removed' };
 
         return { PutRequest: { Item: requestItem } };

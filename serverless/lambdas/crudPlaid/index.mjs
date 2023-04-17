@@ -68,7 +68,7 @@ export const handler = async (event) => {
 
             break;
           case config.path.linkTokenCreate:
-            response = await app.handleLinkTokenCreate();
+            response = await app.handleLinkTokenCreateUpdate();
 
             break;
           case config.path.itemTokenExchange:

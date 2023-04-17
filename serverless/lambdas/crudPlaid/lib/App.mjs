@@ -1,6 +1,6 @@
 import config from '../utils/config.mjs';
-import ddbClient from './ddbClient.mjs';
-import plaidClient from './plaidClient.mjs';
+import ddbClient from './DdbClient.mjs';
+import plaidClient from './PlaidClient.mjs';
 
 class App {
   constructor(event) {
@@ -24,7 +24,7 @@ class App {
     );
   }
 
-  async handleLinkTokenCreate() {
+  async handleLinkTokenCreateUpdate() {
     return await this.plaidClient.createLinkTokenByUserId(this.user.userId);
   }
 
