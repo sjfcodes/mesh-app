@@ -1,3 +1,4 @@
+import { convertToAttr, marshall } from '@aws-sdk/util-dynamodb';
 import {
   DynamoDBClient,
   GetItemCommand,
@@ -43,7 +44,7 @@ class DdbClient {
     const { Item } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.user,
-        Key: { email: { S: email } },
+        Key: { email: marshall(email) },
       })
     );
 
@@ -97,7 +98,7 @@ class DdbClient {
     } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.user,
-        Key: { email: { S: email } },
+        Key: { email: marshall(email) },
         ProjectionExpression: `#items.#item`,
         ExpressionAttributeNames: {
           '#items': config.itemKeys.plaidItem,
@@ -125,7 +126,7 @@ class DdbClient {
     } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.user,
-        Key: { email: { S: email } },
+        Key: { email: marshall(email) },
         ProjectionExpression: `#items, #activity`,
         ExpressionAttributeNames: {
           '#items': config.itemKeys.plaidItem,
@@ -164,7 +165,7 @@ class DdbClient {
           '#partitionKey': PARTITION_KEY,
         },
         ExpressionAttributeValues: {
-          ':partitionKey': { S: formatted },
+          ':partitionKey': marshall(formatted),
         },
       })
     );
@@ -202,7 +203,7 @@ class DdbClient {
     await this.client.send(
       new UpdateItemCommand({
         TableName: config.TableName.user,
-        Key: { email: { S: email } },
+        Key: { email: marshall(email) },
         UpdateExpression: `SET #items.#item.#cursor = :cursor, #items.#item.#cursorUpdated = :cursorUpdated, #items.#item.#updated = :updated`,
         ExpressionAttributeNames: {
           '#items': config.itemKeys.plaidItem,
@@ -212,9 +213,9 @@ class DdbClient {
           '#updated': 'updated_at',
         },
         ExpressionAttributeValues: {
-          ':cursor': { S: newTxCursor },
-          ':cursorUpdated': { S: now },
-          ':updated': { S: now },
+          ':cursor': marshall(newTxCursor),
+          ':cursorUpdated': marshall(now),
+          ':updated': marshall(now),
         },
         ReturnValues: 'UPDATED_NEW',
       })
@@ -237,26 +238,24 @@ class DdbClient {
     await this.client.send(
       new UpdateItemCommand({
         TableName: config.TableName.user,
-        Key: { email: { S: email } },
+        Key: { email: marshall(email) },
         UpdateExpression: `SET #items.#item = :map`,
         ExpressionAttributeNames: {
           '#items': config.itemKeys.plaidItem,
           '#item': tokenExchange.item_id,
         },
         ExpressionAttributeValues: {
-          ':map': {
-            M: {
-              id: { S: tokenExchange.item_id },
-              access_token: { S: tokenExchange.access_token },
-              accounts: { S: JSON.stringify(accounts) },
-              institution_name: { S: institution_name },
-              institution_id: { S: institution_id },
-              [config.itemKeys.txCursor]: { S: '' },
-              [config.itemKeys.txCursorUpdatedAt]: { S: '' },
-              created_at: { S: now },
-              updated_at: { S: now },
-            },
-          },
+          ':map': convertToAttr({
+            id: tokenExchange.item_id,
+            access_token: tokenExchange.access_token,
+            accounts: JSON.stringify(accounts),
+            institution_name: institution_name,
+            institution_id: institution_id,
+            [config.itemKeys.txCursor]: '',
+            [config.itemKeys.txCursorUpdatedAt]: '',
+            created_at: now,
+            updated_at: now,
+          }),
         },
         ReturnValues: 'ALL_NEW',
       })
@@ -283,16 +282,16 @@ class DdbClient {
 
       return array.map((tx) => {
         const requestItem = {
-          [PARTITION_KEY]: { S: `${itemId}::${tx.account_id}` },
-          [SORT_KEY]: { S: tx.transaction_id },
-          transaction: { S: JSON.stringify(tx) },
-          updated_at: { S: now },
+          [PARTITION_KEY]: `${itemId}::${tx.account_id}`,
+          [SORT_KEY]: tx.transaction_id,
+          transaction: JSON.stringify(tx),
+          updated_at: now,
         };
 
-        if (isNew) requestItem.created_at = { S:  tx.date || now };
-        if (isRemoved) requestItem.transaction = { S: 'removed' };
+        if (isNew) requestItem.created_at = tx.date || now;
+        if (isRemoved) requestItem.transaction = 'removed';
 
-        return { PutRequest: { Item: requestItem } };
+        return { PutRequest: { Item: marshall(requestItem) } };
       });
     };
 

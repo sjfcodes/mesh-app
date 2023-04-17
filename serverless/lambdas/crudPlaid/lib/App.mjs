@@ -34,7 +34,7 @@ class App {
     );
 
     // include item_id for future api calls
-    const accounts = this.payload.accounts.map((account) => ({
+    const formattedAccounts = this.payload.accounts.map((account) => ({
       ...account,
       item_id: tokenExchange.item_id,
     }));
@@ -44,7 +44,7 @@ class App {
     await this.ddbClient.writeUserPlaidItem({
       email: this.user.email,
       tokenExchange,
-      accounts,
+      accounts: formattedAccounts,
       institution_id: this.payload.institution_id,
       institution_name: this.payload.institution_name,
     });
@@ -53,29 +53,23 @@ class App {
   }
 
   async handleItemTokenExchangeTest() {
-    const {
-      public_token: tokenExchange,
-      institution_id,
-      institution_name,
-    } = this.payload;
-
     await this.ddbClient.writeUserLastActivity(this.user.email);
 
     // include item_id for future api calls
-    const accounts = this.payload.accounts.map((account) => ({
+    const formattedAccounts = this.payload.accounts.map((account) => ({
       ...account,
-      item_id: tokenExchange.item_id,
+      item_id: this.payload.public_token.item_id,
     }));
 
     await this.ddbClient.writeUserPlaidItem({
+      accounts: formattedAccounts,
       email: this.user.email,
-      tokenExchange,
-      accounts,
-      institution_id,
-      institution_name,
+      tokenExchange: this.payload.public_token,
+      institution_id: this.payload.institution_id,
+      institution_name: this.payload.institution_name,
     });
 
-    return { accounts, item_id: tokenExchange.item_id };
+    return { accounts: formattedAccounts, item_id: this.payload.public_token.item_id };
   }
 
   async handleGetUserItems() {
@@ -109,7 +103,7 @@ class App {
     return { accounts };
   }
 
-  async handleGetUserAccountBalances() {
+  async handleGetItemAccountBalance() {
     const { item_id: itemId, account_id: accountId } = this.queryString;
     const accountIds = [];
 
@@ -126,6 +120,7 @@ class App {
       accessToken,
       accountIds
     );
+    console.log(accounts);
 
     const formatted = accounts.reduce((prev, curr) => {
       return {
@@ -172,7 +167,12 @@ class App {
       tx_cursor: newTxCursor,
     } = this.payload;
 
-    await this.ddbClient.writeUserItemTransaction({ itemId, added, modified, removed });
+    await this.ddbClient.writeUserItemTransaction({
+      itemId,
+      added,
+      modified,
+      removed,
+    });
 
     const { tx_cursor_updated_at } = await this.ddbClient.writeUserItemTxCursor(
       this.user.email,
@@ -200,7 +200,12 @@ class App {
       await this.plaidClient.itemSyncTransactions(accessToken, txCursor);
 
     // write items to db before writing cursor to db
-    await this.ddbClient.writeUserItemTransaction({ itemId, added, modified, removed });
+    await this.ddbClient.writeUserItemTransaction({
+      itemId,
+      added,
+      modified,
+      removed,
+    });
 
     const { tx_cursor_updated_at } = await this.ddbClient.writeUserItemTxCursor(
       this.user.email,

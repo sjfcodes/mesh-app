@@ -6,8 +6,8 @@ dotenv.config();
 const config = {
   params: {
     header: {
-      Authorization: process.env.AUTH_TOKEN
-    }
+      Authorization: process.env.AUTH_TOKEN,
+    },
   },
   TableName: {
     user: process.env.USER_TABLE_NAME /* prod or test table */,
@@ -15,47 +15,25 @@ const config = {
   },
   Item: {
     original: {
-      email: { S: process.env.USER_EMAIL },
-      user_id: { S: process.env.USER_EMAIL },
+      email: process.env.USER_EMAIL,
+      user_id: process.env.USER_EMAIL,
       plaid_item: {
-        M: {
-          [mockData.tokenExchange.item_id]: {
-            M: {
-              access_token: {
-                S: mockData.tokenExchange.access_token,
-              },
-              accounts: {
-                S: JSON.stringify(mockData.accounts),
-              },
-              created_at: {
-                S: '2023-01-12T22:11:53.103Z',
-              },
-              id: {
-                S: mockData.tokenExchange.item_id,
-              },
-              institution_id: {
-                S: mockData.institutionId,
-              },
-              institution_name: {
-                S: mockData.institutionName,
-              },
-              tx_cursor: {
-                S: '',
-              },
-              tx_cursor_updated_at: {
-                S: '2023-01-12T22:11:53.103Z',
-              },
-              updated_at: {
-                S: '2023-01-12T22:11:53.103Z',
-              },
-            },
-          },
+        [mockData.tokenExchange.item_id]: {
+          access_token: mockData.tokenExchange.access_token,
+          accounts: JSON.stringify(mockData.accounts),
+          created_at: '2023-01-12T22:11:53.103Z',
+          id: mockData.tokenExchange.item_id,
+          institution_id: mockData.institutionId,
+          institution_name: mockData.institutionName,
+          tx_cursor: '',
+          tx_cursor_updated_at: '2023-01-12T22:11:53.103Z',
+          updated_at: '2023-01-12T22:11:53.103Z',
         },
       },
-      verified: { BOOL: false },
+      verified: false,
     },
     update: {
-      verified: { BOOL: true },
+      verified: true,
     },
   },
 };

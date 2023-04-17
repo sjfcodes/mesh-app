@@ -30,7 +30,7 @@ import {
   mockSyncTransactionsForItemRequest,
   getTransactionsForAccountRequest,
   getUserItemsRequest,
-  getUserAccountsBalancesRequest,
+  // getUserAccountsBalancesRequest,
 } from './crudPlaid/requests.mjs';
 
 dotenv.config();
@@ -49,14 +49,13 @@ let buildTableAndItem = false;
 let destroyTableAndItem = false;
 let testPlaidItemActions = false;
 // const STAGE = 'CREATE';
-const STAGE = 'PERSIST';
+// const STAGE = 'PERSIST';
 // const STAGE = 'DESTROY';
-// const STAGE = 'LIFECYCLE';
+const STAGE = 'LIFECYCLE';
 
 switch (STAGE) {
   case 'CREATE':
     buildTableAndItem = true;
-    testPlaidItemActions = true;
     break;
 
   case 'PERSIST':
@@ -218,7 +217,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
       expect(status_code).toBe(200);
       // expect unchanged
-      expect(body.Attributes.email.S).toBe(Item.original.email.S);
+      expect(body.Attributes.email.S).toBe(Item.original.email);
       // expect changed
       expect(body.Attributes.verified.BOOL).toBe(true);
     });
