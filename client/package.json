@@ -32,11 +32,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "build": "export REACT_APP_AWS_API_GATEWAY_STAGE=beta && react-scripts build",
+    "build": "export REACT_APP_AWS_API_GATEWAY_STAGE=prod && react-scripts build",
     "deploy": "npm run format && npm run build && ./deploy.sh ./build",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
     "start": "react-scripts start",
-    "start:beta": "export REACT_APP_AWS_API_GATEWAY_STAGE=beta && npm run start",
+    "start:prod": "export REACT_APP_AWS_API_GATEWAY_STAGE=prod && npm run start",
     "start:dev": "export REACT_APP_AWS_API_GATEWAY_STAGE=dev && npm run start",
     "test": "react-scripts test"
   },
