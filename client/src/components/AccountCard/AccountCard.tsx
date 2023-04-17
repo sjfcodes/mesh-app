@@ -17,7 +17,8 @@ interface Props {
 export default function AccountCard({ account }: Props) {
   const [transactionsShown, setTransactionsShown] = useState(false);
   const { getItemAccountBalances } = useInstitutions();
-  const { itemAccountTransaction, getItemAccountTransactions } = useTransactions();
+  const { itemAccountTransaction, getItemAccountTransactions } =
+    useTransactions();
   const { id: accountId, item_id: itemId } = account;
 
   const toggleShowTransactions = () => {

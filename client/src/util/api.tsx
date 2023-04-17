@@ -130,7 +130,3 @@ export const getItemAccountTransactions = async (
       account_id: accountId,
     },
   });
-
-  // CAESJWRrZHpPTHdxbTN1TzBBUjFQb21nSEFqeTAxNVZYWElOT2Vxa2oaBgiE8sCgBiIGCITywKAGKgYIhPLAoAY=
-  // CAESJWRrZHpPTHdxbTN1TzBBUjFQb21nSEFqeTAxNVZYWElOT2Vxa2oaBgiE8sCgBiIGCITywKAGKgYIhPLAoAY=
-  // CAESJWRrZHpPTHdxbTN1TzBBUjFQb21nSEFqeTAxNVZYWElOT2Vxa2oaBgiE8sCgBiIGCITywKAGKgYIhPLAoAY=
