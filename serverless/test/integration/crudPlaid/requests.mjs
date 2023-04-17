@@ -56,7 +56,7 @@ export const mockSyncTransactionsForItemRequest = {
   },
 };
 
-export const getTransactionsForAccountRequest = {
+export const getTransactionsForAccountWithBandsRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
@@ -69,6 +69,21 @@ export const getTransactionsForAccountRequest = {
       item_id: mockPlaid.tokenExchange.item_id,
       lower_band: '2022-12-01',
       upper_band: '2022-12-31',
+    },
+  },
+};
+
+export const getTransactionsForAccountWithoutBandsRequest = {
+  body: {},
+  context: {
+    ['http-method']: 'GET',
+    ['resource-path']: path.itemAccountTransaction,
+  },
+  params: {
+    ...params,
+    querystring: {
+      account_id: mockPlaid.accounts[1].id,
+      item_id: mockPlaid.tokenExchange.item_id,
     },
   },
 };

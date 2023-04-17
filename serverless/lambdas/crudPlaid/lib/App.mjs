@@ -1,5 +1,4 @@
-import { convertToNative, unmarshall } from '@aws-sdk/util-dynamodb';
-import config from '../utils/config.mjs';
+import { convertToNative } from '@aws-sdk/util-dynamodb';
 import ddbClient from './DdbClient.mjs';
 import plaidClient from './PlaidClient.mjs';
 
@@ -131,11 +130,21 @@ class App {
 
   async handleGetUserAccountTransactions() {
     const { account_id, item_id, lower_band, upper_band } = this.queryString;
+    let upperBand = upper_band;
+    let lowerBand = lower_band;
+
+    if (!lowerBand || !upperBand) {
+      const nowInMs = Date.now();
+      const monthInMs = 60 * 60 * 24 * 30 * 1000
+      upperBand = new Date(nowInMs).toISOString().substring(0, 10);
+      lowerBand = new Date(nowInMs - monthInMs).toISOString().substring(0, 10);
+    }
+
     const { transactions } = await this.ddbClient.readAccountTransactions(
       item_id,
       account_id,
-      lower_band,
-      upper_band
+      upperBand,
+      lowerBand
     );
 
     return { transactions };

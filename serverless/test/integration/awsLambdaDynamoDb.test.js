@@ -28,7 +28,8 @@ import {
   getInstitutionByIdRequest,
   getUserAccountsRequest,
   mockSyncTransactionsForItemRequest,
-  getTransactionsForAccountRequest,
+  getTransactionsForAccountWithBandsRequest,
+  getTransactionsForAccountWithoutBandsRequest,
   getUserItemsRequest,
   // getUserAccountsBalancesRequest,
 } from './crudPlaid/requests.mjs';
@@ -119,6 +120,9 @@ describe('lambda + dynamoDb integration tests', () => {
         await new Promise((resolve) => setTimeout(resolve, 8000));
         expect(status_code).toBe(200);
         expect(body.TableDescription.TableName).toBe(TableName.transaction);
+        // pause to let tables create
+        console.log('pause for 5000ms after tables create')
+        await new Promise(resolve=>setTimeout(resolve, 5000))
       });
     });
   }
@@ -240,6 +244,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
         expect(status_code).toBe(200);
         expect(body.public_token_exchange).toBe('complete');
+        console.log('pause for 2000ms after mock item create')
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
@@ -261,6 +266,7 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(body.tx_sync).toBe('complete');
         expect(body.tx_cursor_updated_at).not.toBe(undefined);
         expect(body.added).toBeGreaterThan(0);
+        console.log('pause for 2000ms after tx sync')
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
@@ -345,7 +351,7 @@ describe('lambda + dynamoDb integration tests', () => {
       // });
 
       it('should get plaid item account transactions', async () => {
-        const request = getTransactionsForAccountRequest;
+        const request = getTransactionsForAccountWithBandsRequest;
         const { status_code, body } = await (testApi
           ? api({
               url: request.context['resource-path'],
@@ -375,6 +381,41 @@ describe('lambda + dynamoDb integration tests', () => {
         );
         expect(typeof transaction.transaction === 'object').toBe(true);
         expect(Object.keys(transaction.transaction).length).toBe(23);
+      });
+
+      it('should get plaid item account transactions for last 30 days when no upperBand & lowerBand provided', async () => {
+        const request = getTransactionsForAccountWithoutBandsRequest;
+        const { status_code, body } = await (testApi
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              params: request.params.querystring,
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : plaidHandler(request));
+
+        if (status_code !== 200) console.error(body);
+        expect(status_code).toBe(200);
+        expect(body.transactions?.length).toBe(0);
+
+        const transaction = body.transactions[0];
+        if (transaction) {
+          expect(transaction).toHaveProperty('created_at');
+          expect(transaction).toHaveProperty('updated_at');
+          expect(transaction).toHaveProperty('transaction_id');
+          expect(transaction).toHaveProperty('item_id::account_id');
+          expect(transaction).toHaveProperty('transaction');
+          expect(typeof transaction.created_at === 'string').toBe(true);
+          expect(typeof transaction.updated_at === 'string').toBe(true);
+          expect(typeof transaction.transaction_id === 'string').toBe(true);
+          expect(typeof transaction['item_id::account_id'] === 'string').toBe(
+            true
+          );
+          expect(typeof transaction.transaction === 'object').toBe(true);
+          expect(Object.keys(transaction.transaction).length).toBe(23);
+        }
       });
 
       it('should get bank institution details by id institution_id', async () => {

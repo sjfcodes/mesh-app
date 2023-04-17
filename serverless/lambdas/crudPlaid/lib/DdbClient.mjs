@@ -150,16 +150,11 @@ class DdbClient {
     return { accounts: allAccounts };
   }
 
-  async readAccountTransactions(
-    itemId,
-    accountId,
-    lowerBand,
-    upperBand
-  ) {
+  async readAccountTransactions(itemId, accountId, upperBand, lowerBand) {
     if (!itemId) throw new Error('missing itemId!');
     if (!accountId) throw new Error('missing accountId!');
-    if (!lowerBand) throw new Error('missing lowerBand!');
     if (!upperBand) throw new Error('missing upperBand!');
+    if (!lowerBand) throw new Error('missing lowerBand!');
 
     const formatted = itemId + '::' + accountId;
     console.log(formatted);
