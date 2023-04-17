@@ -1,4 +1,8 @@
-import { convertToAttr, marshall } from '@aws-sdk/util-dynamodb';
+import {
+  convertToAttr,
+  convertToNative,
+  marshall,
+} from '@aws-sdk/util-dynamodb';
 import {
   DynamoDBClient,
   GetItemCommand,
@@ -144,8 +148,8 @@ class DdbClient {
     const { items } = await this.readUserItems(email);
 
     const allAccounts = Object.values(items).reduce((prev, curr) => {
-      const accounts = JSON.parse(curr.M.accounts.S);
-      return [...prev, ...accounts];
+      const parsed = convertToNative(curr);
+      return [...prev, ...parsed.accounts];
     }, []);
 
     return { accounts: allAccounts };
@@ -248,7 +252,7 @@ class DdbClient {
           ':map': convertToAttr({
             id: tokenExchange.item_id,
             access_token: tokenExchange.access_token,
-            accounts: JSON.stringify(accounts),
+            accounts: accounts,
             institution_name: institution_name,
             institution_id: institution_id,
             [config.itemKeys.txCursor]: '',

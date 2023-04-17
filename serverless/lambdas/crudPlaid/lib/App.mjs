@@ -1,3 +1,4 @@
+import { convertToNative, unmarshall } from '@aws-sdk/util-dynamodb';
 import config from '../utils/config.mjs';
 import ddbClient from './DdbClient.mjs';
 import plaidClient from './PlaidClient.mjs';
@@ -69,25 +70,20 @@ class App {
       institution_name: this.payload.institution_name,
     });
 
-    return { accounts: formattedAccounts, item_id: this.payload.public_token.item_id };
+    return {
+      accounts: formattedAccounts,
+      item_id: this.payload.public_token.item_id,
+    };
   }
 
   async handleGetUserItems() {
     const { items, lastActivity } = await this.ddbClient.readUserItems(
       this.user.email
     );
+
     const formatted = Object.entries(items).reduce((prev, [item_id, item]) => {
-      const copy = { ...item.M };
-      delete copy.access_token;
-      copy.accounts = JSON.parse(copy.accounts.S);
-      copy.created_at = copy.created_at.S;
-      copy.id = item_id;
-      copy.institution_id = copy.institution_id.S;
-      copy.institution_name = copy.institution_name.S;
-      copy[config.itemKeys.txCursor] = copy[config.itemKeys.txCursor].S;
-      copy[config.itemKeys.txCursorUpdatedAt] =
-        copy[config.itemKeys.txCursorUpdatedAt].S;
-      copy.updated_at = copy.updated_at.S;
+      const copy = convertToNative(item);
+      delete copy.access_token
       return {
         ...prev,
         [item_id]: copy,
