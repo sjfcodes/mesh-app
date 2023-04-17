@@ -13,15 +13,19 @@ const getAuthToken = async () =>
   (await Auth.currentSession()).getIdToken().getJwtToken();
 
 // setup token
-export const getLinkToken = async () => {
+export const handleLinkTokenCreateUpdate = async (itemId: string | null) => {
+  const method = itemId ? 'PUT' : 'POST';
+  const route = itemId ? '/item/update_login' : '/link/token-create';
+
   const response = await axios({
-    method: 'POST',
-    url: url + '/link/token-create',
+    method,
+    url: url + route,
     headers: { Authorization: await getAuthToken() },
-    data: { path: '/link/token-create' },
+    data: { path: route, payload: { item_id: itemId } },
   });
   return response;
 };
+
 export const exchangeToken = async (
   publicToken: string,
   institution: any,
@@ -126,3 +130,7 @@ export const getItemAccountTransactions = async (
       account_id: accountId,
     },
   });
+
+  // CAESJWRrZHpPTHdxbTN1TzBBUjFQb21nSEFqeTAxNVZYWElOT2Vxa2oaBgiE8sCgBiIGCITywKAGKgYIhPLAoAY=
+  // CAESJWRrZHpPTHdxbTN1TzBBUjFQb21nSEFqeTAxNVZYWElOT2Vxa2oaBgiE8sCgBiIGCITywKAGKgYIhPLAoAY=
+  // CAESJWRrZHpPTHdxbTN1TzBBUjFQb21nSEFqeTAxNVZYWElOT2Vxa2oaBgiE8sCgBiIGCITywKAGKgYIhPLAoAY=

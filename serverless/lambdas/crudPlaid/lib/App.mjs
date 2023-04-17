@@ -24,7 +24,7 @@ class App {
     );
   }
 
-  async handleLinkTokenCreate() {
+  async handleLinkTokenCreateUpdate() {
     return await this.plaidClient.createLinkTokenByUserId(this.user.userId);
   }
 
