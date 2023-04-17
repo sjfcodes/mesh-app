@@ -17,7 +17,7 @@ interface Props {
 export default function AccountCard({ account }: Props) {
   const [transactionsShown, setTransactionsShown] = useState(false);
   const { getItemAccountBalances } = useInstitutions();
-  const { accountTransactions, getItemAccountTransactions } = useTransactions();
+  const { itemAccountTransaction, getItemAccountTransactions } = useTransactions();
   const { id: accountId, item_id: itemId } = account;
 
   const toggleShowTransactions = () => {
@@ -26,7 +26,7 @@ export default function AccountCard({ account }: Props) {
 
   useEffect(() => {
     getItemAccountTransactions(itemId, accountId);
-  }, [getItemAccountTransactions, accountTransactions, itemId, accountId]);
+  }, [getItemAccountTransactions, itemAccountTransaction, itemId, accountId]);
 
   useEffect(() => {
     (async () => {
@@ -51,7 +51,7 @@ export default function AccountCard({ account }: Props) {
       </div>
       <div className="ma-account-footer">
         {transactionsShown && (
-          <TransactionsTable transactions={accountTransactions[accountId]} />
+          <TransactionsTable transactions={itemAccountTransaction[accountId]} />
         )}
       </div>
     </div>

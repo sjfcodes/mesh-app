@@ -17,7 +17,7 @@ export const TransactionsContext = createContext<TransactionsContextShape>(
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props: any) {
-  const [accountTransactions, dispatch] = useReducer(
+  const [itemAccountTransaction, dispatch] = useReducer(
     transactionsReducer,
     initialState
   );
@@ -53,7 +53,7 @@ export function TransactionsProvider(props: any) {
 
   /**
    * @desc Builds a more accessible state shape from the Transactions data. useMemo will prevent
-   * these from being rebuilt on every render unless accountTransactions is updated in the reducer.
+   * these from being rebuilt on every render unless itemAccountTransaction is updated in the reducer.
    */
   const value = useMemo(() => {
     const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
@@ -69,7 +69,7 @@ export function TransactionsProvider(props: any) {
       return copy;
     };
 
-    const allTransactions = Object.values(accountTransactions)
+    const allTransactions = Object.values(itemAccountTransaction)
       .reduce((prev, curr) => {
         const formatted = curr.map(formatTransactions);
         return [...prev, ...formatted];
@@ -83,10 +83,10 @@ export function TransactionsProvider(props: any) {
 
     return {
       allTransactions,
-      accountTransactions,
+      itemAccountTransaction,
       getItemAccountTransactions,
     };
-  }, [accountTransactions, getItemAccountTransactions]);
+  }, [itemAccountTransaction, getItemAccountTransactions]);
 
   return <TransactionsContext.Provider value={value} {...props} />;
 }

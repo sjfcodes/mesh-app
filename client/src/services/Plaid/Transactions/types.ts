@@ -14,7 +14,7 @@ export type TransactionsAction =
 
 export interface TransactionsContextShape extends TransactionsState {
   allTransactions: TransactionType[];
-  accountTransactions: { [accountId: string]: TransactionType[] };
+  itemAccountTransaction: { [accountId: string]: TransactionType[] };
   getItemAccountTransactions: (
     itemId: string,
     accountId: string,
