@@ -31,8 +31,8 @@ export default function AccountCard({ account }: Props) {
 
   useEffect(() => {
     (async () => {
-      const response = await getItemAccountBalances(itemId, accountId);
-      console.log({ response });
+      // const response = await getItemAccountBalances(itemId, accountId);
+      // console.log({ response });
     })();
   }, [getItemAccountBalances, itemId, accountId]);
 
