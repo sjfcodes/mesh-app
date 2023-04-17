@@ -44,7 +44,6 @@ class PlaidClient {
       client_name: config.appName,
       products: ['auth'],
       language: 'en',
-      // webhook: "https://webhook.example.com",
       country_codes: ['US'],
       redirect_uri: config.redirectUri,
     };
@@ -63,10 +62,27 @@ class PlaidClient {
     return data;
   }
 
-  async getItemAccountBalances(accessToken) {
+  async updateItemLogin(userId, accessToken) {
+    if (!userId || !accessToken) throw new Error('missing required arguments!');
+    const request = {
+      user: { client_user_id: userId },
+      client_name: config.appName,
+      language: 'en',
+      country_codes: ['US'],
+      redirect_uri: config.redirectUri,
+      access_token: accessToken,
+    };
+
+    const { data } = await this.client.linkTokenCreate(request);
+    return data;
+  }
+
+  async getItemAccountBalances(accessToken, accountIds) {
     if (!accessToken) throw new Error('missing required arguments!');
 
-    const request = { access_token: accessToken };
+    const request = { access_token: accessToken, options: {} };
+    if (accountIds.length) request.options.account_ids = accountIds;
+
     const response = await this.client.accountsBalanceGet(request);
     const accounts = response.data.accounts;
 

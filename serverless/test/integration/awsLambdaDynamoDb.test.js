@@ -2,99 +2,103 @@ import * as dotenv from 'dotenv';
 import axios from 'axios';
 
 import dynamoDb from '../config/dynamoDb.mjs';
-import {
-  createTransactionTable,
-  createUserTable,
-  deleteTransactionTable,
-  deleteUserTable,
-  getTransactionTable,
-  getUserTable,
-} from './crudDynamoDbTable/modules.mjs';
-import {
-  getUserTablePayload,
-  createUserTablePayload,
-  deleteUserTablePayload,
-  deleteTransactionTablePayload,
-  createTransactionTablePayload,
-  getTransactionTablePayload,
-} from './crudDynamoDbTable/payloads.mjs';
-import {
-  createTableItemPayload,
-  deleteTableItemPayload,
-  getTableItemPayload,
-  updateTableItemPayload,
-} from './crudDynamoDbTableItem/payloads.mjs';
-import {
-  createTableItem,
-  deleteTableItem,
-  getTableItem,
-  updateTableItemItem,
-} from './crudDynamoDbTableItem/modules.mjs';
-import {
-  mockExchangeTokenLinkPayload,
-  getInstitutionByIdPayload,
-  getUserAccountsPayload,
-  mockSyncTransactionsForItemPayload,
-  getTransactionsForAccountPayload,
-  getUserItemsPayload,
-  getUserAccountsBalancesPayload,
-} from './crudPlaid/payloads.mjs';
-import { handler as crudPlaid } from '../../lambdas/crudPlaid/index.mjs';
 import mockData from './crudPlaid/mockData/plaid.js';
+
+import { handler as tableHandler } from '../../lambdas/crudDynamoDbTable/index.mjs';
+import {
+  getUserTableRequest,
+  createUserTableRequest,
+  deleteUserTableRequest,
+  deleteTransactionTableRequest,
+  createTransactionTableRequest,
+  getTransactionTableRequest,
+} from './crudDynamoDbTable/requests.mjs';
+
+import { handler as tableItemHandler } from '../../lambdas/crudDynamoDbTableItem/index.mjs';
+import {
+  createTableItemRequest,
+  deleteTableItemRequest,
+  getTableItemRequest,
+  updateTableItemRequest,
+} from './crudDynamoDbTableItem/requests.mjs';
+
+import { handler as plaidHandler } from '../../lambdas/crudPlaid/index.mjs';
+import {
+  mockExchangeTokenLinkRequest,
+  getInstitutionByIdRequest,
+  getUserAccountsRequest,
+  mockSyncTransactionsForItemRequest,
+  getTransactionsForAccountRequest,
+  getUserItemsRequest,
+  getUserAccountsBalancesRequest,
+} from './crudPlaid/requests.mjs';
 
 dotenv.config();
 const { TableName, Item } = dynamoDb;
 const testApi = process.env.USE_API_GATEWAY === 'true';
-let buildTableAndItem = false;
-let destroyTableAndItem = false;
-let testPlaidItemActions = false;
 
-const apiTable = axios.create({
-  baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtable',
-  headers: { Authorization: process.env.AUTH_TOKEN },
-});
-
-const apiTableItem = axios.create({
-  baseURL: process.env.AWS_API_GATEWAY + '/dynamodbtableitem',
+const api = axios.create({
+  baseURL: process.env.AWS_API_GATEWAY,
   headers: { Authorization: process.env.AUTH_TOKEN },
 });
 
 ///////////////////
 // TEST CONTROLS //
 ///////////////////
-// const STAGE = 'LIFECYCLE';
+let buildTableAndItem = false;
+let destroyTableAndItem = false;
+let testPlaidItemActions = false;
 // const STAGE = 'CREATE';
 const STAGE = 'PERSIST';
 // const STAGE = 'DESTROY';
+// const STAGE = 'LIFECYCLE';
 
-if (STAGE === 'LIFECYCLE') {
-  buildTableAndItem = true;
-  testPlaidItemActions = true;
-  destroyTableAndItem = true;
-}
-if (STAGE === 'CREATE') {
-  buildTableAndItem = true;
-  testPlaidItemActions = true;
-}
-if (STAGE === 'PERSIST') {
-  testPlaidItemActions = true;
-}
-if (STAGE === 'DESTROY') {
-  destroyTableAndItem = true;
+switch (STAGE) {
+  case 'CREATE':
+    buildTableAndItem = true;
+    testPlaidItemActions = true;
+    break;
+
+  case 'PERSIST':
+    testPlaidItemActions = true;
+    break;
+
+  case 'DESTROY':
+    destroyTableAndItem = true;
+    break;
+
+  case 'LIFECYCLE':
+    buildTableAndItem = true;
+    testPlaidItemActions = true;
+    destroyTableAndItem = true;
+    break;
+
+  default:
+    throw new Error('missing test stage');
 }
 
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
+
+const handleError = (err) => {
+  let message = /*err.data || err.response?.data ||*/ err;
+  console.error(message);
+};
 
 describe('lambda + dynamoDb integration tests', () => {
   if (buildTableAndItem) {
     describe('create tables', () => {
       it('should create user table', async () => {
+        const request = createUserTableRequest;
         const { status_code, body } = await (testApi
-          ? apiTable({
-              method: createUserTablePayload.context['http-method'],
-              data: createUserTablePayload,
-            }).then(({ data }) => data)
-          : createUserTable(createUserTablePayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : tableHandler(request));
+
         if (status_code !== 200) console.error(body);
         await new Promise((resolve) => setTimeout(resolve, 8000));
         expect(status_code).toBe(200);
@@ -102,12 +106,16 @@ describe('lambda + dynamoDb integration tests', () => {
       });
 
       it('should create transaction table', async () => {
+        const request = createTransactionTableRequest;
         const { status_code, body } = await (testApi
-          ? apiTable({
-              method: createTransactionTablePayload.context['http-method'],
-              data: createTransactionTablePayload,
-            }).then(({ data }) => data)
-          : createTransactionTable(createTransactionTablePayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : tableHandler(request));
         if (status_code !== 200) console.error(body);
         await new Promise((resolve) => setTimeout(resolve, 8000));
         expect(status_code).toBe(200);
@@ -118,12 +126,16 @@ describe('lambda + dynamoDb integration tests', () => {
 
   describe('read tables', () => {
     it('should get user table', async () => {
+      const request = getUserTableRequest;
       const { status_code, body } = await (testApi
-        ? apiTable({
-            method: getUserTablePayload.context['http-method'],
-            data: getUserTablePayload,
-          }).then(({ data }) => data)
-        : getUserTable(getUserTablePayload));
+        ? api({
+            url: request.context['resource-path'],
+            method: request.context['http-method'],
+            data: request.body,
+          })
+            .then(({ data }) => data)
+            .catch(handleError)
+        : tableHandler(request));
 
       if (status_code !== 200) console.error(body);
 
@@ -131,12 +143,16 @@ describe('lambda + dynamoDb integration tests', () => {
     });
 
     it('should get transaction table', async () => {
+      const request = getTransactionTableRequest;
       const { status_code, body } = await (testApi
-        ? apiTable({
-            method: getTransactionTablePayload.context['http-method'],
-            data: getTransactionTablePayload,
-          }).then(({ data }) => data)
-        : getTransactionTable(getTransactionTablePayload));
+        ? api({
+            url: request.context['resource-path'],
+            method: request.context['http-method'],
+            data: request.body,
+          })
+            .then(({ data }) => data)
+            .catch(handleError)
+        : tableHandler(request));
 
       if (status_code !== 200) console.error(body);
 
@@ -147,37 +163,57 @@ describe('lambda + dynamoDb integration tests', () => {
   describe('create, edit, & delete items from table', () => {
     if (buildTableAndItem) {
       it('should create Item', async () => {
+        const request = createTableItemRequest;
         const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: createTableItemPayload.context['http-method'],
-              data: createTableItemPayload,
-            }).then(({ data }) => data)
-          : createTableItem(createTableItemPayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : tableItemHandler(request));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });
     }
 
     it('should get table item', async () => {
-      const { status_code, body } = await (testApi
-        ? apiTableItem({
-            method: getTableItemPayload.context['http-method'],
-            data: getTableItemPayload,
-          }).then(({ data }) => data)
-        : getTableItem(getTableItemPayload));
+      const request = getTableItemRequest;
+      const response = await (testApi
+        ? api({
+            url: request.context['resource-path'],
+            method: request.context['http-method'],
+            data: request.body,
+          })
+            .then(({ data }) => data)
+            .catch(handleError)
+        : tableItemHandler(request));
+
+      const { status_code, body } = response;
+      if (status_code !== 200) console.error(response);
 
       expect(status_code).toBe(200);
-      expect(body.Item.email.S).toBe(Item.original.email.S);
-      expect(body.Item.email.S).toBe(Item.original.email.S);
+      console.log(body.Item.plaid_item.M);
+      expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.id.S).toBe(
+        mockData.tokenExchange.item_id
+      );
+      expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.institution_name.S).toBe(
+        mockData.institutionName
+      );
     });
 
     it('should update table item with existing properties', async () => {
+      const request = updateTableItemRequest;
       const { status_code, body } = await (testApi
-        ? apiTableItem({
-            method: updateTableItemPayload.context['http-method'],
-            data: updateTableItemPayload,
-          }).then(({ data }) => data)
-        : updateTableItemItem(updateTableItemPayload));
+        ? api({
+            url: request.context['resource-path'],
+            method: request.context['http-method'],
+            data: request.body,
+          })
+            .then(({ data }) => data)
+            .catch(handleError)
+        : tableItemHandler(request));
 
       if (status_code !== 200) console.error(body);
 
@@ -190,13 +226,16 @@ describe('lambda + dynamoDb integration tests', () => {
 
     if (testPlaidItemActions) {
       it('should add new plaid item with mocked token exchange', async () => {
-        const payload = mockExchangeTokenLinkPayload;
+        const request = mockExchangeTokenLinkRequest;
         const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: payload.context['http-method'],
-              data: payload,
-            }).then(({ data }) => data)
-          : crudPlaid(payload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : plaidHandler(request));
 
         if (status_code !== 200) console.error(body);
 
@@ -205,31 +244,38 @@ describe('lambda + dynamoDb integration tests', () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
-      // it('should simulate item sync & write transactions to db', async () => {
-      //   const payload = mockSyncTransactionsForItemPayload;
-      //   const { status_code, body } = await (testApi
-      //     ? apiTableItem({
-      //         method: payload.context['http-method'],
-      //         data: payload,
-      //       }).then(({ data }) => data)
-      //     : crudPlaid(payload));
+      it('should simulate item sync & write transactions to db', async () => {
+        const request = mockSyncTransactionsForItemRequest;
+        const { status_code, body } = await (testApi
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : plaidHandler(request));
 
-      //   if (status_code !== 200) console.error(body);
+        if (status_code !== 200) console.error(body);
 
-      //   expect(status_code).toBe(200);
-      //   expect(body.tx_sync).toBe('complete');
-      //   expect(body.tx_cursor_updated_at).not.toBe(undefined);
-      //   expect(body.added).toBeGreaterThan(0);
-      //   await new Promise((resolve) => setTimeout(resolve, 2000));
-      // });
+        expect(status_code).toBe(200);
+        expect(body.tx_sync).toBe('complete');
+        expect(body.tx_cursor_updated_at).not.toBe(undefined);
+        expect(body.added).toBeGreaterThan(0);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      });
 
       it('should get plaid items for one user', async () => {
+        const request = getUserItemsRequest;
         const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: getUserItemsPayload.context['http-method'],
-              data: getUserItemsPayload,
-            }).then(({ data }) => data)
-          : crudPlaid(getUserItemsPayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : plaidHandler(request));
 
         if (status_code !== 200) console.error(body);
 
@@ -250,12 +296,16 @@ describe('lambda + dynamoDb integration tests', () => {
       });
 
       it('should get plaid item accounts for user', async () => {
+        const request = getUserAccountsRequest;
         const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: getUserAccountsPayload.context['http-method'],
-              data: getUserAccountsPayload,
-            }).then(({ data }) => data)
-          : crudPlaid(getUserAccountsPayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : plaidHandler(request));
 
         if (status_code !== 200) console.error(body);
 
@@ -263,34 +313,56 @@ describe('lambda + dynamoDb integration tests', () => {
         expect(body.accounts.length).toBeGreaterThan(0);
       });
 
-      it('should get plaid item account balances for user', async () => {
-        const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: getUserAccountsBalancesPayload.context['http-method'],
-              data: getUserAccountsBalancesPayload,
-            }).then(({ data }) => data)
-          : crudPlaid(getUserAccountsBalancesPayload));
+      /**
+       * TODO: how to overcome plaid error for this test?
+       *
+       * data: {
+       *   display_message: null,
+       *   error_code: 'ITEM_LOGIN_REQUIRED',
+       *   error_message: "the login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information. use Link's update mode to restore the item to a good state",
+       *   error_type: 'ITEM_ERROR',
+       *   request_id: '3Nr4kWFx69s8tez',
+       *   suggested_action: null
+       * }
+       */
+      // it('should get plaid item account balances for user', async () => {
+      //   const request = getUserAccountsBalancesRequest;
+      //   const { status_code, body } = await (testApi
+      //     ? api({
+      //         url: request.context['resource-path'],
+      //         method: request.context['http-method'],
+      //         data: request.body,
+      //       })
+      //         .then(({ data }) => data)
+      //         .catch(handleError)
+      //     : plaidHandler(request));
 
-        if (status_code !== 200) console.error(body);
+      //   if (status_code !== 200) console.error(body);
+      //   expect(status_code).toBe(200);
+      //   expect(Array.isArray(body.account)).toBe(true);
 
-        const account = Object.values(body.account)[0];
-
-        expect(status_code).toBe(200);
-        expect(account.balances.available).toBeGreaterThan(0);
-      });
+      //   const account = Object.values(body.account)[0];
+      //   expect(account.balances.available).toBeGreaterThan(0);
+      // });
 
       it('should get plaid item account transactions', async () => {
+        const request = getTransactionsForAccountRequest;
         const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: getTransactionsForAccountPayload.context['http-method'],
-              data: getTransactionsForAccountPayload,
-            }).then(({ data }) => data)
-          : crudPlaid(getTransactionsForAccountPayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              params: request.params.querystring,
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : plaidHandler(request));
 
         if (status_code !== 200) console.error(body);
-        const transaction = body.transactions[0];
         expect(status_code).toBe(200);
         expect(body.transactions?.length).toBe(48);
+
+        const transaction = body.transactions[0];
         expect(transaction).toHaveProperty('created_at');
         expect(transaction).toHaveProperty('updated_at');
         expect(transaction).toHaveProperty('transaction_id');
@@ -307,12 +379,17 @@ describe('lambda + dynamoDb integration tests', () => {
       });
 
       it('should get bank institution details by id institution_id', async () => {
+        const request = getInstitutionByIdRequest;
         const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: getInstitutionByIdPayload.context['http-method'],
-              data: getInstitutionByIdPayload,
-            }).then(({ data }) => data)
-          : crudPlaid(getInstitutionByIdPayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              params: request.params.querystring,
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : plaidHandler(request));
 
         if (status_code !== 200) console.error(body);
 
@@ -323,12 +400,16 @@ describe('lambda + dynamoDb integration tests', () => {
 
     if (destroyTableAndItem) {
       it('should DELETE item from Table', async () => {
+        const request = deleteTableItemRequest;
         const { status_code, body } = await (testApi
-          ? apiTableItem({
-              method: deleteTableItemPayload.context['http-method'],
-              data: deleteTableItemPayload,
-            }).then(({ data }) => data)
-          : deleteTableItem(deleteTableItemPayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : tableItemHandler(request));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });
@@ -338,22 +419,30 @@ describe('lambda + dynamoDb integration tests', () => {
   if (destroyTableAndItem) {
     describe('destroy tables', () => {
       it('should delete user table', async () => {
+        const request = deleteUserTableRequest;
         const { status_code, body } = await (testApi
-          ? apiTable({
-              method: deleteUserTablePayload.context['http-method'],
-              data: deleteUserTablePayload,
-            }).then(({ data }) => data)
-          : deleteUserTable(deleteUserTablePayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : tableHandler(request));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });
       it('should delete transaction table', async () => {
+        const request = deleteTransactionTableRequest;
         const { status_code, body } = await (testApi
-          ? apiTable({
-              method: deleteTransactionTablePayload.context['http-method'],
-              data: deleteTransactionTablePayload,
-            }).then(({ data }) => data)
-          : deleteTransactionTable(deleteTransactionTablePayload));
+          ? api({
+              url: request.context['resource-path'],
+              method: request.context['http-method'],
+              data: request.body,
+            })
+              .then(({ data }) => data)
+              .catch(handleError)
+          : tableHandler(request));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });

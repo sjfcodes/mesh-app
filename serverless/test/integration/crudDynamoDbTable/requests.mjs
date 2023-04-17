@@ -1,15 +1,14 @@
-import * as dotenv from 'dotenv';
+import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
+import dynamoDbConfig from '../../config/dynamoDb.mjs';
 
-dotenv.config();
-import config from '../../config/dynamoDb.mjs';
-
-const { TableName, params } = config;
+const { path } = lambdaConfig
+const { TableName } = dynamoDbConfig;
 
 ////////////////
 // USER TABLE //
 ////////////////
 
-export const createUserTablePayload = {
+export const createUserTableRequest = {
   body: {
     path: null,
     payload: {
@@ -35,37 +34,43 @@ export const createUserTablePayload = {
       },
     },
   },
-  context: { ['http-method']: 'PUT' },
-  params,
+  context: { 
+    ['http-method']: 'PUT',
+    ['resource-path']: path.dynamoDbTable
+  },
 };
 
-export const getUserTablePayload = {
+export const getUserTableRequest = {
   body: {
     path: null,
     payload: {
       TableName: TableName.user,
     },
   },
-  context: { ['http-method']: 'GET' },
-  params,
+  context: { 
+    ['http-method']: 'GET',
+    ['resource-path']: path.dynamoDbTable
+  },
 };
 
-export const deleteUserTablePayload = {
+export const deleteUserTableRequest = {
   body: {
     path: null,
     payload: {
       TableName: TableName.user,
     },
   },
-  context: { ['http-method']: 'DELETE' },
-  params,
+  context: { 
+    ['http-method']: 'DELETE',
+    ['resource-path']: path.dynamoDbTable
+  },
 };
 
 ///////////////////////
 // TRANSACTION TABLE //
 ///////////////////////
 
-export const createTransactionTablePayload = {
+export const createTransactionTableRequest = {
   body: {
     path: null,
     payload: {
@@ -99,28 +104,34 @@ export const createTransactionTablePayload = {
       },
     },
   },
-  context: { ['http-method']: 'PUT' },
-  params,
+  context: { 
+    ['http-method']: 'PUT',
+    ['resource-path']: path.dynamoDbTable
+  },
 };
 
-export const getTransactionTablePayload = {
+export const getTransactionTableRequest = {
   body: {
     path: null,
     payload: {
       TableName: TableName.transaction,
     },
   },
-  context: { ['http-method']: 'GET' },
-  params,
+  context: { 
+    ['http-method']: 'GET',
+    ['resource-path']: path.dynamoDbTable
+  },
 };
 
-export const deleteTransactionTablePayload = {
+export const deleteTransactionTableRequest = {
   body: {
     path: null,
     payload: {
       TableName: TableName.transaction,
     },
   },
-  context: { ['http-method']: 'DELETE' },
-  params,
+  context: { 
+    ['http-method']: 'DELETE',
+    ['resource-path']: path.dynamoDbTable
+  },
 };

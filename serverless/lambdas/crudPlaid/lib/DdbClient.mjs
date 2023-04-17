@@ -53,10 +53,10 @@ class DdbClient {
      * for getting user last activity.
      * Skip this check for said route.
      */
-    if (requestPath !== config.path.getItems) {
+    if (requestPath !== config.path.userItem) {
       let shouldWriteUserLastActivity = false;
       const lastActivity = new Date(
-        Item[config.itemKeys.lastActivity].S
+        Item[config.itemKeys.lastActivity]?.S
       ).getTime();
 
       if (!isNaN(lastActivity)) {
@@ -168,33 +168,34 @@ class DdbClient {
         },
       })
     );
+
     return { transactions: response.Items };
   }
 
-  async readAccountTransaction(itemId, accountId, transactionId) {
-    if (!itemId) throw new Error('missing itemId!');
-    if (!accountId) throw new Error('missing accountId!');
-    if (!transaction) throw new Error('missing transaction!');
+  // async readAccountTransaction(itemId, accountId, transactionId) {
+  //   if (!itemId) throw new Error('missing itemId!');
+  //   if (!accountId) throw new Error('missing accountId!');
+  //   if (!transaction) throw new Error('missing transaction!');
 
-    const formatted = itemId + '::' + accountId;
-    const response = await this.client.send(
-      new GetItemCommand({
-        TableName: config.TableName.transaction,
-        Key: {
-          [PARTITION_KEY]: { S: formatted },
-          [SORT_KEY]: { S: transactionId },
-        },
-      })
-    );
+  //   const formatted = itemId + '::' + accountId;
+  //   const response = await this.client.send(
+  //     new GetItemCommand({
+  //       TableName: config.TableName.transaction,
+  //       Key: {
+  //         [PARTITION_KEY]: { S: formatted },
+  //         [SORT_KEY]: { S: transactionId },
+  //       },
+  //     })
+  //   );
 
-    return { transaction: {} };
-  }
+  //   return { transaction: {} };
+  // }
 
-  async writeItemTxCursor(email, itemId, newTxCursor) {
+  async writeUserItemTxCursor(email, itemId, newTxCursor) {
     if (!email || !itemId || newTxCursor === undefined)
       throw new Error('missing required arguments!');
 
-    console.log(`writeItemTxCursor(${email}, ${itemId}, ${newTxCursor})`);
+    console.log(`writeUserItemTxCursor(${email}, ${itemId}, ${newTxCursor})`);
 
     const now = getTimestamp();
 
@@ -221,7 +222,7 @@ class DdbClient {
     return { tx_cursor_updated_at: now };
   }
 
-  async writePlaidItemToUser({
+  async writeUserPlaidItem({
     email,
     tokenExchange,
     accounts,
@@ -262,16 +263,11 @@ class DdbClient {
     );
   }
 
-  async writeTxsForItem({ itemId, added, modified, removed }) {
-    if (
-      !itemId ||
-      added === undefined ||
-      modified === undefined ||
-      removed === undefined
-    )
+  async writeUserItemTransaction({ itemId, added, modified, removed }) {
+    if (!itemId || !added || !modified || !removed)
       throw new Error('missing required arguments!');
     console.log(
-      `writeTxsForItem(${JSON.stringify({
+      `writeUserItemTransaction(${JSON.stringify({
         itemId,
         added: added.length,
         modified: modified.length,
@@ -322,13 +318,15 @@ class DdbClient {
       allRequests,
       config.dynamoDbBatchRequestLength
     );
+
     const responses = [];
-    for (let i = 0; i < requestQueue.length; i++) {
+    const loopCount = requestQueue.length;
+    for (let i = 0; i < loopCount; i++) {
       const request = requestQueue.pop();
       const response = await batchWriteToTxTable(request);
       if (requestQueue.length) {
-        console.log('pausing for 3000 ms');
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        console.log('pausing for 1000 ms');
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
       responses.push(response);
     }

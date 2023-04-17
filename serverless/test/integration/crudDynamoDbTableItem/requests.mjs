@@ -1,17 +1,21 @@
 import dynamoDbConfig from '../../config/dynamoDb.mjs';
+import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
 
-const { TableName, Item, params } = dynamoDbConfig;
+const { path } = lambdaConfig;
+const { TableName, Item } = dynamoDbConfig;
 
-export const createTableItemPayload = {
+export const createTableItemRequest = {
   body: {
     path: null,
     payload: { TableName: TableName.user, Item: Item.original },
   },
-  context: { ['http-method']: 'PUT' },
-  params,
+  context: {
+    ['http-method']: 'PUT',
+    ['resource-path']: path.dynamoDbTableItem,
+  },
 };
 
-export const getTableItemPayload = {
+export const getTableItemRequest = {
   body: {
     path: null,
     payload: {
@@ -21,11 +25,13 @@ export const getTableItemPayload = {
       },
     },
   },
-  context: { ['http-method']: 'GET' },
-  params,
+  context: {
+    ['http-method']: 'GET',
+    ['resource-path']: path.dynamoDbTableItem,
+  },
 };
 
-export const updateTableItemPayload = {
+export const updateTableItemRequest = {
   body: {
     path: null,
     payload: {
@@ -38,11 +44,13 @@ export const updateTableItemPayload = {
       ReturnValues: 'ALL_NEW', //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
     },
   },
-  context: { ['http-method']: 'POST' },
-  params,
+  context: {
+    ['http-method']: 'POST',
+    ['resource-path']: path.dynamoDbTableItem,
+  },
 };
 
-export const deleteTableItemPayload = {
+export const deleteTableItemRequest = {
   body: {
     path: null,
     payload: {
@@ -50,8 +58,10 @@ export const deleteTableItemPayload = {
       Key: { email: { S: Item.original.email.S } },
     },
   },
-  context: { ['http-method']: 'DELETE' },
-  params,
+  context: {
+    ['http-method']: 'DELETE',
+    ['resource-path']: path.dynamoDbTableItem,
+  },
 };
 
 export const createPlaidItemPayload = {
@@ -62,6 +72,8 @@ export const createPlaidItemPayload = {
       Item: Item.original,
     },
   },
-  context: { ['http-method']: 'PUT' },
-  params,
+  context: {
+    ['http-method']: 'PUT',
+    ['resource-path']: path.dynamoDbTableItem,
+  },
 };

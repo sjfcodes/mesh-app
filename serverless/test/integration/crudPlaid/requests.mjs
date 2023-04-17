@@ -1,11 +1,11 @@
 import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
 import dynamoDbConfig from '../../config/dynamoDb.mjs';
-import mockPlaid from './mockData/plaid';
+import mockPlaid from './mockData/plaid.js';
 
 const { TableName, path } = lambdaConfig;
 const { params } = dynamoDbConfig;
 
-export const createTokenLinkPayload = {
+export const createTokenLinkRequest = {
   body: {
     TableName: TableName.user,
     path: path.linkTokenCreate,
@@ -17,15 +17,15 @@ export const createTokenLinkPayload = {
   params,
 };
 
-export const mockExchangeTokenLinkPayload = {
+export const mockExchangeTokenLinkRequest = {
   body: {
     path: path.itemTokenExchangeTest,
     payload: {
       accounts: mockPlaid.accounts,
       institution_id: mockPlaid.institutionId,
       institution_name: mockPlaid.institutionName,
-      public_token:
-        mockPlaid.tokenExchange /** typically a public token that is protected and exchanged server side */,
+      /** typically a public token that is protected and exchanged server side */
+      public_token: mockPlaid.tokenExchange,
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
@@ -36,7 +36,7 @@ export const mockExchangeTokenLinkPayload = {
   params,
 };
 
-export const mockSyncTransactionsForItemPayload = {
+export const mockSyncTransactionsForItemRequest = {
   body: {
     payload: {
       item_id: mockPlaid.tokenExchange.item_id,
@@ -46,16 +46,21 @@ export const mockSyncTransactionsForItemPayload = {
   },
   context: {
     ['http-method']: 'PUT',
-    ['resource-path']: path.itemTxSyncTest,
+    ['resource-path']: path.testItemTransactionSync,
   },
-  params,
+  params: {
+    ...params,
+    querystring: {
+      item_id: mockPlaid.tokenExchange.item_id,
+    },
+  },
 };
 
-export const getTransactionsForAccountPayload = {
+export const getTransactionsForAccountRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.getAccountTransactions,
+    ['resource-path']: path.itemAccountTransaction,
   },
   params: {
     ...params,
@@ -66,29 +71,29 @@ export const getTransactionsForAccountPayload = {
   },
 };
 
-export const getUserItemsPayload = {
+export const getUserItemsRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.getItems,
+    ['resource-path']: path.userItem,
   },
   params,
 };
 
-export const getUserAccountsPayload = {
+export const getUserAccountsRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.itemGetAccounts,
+    ['resource-path']: path.itemAccount,
   },
   params,
 };
 
-export const getUserAccountsBalancesPayload = {
+export const getUserAccountsBalancesRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.getAccountBalances,
+    ['resource-path']: path.itemAccountBalance,
   },
   params: {
     ...params,
@@ -98,11 +103,11 @@ export const getUserAccountsBalancesPayload = {
   },
 };
 
-export const getInstitutionByIdPayload = {
+export const getInstitutionByIdRequest = {
   body: {},
   context: {
     ['http-method']: 'GET',
-    ['resource-path']: path.itemGetInstitution,
+    ['resource-path']: path.itemInstitution,
   },
   params: {
     ...params,

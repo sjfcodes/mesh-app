@@ -1,18 +1,56 @@
 import * as dotenv from 'dotenv';
+import mockData from '../integration/crudPlaid/mockData/plaid';
 
 dotenv.config();
 
 const config = {
+  params: {
+    header: {
+      Authorization: process.env.AUTH_TOKEN
+    }
+  },
   TableName: {
     user: process.env.USER_TABLE_NAME /* prod or test table */,
     transaction: process.env.TRANSACTION_TABLE_NAME /* prod or test table */,
   },
   Item: {
     original: {
-      email: { S: 'sjfcodes@gmail.com' },
-      user_id: { S: '02f25056-fe04-49a0-8c07-c509a245ff8e' },
+      email: { S: process.env.USER_EMAIL },
+      user_id: { S: process.env.USER_EMAIL },
       plaid_item: {
-        M: {},
+        M: {
+          [mockData.tokenExchange.item_id]: {
+            M: {
+              access_token: {
+                S: mockData.tokenExchange.access_token,
+              },
+              accounts: {
+                S: JSON.stringify(mockData.accounts),
+              },
+              created_at: {
+                S: '2023-01-12T22:11:53.103Z',
+              },
+              id: {
+                S: mockData.tokenExchange.item_id,
+              },
+              institution_id: {
+                S: mockData.institutionId,
+              },
+              institution_name: {
+                S: mockData.institutionName,
+              },
+              tx_cursor: {
+                S: '',
+              },
+              tx_cursor_updated_at: {
+                S: '2023-01-12T22:11:53.103Z',
+              },
+              updated_at: {
+                S: '2023-01-12T22:11:53.103Z',
+              },
+            },
+          },
+        },
       },
       verified: { BOOL: false },
     },
@@ -20,7 +58,6 @@ const config = {
       verified: { BOOL: true },
     },
   },
-  params: { header: { Authorization: process.env.AUTH_TOKEN } },
 };
 
 export default config;

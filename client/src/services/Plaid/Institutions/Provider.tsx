@@ -1,6 +1,9 @@
 import React, { createContext, useCallback, useMemo, useReducer } from 'react';
 
-import { getItemInstitution as apiGetInstitutionById } from '../../../util/api';
+import {
+  getItemInstitution as apiGetInstitutionById,
+  getItemAccountBalances as apiGetItemAccountBalances,
+} from '../../../util/api';
 import plaidInstitutionsReducer from './reducer';
 import { InstitutionsContextShape } from './types';
 
@@ -36,6 +39,14 @@ export const InstitutionsProvider = (props: any) => {
     dispatch({ type: 'SUCCESSFUL_GET', payload: institutions[0] });
   }, []);
 
+  const getItemAccountBalances = useCallback(
+    async (itemId: string, accountId: string) => {
+      const data = apiGetItemAccountBalances(itemId, accountId);
+      console.log(data);
+    },
+    []
+  );
+
   /**
    * @desc Builds a more accessible state shape from the Institution data. useMemo will prevent
    * these from being rebuilt on every render unless institutionsById is updated in the reducer.
@@ -47,9 +58,10 @@ export const InstitutionsProvider = (props: any) => {
       institutionsById,
       getItemInstitution,
       getInstitutionsById: getItemInstitution,
+      getItemAccountBalances,
       formatLogoSrc,
     };
-  }, [institutionsById, getItemInstitution]);
+  }, [institutionsById, getItemInstitution, getItemAccountBalances]);
 
   return <InstitutionsContext.Provider value={value} {...props} />;
 };
