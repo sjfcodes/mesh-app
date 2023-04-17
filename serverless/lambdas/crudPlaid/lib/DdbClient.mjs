@@ -169,7 +169,13 @@ class DdbClient {
       })
     );
 
-    return { transactions: response.Items };
+    let transactions = [];
+
+    if (response.Items?.length) {
+      transactions = response.Items.map((tx) => unmarshall(tx));
+    }
+
+    return { transactions };
   }
 
   // async readAccountTransaction(itemId, accountId, transactionId) {
@@ -283,7 +289,7 @@ class DdbClient {
         const requestItem = {
           [PARTITION_KEY]: `${itemId}::${tx.account_id}`,
           [SORT_KEY]: tx.transaction_id,
-          transaction: JSON.stringify(tx),
+          transaction: tx,
           updated_at: now,
         };
 

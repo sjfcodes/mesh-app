@@ -116,6 +116,7 @@ class App {
       accessToken,
       accountIds
     );
+
     console.log(accounts);
 
     const formatted = accounts.reduce((prev, curr) => {
@@ -135,16 +136,7 @@ class App {
       account_id
     );
 
-    const formatted = transactions.map((tx) => {
-      const copy = { ...tx };
-      copy.created_at = tx.created_at.S;
-      copy.updated_at = tx.updated_at.S;
-      copy.transaction_id = tx.transaction_id.S;
-      copy['item_id::account_id'] = tx['item_id::account_id'].S;
-      copy.transaction = JSON.parse(tx.transaction.S);
-      return copy;
-    });
-    return { transactions: formatted };
+    return { transactions };
   }
 
   async handleGetItemInstitutionById() {
