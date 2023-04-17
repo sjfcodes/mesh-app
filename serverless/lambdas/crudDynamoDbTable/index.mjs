@@ -32,6 +32,7 @@ export const handler = async (event) => {
       default:
         throw new Error(`Unsupported httpMethod "${httpMethod}"`);
     }
+
     response = await client.send(new Command(event.body.payload));
   } catch (err) {
     console.error(err);

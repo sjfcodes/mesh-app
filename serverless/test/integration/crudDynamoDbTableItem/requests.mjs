@@ -21,7 +21,7 @@ export const getTableItemRequest = {
     payload: {
       TableName: TableName.user,
       Key: {
-        email: { S: Item.original.email.S },
+        email: Item.original.email,
       },
     },
   },
@@ -36,7 +36,7 @@ export const updateTableItemRequest = {
     path: null,
     payload: {
       TableName: TableName.user,
-      Key: { email: { S: Item.original.email.S } },
+      Key: { email: Item.original.email },
       UpdateExpression: 'SET verified = :verified',
       ExpressionAttributeValues: {
         ':verified': Item.update.verified,
@@ -55,7 +55,7 @@ export const deleteTableItemRequest = {
     path: null,
     payload: {
       TableName: TableName.user,
-      Key: { email: { S: Item.original.email.S } },
+      Key: { email: Item.original.email },
     },
   },
   context: {
