@@ -7,6 +7,7 @@ import useInstitutions from '../../hooks/usePlaidInstitutions';
 import AccountCard from '../AccountCard/AccountCard';
 import DefaultButton from '../Button/Default/DefaultButton';
 import usePlaidItems from '../../hooks/usePlaidItems';
+import ButtonUpdateItem from '../ButtonUpdateItem/ButtonUpdateItem';
 
 import './style.scss';
 
@@ -68,12 +69,10 @@ const ItemCard = ({ item }: Props) => {
               <h3>last activity</h3>
               <p>{diffBetweenCurrentTime(lastActivity)}</p>
             </li>
-            <li>
+            {/* <li>
               <h3>routing #</h3>
               <p>{institution.routing_numbers}</p>
-            </li>
-          </ul>
-          <ul>
+            </li> */}
             <li>
               <h3>last sync</h3>
               <p>{itemLastSyncDate}</p>
@@ -82,6 +81,9 @@ const ItemCard = ({ item }: Props) => {
               <DefaultButton onClick={handleSyncItem}>
                 sync transactions
               </DefaultButton>
+            </li>
+            <li>
+              <ButtonUpdateItem itemId={item.id} />
             </li>
           </ul>
         </div>
