@@ -76,7 +76,7 @@ class App {
     };
   }
 
-  async handleGetUserItems() {
+  async handleGetItems() {
     const { items, lastActivity } = await this.ddbClient.readUserItems(
       this.user.email
     );
@@ -93,13 +93,13 @@ class App {
     return { items: formatted, last_activity: lastActivity };
   }
 
-  async handleGetUserAccounts() {
+  async handleGetItemAccounts() {
     const { accounts } = await this.ddbClient.readUserAccounts(this.user.email);
 
     return { accounts };
   }
 
-  async handleGetItemAccountBalance() {
+  async handleGetItemAccountBalances() {
     const { item_id: itemId, account_id: accountId } = this.queryString;
     const accountIds = [];
 
