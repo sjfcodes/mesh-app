@@ -49,9 +49,9 @@ let buildTableAndItem = false;
 let destroyTableAndItem = false;
 let testPlaidItemActions = false;
 // const STAGE = 'CREATE';
-// const STAGE = 'PERSIST';
+const STAGE = 'PERSIST';
 // const STAGE = 'DESTROY';
-const STAGE = 'LIFECYCLE';
+// const STAGE = 'LIFECYCLE';
 
 switch (STAGE) {
   case 'CREATE':
@@ -194,10 +194,11 @@ describe('lambda + dynamoDb integration tests', () => {
       if (status_code !== 200) console.error(response);
 
       expect(status_code).toBe(200);
-      expect(body.items[mockData.tokenExchange.item_id].id).toBe(
+      console.log(body.Item.plaid_item.M);
+      expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.id.S).toBe(
         mockData.tokenExchange.item_id
       );
-      expect(body.items[mockData.tokenExchange.item_id].institution_name).toBe(
+      expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.institution_name.S).toBe(
         mockData.institutionName
       );
     });
@@ -427,7 +428,7 @@ describe('lambda + dynamoDb integration tests', () => {
             })
               .then(({ data }) => data)
               .catch(handleError)
-          : deleteUserTable(request));
+          : tableHandler(request));
         if (status_code !== 200) console.error(body);
         expect(status_code).toBe(200);
       });
