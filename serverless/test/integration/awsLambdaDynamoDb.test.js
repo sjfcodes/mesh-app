@@ -194,7 +194,6 @@ describe('lambda + dynamoDb integration tests', () => {
       if (status_code !== 200) console.error(response);
 
       expect(status_code).toBe(200);
-      console.log(body.Item.plaid_item.M);
       expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.id.S).toBe(
         mockData.tokenExchange.item_id
       );
