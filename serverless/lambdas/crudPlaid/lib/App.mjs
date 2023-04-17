@@ -83,7 +83,7 @@ class App {
 
     const formatted = Object.entries(items).reduce((prev, [item_id, item]) => {
       const copy = convertToNative(item);
-      delete copy.access_token
+      delete copy.access_token;
       return {
         ...prev,
         [item_id]: copy,
@@ -162,6 +162,13 @@ class App {
       transactions: { added, modified, removed },
       tx_cursor: newTxCursor,
     } = this.payload;
+
+    // perform item read to replicate sync workflow
+    const test = await this.ddbClient.readItemByItemId(this.user.email, itemId);
+    if (!test.accessToken) throw new Error('missing accessToken');
+    if (!test.accounts.length) throw new Error('missing accounts.length');
+    if (!test.createdAt) throw new Error('missing createdAt');
+    if (!test.updatedAt) throw new Error('missing updatedAt');
 
     await this.ddbClient.writeUserItemTransaction({
       itemId,

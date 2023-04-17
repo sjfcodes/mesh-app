@@ -79,7 +79,7 @@ switch (STAGE) {
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
 
 const handleError = (err) => {
-  let message = /*err.data || err.response?.data ||*/ err;
+  let message = err.data || err.response?.data || err;
   console.error(message);
 };
 
@@ -193,12 +193,13 @@ describe('lambda + dynamoDb integration tests', () => {
       if (status_code !== 200) console.error(response);
 
       expect(status_code).toBe(200);
-      expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.id.S).toBe(
-        mockData.tokenExchange.item_id
-      );
-      expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.institution_name.S).toBe(
-        mockData.institutionName
-      );
+      expect(
+        body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.id.S
+      ).toBe(mockData.tokenExchange.item_id);
+      expect(
+        body.Item.plaid_item.M[mockData.tokenExchange.item_id].M
+          .institution_name.S
+      ).toBe(mockData.institutionName);
     });
 
     it('should update table item with existing properties', async () => {

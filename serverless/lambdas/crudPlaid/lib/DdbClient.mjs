@@ -2,6 +2,7 @@ import {
   convertToAttr,
   convertToNative,
   marshall,
+  unmarshall,
 } from '@aws-sdk/util-dynamodb';
 import {
   DynamoDBClient,
@@ -88,18 +89,8 @@ class DdbClient {
   async readItemByItemId(email, itemId) {
     if (!email) throw new Error('missing email!');
     if (!itemId) throw new Error('missing itemId!');
-    console.log(`readItemByItemId(${email}, ${itemId})`);
-    const {
-      Item: {
-        [config.itemKeys.plaidItem]: {
-          M: {
-            [itemId]: {
-              M: { access_token, accounts, created_at, updated_at, tx_cursor },
-            },
-          },
-        },
-      },
-    } = await this.client.send(
+
+    const { Item } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.user,
         Key: { email: marshall(email) },
@@ -111,12 +102,16 @@ class DdbClient {
       })
     );
 
+    const {
+      [config.itemKeys.plaidItem]: { [itemId]: item },
+    } = unmarshall(Item);
+
     return {
-      accessToken: access_token.S,
-      accounts: JSON.parse(accounts.S),
-      createdAt: created_at.S,
-      updatedAt: updated_at.S,
-      txCursor: tx_cursor.S,
+      accessToken: item.access_token,
+      accounts: item.accounts,
+      createdAt: item.created_at,
+      updatedAt: item.updated_at,
+      txCursor: item.tx_cursor,
     };
   }
 
