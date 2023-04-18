@@ -89,7 +89,7 @@ describe('lambda + dynamoDb integration tests', () => {
     describe('create tables', () => {
       it('should create user table', async () => {
         const request = createUserTableRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -99,7 +99,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .catch(handleError)
           : tableHandler(request));
 
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
         await new Promise((resolve) => setTimeout(resolve, 8000));
         expect(status_code).toBe(200);
         expect(body.TableDescription.TableName).toBe(TableName.user);
@@ -107,7 +108,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
       it('should create transaction table', async () => {
         const request = createTransactionTableRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -116,13 +117,16 @@ describe('lambda + dynamoDb integration tests', () => {
               .then(({ data }) => data)
               .catch(handleError)
           : tableHandler(request));
-        if (status_code !== 200) console.error(body);
+
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
+
         await new Promise((resolve) => setTimeout(resolve, 8000));
         expect(status_code).toBe(200);
         expect(body.TableDescription.TableName).toBe(TableName.transaction);
         // pause to let tables create
-        console.log('pause for 5000ms after tables create')
-        await new Promise(resolve=>setTimeout(resolve, 5000))
+        console.log('pause for 5000ms after tables create');
+        await new Promise((resolve) => setTimeout(resolve, 5000));
       });
     });
   }
@@ -130,7 +134,7 @@ describe('lambda + dynamoDb integration tests', () => {
   describe('read tables', () => {
     it('should get user table', async () => {
       const request = getUserTableRequest;
-      const { status_code, body } = await (testApi
+      const response = await (testApi
         ? api({
             url: request.context['resource-path'],
             method: request.context['http-method'],
@@ -140,14 +144,15 @@ describe('lambda + dynamoDb integration tests', () => {
             .catch(handleError)
         : tableHandler(request));
 
-      if (status_code !== 200) console.error(body);
+      const { status_code, body } = response;
+      if (status_code !== 200) console.error(response);
 
       expect(status_code).toBe(200);
     });
 
     it('should get transaction table', async () => {
       const request = getTransactionTableRequest;
-      const { status_code, body } = await (testApi
+      const response = await (testApi
         ? api({
             url: request.context['resource-path'],
             method: request.context['http-method'],
@@ -157,7 +162,8 @@ describe('lambda + dynamoDb integration tests', () => {
             .catch(handleError)
         : tableHandler(request));
 
-      if (status_code !== 200) console.error(body);
+      const { status_code, body } = response;
+      if (status_code !== 200) console.error(response);
 
       expect(status_code).toBe(200);
     });
@@ -167,7 +173,7 @@ describe('lambda + dynamoDb integration tests', () => {
     if (buildTableAndItem) {
       it('should create Item', async () => {
         const request = createTableItemRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -176,7 +182,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .then(({ data }) => data)
               .catch(handleError)
           : tableItemHandler(request));
-        if (status_code !== 200) console.error(body);
+        const { status_code } = response;
+        if (status_code !== 200) console.error(response);
         expect(status_code).toBe(200);
       });
     }
@@ -208,7 +215,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
     it('should update table item with existing properties', async () => {
       const request = updateTableItemRequest;
-      const { status_code, body } = await (testApi
+      const response = await (testApi
         ? api({
             url: request.context['resource-path'],
             method: request.context['http-method'],
@@ -218,7 +225,8 @@ describe('lambda + dynamoDb integration tests', () => {
             .catch(handleError)
         : tableItemHandler(request));
 
-      if (status_code !== 200) console.error(body);
+      const { status_code, body } = response;
+      if (status_code !== 200) console.error(response);
 
       expect(status_code).toBe(200);
       // expect unchanged
@@ -230,7 +238,7 @@ describe('lambda + dynamoDb integration tests', () => {
     if (testPlaidItemActions) {
       it('should add new plaid item with mocked token exchange', async () => {
         const request = mockExchangeTokenLinkRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -240,17 +248,18 @@ describe('lambda + dynamoDb integration tests', () => {
               .catch(handleError)
           : plaidHandler(request));
 
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
 
         expect(status_code).toBe(200);
         expect(body.public_token_exchange).toBe('complete');
-        console.log('pause for 2000ms after mock item create')
+        console.log('pause for 2000ms after mock item create');
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
       it('should simulate item sync & write transactions to db', async () => {
         const request = mockSyncTransactionsForItemRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -260,19 +269,20 @@ describe('lambda + dynamoDb integration tests', () => {
               .catch(handleError)
           : plaidHandler(request));
 
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
 
         expect(status_code).toBe(200);
         expect(body.tx_sync).toBe('complete');
         expect(body.tx_cursor_updated_at).not.toBe(undefined);
         expect(body.added).toBeGreaterThan(0);
-        console.log('pause for 2000ms after tx sync')
+        console.log('pause for 2000ms after tx sync');
         await new Promise((resolve) => setTimeout(resolve, 2000));
       });
 
       it('should get plaid items for one user', async () => {
         const request = getUserItemsRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -282,7 +292,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .catch(handleError)
           : plaidHandler(request));
 
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
 
         const item = Object.values(body.items)[0];
 
@@ -302,7 +313,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
       it('should get plaid item accounts for user', async () => {
         const request = getUserAccountsRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -312,7 +323,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .catch(handleError)
           : plaidHandler(request));
 
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
 
         expect(status_code).toBe(200);
         expect(body.accounts.length).toBeGreaterThan(0);
@@ -332,7 +344,7 @@ describe('lambda + dynamoDb integration tests', () => {
        */
       // it('should get plaid item account balances for user', async () => {
       //   const request = getUserAccountsBalancesRequest;
-      //   const { status_code, body } = await (testApi
+      //   const response = await (testApi
       //     ? api({
       //         url: request.context['resource-path'],
       //         method: request.context['http-method'],
@@ -342,7 +354,8 @@ describe('lambda + dynamoDb integration tests', () => {
       //         .catch(handleError)
       //     : plaidHandler(request));
 
-      //   if (status_code !== 200) console.error(body);
+      //   const { status_code, body } = response;
+      //   if (status_code !== 200) console.error(response);
       //   expect(status_code).toBe(200);
       //   expect(Array.isArray(body.account)).toBe(true);
 
@@ -352,7 +365,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
       it('should get plaid item account transactions', async () => {
         const request = getTransactionsForAccountWithBandsRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -363,7 +376,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .catch(handleError)
           : plaidHandler(request));
 
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
         expect(status_code).toBe(200);
         expect(body.transactions?.length).toBe(3);
 
@@ -385,7 +399,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
       it('should get plaid item account transactions for last 30 days when no upperBand & lowerBand provided', async () => {
         const request = getTransactionsForAccountWithoutBandsRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -396,7 +410,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .catch(handleError)
           : plaidHandler(request));
 
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
         expect(status_code).toBe(200);
         expect(body.transactions?.length).toBe(0);
 
@@ -420,7 +435,7 @@ describe('lambda + dynamoDb integration tests', () => {
 
       it('should get bank institution details by id institution_id', async () => {
         const request = getInstitutionByIdRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -431,7 +446,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .catch(handleError)
           : plaidHandler(request));
 
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
 
         expect(status_code).toBe(200);
         expect(body.logo).not.toBe(null);
@@ -441,7 +457,7 @@ describe('lambda + dynamoDb integration tests', () => {
     if (destroyTableAndItem) {
       it('should DELETE item from Table', async () => {
         const request = deleteTableItemRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -450,7 +466,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .then(({ data }) => data)
               .catch(handleError)
           : tableItemHandler(request));
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
         expect(status_code).toBe(200);
       });
     }
@@ -460,7 +477,7 @@ describe('lambda + dynamoDb integration tests', () => {
     describe('destroy tables', () => {
       it('should delete user table', async () => {
         const request = deleteUserTableRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -469,12 +486,13 @@ describe('lambda + dynamoDb integration tests', () => {
               .then(({ data }) => data)
               .catch(handleError)
           : tableHandler(request));
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
         expect(status_code).toBe(200);
       });
       it('should delete transaction table', async () => {
         const request = deleteTransactionTableRequest;
-        const { status_code, body } = await (testApi
+        const response = await (testApi
           ? api({
               url: request.context['resource-path'],
               method: request.context['http-method'],
@@ -483,7 +501,8 @@ describe('lambda + dynamoDb integration tests', () => {
               .then(({ data }) => data)
               .catch(handleError)
           : tableHandler(request));
-        if (status_code !== 200) console.error(body);
+        const { status_code, body } = response;
+        if (status_code !== 200) console.error(response);
         expect(status_code).toBe(200);
       });
     });
