@@ -18,15 +18,15 @@ resource "aws_iam_role" "iam_role_lambda" {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  source_file = "../lambdas/crudPlaid/index.mjs"
-  output_path = "lambda_function_payload.zip"
+  source_file = "../lambdas/${local.lambda_crudPlaid}/index.mjs"
+  output_path = "../lambdas/${local.lambda_crudPlaid}/lambda_function_payload.zip"
 }
 
 resource "aws_lambda_function" "test_lambda" {
   # If the file is not in the current working directory you will need to include a
   # path.module in the filename.
-  filename      = "lambda_function_payload.zip"
-  function_name = "test-crudPlaid"
+  filename      = "../lambdas/${local.lambda_crudPlaid}/lambda_function_payload.zip"
+  function_name = "${local.env_dev}-${local.lambda_crudPlaid}"
   role          = aws_iam_role.iam_role_lambda.arn
   handler       = "index.handler"
 
