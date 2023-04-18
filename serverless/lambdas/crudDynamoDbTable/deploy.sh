@@ -1,6 +1,6 @@
 #!/bin/bash
 
-functionName=crudDynamoDbTable
+functionName=$1
 
 pathToJs=index.mjs
 pathToZip=$functionName.zip
