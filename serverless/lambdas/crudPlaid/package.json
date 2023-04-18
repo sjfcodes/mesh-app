@@ -6,7 +6,8 @@
   "main": "index.test.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --watchAll",
-    "deploy": "./deploy.sh"
+    "deploy:dev": "./deploy.sh dev-crudPlaid",
+    "deploy:prod": "./deploy.sh crudPlaid"
   },
   "keywords": [],
   "author": "sjfcodes@gmail.com",
