@@ -18,7 +18,7 @@ resource "aws_iam_role" "iam_role_lambda" {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  source_file = "../index.mjs"
+  source_file = "../lambdas/crudPlaid/index.mjs"
   output_path = "lambda_function_payload.zip"
 }
 

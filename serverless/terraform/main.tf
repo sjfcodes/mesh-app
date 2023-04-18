@@ -7,12 +7,22 @@ terraform {
   }
   # Adding Backend as S3 for Remote State Storage
   backend "s3" {
+    profile = "mesh-app-deployer"
     bucket = "mesh-app-tfstate"
     key    = "dev/lambda/terraform.tfstate"
     region = "us-east-1"
     # Enable during Step-09     
     # For State Locking
     dynamodb_table = "mesh-app-tfstate-lock"
-    profile = "mesh-app-deployer"
   }
+}
+
+# Configure the AWS Provider
+provider "aws" {
+  region = "us-east-1"
+  profile = "mesh-app-deployer"
+}
+
+module "lambdas" {
+  source = "./lambdas"
 }
