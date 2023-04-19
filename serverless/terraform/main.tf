@@ -1,3 +1,4 @@
+# DOCS: https://developer.hashicorp.com/terraform/language
 terraform {
   required_providers {
     aws = {

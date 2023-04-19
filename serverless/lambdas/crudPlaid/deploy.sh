@@ -1,7 +1,7 @@
 #!/bin/bash
 functionName=$1
 
-pathToJs=index.mjs
+pathToJs=index.js
 pathToZip=$functionName.zip
 
 npm ci

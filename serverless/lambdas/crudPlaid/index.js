@@ -1,5 +1,5 @@
-import config from './utils/config.mjs';
-import App from './lib/App.mjs';
+import config from './utils/config.js';
+import App from './lib/App.js';
 
 export const handler = async (event) => {
   let response = event.body;

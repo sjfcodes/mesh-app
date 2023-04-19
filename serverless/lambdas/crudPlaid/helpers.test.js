@@ -1,4 +1,4 @@
-import { splitListIntoSmallerLists } from './utils/helpers.mjs';
+import { splitListIntoSmallerLists } from './utils/helpers.js';
 
 describe('splitListIntoSmallerLists()', () => {
   it('should throw error when list not provided', () => {

@@ -1,5 +1,5 @@
-import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.mjs';
-import dynamoDbConfig from '../../config/dynamoDb.mjs';
+import lambdaConfig from '../../../lambdas/crudPlaid/utils/config.js';
+import dynamoDbConfig from '../../config/dynamoDb.js';
 import mockPlaid from './mockData/plaid.js';
 
 const { TableName, path } = lambdaConfig;

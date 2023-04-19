@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import dynamoDb from '../config/dynamoDb.mjs';
+import dynamoDb from '../config/dynamoDb.js';
 import mockData from './crudPlaid/mockData/plaid.js';
 
-import { handler as tableHandler } from '../../lambdas/crudDynamoDbTable/index.mjs';
+import { handler as tableHandler } from '../../lambdas/crudDynamoDbTable/index.js';
 import {
   getUserTableRequest,
   createUserTableRequest,
@@ -12,17 +12,17 @@ import {
   deleteTransactionTableRequest,
   createTransactionTableRequest,
   getTransactionTableRequest,
-} from './crudDynamoDbTable/requests.mjs';
+} from './crudDynamoDbTable/requests.js';
 
-import { handler as tableItemHandler } from '../../lambdas/crudDynamoDbTableItem/index.mjs';
+import { handler as tableItemHandler } from '../../lambdas/crudDynamoDbTableItem/index.js';
 import {
   createTableItemRequest,
   deleteTableItemRequest,
   getTableItemRequest,
   updateTableItemRequest,
-} from './crudDynamoDbTableItem/requests.mjs';
+} from './crudDynamoDbTableItem/requests.js';
 
-import { handler as plaidHandler } from '../../lambdas/crudPlaid/index.mjs';
+import { handler as plaidHandler } from '../../lambdas/crudPlaid/index.js';
 import {
   mockExchangeTokenLinkRequest,
   getInstitutionByIdRequest,
@@ -32,7 +32,7 @@ import {
   getTransactionsForAccountWithoutBandsRequest,
   getUserItemsRequest,
   // getUserAccountsBalancesRequest,
-} from './crudPlaid/requests.mjs';
+} from './crudPlaid/requests.js';
 
 dotenv.config();
 const { TableName, Item } = dynamoDb;

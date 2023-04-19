@@ -1,6 +1,6 @@
 import { convertToNative } from '@aws-sdk/util-dynamodb';
-import ddbClient from './DdbClient.mjs';
-import plaidClient from './PlaidClient.mjs';
+import ddbClient from './DdbClient.js';
+import plaidClient from './PlaidClient.js';
 
 class App {
   constructor(event) {
