@@ -5,9 +5,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "export AWS_PROFILE=mesh-app-deployer USE_API_GATEWAY=${USE_API_GATEWAY} && NODE_OPTIONS=--experimental-vm-modules npx jest test/integration/awsLambdaDynamoDb.test.js --watchAll",
-    "test:it:api": "export USE_API_GATEWAY=true && npm run test",
-    "test:it:local": "npm run test",
+    "test": "AWS_PROFILE=mesh-app-deployer NODE_OPTIONS=--experimental-vm-modules jest --watchAll=false",
+    "test:it": "test/integration/run.sh",
+    "test:it:api": "export USE_API_GATEWAY=true && npm run test:it",
+    "test:it:local": "npm run test:it",
     "format": "prettier --write \"lambdas/**/*.{js,mjs}\"",
     "deploy:all": "npm run format && cd lambdas && npm run deploy:all"
   },
@@ -20,6 +21,7 @@
   "devDependencies": {
     "dotenv": "^16.0.3",
     "jest": "^29.3.1",
+    "jest-runner-groups": "^2.2.0",
     "prettier": "^2.7.1"
   }
 }
