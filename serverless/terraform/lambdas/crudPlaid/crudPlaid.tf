@@ -23,8 +23,6 @@ data "archive_file" "lambda" {
 }
 
 resource "aws_lambda_function" "test_lambda" {
-  # If the file is not in the current working directory you will need to include a
-  # path.module in the filename.
   filename      = "../lambdas/${local.lambda_crudPlaid}/lambda_function_payload.zip"
   function_name = "${local.env_dev}-${local.lambda_crudPlaid}"
   role          = aws_iam_role.iam_role_lambda.arn
@@ -36,7 +34,8 @@ resource "aws_lambda_function" "test_lambda" {
 
   environment {
     variables = {
-      foo = "bar"
+      USER_TABLE_NAME="mesh-app.users.test"
+      TRANSACTION_TABLE_NAME="mesh-app.plaid.transactions.test"
     }
   }
 }
