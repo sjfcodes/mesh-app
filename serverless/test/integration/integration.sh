@@ -2,12 +2,20 @@
 
 exit_code=1
 
-npm run test -- --group=db/create &&
-    npm run test -- --group=db/item/create &&
-    npm run test -- --group=db/read &&
-    npm run test -- --group=app/main &&
-    $exit_code=0
+test() {
+    npm run test -- --group=$1
+}
 
-npm run test -- --group=db/destroy
+# run suites in desired order
+test db/create &&
+    test db/item/create &&
+    test db/item/read &&
+    test db/read &&
+    test app/main &&
+    exit_code=0
 
+# run cleanup
+test db/destroy
+
+# exit with code
 exit $exit_code
