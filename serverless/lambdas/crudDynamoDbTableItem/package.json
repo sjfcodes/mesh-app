@@ -6,12 +6,14 @@
   "main": "index.test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "./deploy.sh"
+    "deploy:dev": "./deploy.sh dev-crudDynamoDbTableItem",
+    "deploy:prod": "./deploy.sh crudDynamoDbTableItem"
   },
   "keywords": [],
   "author": "sjfcodes@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.241.0"
+    "@aws-sdk/client-dynamodb": "^3.241.0",
+    "@aws-sdk/util-dynamodb": "^3.312.0"
   }
 }

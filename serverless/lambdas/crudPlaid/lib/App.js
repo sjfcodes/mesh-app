@@ -1,6 +1,6 @@
-import config from '../utils/config.mjs';
-import ddbClient from './DdbClient.mjs';
-import plaidClient from './PlaidClient.mjs';
+import { convertToNative } from '@aws-sdk/util-dynamodb';
+import ddbClient from './DdbClient.js';
+import plaidClient from './PlaidClient.js';
 
 class App {
   constructor(event) {
@@ -34,7 +34,7 @@ class App {
     );
 
     // include item_id for future api calls
-    const accounts = this.payload.accounts.map((account) => ({
+    const formattedAccounts = this.payload.accounts.map((account) => ({
       ...account,
       item_id: tokenExchange.item_id,
     }));
@@ -44,7 +44,7 @@ class App {
     await this.ddbClient.writeUserPlaidItem({
       email: this.user.email,
       tokenExchange,
-      accounts,
+      accounts: formattedAccounts,
       institution_id: this.payload.institution_id,
       institution_name: this.payload.institution_name,
     });
@@ -53,47 +53,36 @@ class App {
   }
 
   async handleItemTokenExchangeTest() {
-    const {
-      public_token: tokenExchange,
-      institution_id,
-      institution_name,
-    } = this.payload;
-
     await this.ddbClient.writeUserLastActivity(this.user.email);
 
     // include item_id for future api calls
-    const accounts = this.payload.accounts.map((account) => ({
+    const formattedAccounts = this.payload.accounts.map((account) => ({
       ...account,
-      item_id: tokenExchange.item_id,
+      item_id: this.payload.public_token.item_id,
     }));
 
     await this.ddbClient.writeUserPlaidItem({
+      accounts: formattedAccounts,
       email: this.user.email,
-      tokenExchange,
-      accounts,
-      institution_id,
-      institution_name,
+      tokenExchange: this.payload.public_token,
+      institution_id: this.payload.institution_id,
+      institution_name: this.payload.institution_name,
     });
 
-    return { accounts, item_id: tokenExchange.item_id };
+    return {
+      accounts: formattedAccounts,
+      item_id: this.payload.public_token.item_id,
+    };
   }
 
-  async handleGetUserItems() {
+  async handleGetItems() {
     const { items, lastActivity } = await this.ddbClient.readUserItems(
       this.user.email
     );
+
     const formatted = Object.entries(items).reduce((prev, [item_id, item]) => {
-      const copy = { ...item.M };
+      const copy = convertToNative(item);
       delete copy.access_token;
-      copy.accounts = JSON.parse(copy.accounts.S);
-      copy.created_at = copy.created_at.S;
-      copy.id = item_id;
-      copy.institution_id = copy.institution_id.S;
-      copy.institution_name = copy.institution_name.S;
-      copy[config.itemKeys.txCursor] = copy[config.itemKeys.txCursor].S;
-      copy[config.itemKeys.txCursorUpdatedAt] =
-        copy[config.itemKeys.txCursorUpdatedAt].S;
-      copy.updated_at = copy.updated_at.S;
       return {
         ...prev,
         [item_id]: copy,
@@ -103,13 +92,13 @@ class App {
     return { items: formatted, last_activity: lastActivity };
   }
 
-  async handleGetUserAccounts() {
+  async handleGetItemAccounts() {
     const { accounts } = await this.ddbClient.readUserAccounts(this.user.email);
 
     return { accounts };
   }
 
-  async handleGetUserAccountBalances() {
+  async handleGetItemAccountBalances() {
     const { item_id: itemId, account_id: accountId } = this.queryString;
     const accountIds = [];
 
@@ -127,6 +116,8 @@ class App {
       accountIds
     );
 
+    console.log(accounts);
+
     const formatted = accounts.reduce((prev, curr) => {
       return {
         ...prev,
@@ -138,22 +129,25 @@ class App {
   }
 
   async handleGetUserAccountTransactions() {
-    const { account_id, item_id } = this.queryString;
+    const { account_id, item_id, lower_band, upper_band } = this.queryString;
+    let upperBand = upper_band;
+    let lowerBand = lower_band;
+
+    if (!lowerBand || !upperBand) {
+      const nowInMs = Date.now();
+      const monthInMs = 60 * 60 * 24 * 30 * 1000
+      upperBand = new Date(nowInMs).toISOString().substring(0, 10);
+      lowerBand = new Date(nowInMs - monthInMs).toISOString().substring(0, 10);
+    }
+
     const { transactions } = await this.ddbClient.readAccountTransactions(
       item_id,
-      account_id
+      account_id,
+      upperBand,
+      lowerBand
     );
 
-    const formatted = transactions.map((tx) => {
-      const copy = { ...tx };
-      copy.created_at = tx.created_at.S;
-      copy.updated_at = tx.updated_at.S;
-      copy.transaction_id = tx.transaction_id.S;
-      copy['item_id::account_id'] = tx['item_id::account_id'].S;
-      copy.transaction = JSON.parse(tx.transaction.S);
-      return copy;
-    });
-    return { transactions: formatted };
+    return { transactions };
   }
 
   async handleGetItemInstitutionById() {
@@ -172,7 +166,19 @@ class App {
       tx_cursor: newTxCursor,
     } = this.payload;
 
-    await this.ddbClient.writeUserItemTransaction({ itemId, added, modified, removed });
+    // perform item read to replicate sync workflow
+    const test = await this.ddbClient.readItemByItemId(this.user.email, itemId);
+    if (!test.accessToken) throw new Error('missing accessToken');
+    if (!test.accounts.length) throw new Error('missing accounts.length');
+    if (!test.createdAt) throw new Error('missing createdAt');
+    if (!test.updatedAt) throw new Error('missing updatedAt');
+
+    await this.ddbClient.writeUserItemTransaction({
+      itemId,
+      added,
+      modified,
+      removed,
+    });
 
     const { tx_cursor_updated_at } = await this.ddbClient.writeUserItemTxCursor(
       this.user.email,
@@ -200,7 +206,12 @@ class App {
       await this.plaidClient.itemSyncTransactions(accessToken, txCursor);
 
     // write items to db before writing cursor to db
-    await this.ddbClient.writeUserItemTransaction({ itemId, added, modified, removed });
+    await this.ddbClient.writeUserItemTransaction({
+      itemId,
+      added,
+      modified,
+      removed,
+    });
 
     const { tx_cursor_updated_at } = await this.ddbClient.writeUserItemTxCursor(
       this.user.email,

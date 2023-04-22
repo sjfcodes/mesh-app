@@ -1,5 +1,5 @@
-import config from './utils/config.mjs';
-import App from './lib/App.mjs';
+import config from './utils/config.js';
+import App from './lib/App.js';
 
 export const handler = async (event) => {
   let response = event.body;
@@ -16,79 +16,80 @@ export const handler = async (event) => {
       case 'GET':
         switch (requestPath) {
           case config.path.userItem:
-            response = await app.handleGetUserItems();
-
+            response = await app.handleGetItems();
             break;
+
           case config.path.itemInstitution:
             response = await app.handleGetItemInstitutionById();
-
             break;
+
           case config.path.itemAccount:
-            response = await app.handleGetUserAccounts();
-
+            response = await app.handleGetItemAccounts();
             break;
+
           case config.path.itemAccountBalance:
-            response = await app.handleGetUserAccountBalances();
-
+            response = await app.handleGetItemAccountBalances();
             break;
+
           case config.path.itemAccountTransaction:
             response = await app.handleGetUserAccountTransactions();
-
             break;
+
           default:
             throw Error(`requestPath:"${requestPath}" not found!`);
         }
-
         break;
+
       case 'PUT':
         switch (requestPath) {
           case config.path.itemTransactionSync:
             const summary = await app.handleUserItemSyncTransactions();
             response = { tx_sync: 'complete', ...summary };
-
             break;
+
           case config.path.testItemTransactionSync:
             const testSummary = await app.handleUserItemSyncTransactionsTest();
             response = { tx_sync: 'complete', ...testSummary };
-
             break;
+
           case config.path.itemUpdateLogin:
             response = await app.handleUpdateUserItemLogin();
-
             break;
+
           default:
             throw Error(`requestPath:"${requestPath}" not found!`);
         }
-
         break;
+
       case 'POST':
         switch (requestPath) {
           case config.path.itemAccount:
             response = await app.handleGetItemAccounts();
-
             break;
+
           case config.path.linkTokenCreate:
             response = await app.handleLinkTokenCreateUpdate();
-
             break;
+
           case config.path.itemTokenExchange:
             const { item_id } = await app.handleItemTokenExchange();
             response = { public_token_exchange: 'complete', item_id };
-
             break;
+
           case config.path.itemTokenExchangeTest:
-            const { item_id: testItemId } = await app.handleItemTokenExchangeTest();
+            const { item_id: testItemId } =
+              await app.handleItemTokenExchangeTest();
             response = {
               public_token_exchange: 'complete',
               item_id: testItemId,
             };
-
             break;
+
           default:
             throw Error(`requestPath:"${requestPath}" not found!`);
         }
-
         break;
+
       default:
         throw new Error(
           `Unsupported method: "${event.context['http-method']}"`

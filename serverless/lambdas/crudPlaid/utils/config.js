@@ -27,7 +27,7 @@ const config = {
     itemInstitution: '/item/institution',
     itemUpdateLogin: '/item/update_login',
     itemTransactionSync: '/item/sync',
-    testItemTransactionSync: '/test/item/sync',
+    testItemTransactionSync: '/item/sync/test',
   },
   itemKeys: {
     lastActivity: 'last_activity',

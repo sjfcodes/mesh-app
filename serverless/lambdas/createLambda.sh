@@ -40,10 +40,10 @@ echo "{
 npm i
 
 #########################
-# Create index.mjs File #
+# Create index.js File #
 #########################
 
-echo "import config from './utils/config.mjs';
+echo "import config from './utils/config.js';
 
 export const handler = async (event) => {
   let statusCode = 200;
@@ -81,7 +81,7 @@ export const handler = async (event) => {
     status_code: statusCode,
   };
 };
-" >index.mjs
+" >index.js
 
 ######################
 # Create config file #
@@ -93,14 +93,14 @@ echo "const config = {
 };
 
 export default config;
-" >utils/config.mjs
+" >utils/config.js
 
 #############################
 # Create test payloads file #
 #############################
 
 mkdir -p -v -- $pathToIntegrationTest/$functionName
-echo "import config from '../../config/dynamoDb.mjs';
+echo "import config from '../../config/dynamoDb.js';
 
 const { TableName: { user }, params } = config;
 
@@ -112,17 +112,17 @@ export const getMyRequestPayload = {
   context: { ['http-method']: 'GET' },
   params,
 };
-" >$pathToIntegrationTest/$functionName/payloads.mjs
+" >$pathToIntegrationTest/$functionName/payloads.js
 
 ############################
 # Create test modules file #
 ############################
 
-echo "import { handler } from '../../../lambdas/$functionName/index.mjs';
-import { getMyRequestPayload } from './payloads.mjs';
+echo "import { handler } from '../../../lambdas/$functionName/index.js';
+import { getMyRequestPayload } from './payloads.js';
 
 export const getMyRequest = async () => handler(getMyRequestPayload);
-" >$pathToIntegrationTest/$functionName/modules.mjs
+" >$pathToIntegrationTest/$functionName/modules.js
 
 ############################################
 # Append test to awsLambdaDynamoDb.test.js #
@@ -130,8 +130,8 @@ export const getMyRequest = async () => handler(getMyRequestPayload);
 
 echo "
 // !!TEST ADDED BY ../../lambdas/createLambda.sh
-import { getMyRequest } from './$functionName/modules.mjs';
-import { getMyRequestPayload } from './$functionName/payloads.mjs';
+import { getMyRequest } from './$functionName/modules.js';
+import { getMyRequestPayload } from './$functionName/payloads.js';
 
 describe('$functionName', () => {
   it('should return expected body', async () => {
@@ -150,7 +150,7 @@ echo "#!/bin/bash
 
 functionName=$functionName
 
-pathToJs=index.mjs
+pathToJs=index.js
 pathToZip=\$functionName.zip
 
 npm ci
@@ -178,7 +178,7 @@ npm run test:it:local
 
 # pwd
 
-# pathToJs=index.mjs
+# pathToJs=index.js
 # pathToZip=$functionName.zip
 
 # npm i

@@ -5,10 +5,14 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "deploy:ddb-table": "cd crudDynamoDbTable && npm run deploy",
-    "deploy:ddb-table-item": "cd crudDynamoDbTableItem && npm run deploy",
-    "deploy:plaid-link": "cd crudPlaid && npm run deploy",
-    "deploy:all": "./deployAll.sh"
+    "deploy:ddb-table:dev": "cd crudDynamoDbTable && npm run deploy:dev",
+    "deploy:ddb-table:prod": "cd crudDynamoDbTable && npm run deploy:prod",
+    "deploy:ddb-table-item:dev": "cd crudDynamoDbTableItem && npm run deploy:dev",
+    "deploy:ddb-table-item:prod": "cd crudDynamoDbTableItem && npm run deploy:prod",
+    "deploy:plaid-link:dev": "cd crudPlaid && npm run deploy:dev",
+    "deploy:plaid-link:prod": "cd crudPlaid && npm run deploy:prod",
+    "deploy:all:dev": "./deployAll.sh dev",
+    "deploy:all:prod": "./deployAll.sh prod"
   },
   "keywords": [],
   "author": "sjfcodes@gmail.com",

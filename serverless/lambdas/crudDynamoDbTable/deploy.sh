@@ -1,8 +1,8 @@
 #!/bin/bash
 
-functionName=crudDynamoDbTable
+functionName=$1
 
-pathToJs=index.mjs
+pathToJs=index.js
 pathToZip=$functionName.zip
 
 npm ci

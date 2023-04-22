@@ -1,3 +1,4 @@
+import { marshall } from '@aws-sdk/util-dynamodb';
 import {
   DeleteItemCommand,
   DynamoDBClient,
@@ -6,7 +7,7 @@ import {
   UpdateItemCommand,
 } from '@aws-sdk/client-dynamodb';
 
-import config from './utils/config.mjs';
+import config from './utils/config.js';
 
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html#dynamodb-example-table-read-write-writing-an-item
 
@@ -23,18 +24,39 @@ export const handler = async (event, context) => {
       case 'DELETE':
         Command = DeleteItemCommand;
         break;
+
       case 'GET':
         Command = GetItemCommand;
         break;
+
       case 'POST':
         Command = UpdateItemCommand;
         break;
+
       case 'PUT':
         Command = PutItemCommand;
         break;
+
       default:
         throw new Error(`Unsupported method "${httpMethod}"`);
     }
+
+    if (event.body.payload.Item) {
+      event.body.payload.Item = marshall(event.body.payload.Item);
+    }
+
+    if (event.body.payload.Key) {
+      event.body.payload.Key = marshall(event.body.payload.Key);
+    }
+
+    if (event.body.payload.ExpressionAttributeValues) {
+      Object.entries(event.body.payload.ExpressionAttributeValues).forEach(
+        ([key, value]) => {
+          event.body.payload.ExpressionAttributeValues[key] = marshall(value);
+        }
+      );
+    }
+
     response = await client.send(new Command(event.body.payload));
   } catch (err) {
     console.error(err);
