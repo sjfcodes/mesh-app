@@ -1,21 +1,21 @@
 /**
  * Tests Foo class
  *
- * @group setup
+ * @group db/read
  */
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import dynamoDb from '../config/dynamoDb.js';
+import dynamoDb from '../../config/dynamoDb.js';
 
-import { handler as tableHandler } from '../../lambdas/crudDynamoDbTable/index.js';
+import { handler as tableHandler } from '../../../lambdas/crudDynamoDbTable/index.js';
 import {
-  createUserTableRequest,
-  createTransactionTableRequest,
-} from './crudDynamoDbTable/requests.js';
+  getUserTableRequest,
+  getTransactionTableRequest,
+} from './requests.js';
 
 dotenv.config();
-const { TableName } = dynamoDb;
+const { Item } = dynamoDb;
 const testApi = process.env.USE_API_GATEWAY === 'true';
 
 const api = axios.create({
@@ -30,9 +30,9 @@ const handleError = (err) => {
   console.error(message);
 };
 
-describe('create tables', () => {
-  it('should create user table', async () => {
-    const request = createUserTableRequest;
+describe('read tables', () => {
+  it('should get user table', async () => {
+    const request = getUserTableRequest;
     const response = await (testApi
       ? api({
           url: request.context['resource-path'],
@@ -45,13 +45,12 @@ describe('create tables', () => {
 
     const { status_code, body } = response;
     if (status_code !== 200) console.error(response);
-    await new Promise((resolve) => setTimeout(resolve, 8000));
+
     expect(status_code).toBe(200);
-    expect(body.TableDescription.TableName).toBe(TableName.user);
   });
 
-  it('should create transaction table', async () => {
-    const request = createTransactionTableRequest;
+  it('should get transaction table', async () => {
+    const request = getTransactionTableRequest;
     const response = await (testApi
       ? api({
           url: request.context['resource-path'],
@@ -65,11 +64,6 @@ describe('create tables', () => {
     const { status_code, body } = response;
     if (status_code !== 200) console.error(response);
 
-    await new Promise((resolve) => setTimeout(resolve, 8000));
     expect(status_code).toBe(200);
-    expect(body.TableDescription.TableName).toBe(TableName.transaction);
-    // pause to let tables create
-    console.log('pause for 5000ms after tables create');
-    await new Promise((resolve) => setTimeout(resolve, 5000));
   });
 });
