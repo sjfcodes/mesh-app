@@ -1,13 +1,13 @@
 /**
  * Tests Foo class
  *
- * @group app/main
+ * @group db/item/destroy
  */
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import { handler as tableItemHandler } from '../../lambdas/crudDynamoDbTableItem/index.js';
-import { deleteTableItemRequest } from './crudDynamoDbTableItem/requests.js';
+import { handler as tableItemHandler } from '../../../lambdas/crudDynamoDbTableItem/index.js';
+import { deleteTableItemRequest } from './requests.js';
 
 dotenv.config();
 const testApi = process.env.USE_API_GATEWAY === 'true';
