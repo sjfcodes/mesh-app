@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv';
 import axios from 'axios';
 
 import dynamoDb from '../../config/dynamoDb.js';
-import mockData from '../crudPlaid/mockData/plaid.js';
+import mockData from '../plaid/mockData/plaid.js';
 
 import { handler as tableItemHandler } from '../../../lambdas/crudDynamoDbTableItem/index.js';
 import {
@@ -23,7 +23,7 @@ import {
   getTransactionsForAccountWithoutBandsRequest,
   getUserItemsRequest,
   // getUserAccountsBalancesRequest,
-} from '../crudPlaid/requests.js';
+} from '../plaid/requests.js';
 
 dotenv.config();
 const { Item } = dynamoDb;

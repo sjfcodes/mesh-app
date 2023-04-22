@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import mockData from '../integration/crudPlaid/mockData/plaid';
+import mockData from '../integration/plaid/mockData/plaid';
 
 dotenv.config();
 

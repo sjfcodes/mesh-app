@@ -13,7 +13,7 @@ import { handler as plaidHandler } from '../../../lambdas/crudPlaid/index.js';
 import {
   mockExchangeTokenLinkRequest,
   mockSyncTransactionsForItemRequest,
-} from '../crudPlaid/requests.js';
+} from '../plaid/requests.js';
 
 dotenv.config();
 const testApi = process.env.USE_API_GATEWAY === 'true';
