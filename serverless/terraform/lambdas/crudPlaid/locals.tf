@@ -1,4 +1,4 @@
 locals {
-  env_dev="test"
+  env="test"
   lambda_crudPlaid="crudPlaid"
 }

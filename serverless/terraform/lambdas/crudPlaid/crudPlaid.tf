@@ -24,7 +24,7 @@ data "archive_file" "lambda" {
 
 resource "aws_lambda_function" "test_lambda" {
   filename      = "../lambdas/${local.lambda_crudPlaid}/lambda_function_payload.zip"
-  function_name = "${local.env_dev}-${local.lambda_crudPlaid}"
+  function_name = "${local.env}-${local.lambda_crudPlaid}"
   role          = aws_iam_role.iam_role_lambda.arn
   handler       = "index.handler"
 
@@ -34,8 +34,8 @@ resource "aws_lambda_function" "test_lambda" {
 
   environment {
     variables = {
-      USER_TABLE_NAME="mesh-app.users.test"
-      TRANSACTION_TABLE_NAME="mesh-app.plaid.transactions.test"
+      USER_TABLE_NAME        = "mesh-app.users.${local.env}"
+      TRANSACTION_TABLE_NAME = "mesh-app.plaid.transactions.${local.env}"
     }
   }
 }
