@@ -8,12 +8,10 @@ terraform {
   }
   # Adding Backend as S3 for Remote State Storage
   backend "s3" {
-    profile = "deployer-creator"
-    bucket  = "mesh-app-tfstate"
-    key     = "dev/deployer/terraform.tfstate"
-    region  = "us-east-1"
-    # Enable during Step-09     
-    # For State Locking
+    profile        = "deployer-creator"
+    bucket         = "mesh-app-tfstate"
+    key            = "dev/deployer/terraform.tfstate"
+    region         = "us-east-1"
     dynamodb_table = "deployer-creator-tfstate-lock"
   }
 }
@@ -30,7 +28,8 @@ resource "aws_iam_role" "test_mesh_app_deployer" {
   managed_policy_arns = [
     aws_iam_policy.test_mesh_app_deployer_dynamodb.arn,
     aws_iam_policy.test_mesh_app_deployer_iam.arn,
-    aws_iam_policy.test_mesh_app_deployer_lambda.arn
+    aws_iam_policy.test_mesh_app_deployer_lambda.arn,
+    aws_iam_policy.test_mesh_app_deployer_s3.arn
   ]
 }
 
@@ -46,7 +45,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 }
 
 resource "aws_iam_policy" "test_mesh_app_deployer_dynamodb" {
-  description = "mesh app deployer dynamodb parmissions"
+  description = "mesh app deployer dynamodb permissions"
   name        = "test-mesh-app-deployer-dynamodb"
   path        = "/"
 
@@ -68,7 +67,7 @@ resource "aws_iam_policy" "test_mesh_app_deployer_dynamodb" {
 }
 
 resource "aws_iam_policy" "test_mesh_app_deployer_iam" {
-  description = "mesh app deployer iam parmissions"
+  description = "mesh app deployer iam permissions"
   name        = "test-mesh-app-deployer-iam"
   path        = "/"
 
@@ -93,7 +92,7 @@ resource "aws_iam_policy" "test_mesh_app_deployer_iam" {
 }
 
 resource "aws_iam_policy" "test_mesh_app_deployer_lambda" {
-  description = "mesh app deployer lambda parmissions"
+  description = "mesh app deployer lambda permissions"
   name        = "test-mesh-app-deployer-lambda"
   path        = "/"
 
@@ -117,21 +116,28 @@ resource "aws_iam_policy" "test_mesh_app_deployer_lambda" {
   })
 }
 
-# resource "aws_iam_policy" "test_mesh_app_deployer_<service>" {
-#   description = "mesh app deployer <service> parmissions"
-#   name        = "test-mesh-app-deployer-<service>"
-#   path        = "/"
-#
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Effect   = "Allow"
-#         Action = [
-#                 "<service>:<ActionName>",
-#         ]
-#         Resource = "arn:aws:<service>:us-east-1:118185547444:<resoucrce>"
-#       },
-#     ]
-#   })
-# }
+resource "aws_iam_policy" "test_mesh_app_deployer_s3" {
+  description = "mesh app deployer s3 permissions"
+  name        = "test-mesh-app-deployer-s3"
+  path        = "/"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "s3:ListBucket",
+        Resource = "arn:aws:s3:::mesh-app-tfstate"
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject"
+        ],
+        Resource = "arn:aws:s3:::mesh-app-tfstate/dev/*"
+      }
+    ]
+  })
+}
