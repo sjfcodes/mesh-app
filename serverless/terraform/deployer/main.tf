@@ -23,7 +23,7 @@ provider "aws" {
 }
 
 resource "aws_iam_role" "test_mesh_app_deployer" {
-  name               = "test-mesh-app-deployer"
+  name               = local.deployer_name
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json # (not shown)
   managed_policy_arns = [
     aws_iam_policy.test_mesh_app_deployer_dynamodb.arn,
@@ -33,6 +33,7 @@ resource "aws_iam_role" "test_mesh_app_deployer" {
   ]
 }
 
+# TODO: why is this required for aws_iam_role resource?
 data "aws_iam_policy_document" "assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -46,7 +47,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 
 resource "aws_iam_policy" "test_mesh_app_deployer_dynamodb" {
   description = "mesh app deployer dynamodb permissions"
-  name        = "test-mesh-app-deployer-dynamodb"
+  name        = "${local.deployer_name}-dynamodb"
   path        = "/"
 
   policy = jsonencode({
@@ -68,7 +69,7 @@ resource "aws_iam_policy" "test_mesh_app_deployer_dynamodb" {
 
 resource "aws_iam_policy" "test_mesh_app_deployer_iam" {
   description = "mesh app deployer iam permissions"
-  name        = "test-mesh-app-deployer-iam"
+  name        = "${local.deployer_name}-iam"
   path        = "/"
 
   policy = jsonencode({
@@ -93,7 +94,7 @@ resource "aws_iam_policy" "test_mesh_app_deployer_iam" {
 
 resource "aws_iam_policy" "test_mesh_app_deployer_lambda" {
   description = "mesh app deployer lambda permissions"
-  name        = "test-mesh-app-deployer-lambda"
+  name        = "${local.deployer_name}-lambda"
   path        = "/"
 
   policy = jsonencode({
@@ -118,7 +119,7 @@ resource "aws_iam_policy" "test_mesh_app_deployer_lambda" {
 
 resource "aws_iam_policy" "test_mesh_app_deployer_s3" {
   description = "mesh app deployer s3 permissions"
-  name        = "test-mesh-app-deployer-s3"
+  name        = "${local.deployer_name}-s3"
   path        = "/"
 
   policy = jsonencode({
