@@ -18,18 +18,18 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region  = "us-east-1"
+  region  = local.region
   profile = "deployer-creator"
 }
 
-resource "aws_iam_role" "test_mesh_app_deployer" {
+resource "aws_iam_role" "mesh_app_deployer" {
   name               = local.deployer_name
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json # (not shown)
   managed_policy_arns = [
-    aws_iam_policy.test_mesh_app_deployer_dynamodb.arn,
-    aws_iam_policy.test_mesh_app_deployer_iam.arn,
-    aws_iam_policy.test_mesh_app_deployer_lambda.arn,
-    aws_iam_policy.test_mesh_app_deployer_s3.arn
+    aws_iam_policy.mad_dynamodb.arn,
+    aws_iam_policy.mad_iam.arn,
+    aws_iam_policy.mad_lambda.arn,
+    aws_iam_policy.mad_s3.arn
   ]
 }
 
@@ -45,8 +45,8 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-resource "aws_iam_policy" "test_mesh_app_deployer_dynamodb" {
-  description = "mesh app deployer dynamodb permissions"
+resource "aws_iam_policy" "mad_dynamodb" {
+  description = "mesh app deployer dynamodb policy"
   name        = "${local.deployer_name}-dynamodb"
   path        = "/"
 
@@ -61,14 +61,14 @@ resource "aws_iam_policy" "test_mesh_app_deployer_dynamodb" {
           "dynamodb:PutItem",
           "dynamodb:DeleteItem"
         ]
-        Resource = "arn:aws:dynamodb:us-east-1:118185547444:table/mesh-app-tfstate-lock"
+        Resource = "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app-tfstate-lock"
       },
     ]
   })
 }
 
-resource "aws_iam_policy" "test_mesh_app_deployer_iam" {
-  description = "mesh app deployer iam permissions"
+resource "aws_iam_policy" "mad_iam" {
+  description = "mesh app deployer iam policy"
   name        = "${local.deployer_name}-iam"
   path        = "/"
 
@@ -86,14 +86,14 @@ resource "aws_iam_policy" "test_mesh_app_deployer_iam" {
           "iam:DeleteRole",
           "iam:PassRole"
         ]
-        Resource = "arn:aws:iam::118185547444:role/iam_role_lambda"
+        Resource = "arn:aws:iam::${local.account_id}:role/iam_role_lambda"
       },
     ]
   })
 }
 
-resource "aws_iam_policy" "test_mesh_app_deployer_lambda" {
-  description = "mesh app deployer lambda permissions"
+resource "aws_iam_policy" "mad_lambda" {
+  description = "mesh app deployer lambda policy"
   name        = "${local.deployer_name}-lambda"
   path        = "/"
 
@@ -111,14 +111,14 @@ resource "aws_iam_policy" "test_mesh_app_deployer_lambda" {
           "lambda:UpdateFunctionCode",
           "lambda:UpdateFunctionConfiguration"
         ],
-        Resource = "arn:aws:lambda:us-east-1:118185547444:function:test-crudPlaid"
+        Resource = "arn:aws:lambda:${local.region}:${local.account_id}:function:test-crudPlaid"
       }
     ]
   })
 }
 
-resource "aws_iam_policy" "test_mesh_app_deployer_s3" {
-  description = "mesh app deployer s3 permissions"
+resource "aws_iam_policy" "mad_s3" {
+  description = "mesh app deployer s3 policy"
   name        = "${local.deployer_name}-s3"
   path        = "/"
 
