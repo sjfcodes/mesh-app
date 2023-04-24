@@ -16,7 +16,7 @@ resource "aws_iam_policy" "cognito" {
         Action = [
           "cognito-idp:ListUserPools"
         ],
-        Resource = "arn:aws:cognito-idp:us-east-1:118185547444:userpool/us-east-1_MmpeiDLFc"
+        Resource = "*"
       }
     ]
   })
