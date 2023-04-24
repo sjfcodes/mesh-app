@@ -22,7 +22,7 @@ resource "aws_iam_policy" "mad_lambda" {
           "lambda:UpdateFunctionCode",
           "lambda:UpdateFunctionConfiguration"
         ],
-        Resource = "arn:aws:lambda:${local.region}:${local.account_id}:function:test-crudPlaid"
+        Resource = "arn:aws:lambda:${local.region}:${local.account_id}:function:test_crudPlaid"
       }
     ]
   })

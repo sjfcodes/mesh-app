@@ -8,7 +8,7 @@ terraform {
   }
   # Adding Backend as S3 for Remote State Storage
   backend "s3" {
-    profile = "mesh-app-deployer"
+    profile = "mesh-app_terraform_deployer"
     bucket  = "mesh-app-tfstate"
     key     = "dev/lambda/terraform.tfstate"
     region  = "us-east-1"
@@ -21,7 +21,7 @@ terraform {
 # Configure the AWS Provider
 provider "aws" {
   region  = "us-east-1"
-  profile = "mesh-app-deployer"
+  profile = "mesh-app_terraform_deployer"
 }
 
 module "lambda_crud_plaid" {

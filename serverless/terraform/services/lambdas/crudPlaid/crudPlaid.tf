@@ -18,13 +18,13 @@ resource "aws_iam_role" "iam_role_lambda" {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  source_file = "../lambdas/${local.lambda_crudPlaid}/index.js"
-  output_path = "../lambdas/${local.lambda_crudPlaid}/lambda_function_payload.zip"
+  source_file = "${local.path_to_lambdas}/${local.lambda_crudPlaid}/index.js"
+  output_path = "${local.path_to_lambdas}/${local.lambda_crudPlaid}/${local.lambda_crudPlaid}.zip"
 }
 
 resource "aws_lambda_function" "test_lambda" {
-  filename      = "../lambdas/${local.lambda_crudPlaid}/lambda_function_payload.zip"
-  function_name = "${local.env}-${local.lambda_crudPlaid}"
+  filename      = "${local.path_to_lambdas}/${local.lambda_crudPlaid}/${local.lambda_crudPlaid}.zip"
+  function_name = "${local.env}_${local.lambda_crudPlaid}"
   role          = aws_iam_role.iam_role_lambda.arn
   handler       = "index.handler"
 
