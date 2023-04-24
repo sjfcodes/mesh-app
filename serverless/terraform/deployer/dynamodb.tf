@@ -23,4 +23,8 @@ resource "aws_iam_policy" "mad_dynamodb" {
       },
     ]
   })
+
+  tags = {
+    app_name = local.app_name
+  }
 }

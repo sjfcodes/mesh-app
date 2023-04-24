@@ -29,6 +29,6 @@ resource "aws_iam_policy" "mad_s3" {
   })
 
   tags = {
-    app = "mesh-app"
+    app_name = local.app_name
   }
 }

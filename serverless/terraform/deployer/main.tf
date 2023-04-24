@@ -25,6 +25,6 @@ resource "aws_iam_user" "tf_deployer" {
   path = "/"
 
   tags = {
-    app = "mesh-app"
+    app_name = local.app_name
   }
 }

@@ -26,4 +26,8 @@ resource "aws_iam_policy" "mad_iam" {
       },
     ]
   })
+
+  tags = {
+    app_name = local.app_name
+  }
 }
