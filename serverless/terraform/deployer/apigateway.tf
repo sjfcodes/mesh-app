@@ -14,10 +14,11 @@ resource "aws_iam_policy" "apigateway" {
       {
         Effect = "Allow",
         Action = [
+          "apigateway:DELETE",
+          "apigateway:GET",
+          "apigateway:PATCH",
           "apigateway:POST",
           "apigateway:PUT",
-          "apigateway:GET",
-          "apigateway:DELETE",
         ],
         Resource = [
           "arn:aws:apigateway:us-east-1::/restapis",
