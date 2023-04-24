@@ -1,9 +1,9 @@
-resource "aws_iam_user_policy_attachment" "attach_s3" {
+resource "aws_iam_user_policy_attachment" "s3" {
   user       = aws_iam_user.tf_deployer.name
-  policy_arn = aws_iam_policy.mad_s3.arn
+  policy_arn = aws_iam_policy.s3.arn
 }
 
-resource "aws_iam_policy" "mad_s3" {
+resource "aws_iam_policy" "s3" {
   description = "mesh app deployer s3 policy"
   name        = "${local.deployer_name}_s3"
   path        = "/"

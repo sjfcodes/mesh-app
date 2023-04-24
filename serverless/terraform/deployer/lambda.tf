@@ -1,9 +1,9 @@
-resource "aws_iam_user_policy_attachment" "attach_lambda" {
+resource "aws_iam_user_policy_attachment" "lambda" {
   user       = aws_iam_user.tf_deployer.name
-  policy_arn = aws_iam_policy.mad_lambda.arn
+  policy_arn = aws_iam_policy.lambda.arn
 }
 
-resource "aws_iam_policy" "mad_lambda" {
+resource "aws_iam_policy" "lambda" {
   description = "mesh app deployer lambda policy"
   name        = "${local.deployer_name}_lambda"
   path        = "/"

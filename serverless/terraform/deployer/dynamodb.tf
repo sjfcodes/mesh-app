@@ -1,9 +1,9 @@
-resource "aws_iam_user_policy_attachment" "attach_dynamodb" {
+resource "aws_iam_user_policy_attachment" "dynamodb" {
   user       = aws_iam_user.tf_deployer.name
-  policy_arn = aws_iam_policy.mad_dynamodb.arn
+  policy_arn = aws_iam_policy.dynamodb.arn
 }
 
-resource "aws_iam_policy" "mad_dynamodb" {
+resource "aws_iam_policy" "dynamodb" {
   description = "mesh app deployer dynamodb policy"
   name        = "${local.deployer_name}_dynamodb"
   path        = "/"
