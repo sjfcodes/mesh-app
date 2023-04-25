@@ -18,7 +18,7 @@ resource "aws_iam_role" "iam_role_lambda" {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  source_file = "${local.path_to_lambdas}/${local.lambda_crudPlaid}/index.js"
+  source_dir = "${local.path_to_lambdas}/${local.lambda_crudPlaid}"
   output_path = "${local.path_to_lambdas}/${local.lambda_crudPlaid}/${local.lambda_crudPlaid}.zip"
 }
 
