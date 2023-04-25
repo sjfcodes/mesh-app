@@ -20,7 +20,10 @@ resource "aws_iam_policy" "lambda" {
           "lambda:DeleteFunction",
           "lambda:GetFunctionCodeSigningConfig",
           "lambda:UpdateFunctionCode",
-          "lambda:UpdateFunctionConfiguration"
+          "lambda:UpdateFunctionConfiguration",
+          "lambda:AddPermission",
+          "lambda:GetPolicy",
+          "lambda:RemovePermission"
         ],
         Resource = "arn:aws:lambda:${local.region}:${local.account_id}:function:test_crudPlaid"
       }
