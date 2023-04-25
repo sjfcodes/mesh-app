@@ -21,10 +21,6 @@ provider "aws" {
   profile = "mesh-app_terraform_deployer"
 }
 
-module "lambda_crud_plaid" {
-  source = "./lambdas/crudPlaid"
-}
-
 module "apigateway" {
   source = "./apigateway"
 }
