@@ -21,7 +21,8 @@ resource "aws_iam_policy" "iam" {
           "iam:ListInstanceProfilesForRole",
           "iam:DeleteRole",
           "iam:PassRole",
-          "iam:AttachRolePolicy"
+          "iam:AttachRolePolicy",
+          "iam:DetachRolePolicy"
         ]
         Resource = [
           "arn:aws:iam::${local.account_id}:role/iam_role_lambda"
