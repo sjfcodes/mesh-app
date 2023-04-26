@@ -31,6 +31,7 @@ resource "aws_iam_policy" "lambda" {
         Resource = [
           "arn:aws:lambda:${local.region}:${local.account_id}:function:test_plaid",
           "arn:aws:lambda:${local.region}:${local.account_id}:function:prod_plaid",
+          "arn:aws:lambda:${local.region}:${local.account_id}:function:_plaid",
         ]
       }
     ]

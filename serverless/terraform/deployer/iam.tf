@@ -26,7 +26,8 @@ resource "aws_iam_policy" "iam" {
         ]
         Resource = [
           "arn:aws:iam::${local.account_id}:role/test_iam_role_lambda",
-          "arn:aws:iam::${local.account_id}:role/prod_iam_role_lambda"
+          "arn:aws:iam::${local.account_id}:role/prod_iam_role_lambda",
+          "arn:aws:iam::${local.account_id}:role/_iam_role_lambda",
         ]
       },
       {
@@ -46,7 +47,8 @@ resource "aws_iam_policy" "iam" {
         ]
         Resource = [
           "arn:aws:iam::118185547444:policy/test_lambda_logging",
-          "arn:aws:iam::118185547444:policy/prod_lambda_logging"
+          "arn:aws:iam::118185547444:policy/prod_lambda_logging",
+          "arn:aws:iam::118185547444:policy/_lambda_logging",
         ]
       }
     ]
