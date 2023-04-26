@@ -9,7 +9,7 @@ import axios from 'axios';
 import { handler as tableItemHandler } from '../../../lambdas/crudDynamoDbTableItem/index.js';
 import { createTableItemRequest } from './requests.js';
 
-import { handler as plaidHandler } from '../../../lambdas/crudPlaid/index.js';
+import { handler as plaidHandler } from '../../../lambdas/plaid/index.js';
 import {
   mockExchangeTokenLinkRequest,
   mockSyncTransactionsForItemRequest,

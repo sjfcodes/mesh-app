@@ -6,9 +6,10 @@ export const handler = async (event) => {
   let statusCode = 200;
 
   try {
+    console.log(event);
     const app = new App(event);
-    const requestMethod = event.context['http-method'];
-    const requestPath = event.context['resource-path'];
+    const requestMethod = event.context?.['http-method'];
+    const requestPath = event.context?.['resource-path'];
 
     await app.setUserByToken(event.params.header.Authorization);
 

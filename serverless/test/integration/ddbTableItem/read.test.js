@@ -15,7 +15,7 @@ import {
   updateTableItemRequest,
 } from './requests.js';
 
-import { handler as plaidHandler } from '../../../lambdas/crudPlaid/index.js';
+import { handler as plaidHandler } from '../../../lambdas/plaid/index.js';
 import {
   getInstitutionByIdRequest,
   getUserAccountsRequest,
