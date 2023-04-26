@@ -25,6 +25,7 @@ module "apigateway" {
   source    = "./apigateway"
   region    = var.region
   accountId = var.accountId
+  env     = "test"
 }
 
 output "apigw_resource_id" {

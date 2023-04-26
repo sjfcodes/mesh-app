@@ -1,10 +1,12 @@
 variable "region" {}
 variable "accountId" {}
+variable "env" {}
 variable "api" {}
 variable "authorizer" {}
 
-module "test_lambda" {
+module "lambda_plaid" {
   source = "../../lambdas/crudPlaid"
+  env    = var.env
 }
 
 resource "aws_api_gateway_resource" "link" {
@@ -29,7 +31,7 @@ resource "aws_api_gateway_method" "link_post" {
 resource "aws_lambda_permission" "apigw_lambda" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = module.test_lambda.function_name
+  function_name = module.lambda_plaid.function_name
   principal     = "apigateway.amazonaws.com"
 
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-module.api.html
@@ -42,7 +44,7 @@ resource "aws_api_gateway_integration" "this" {
   http_method             = aws_api_gateway_method.link_post.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = module.test_lambda.invoke_arn
+  uri                     = module.lambda_plaid.invoke_arn
 }
 
 output "resource" {
