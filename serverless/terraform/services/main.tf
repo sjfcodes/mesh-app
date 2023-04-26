@@ -1,4 +1,9 @@
 # DOCS: https://developer.hashicorp.com/terraform/language
+# setting env variable
+variable "env" {
+  default = "test"
+}
+
 terraform {
   required_providers {
     aws = {
@@ -10,9 +15,9 @@ terraform {
   backend "s3" {
     profile        = "mesh-app_terraform_deployer"
     bucket         = "mesh-app-tfstate"
-    key            = "dev/lambda/terraform.tfstate"
+    key            = "test/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "mesh-app-tfstate-lock"
+    dynamodb_table = "test_mesh-app_tfstate_lock"
   }
 }
 
@@ -25,7 +30,7 @@ module "apigateway" {
   source    = "./apigateway"
   region    = var.region
   accountId = var.accountId
-  env     = "test"
+  env       = var.env
 }
 
 output "apigw_resource_id" {

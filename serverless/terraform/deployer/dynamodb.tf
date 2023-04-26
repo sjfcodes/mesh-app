@@ -19,7 +19,10 @@ resource "aws_iam_policy" "dynamodb" {
           "dynamodb:PutItem",
           "dynamodb:DeleteItem"
         ]
-        Resource = "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app-tfstate-lock"
+        Resource = [
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/test_mesh-app_tfstate_lock",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/prod_mesh-app_tfstate_lock",
+        ]
       },
     ]
   })
