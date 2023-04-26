@@ -20,10 +20,30 @@ resource "aws_iam_policy" "iam" {
           "iam:ListAttachedRolePolicies",
           "iam:ListInstanceProfilesForRole",
           "iam:DeleteRole",
-          "iam:PassRole"
+          "iam:PassRole",
+          "iam:AttachRolePolicy"
         ]
-        Resource = "arn:aws:iam::${local.account_id}:role/iam_role_lambda"
+        Resource = [
+          "arn:aws:iam::${local.account_id}:role/iam_role_lambda"
+        ]
       },
+      {
+        Effect = "Allow"
+        Action = [
+          "iam:CreatePolicy",
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "iam:GetPolicy",
+          "iam:GetPolicyVersion",
+          "iam:ListPolicyVersions",
+          "iam:DeletePolicy"
+        ]
+        Resource = "arn:aws:iam::118185547444:policy/lambda_logging"
+      }
     ]
   })
 

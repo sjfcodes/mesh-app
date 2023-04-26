@@ -23,9 +23,16 @@ resource "aws_iam_policy" "lambda" {
           "lambda:UpdateFunctionConfiguration",
           "lambda:AddPermission",
           "lambda:GetPolicy",
-          "lambda:RemovePermission"
+          "lambda:RemovePermission",
+          "lambda:CreateAlias",
+          "lambda:GetAlias",
+          "lambda:DeleteAlias",
         ],
-        Resource = "arn:aws:lambda:${local.region}:${local.account_id}:function:test_crudPlaid"
+        Resource = [
+          "arn:aws:lambda:${local.region}:${local.account_id}:function:test_crudPlaid",
+          "arn:aws:lambda:${local.region}:${local.account_id}:function:test_crudPlaid:testalias",
+          "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/crudPlaid:log-stream:"
+        ]
       }
     ]
   })
