@@ -8,10 +8,10 @@ terraform {
   }
 
   backend "s3" {
-    profile = "mesh-app_terraform_deployer"
-    bucket  = "mesh-app-tfstate"
-    key     = "dev/lambda/terraform.tfstate"
-    region  = "us-east-1"
+    profile        = "mesh-app_terraform_deployer"
+    bucket         = "mesh-app-tfstate"
+    key            = "dev/lambda/terraform.tfstate"
+    region         = "us-east-1"
     dynamodb_table = "mesh-app-tfstate-lock"
   }
 }
