@@ -22,7 +22,9 @@ provider "aws" {
 }
 
 module "apigateway" {
-  source = "./apigateway"
+  source    = "./apigateway"
+  region    = var.region
+  accountId = var.accountId
 }
 
 output "apigw_resource_id" {
