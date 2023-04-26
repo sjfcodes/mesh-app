@@ -24,3 +24,7 @@ provider "aws" {
 module "apigateway" {
   source = "./apigateway"
 }
+
+output "apigw_resource_id" {
+  value = "https://${module.apigateway.apigw_resource_id}.execute-api.us-east-1.amazonaws.com"
+}
