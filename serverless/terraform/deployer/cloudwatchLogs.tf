@@ -16,8 +16,8 @@ resource "aws_iam_policy" "cloudwatch_logs" {
           "logs:PutRetentionPolicy",
         ],
         Resource = [
-          "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/test_crudPlaid:log-stream:",
-          "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/prod_crudPlaid:log-stream:",
+          "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/test_plaid:log-stream:",
+          "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/prod_plaid:log-stream:",
           "arn:aws:logs:${local.region}:${local.account_id}:log-group::log-stream:",
         ]
       }

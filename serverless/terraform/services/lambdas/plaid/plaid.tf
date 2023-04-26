@@ -4,7 +4,7 @@ variable "path" {
 
 }
 variable "lambda_name" {
-  default = "crudPlaid"
+  default = "plaid"
 }
 
 data "aws_iam_policy_document" "assume_role" {

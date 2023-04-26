@@ -5,7 +5,7 @@ variable "api" {}
 variable "authorizer" {}
 
 module "lambda_plaid" {
-  source = "../../lambdas/crudPlaid"
+  source = "../../lambdas/plaid"
   env    = var.env
 }
 
