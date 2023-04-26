@@ -10,16 +10,15 @@ resource "aws_iam_policy" "cloudwatch_logs" {
         Effect = "Allow",
         Action = [
           "logs:CreateLogGroup",
-          "logs:PutRetentionPolicy",
+          "logs:DeleteLogGroup",
           "logs:DescribeLogGroups",
           "logs:ListTagsLogGroup",
-          "logs:DeleteLogGroup",
-          "logs:PutSubscriptionFilter"
+          "logs:PutRetentionPolicy",
         ],
         Resource = [
           "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/test_crudPlaid:log-stream:",
+          "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/prod_crudPlaid:log-stream:",
           "arn:aws:logs:${local.region}:${local.account_id}:log-group::log-stream:",
-          "arn:aws:logs:${local.region}:${local.account_id}:log-group:/default:log-stream:"
         ]
       }
     ]

@@ -12,10 +12,8 @@ resource "aws_iam_policy" "cognito" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow",
-        Action = [
-          "cognito-idp:ListUserPools"
-        ],
+        Effect   = "Allow",
+        Action   = "cognito-idp:ListUserPools"
         Resource = "*"
       }
     ]

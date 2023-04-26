@@ -14,18 +14,19 @@ resource "aws_iam_policy" "iam" {
       {
         Effect = "Allow"
         Action = [
+          "iam:AttachRolePolicy",
           "iam:CreateRole",
+          "iam:DetachRolePolicy",
+          "iam:DeleteRole",
           "iam:GetRole",
           "iam:ListRolePolicies",
           "iam:ListAttachedRolePolicies",
           "iam:ListInstanceProfilesForRole",
-          "iam:DeleteRole",
           "iam:PassRole",
-          "iam:AttachRolePolicy",
-          "iam:DetachRolePolicy"
         ]
         Resource = [
-          "arn:aws:iam::${local.account_id}:role/iam_role_lambda"
+          "arn:aws:iam::${local.account_id}:role/test_iam_role_lambda",
+          "arn:aws:iam::${local.account_id}:role/prod_iam_role_lambda"
         ]
       },
       {
@@ -38,12 +39,15 @@ resource "aws_iam_policy" "iam" {
       {
         Effect = "Allow"
         Action = [
+          "iam:DeletePolicy",
           "iam:GetPolicy",
           "iam:GetPolicyVersion",
           "iam:ListPolicyVersions",
-          "iam:DeletePolicy"
         ]
-        Resource = "arn:aws:iam::118185547444:policy/lambda_logging"
+        Resource = [
+          "arn:aws:iam::118185547444:policy/test_lambda_logging",
+          "arn:aws:iam::118185547444:policy/prod_lambda_logging"
+        ]
       }
     ]
   })

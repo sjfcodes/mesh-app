@@ -14,24 +14,23 @@ resource "aws_iam_policy" "lambda" {
       {
         Effect = "Allow",
         Action = [
+          "lambda:AddPermission",
+          "lambda:CreateAlias",
           "lambda:CreateFunction",
-          "lambda:ListVersionsByFunction",
-          "lambda:GetFunction",
+          "lambda:DeleteAlias",
           "lambda:DeleteFunction",
+          "lambda:GetAlias",
+          "lambda:GetFunction",
           "lambda:GetFunctionCodeSigningConfig",
+          "lambda:GetPolicy",
+          "lambda:ListVersionsByFunction",
           "lambda:UpdateFunctionCode",
           "lambda:UpdateFunctionConfiguration",
-          "lambda:AddPermission",
-          "lambda:GetPolicy",
           "lambda:RemovePermission",
-          "lambda:CreateAlias",
-          "lambda:GetAlias",
-          "lambda:DeleteAlias",
         ],
         Resource = [
           "arn:aws:lambda:${local.region}:${local.account_id}:function:test_crudPlaid",
-          "arn:aws:lambda:${local.region}:${local.account_id}:function:test_crudPlaid:testalias",
-          "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/crudPlaid:log-stream:"
+          "arn:aws:lambda:${local.region}:${local.account_id}:function:prod_crudPlaid",
         ]
       }
     ]
