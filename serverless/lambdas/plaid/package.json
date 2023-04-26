@@ -1,0 +1,21 @@
+{
+  "name": "crud-plaid-link",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.test.js",
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --watchAll"
+  },
+  "keywords": [],
+  "author": "sjfcodes@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.241.0",
+    "@aws-sdk/util-dynamodb": "^3.312.0",
+    "plaid": "^10.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
+  }
+}
