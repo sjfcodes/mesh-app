@@ -4,13 +4,14 @@ import App from './lib/App.js';
 export const handler = async (event) => {
   let response = event.body;
   let statusCode = 200;
+  console.log(event);
 
   try {
     const app = new App(event);
-    const requestMethod = event.context['http-method'];
-    const requestPath = event.context['resource-path'];
+    const requestMethod = event.httpMethod;
+    const requestPath = event.path;
 
-    await app.setUserByToken(event.params.header.Authorization);
+    await app.setUserByToken(event.headers.Authorization);
 
     switch (requestMethod) {
       case 'GET':
@@ -92,7 +93,7 @@ export const handler = async (event) => {
 
       default:
         throw new Error(
-          `Unsupported method: "${event.context['http-method']}"`
+          `Unsupported method: "${requestMethod}"`
         );
     }
   } catch (error) {

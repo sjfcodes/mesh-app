@@ -7,9 +7,9 @@ class App {
     this.plaidClient = plaidClient;
     this.ddbClient = ddbClient;
     this.user = {};
-    this.requestPath = event.context['resource-path'];
-    this.payload = event.body?.payload;
-    this.queryString = event.params?.querystring;
+    this.requestPath = event.path;
+    this.payload = event.body;
+    this.queryString = event.queryStringParameters;
   }
 
   async setUserByToken(token) {
