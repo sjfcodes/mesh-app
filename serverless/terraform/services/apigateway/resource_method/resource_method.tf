@@ -1,23 +1,22 @@
 # INPUTS
-variable "env" {}
-variable "region" {}
-variable "account_id" {}
-
 variable "api_id" {}
-variable "parent_id" {}
 variable "authorizer_id" {}
+
+variable "parent_id" {}
 variable "path_part" {}
 variable "http_method" {}
 variable "lambda_invoke_arn" {}
 
 # RESOURCES
 
+# [/path][][]
 resource "aws_api_gateway_resource" "this" {
   rest_api_id = var.api_id
   parent_id   = var.parent_id
   path_part   = var.path_part
 }
 
+# [/path][METHOD][]
 resource "aws_api_gateway_method" "this" {
   rest_api_id   = var.api_id
   resource_id   = aws_api_gateway_resource.this.id
@@ -30,6 +29,7 @@ resource "aws_api_gateway_method" "this" {
   }
 }
 
+# [/path][METHOD][LAMBDA]
 resource "aws_api_gateway_integration" "this" {
   rest_api_id             = var.api_id
   resource_id             = aws_api_gateway_resource.this.id
@@ -40,3 +40,6 @@ resource "aws_api_gateway_integration" "this" {
 }
 
 # OUTPUTS
+output "integration" {
+  value = aws_api_gateway_integration.this
+}

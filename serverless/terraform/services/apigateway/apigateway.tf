@@ -51,40 +51,68 @@ resource "aws_api_gateway_authorizer" "this" {
 # ROUTES  #
 # # # # # #
 
-# [POST] /link/token_create
+# /link
 module "link" {
-  source = "./resource/resource-method"
+  # constant
+  source = "./resource"
+  api_id = aws_api_gateway_rest_api.this.id
 
-  region     = var.region
-  account_id = var.account_id
-  env        = var.env
+  # variable
+  parent_id = aws_api_gateway_rest_api.this.root_resource_id
+  path_part = "link"
+}
 
+# [POST] /link/token_create
+module "token_create" {
+  # constant
+  source        = "./resource_method"
   api_id        = aws_api_gateway_rest_api.this.id
-  parent_id     = aws_api_gateway_rest_api.this.root_resource_id
   authorizer_id = aws_api_gateway_authorizer.this.id
-  path_part     = "link"
 
-  child_path_part         = "token_create"
-  child_http_method       = "POST"
-  child_lambda_invoke_arn = module.lambda.invoke_arn
+  # variable
+  parent_id         = module.link.id
+  path_part         = "token_create"
+  http_method       = "POST"
+  lambda_invoke_arn = module.lambda.invoke_arn
+}
+
+# /item
+module "item" {
+  # constant
+  source = "./resource"
+  api_id = aws_api_gateway_rest_api.this.id
+
+  # variable
+  parent_id = aws_api_gateway_rest_api.this.root_resource_id
+  path_part = "item"
 }
 
 # [POST] /item/token_exchange
-module "item" {
-  source = "./resource/resource-method"
-
-  region     = var.region
-  account_id = var.account_id
-  env        = var.env
-
+module "token_exchange" {
+  # constant
+  source        = "./resource_method"
   api_id        = aws_api_gateway_rest_api.this.id
-  parent_id     = aws_api_gateway_rest_api.this.root_resource_id
   authorizer_id = aws_api_gateway_authorizer.this.id
-  path_part     = "item"
 
-  child_path_part         = "token_exchange"
-  child_http_method       = "POST"
-  child_lambda_invoke_arn = module.lambda.invoke_arn
+  # variable
+  parent_id         = module.item.id
+  path_part         = "token_exchange"
+  http_method       = "POST"
+  lambda_invoke_arn = module.lambda.invoke_arn
+}
+
+# [POST] /item/update_login
+module "update_login" {
+  # constant
+  source        = "./resource_method"
+  api_id        = aws_api_gateway_rest_api.this.id
+  authorizer_id = aws_api_gateway_authorizer.this.id
+
+  # variable
+  parent_id         = module.item.id
+  path_part         = "update_login"
+  http_method       = "PUT"
+  lambda_invoke_arn = module.lambda.invoke_arn
 }
 
 # # # # # # # #
@@ -95,8 +123,9 @@ resource "aws_api_gateway_deployment" "this" {
 
   triggers = {
     redeployment = sha1(jsonencode([
-      module.link,
-      module.item
+      module.token_create.integration,
+      module.token_exchange.integration,
+      module.update_login.integration
     ]))
   }
 
