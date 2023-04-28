@@ -11,8 +11,8 @@ module "item" {
   path_part = "item"
 }
 
-# [/item/token_exchange]
-module "item_token_exchange" {
+# [/item/tokenExchange]
+module "item_tokenExchange" {
   source = "./resource"
   api_id = aws_api_gateway_rest_api.this.id
 
@@ -20,19 +20,39 @@ module "item_token_exchange" {
   path_part = "token_exchange"
 }
 
-# [/item/token_exchange][POST]
-module "item_token_exchange_post" {
-  source        = "./method"
+# [/item/tokenExchange][POST]
+module "item_tokenExchange_POST" {
+  source        = "./method-integration"
   api_id        = aws_api_gateway_rest_api.this.id
   authorizer_id = aws_api_gateway_authorizer.this.id
 
-  resource_id       = module.item_token_exchange.id
+  resource_id       = module.item_tokenExchange.id
   http_method       = "POST"
   lambda_invoke_arn = var.lambda_plaid_invoke_arn
 }
 
-# [/item/token_exchange]
-module "item_update_login" {
+# [/item/tokenExchange/mock]
+module "item_tokenExchange_mock" {
+  source = "./resource"
+  api_id = aws_api_gateway_rest_api.this.id
+
+  parent_id = module.item_tokenExchange.id
+  path_part = "mock"
+}
+
+# [/item/tokenExchange/mock][POST]
+module "item_tokenExchange_mock_POST" {
+  source        = "./method-integration"
+  api_id        = aws_api_gateway_rest_api.this.id
+  authorizer_id = aws_api_gateway_authorizer.this.id
+
+  resource_id       = module.item_tokenExchange_mock.id
+  http_method       = "POST"
+  lambda_invoke_arn = var.lambda_plaid_invoke_arn
+}
+
+# [/item/updateLogin]
+module "item_updateLogin" {
   source = "./resource"
   api_id = aws_api_gateway_rest_api.this.id
 
@@ -40,13 +60,13 @@ module "item_update_login" {
   path_part = "update_login"
 }
 
-# [/item/update_login][POST]
-module "item_update_login_put" {
-  source        = "./method"
+# [/item/updateLogin][POST]
+module "item_updateLogin_PUT" {
+  source        = "./method-integration"
   api_id        = aws_api_gateway_rest_api.this.id
   authorizer_id = aws_api_gateway_authorizer.this.id
 
-  resource_id       = module.item_update_login.id
+  resource_id       = module.item_updateLogin.id
   http_method       = "PUT"
   lambda_invoke_arn = var.lambda_plaid_invoke_arn
 }
