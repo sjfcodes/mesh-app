@@ -12,13 +12,13 @@ variable "cognito_user_pool_name" {
   default = "mesh-app"
 }
 
+# resources
+
 module "lambda" {
   source = "../../../lambdas/plaid"
 
   env = var.env
 }
-
-# resources
 
 resource "aws_api_gateway_resource" "this" {
   rest_api_id = var.api_id
@@ -50,7 +50,7 @@ resource "aws_api_gateway_method" "this" {
 }
 
 # Lambda
-resource "aws_lambda_permission" "apigw_lambda" {
+resource "aws_lambda_permission" "this" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = module.lambda.function_name
