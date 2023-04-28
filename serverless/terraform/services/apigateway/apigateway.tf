@@ -1,3 +1,4 @@
+# inputs
 variable "region" {}
 variable "accountId" {}
 variable "env" {}
@@ -5,15 +6,16 @@ variable "cognito_user_pool_name" {
   default = "mesh-app"
 }
 
-module link {
-  source = "./resource"
-  region = var.region
-  accountId = var.accountId
-  env = var.env
-  api = aws_api_gateway_rest_api.this
+module "link" {
+  source     = "./resource/link"
+  region     = var.region
+  accountId  = var.accountId
+  env        = var.env
+  api        = aws_api_gateway_rest_api.this
   authorizer = aws_api_gateway_authorizer.this
 }
 
+# resources
 data "aws_cognito_user_pools" "this" {
   name = var.cognito_user_pool_name
 }
@@ -21,7 +23,6 @@ data "aws_cognito_user_pools" "this" {
 resource "aws_api_gateway_rest_api" "this" {
   name = "${var.env}_mesh-app"
 }
-
 
 resource "aws_api_gateway_authorizer" "this" {
   name          = "CognitoUserPoolAuthorizer"
@@ -35,9 +36,7 @@ resource "aws_api_gateway_deployment" "this" {
 
   triggers = {
     redeployment = sha1(jsonencode([
-      module.link.resource.id,
-      module.link.method.id,
-      module.link.integration.id,
+      module.link
     ]))
   }
 
@@ -52,6 +51,7 @@ resource "aws_api_gateway_stage" "this" {
   stage_name    = var.env
 }
 
+# outputs
 output "apigw_resource_id" {
   value = aws_api_gateway_rest_api.this.id
 }

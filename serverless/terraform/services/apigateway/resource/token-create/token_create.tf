@@ -1,23 +1,29 @@
+# inputs
+variable "env" {}
 variable "region" {}
 variable "accountId" {}
-variable "env" {}
 variable "api" {}
+variable "parent" {}
 variable "authorizer" {}
 
 module "lambda_plaid" {
-  source = "../../lambdas/plaid"
+  source = "../../../lambdas/plaid"
   env    = var.env
 }
 
-resource "aws_api_gateway_resource" "link" {
+# resources
+
+# /link/token_create
+resource "aws_api_gateway_resource" "token_create" {
   rest_api_id = var.api.id
-  parent_id   = var.api.root_resource_id
-  path_part   = "link"
+  parent_id   = var.parent.id
+  path_part   = "token_create"
 }
 
+# POST: /link/token_create
 resource "aws_api_gateway_method" "link_post" {
   rest_api_id   = var.api.id
-  resource_id   = aws_api_gateway_resource.link.id
+  resource_id   = aws_api_gateway_resource.token_create.id
   http_method   = "POST"
   authorization = "COGNITO_USER_POOLS"
   authorizer_id = var.authorizer.id
@@ -35,20 +41,21 @@ resource "aws_lambda_permission" "apigw_lambda" {
   principal     = "apigateway.amazonaws.com"
 
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-module.api.html
-  source_arn = "arn:aws:execute-api:${var.region}:${var.accountId}:${var.api.id}/*/${aws_api_gateway_method.link_post.http_method}${aws_api_gateway_resource.link.path}"
+  source_arn = "arn:aws:execute-api:${var.region}:${var.accountId}:${var.api.id}/*/${aws_api_gateway_method.link_post.http_method}${aws_api_gateway_resource.token_create.path}"
 }
 
 resource "aws_api_gateway_integration" "this" {
   rest_api_id             = var.api.id
-  resource_id             = aws_api_gateway_resource.link.id
+  resource_id             = aws_api_gateway_resource.token_create.id
   http_method             = aws_api_gateway_method.link_post.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = module.lambda_plaid.invoke_arn
 }
 
+# outputs
 output "resource" {
-  value = aws_api_gateway_resource.link
+  value = aws_api_gateway_resource.token_create
 }
 
 output "method" {
