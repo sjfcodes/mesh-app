@@ -20,9 +20,9 @@ resource "aws_api_gateway_deployment" "this" {
 
   triggers = {
     redeployment = sha1(jsonencode([
-      module.token_create.integration,
-      module.token_exchange.integration,
-      module.update_login.integration
+      module.link_token_create_post.integration,
+      module.item_token_exchange_post.integration,
+      module.item_update_login_put.integration
     ]))
   }
 
