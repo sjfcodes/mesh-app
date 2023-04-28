@@ -29,7 +29,7 @@ provider "aws" {
 module "apigateway" {
   source    = "./apigateway"
   region    = var.region
-  accountId = var.accountId
+  account_id = var.account_id
   env       = var.env
 }
 
