@@ -26,11 +26,19 @@ provider "aws" {
   profile = "mesh-app_terraform_deployer"
 }
 
+module "lambda_plaid" {
+  env    = var.env
+  source = "./lambda/plaid"
+}
+
 module "apigateway" {
-  source    = "./apigateway"
-  region    = var.region
+  env        = var.env
+  region     = var.region
   account_id = var.account_id
-  env       = var.env
+  source     = "./apigateway"
+
+  lambda_plaid_function_name = module.lambda_plaid.function_name
+  lambda_plaid_invoke_arn    = module.lambda_plaid.invoke_arn
 }
 
 output "apigw_resource_id" {

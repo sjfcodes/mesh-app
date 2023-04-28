@@ -1,4 +1,6 @@
-# INPUTS
+# # # # # #
+# INPUTS  #
+# # # # # #
 variable "api_id" {}
 variable "authorizer_id" {}
 
@@ -7,7 +9,9 @@ variable "path_part" {}
 variable "http_method" {}
 variable "lambda_invoke_arn" {}
 
-# RESOURCES
+# # # # # # #
+# RESOURCES #
+# # # # # # #
 
 # [/path][][]
 resource "aws_api_gateway_resource" "this" {
@@ -39,7 +43,9 @@ resource "aws_api_gateway_integration" "this" {
   uri                     = var.lambda_invoke_arn
 }
 
-# OUTPUTS
+# # # # # #
+# OUTPUTS #
+# # # # # #
 output "integration" {
   value = aws_api_gateway_integration.this
 }
