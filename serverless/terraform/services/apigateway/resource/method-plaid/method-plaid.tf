@@ -5,7 +5,7 @@ variable "account_id" {}
 
 variable "api_id" {}
 variable "parent_id" {}
-variable "resource_name" {}
+variable "path_part" {}
 variable "http_method" {}
 
 variable "cognito_user_pool_name" {
@@ -23,7 +23,7 @@ module "lambda" {
 resource "aws_api_gateway_resource" "this" {
   rest_api_id = var.api_id
   parent_id   = var.parent_id
-  path_part   = var.resource_name
+  path_part   = var.path_part
 }
 
 data "aws_cognito_user_pools" "this" {

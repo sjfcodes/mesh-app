@@ -5,15 +5,19 @@ variable "account_id" {}
 
 # resources
 
+# [POST] /link/token_create
 module "link" {
-  source = "./resource/link"
+  source = "./resource/resource-method"
 
   region     = var.region
   account_id = var.account_id
   env        = var.env
 
-  api_id    = aws_api_gateway_rest_api.this.id
-  parent_id = aws_api_gateway_rest_api.this.root_resource_id
+  api_id            = aws_api_gateway_rest_api.this.id
+  parent_id         = aws_api_gateway_rest_api.this.root_resource_id
+  path_part         = "link"
+  child_path_part   = "token_create"
+  child_http_method = "POST"
 }
 
 resource "aws_api_gateway_rest_api" "this" {
