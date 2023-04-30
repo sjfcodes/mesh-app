@@ -40,6 +40,7 @@ resource "aws_iam_policy" "iam" {
       {
         Effect = "Allow"
         Action = [
+          "iam:CreatePolicyVersion",
           "iam:DeletePolicy",
           "iam:GetPolicy",
           "iam:GetPolicyVersion",
