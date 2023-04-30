@@ -35,9 +35,9 @@ describe('create tables', () => {
     const request = createUserTableRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -54,9 +54,9 @@ describe('create tables', () => {
     const request = createTransactionTableRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)

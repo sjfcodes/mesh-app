@@ -48,7 +48,7 @@ echo "import config from './utils/config.js';
 export const handler = async (event) => {
   let statusCode = 200;
   let response;
-  const httpMethod = event.context['http-method'];
+  const httpMethod = event.httpMethod;
 
   try {
     switch (httpMethod) {
@@ -109,7 +109,7 @@ export const getMyRequestPayload = {
     path: null,
     payload: { hello: 'world' }
   },
-  context: { ['http-method']: 'GET' },
+  event: { httpMethod: 'GET' },
   params,
 };
 " >$pathToIntegrationTest/$functionName/payloads.js

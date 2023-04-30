@@ -35,9 +35,9 @@ describe('create, edit, & delete items from table', () => {
     const request = createTableItemRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -51,9 +51,9 @@ describe('create, edit, & delete items from table', () => {
     const request = mockExchangeTokenLinkRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -72,9 +72,9 @@ describe('create, edit, & delete items from table', () => {
     const request = mockSyncTransactionsForItemRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)

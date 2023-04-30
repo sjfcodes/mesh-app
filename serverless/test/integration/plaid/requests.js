@@ -10,9 +10,9 @@ export const createTokenLinkRequest = {
     TableName: TableName.user,
     path: path.linkTokenCreate,
   },
-  context: {
-    ['http-method']: 'PUT',
-    ['resource-path']: path.linkTokenCreate,
+  event: {
+    httpMethod: 'PUT',
+    path: path.linkTokenCreate,
   },
   params,
 };
@@ -29,9 +29,9 @@ export const mockExchangeTokenLinkRequest = {
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
-  context: {
-    ['http-method']: 'POST',
-    ['resource-path']: path.itemTokenExchangeTest,
+  event: {
+    httpMethod: 'POST',
+    path: path.itemTokenExchangeTest,
   },
   params,
 };
@@ -44,9 +44,9 @@ export const mockSyncTransactionsForItemRequest = {
       tx_cursor: mockPlaid.txCursor,
     },
   },
-  context: {
-    ['http-method']: 'PUT',
-    ['resource-path']: path.testItemTransactionSync,
+  event: {
+    httpMethod: 'PUT',
+    path: path.testItemTransactionSync,
   },
   params: {
     ...params,
@@ -58,9 +58,9 @@ export const mockSyncTransactionsForItemRequest = {
 
 export const getTransactionsForAccountWithBandsRequest = {
   body: {},
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.itemAccountTransaction,
+  event: {
+    httpMethod: 'GET',
+    path: path.itemAccountTransaction,
   },
   params: {
     ...params,
@@ -75,9 +75,9 @@ export const getTransactionsForAccountWithBandsRequest = {
 
 export const getTransactionsForAccountWithoutBandsRequest = {
   body: {},
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.itemAccountTransaction,
+  event: {
+    httpMethod: 'GET',
+    path: path.itemAccountTransaction,
   },
   params: {
     ...params,
@@ -90,27 +90,27 @@ export const getTransactionsForAccountWithoutBandsRequest = {
 
 export const getUserItemsRequest = {
   body: {},
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.userItem,
+  event: {
+    httpMethod: 'GET',
+    path: path.userItem,
   },
   params,
 };
 
 export const getUserAccountsRequest = {
   body: {},
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.itemAccount,
+  event: {
+    httpMethod: 'GET',
+    path: path.itemAccount,
   },
   params,
 };
 
 export const getUserAccountsBalancesRequest = {
   body: {},
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.itemAccountBalance,
+  event: {
+    httpMethod: 'GET',
+    path: path.itemAccountBalance,
   },
   params: {
     ...params,
@@ -122,9 +122,9 @@ export const getUserAccountsBalancesRequest = {
 
 export const getInstitutionByIdRequest = {
   body: {},
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.itemInstitution,
+  event: {
+    httpMethod: 'GET',
+    path: path.itemInstitution,
   },
   params: {
     ...params,

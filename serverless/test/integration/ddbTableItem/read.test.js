@@ -46,9 +46,9 @@ describe('create, edit, & delete items from table', () => {
     const request = getTableItemRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -71,9 +71,9 @@ describe('create, edit, & delete items from table', () => {
     const request = updateTableItemRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -93,9 +93,9 @@ describe('create, edit, & delete items from table', () => {
     const request = getUserItemsRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -124,9 +124,9 @@ describe('create, edit, & delete items from table', () => {
     const request = getUserAccountsRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -155,9 +155,9 @@ describe('create, edit, & delete items from table', () => {
   //   const request = getUserAccountsBalancesRequest;
   //   const response = await (testApi
   //     ? api({
-  //         url: request.context['resource-path'],
-  //         method: request.context['http-method'],
-  //         data: request.body,
+  //         url: request.event.path,
+  //         method: request.event.httpMethod,
+  //         data: request.event.body,
   //       })
   //         .then(({ data }) => data)
   //         .catch(handleError)
@@ -176,10 +176,10 @@ describe('create, edit, & delete items from table', () => {
     const request = getTransactionsForAccountWithBandsRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          params: request.params.querystring,
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          params: request.event.params.querystring,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -208,10 +208,10 @@ describe('create, edit, & delete items from table', () => {
     const request = getTransactionsForAccountWithoutBandsRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          params: request.params.querystring,
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          params: request.event.params.querystring,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -242,10 +242,10 @@ describe('create, edit, & delete items from table', () => {
     const request = getInstitutionByIdRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          params: request.params.querystring,
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          params: request.event.params.querystring,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)

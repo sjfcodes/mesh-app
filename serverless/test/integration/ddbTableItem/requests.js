@@ -9,9 +9,9 @@ export const createTableItemRequest = {
     path: null,
     payload: { TableName: TableName.user, Item: Item.original },
   },
-  context: {
-    ['http-method']: 'PUT',
-    ['resource-path']: path.dynamoDbTableItem,
+  event: {
+    httpMethod: 'PUT',
+    path: path.dynamoDbTableItem,
   },
 };
 
@@ -25,9 +25,9 @@ export const getTableItemRequest = {
       },
     },
   },
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.dynamoDbTableItem,
+  event: {
+    httpMethod: 'GET',
+    path: path.dynamoDbTableItem,
   },
 };
 
@@ -44,9 +44,9 @@ export const updateTableItemRequest = {
       ReturnValues: 'ALL_NEW', //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
     },
   },
-  context: {
-    ['http-method']: 'POST',
-    ['resource-path']: path.dynamoDbTableItem,
+  event: {
+    httpMethod: 'POST',
+    path: path.dynamoDbTableItem,
   },
 };
 
@@ -58,9 +58,9 @@ export const deleteTableItemRequest = {
       Key: { email: Item.original.email },
     },
   },
-  context: {
-    ['http-method']: 'DELETE',
-    ['resource-path']: path.dynamoDbTableItem,
+  event: {
+    httpMethod: 'DELETE',
+    path: path.dynamoDbTableItem,
   },
 };
 
@@ -72,8 +72,8 @@ export const createPlaidItemPayload = {
       Item: Item.original,
     },
   },
-  context: {
-    ['http-method']: 'PUT',
-    ['resource-path']: path.dynamoDbTableItem,
+  event: {
+    httpMethod: 'PUT',
+    path: path.dynamoDbTableItem,
   },
 };

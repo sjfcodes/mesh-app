@@ -32,9 +32,9 @@ describe('destroy tables', () => {
     const request = deleteUserTableRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
@@ -47,9 +47,9 @@ describe('destroy tables', () => {
     const request = deleteTransactionTableRequest;
     const response = await (testApi
       ? api({
-          url: request.context['resource-path'],
-          method: request.context['http-method'],
-          data: request.body,
+          url: request.event.path,
+          method: request.event.httpMethod,
+          data: request.event.body,
         })
           .then(({ data }) => data)
           .catch(handleError)

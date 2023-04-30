@@ -18,7 +18,7 @@ export const handler = async (event, context) => {
   let response;
   let Command;
 
-  const httpMethod = event.context['http-method'];
+  const httpMethod = event.httpMethod;
   try {
     switch (httpMethod) {
       case 'DELETE':

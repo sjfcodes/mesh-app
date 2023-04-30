@@ -34,9 +34,9 @@ export const createUserTableRequest = {
       },
     },
   },
-  context: {
-    ['http-method']: 'PUT',
-    ['resource-path']: path.dynamoDbTable,
+  event: {
+    httpMethod: 'PUT',
+    path: path.dynamoDbTable,
   },
 };
 
@@ -47,9 +47,9 @@ export const getUserTableRequest = {
       TableName: TableName.user,
     },
   },
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.dynamoDbTable,
+  event: {
+    httpMethod: 'GET',
+    path: path.dynamoDbTable,
   },
 };
 
@@ -60,9 +60,9 @@ export const deleteUserTableRequest = {
       TableName: TableName.user,
     },
   },
-  context: {
-    ['http-method']: 'DELETE',
-    ['resource-path']: path.dynamoDbTable,
+  event: {
+    httpMethod: 'DELETE',
+    path: path.dynamoDbTable,
   },
 };
 
@@ -133,9 +133,9 @@ export const createTransactionTableRequest = {
       },
     },
   },
-  context: {
-    ['http-method']: 'PUT',
-    ['resource-path']: path.dynamoDbTable,
+  event: {
+    httpMethod: 'PUT',
+    path: path.dynamoDbTable,
   },
 };
 
@@ -146,9 +146,9 @@ export const getTransactionTableRequest = {
       TableName: TableName.transaction,
     },
   },
-  context: {
-    ['http-method']: 'GET',
-    ['resource-path']: path.dynamoDbTable,
+  event: {
+    httpMethod: 'GET',
+    path: path.dynamoDbTable,
   },
 };
 
@@ -159,8 +159,8 @@ export const deleteTransactionTableRequest = {
       TableName: TableName.transaction,
     },
   },
-  context: {
-    ['http-method']: 'DELETE',
-    ['resource-path']: path.dynamoDbTable,
+  event: {
+    httpMethod: 'DELETE',
+    path: path.dynamoDbTable,
   },
 };
