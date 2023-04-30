@@ -25,9 +25,8 @@ resource "aws_iam_policy" "iam" {
           "iam:PassRole",
         ]
         Resource = [
-          "arn:aws:iam::${local.account_id}:role/test_iam_role_lambda",
-          "arn:aws:iam::${local.account_id}:role/prod_iam_role_lambda",
-          "arn:aws:iam::${local.account_id}:role/_iam_role_lambda",
+          "arn:aws:iam::${local.account_id}:role/test_iam_role_lambda_plaid",
+          "arn:aws:iam::${local.account_id}:role/prod_iam_role_lambda_plaid",
         ]
       },
       {
@@ -42,14 +41,14 @@ resource "aws_iam_policy" "iam" {
         Action = [
           "iam:CreatePolicyVersion",
           "iam:DeletePolicy",
+          "iam:DeletePolicyVersion",
           "iam:GetPolicy",
           "iam:GetPolicyVersion",
           "iam:ListPolicyVersions",
         ]
         Resource = [
-          "arn:aws:iam::118185547444:policy/test_plaid_lambda",
-          "arn:aws:iam::118185547444:policy/prod_plaid_lambda",
-          "arn:aws:iam::118185547444:policy/_plaid_lambda",
+          "arn:aws:iam::118185547444:policy/test_lambda_plaid",
+          "arn:aws:iam::118185547444:policy/prod_lambda_plaid",
         ]
       }
     ]
