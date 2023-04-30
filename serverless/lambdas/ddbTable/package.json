@@ -6,8 +6,8 @@
   "main": "index.test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy:dev": "./deploy.sh dev-crudDynamoDbTable",
-    "deploy:prod": "./deploy.sh crudDynamoDbTable"
+    "deploy:dev": "./deploy.sh dev-ddbTable",
+    "deploy:prod": "./deploy.sh ddbTable"
   },
   "keywords": [],
   "author": "sjfcodes@gmail.com",

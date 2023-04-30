@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import dynamoDb from '../../config/dynamoDb.js';
 
-import { handler as tableHandler } from '../../../lambdas/crudDynamoDbTable/index.js';
+import { handler as tableHandler } from '../../../lambdas/ddbTable/index.js';
 import {
   getUserTableRequest,
   getTransactionTableRequest,
