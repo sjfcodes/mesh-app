@@ -2,14 +2,19 @@ import config from './utils/config.js';
 import App from './lib/App.js';
 
 export const handler = async (event) => {
-  let response = event.body;
+  const requestMethod = event.httpMethod;
+  const requestPath = event.path;
+
+  let response = {
+    message: 'default',
+    body: {},
+  };
   let statusCode = 200;
+
   console.log(event);
 
   try {
     const app = new App(event);
-    const requestMethod = event.httpMethod;
-    const requestPath = event.path;
 
     await app.setUserByToken(event.headers.Authorization);
 
@@ -17,23 +22,23 @@ export const handler = async (event) => {
       case 'GET':
         switch (requestPath) {
           case config.path.userItem:
-            response = await app.handleGetItems();
+            response.body = await app.handleGetItems();
             break;
 
           case config.path.itemInstitution:
-            response = await app.handleGetItemInstitutionById();
+            response.body = await app.handleGetItemInstitutionById();
             break;
 
           case config.path.itemAccount:
-            response = await app.handleGetItemAccounts();
+            response.body = await app.handleGetItemAccounts();
             break;
 
           case config.path.itemAccountBalance:
-            response = await app.handleGetItemAccountBalances();
+            response.body = await app.handleGetItemAccountBalances();
             break;
 
           case config.path.itemAccountTransaction:
-            response = await app.handleGetUserAccountTransactions();
+            response.body = await app.handleGetUserAccountTransactions();
             break;
 
           default:
@@ -45,16 +50,16 @@ export const handler = async (event) => {
         switch (requestPath) {
           case config.path.itemTransactionSync:
             const summary = await app.handleUserItemSyncTransactions();
-            response = { tx_sync: 'complete', ...summary };
+            response.body = { tx_sync: 'complete', ...summary };
             break;
 
           case config.path.testItemTransactionSync:
             const testSummary = await app.handleUserItemSyncTransactionsTest();
-            response = { tx_sync: 'complete', ...testSummary };
+            response.body = { tx_sync: 'complete', ...testSummary };
             break;
 
           case config.path.itemUpdateLogin:
-            response = await app.handleUpdateUserItemLogin();
+            response.body = await app.handleUpdateUserItemLogin();
             break;
 
           default:
@@ -65,22 +70,22 @@ export const handler = async (event) => {
       case 'POST':
         switch (requestPath) {
           case config.path.itemAccount:
-            response = await app.handleGetItemAccounts();
+            response.body = await app.handleGetItemAccounts();
             break;
 
           case config.path.linkTokenCreate:
-            response = await app.handleLinkTokenCreateUpdate();
+            response.body = await app.handleLinkTokenCreateUpdate();
             break;
 
           case config.path.itemTokenExchange:
             const { item_id } = await app.handleItemTokenExchange();
-            response = { public_token_exchange: 'complete', item_id };
+            response.body = { public_token_exchange: 'complete', item_id };
             break;
 
           case config.path.itemTokenExchangeTest:
             const { item_id: testItemId } =
               await app.handleItemTokenExchangeTest();
-            response = {
+            response.body = {
               public_token_exchange: 'complete',
               item_id: testItemId,
             };
@@ -92,27 +97,25 @@ export const handler = async (event) => {
         break;
 
       default:
-        throw new Error(
-          `Unsupported method: "${requestMethod}"`
-        );
+        throw new Error(`Unsupported method: "${requestMethod}"`);
     }
   } catch (error) {
-    response = error;
+    console.error(error);
+    response.message = error.message;
     if (error?.response) {
-      response = error.response;
+      response.body = error.response;
     }
-    console.error(response);
-    statusCode = 400;
+    statusCode = 500;
   }
 
+  // follow expected formatted response
   return {
-    body: response,
+    body: JSON.stringify(response),
     headers: {
       'Access-Control-Allow-Origin': '*', // Required for CORS support to work
       'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
       'Content-Type': 'application/json',
     },
-    path: event.path,
-    status_code: statusCode,
+    statusCode: statusCode,
   };
 };
