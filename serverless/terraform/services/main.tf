@@ -41,6 +41,8 @@ module "dynamodb_table_transactions" {
 module "lambda_plaid" {
   env    = var.env
   source = "./lambda/plaid"
+  table_transactions_name = module.dynamodb_table_transactions.table_name
+  table_users_name = module.dynamodb_table_users.table_name
 }
 
 module "apigateway" {

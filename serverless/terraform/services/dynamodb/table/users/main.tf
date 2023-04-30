@@ -8,7 +8,7 @@ variable "app_name" {}
 # # # # # # #
 # RESOURCES #
 # # # # # # #
-resource "aws_dynamodb_table" "basic-dynamodb-table" {
+resource "aws_dynamodb_table" "users" {
   name           = "${var.app_name}.${var.env}.users"
   billing_mode   = "PROVISIONED"
   read_capacity  = 1
@@ -30,3 +30,6 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
 # # # # # #
 # OUTPUTS #
 # # # # # #
+output "table_name" {
+  value = aws_dynamodb_table.users.name
+}

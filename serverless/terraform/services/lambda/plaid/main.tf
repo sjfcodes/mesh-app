@@ -1,4 +1,9 @@
+# # # # # #
+# INPUTS  #
+# # # # # #
 variable "env" {}
+variable "table_transactions_name" {}
+variable "table_users_name" {}
 variable "path" {
   default = "../../lambdas"
 
@@ -7,6 +12,9 @@ variable "lambda_name" {
   default = "plaid"
 }
 
+# # # # # # #
+# RESOURCES #
+# # # # # # #
 data "aws_iam_policy_document" "assume_role" {
   statement {
     effect = "Allow"
@@ -43,8 +51,8 @@ resource "aws_lambda_function" "plaid" {
 
   environment {
     variables = {
-      USER_TABLE_NAME        = "mesh-app.users.${var.env}"
-      TRANSACTION_TABLE_NAME = "mesh-app.plaid.transactions.${var.env}"
+      USER_TABLE_NAME        = var.table_users_name
+      TRANSACTION_TABLE_NAME = var.table_transactions_name
     }
   }
 
@@ -80,7 +88,8 @@ data "aws_iam_policy_document" "this" {
       "dynamodb:GetItem"
     ]
     resources = [
-      "arn:aws:dynamodb:us-east-1:118185547444:table/mesh-app.users.test"
+      "arn:aws:dynamodb:us-east-1:118185547444:table/${var.table_transactions_name}",
+      "arn:aws:dynamodb:us-east-1:118185547444:table/${var.table_users_name}"
     ]
   }
 }
@@ -96,6 +105,9 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   policy_arn = aws_iam_policy.this.arn
 }
 
+# # # # # #
+# OUTPUTS #
+# # # # # #
 output "function_name" {
   value = aws_lambda_function.plaid.function_name
 }
