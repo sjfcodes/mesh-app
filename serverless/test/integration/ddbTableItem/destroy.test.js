@@ -1,6 +1,4 @@
 /**
- * Tests Foo class
- *
  * @group db/item/destroy
  */
 import * as dotenv from 'dotenv';

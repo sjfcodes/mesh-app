@@ -1,6 +1,4 @@
 /**
- * Tests Foo class
- *
  * @group db/read
  */
 import * as dotenv from 'dotenv';
@@ -31,13 +29,13 @@ const handleError = (err) => {
 };
 
 describe('read tables', () => {
-  it('should get user table', async () => {
+  it.only('should get user table', async () => {
     const request = getUserTableRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
