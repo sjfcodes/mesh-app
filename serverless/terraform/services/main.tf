@@ -39,10 +39,25 @@ module "dynamodb_table_transactions" {
 }
 
 module "lambda_plaid" {
-  env    = var.env
-  source = "./lambda/plaid"
+  env                     = var.env
+  region                  = var.region
+  account_id              = var.account_id
+  source                  = "./lambda"
   table_transactions_name = module.dynamodb_table_transactions.table_name
-  table_users_name = module.dynamodb_table_users.table_name
+  table_users_name        = module.dynamodb_table_users.table_name
+
+  lambda_name = "plaid"
+}
+
+module "lambda_ddb_table" {
+  env                     = var.env
+  region                  = var.region
+  account_id              = var.account_id
+  source                  = "./lambda"
+  table_transactions_name = module.dynamodb_table_transactions.table_name
+  table_users_name        = module.dynamodb_table_users.table_name
+
+  lambda_name = "ddbTable"
 }
 
 module "apigateway" {

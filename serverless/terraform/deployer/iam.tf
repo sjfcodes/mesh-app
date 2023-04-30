@@ -25,8 +25,11 @@ resource "aws_iam_policy" "iam" {
           "iam:PassRole",
         ]
         Resource = [
-          "arn:aws:iam::${local.account_id}:role/test_iam_role_lambda_plaid",
-          "arn:aws:iam::${local.account_id}:role/prod_iam_role_lambda_plaid",
+          "arn:aws:iam::${local.account_id}:role/lambda_test_plaid",
+          "arn:aws:iam::${local.account_id}:role/lambda_prod_plaid",
+          "arn:aws:iam::${local.account_id}:role/lambda_test_ddbTable",
+          "arn:aws:iam::${local.account_id}:role/lambda_prod_ddbTable",
+          # "arn:aws:iam::${local.account_id}:role/*",
         ]
       },
       {
@@ -47,8 +50,11 @@ resource "aws_iam_policy" "iam" {
           "iam:ListPolicyVersions",
         ]
         Resource = [
-          "arn:aws:iam::118185547444:policy/test_lambda_plaid",
-          "arn:aws:iam::118185547444:policy/prod_lambda_plaid",
+          "arn:aws:iam::118185547444:policy/lambda_test_plaid",
+          "arn:aws:iam::118185547444:policy/lambda_prod_plaid",
+          "arn:aws:iam::118185547444:policy/lambda_test_ddbTable",
+          "arn:aws:iam::118185547444:policy/lambda_prod_ddbTable",
+          # "arn:aws:iam::118185547444:policy/*",
         ]
       }
     ]

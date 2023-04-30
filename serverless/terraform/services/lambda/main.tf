@@ -2,15 +2,16 @@
 # INPUTS  #
 # # # # # #
 variable "env" {}
+variable "region" {}
+variable "account_id" {}
+
 variable "table_transactions_name" {}
 variable "table_users_name" {}
 variable "path" {
   default = "../../lambdas"
 
 }
-variable "lambda_name" {
-  default = "plaid"
-}
+variable "lambda_name" {}
 
 # # # # # # #
 # RESOURCES #
@@ -29,7 +30,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "lambda" {
-  name               = "${var.env}_iam_role_lambda"
+  name               = "lambda_${var.env}_${var.lambda_name}"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -39,7 +40,7 @@ data "archive_file" "lambda" {
   output_path = "${var.path}/${var.lambda_name}/${var.lambda_name}.zip"
 }
 
-resource "aws_lambda_function" "plaid" {
+resource "aws_lambda_function" "this" {
   filename      = "${var.path}/${var.lambda_name}/${var.lambda_name}.zip"
   function_name = "${var.env}_${var.lambda_name}"
   role          = aws_iam_role.lambda.arn
@@ -58,11 +59,11 @@ resource "aws_lambda_function" "plaid" {
 
   depends_on = [
     aws_iam_role_policy_attachment.lambda_logs,
-    aws_cloudwatch_log_group.example,
+    aws_cloudwatch_log_group.this,
   ]
 }
 
-resource "aws_cloudwatch_log_group" "example" {
+resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/lambda/${var.env}_${var.lambda_name}"
   retention_in_days = 14
 }
@@ -88,16 +89,16 @@ data "aws_iam_policy_document" "this" {
       "dynamodb:GetItem"
     ]
     resources = [
-      "arn:aws:dynamodb:us-east-1:118185547444:table/${var.table_transactions_name}",
-      "arn:aws:dynamodb:us-east-1:118185547444:table/${var.table_users_name}"
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}",
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}"
     ]
   }
 }
 
 resource "aws_iam_policy" "this" {
-  name        = "${var.env}_plaid_lambda"
-  path        = "/"
-  policy      = data.aws_iam_policy_document.this.json
+  name   = "lambda_${var.env}_${var.lambda_name}"
+  path   = "/"
+  policy = data.aws_iam_policy_document.this.json
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
@@ -109,8 +110,8 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 # OUTPUTS #
 # # # # # #
 output "function_name" {
-  value = aws_lambda_function.plaid.function_name
+  value = aws_lambda_function.this.function_name
 }
 output "invoke_arn" {
-  value = aws_lambda_function.plaid.invoke_arn
+  value = aws_lambda_function.this.invoke_arn
 }
