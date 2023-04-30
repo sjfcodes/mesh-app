@@ -46,9 +46,9 @@ resource "aws_iam_policy" "iam" {
           "iam:ListPolicyVersions",
         ]
         Resource = [
-          "arn:aws:iam::118185547444:policy/test_lambda_logging",
-          "arn:aws:iam::118185547444:policy/prod_lambda_logging",
-          "arn:aws:iam::118185547444:policy/_lambda_logging",
+          "arn:aws:iam::118185547444:policy/test_plaid_lambda",
+          "arn:aws:iam::118185547444:policy/prod_plaid_lambda",
+          "arn:aws:iam::118185547444:policy/_plaid_lambda",
         ]
       }
     ]

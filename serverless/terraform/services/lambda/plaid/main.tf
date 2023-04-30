@@ -60,7 +60,7 @@ resource "aws_cloudwatch_log_group" "example" {
 }
 
 # See also the following AWS managed policy: AWSLambdaBasicExecutionRole
-data "aws_iam_policy_document" "logging" {
+data "aws_iam_policy_document" "this" {
   statement {
     effect = "Allow"
 
@@ -72,18 +72,28 @@ data "aws_iam_policy_document" "logging" {
 
     resources = ["arn:aws:logs:*:*:*"]
   }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "dynamodb:GetItem"
+    ]
+    resources = [
+      "arn:aws:dynamodb:us-east-1:118185547444:table/mesh-app.users.test"
+    ]
+  }
 }
 
-resource "aws_iam_policy" "logging" {
-  name        = "${var.env}_lambda_logging"
+resource "aws_iam_policy" "this" {
+  name        = "${var.env}_plaid_lambda"
   path        = "/"
-  description = "IAM policy for logging from a lambda"
-  policy      = data.aws_iam_policy_document.logging.json
+  policy      = data.aws_iam_policy_document.this.json
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
   role       = aws_iam_role.lambda.name
-  policy_arn = aws_iam_policy.logging.arn
+  policy_arn = aws_iam_policy.this.arn
 }
 
 output "function_name" {
