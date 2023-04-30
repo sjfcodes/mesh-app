@@ -7,6 +7,8 @@ variable "account_id" {}
 
 variable "lambda_plaid_function_name" {}
 variable "lambda_plaid_invoke_arn" {}
+variable "lambda_ddbTable_function_name" {}
+variable "lambda_ddbTable_invoke_arn" {}
 
 # # # # # # #
 # RESOURCES #
@@ -30,7 +32,8 @@ resource "aws_api_gateway_deployment" "this" {
       module.link.link_tokenCreate_POST,
       module.item.item_tokenExchange_POST,
       module.item.item_tokenExchange_mock_POST,
-      module.item.item_updateLogin_PUT
+      module.item.item_updateLogin_PUT,
+      module.ddbTable.table_GET
     ]))
   }
 

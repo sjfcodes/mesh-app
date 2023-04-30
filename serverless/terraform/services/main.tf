@@ -49,7 +49,7 @@ module "lambda_plaid" {
   lambda_name = "plaid"
 }
 
-module "lambda_ddb_table" {
+module "lambda_ddbTable" {
   env                     = var.env
   region                  = var.region
   account_id              = var.account_id
@@ -68,6 +68,8 @@ module "apigateway" {
 
   lambda_plaid_function_name = module.lambda_plaid.function_name
   lambda_plaid_invoke_arn    = module.lambda_plaid.invoke_arn
+  lambda_ddbTable_function_name = module.lambda_ddbTable.function_name
+  lambda_ddbTable_invoke_arn    = module.lambda_ddbTable.invoke_arn
 }
 
 output "apigw_resource_id" {
