@@ -26,6 +26,18 @@ provider "aws" {
   profile = "mesh-app_terraform_deployer"
 }
 
+module "dynamodb_table_users" {
+  env      = var.env
+  app_name = var.app_name
+  source   = "./dynamodb/table/users"
+}
+
+module "dynamodb_table_transactions" {
+  env      = var.env
+  app_name = var.app_name
+  source   = "./dynamodb/table/transactions"
+}
+
 module "lambda_plaid" {
   env    = var.env
   source = "./lambda/plaid"
