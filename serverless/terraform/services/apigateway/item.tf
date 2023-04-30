@@ -22,7 +22,7 @@ module "item_tokenExchange" {
 
 # [/item/tokenExchange][POST]
 module "item_tokenExchange_POST" {
-  source        = "./method-integration"
+  source        = "./method:integration"
   api_id        = aws_api_gateway_rest_api.this.id
   authorizer_id = aws_api_gateway_authorizer.this.id
 
@@ -42,7 +42,7 @@ module "item_tokenExchange_mock" {
 
 # [/item/tokenExchange/mock][POST]
 module "item_tokenExchange_mock_POST" {
-  source        = "./method-integration"
+  source        = "./method:integration"
   api_id        = aws_api_gateway_rest_api.this.id
   authorizer_id = aws_api_gateway_authorizer.this.id
 
@@ -62,7 +62,7 @@ module "item_updateLogin" {
 
 # [/item/updateLogin][POST]
 module "item_updateLogin_PUT" {
-  source        = "./method-integration"
+  source        = "./method:integration"
   api_id        = aws_api_gateway_rest_api.this.id
   authorizer_id = aws_api_gateway_authorizer.this.id
 

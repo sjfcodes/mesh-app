@@ -22,7 +22,7 @@ module "link_tokenCreate" {
 
 # [/link/tokenCreate][POST]
 module "link_tokenCreate_POST" {
-  source        = "./method-integration"
+  source        = "./method:integration"
   api_id        = aws_api_gateway_rest_api.this.id
   authorizer_id = aws_api_gateway_authorizer.this.id
 
