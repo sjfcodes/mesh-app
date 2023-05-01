@@ -16,7 +16,7 @@ export const getUserTableRequest = {
     },
   },
   httpMethod: 'GET',
-  path: path.dynamoDbTable,
+  path: path.ddbTable,
 };
 
 export const deleteUserTableRequest = {
@@ -28,7 +28,7 @@ export const deleteUserTableRequest = {
   },
   event: {
     httpMethod: 'DELETE',
-    path: path.dynamoDbTable,
+    path: path.ddbTable,
   },
 };
 
@@ -45,7 +45,7 @@ export const getTransactionTableRequest = {
   },
   event: {
     httpMethod: 'GET',
-    path: path.dynamoDbTable,
+    path: path.ddbTable,
   },
 };
 
@@ -58,6 +58,6 @@ export const deleteTransactionTableRequest = {
   },
   event: {
     httpMethod: 'DELETE',
-    path: path.dynamoDbTable,
+    path: path.ddbTable,
   },
 };

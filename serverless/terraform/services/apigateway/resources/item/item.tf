@@ -69,7 +69,7 @@ module "item_updateLogin" {
   path_part = "update_login"
 }
 
-# [/item/updateLogin][POST]
+# [/item/updateLogin][PUT]
 module "item_updateLogin_PUT" {
   source        = "../../templates/method_integration"
   api_id        = var.api_id

@@ -15,7 +15,7 @@ const config = {
     transaction: process.env.TRANSACTION_TABLE_NAME /* prod or test table */,
   },
   path: {
-    dynamoDbTable: '/dynamodbtable',
+    ddbTable: '/table',
     dynamoDbTableItem: '/dynamodbtableitem',
     linkTokenCreate: '/link/token-create',
     itemTokenExchange: '/item/token-exchange',
