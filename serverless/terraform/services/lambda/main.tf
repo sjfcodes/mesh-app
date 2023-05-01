@@ -87,7 +87,8 @@ data "aws_iam_policy_document" "this" {
 
     actions = [
       "dynamodb:GetItem",
-      "dynamodb:PutItem"
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem"
     ]
     resources = [
       "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}",
