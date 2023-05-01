@@ -77,7 +77,7 @@ export const handler = async (event) => {
         }
 
         if (requestBody.Item) {
-          requestBody.Item = marshall(requestBody.Item );
+          requestBody.Item = marshall(requestBody.Item);
         }
 
         if (event.body.Key) {
