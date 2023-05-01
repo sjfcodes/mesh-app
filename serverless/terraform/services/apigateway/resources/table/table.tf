@@ -30,9 +30,32 @@ module "table_GET" {
   lambda_invoke_arn = var.lambda_invoke_arn
 }
 
+# [/table/item]
+module "item" {
+  source = "../../templates/resource"
+  api_id = var.api_id
+
+  parent_id = module.table.id
+  path_part = "item"
+}
+
+# [/table/item][PUT]
+module "table_item_PUT" {
+  source        = "../../templates/method_integration"
+  api_id        = var.api_id
+  authorizer_id = var.authorizer_id
+
+  resource_id       = module.item.id
+  http_method       = "PUT"
+  lambda_invoke_arn = var.lambda_invoke_arn
+}
+
 # # # # # #
 # OUTPUTS #
 # # # # # #
 output "table_GET" {
   value = module.table_GET
+}
+output "table_PUT" {
+  value = module.table_item_PUT
 }
