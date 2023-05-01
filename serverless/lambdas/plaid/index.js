@@ -108,7 +108,9 @@ export const handler = async (event) => {
     statusCode = 500;
   }
 
-  // follow expected formatted response
+  response.body.statusCode = statusCode;
+
+  // must follow expected formatted response
   return {
     body: JSON.stringify(response),
     headers: {

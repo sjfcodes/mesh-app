@@ -95,7 +95,7 @@ export const handler = async (event) => {
         console.log('event.body', event.body);
         console.log('requestBody', requestBody);
 
-        response = await client.send(new Command(requestBody));
+        response.body = await client.send(new Command(requestBody));
         break;
 
       default:
@@ -109,6 +109,9 @@ export const handler = async (event) => {
     statusCode = 500;
   }
 
+  response.body.statusCode = statusCode;
+
+  // must follow expected formatted response
   return {
     body: JSON.stringify(response),
     headers: {
