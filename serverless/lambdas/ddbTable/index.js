@@ -102,10 +102,10 @@ export const handler = async (event) => {
         throw new Error(`Unsupported path: "${requestPath}"`);
     }
 
-    response.message = 'success';
+    response.body.message = 'success';
   } catch (error) {
     console.error(error);
-    response.message = error.message;
+    response.body.message = error.message;
     statusCode = 500;
   }
 

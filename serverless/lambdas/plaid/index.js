@@ -101,7 +101,7 @@ export const handler = async (event) => {
     }
   } catch (error) {
     console.error(error);
-    response.message = error.message;
+    response.body.message = error.message;
     if (error?.response) {
       response.body = error.response;
     }
