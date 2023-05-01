@@ -4,5 +4,5 @@ export const handleAxiosError = (error) => {
   console.error(message);
 
   // return axios response data from lambda
-  return error.response.data;
+  return  error.body || error.response.data;
 };
