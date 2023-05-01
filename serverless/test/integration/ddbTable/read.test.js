@@ -41,10 +41,10 @@ describe('read tables', () => {
           .catch(handleError)
       : tableHandler(request));
 
-    const { status_code, body } = response;
-    if (status_code !== 200) console.error(response);
+    const { statusCode, body } = response;
+    if (statusCode !== 200) console.error(response);
 
-    expect(status_code).toBe(200);
+    expect(statusCode).toBe(200);
   });
 
   it('should get transaction table', async () => {
@@ -59,9 +59,9 @@ describe('read tables', () => {
           .catch(handleError)
       : tableHandler(request));
 
-    const { status_code, body } = response;
-    if (status_code !== 200) console.error(response);
+    const { statusCode, body } = response;
+    if (statusCode !== 200) console.error(response);
 
-    expect(status_code).toBe(200);
+    expect(statusCode).toBe(200);
   });
 });

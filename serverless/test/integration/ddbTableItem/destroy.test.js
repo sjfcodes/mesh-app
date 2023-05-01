@@ -34,8 +34,8 @@ describe('create, edit, & delete items from table', () => {
           .then(({ data }) => data)
           .catch(handleError)
       : tableItemHandler(request));
-    const { status_code, body } = response;
-    if (status_code !== 200) console.error(response);
-    expect(status_code).toBe(200);
+    const { statusCode, body } = response;
+    if (statusCode !== 200) console.error(response);
+    expect(statusCode).toBe(200);
   });
 });

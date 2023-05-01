@@ -19,7 +19,7 @@ import config from './utils/config.js';
 const client = new DynamoDBClient({ region: config.region });
 
 export const handler = async (event) => {
-  const requestMethod = event.requestMethod;
+  const requestMethod = event.httpMethod;
   const requestPath = event.path;
 
   let response = {

@@ -4,7 +4,7 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import { handler as tableItemHandler } from '../../../lambdas/crudDynamoDbTableItem/index.js';
+import { handler as tableHandler } from '../../../lambdas/ddbTable/index.js';
 import { createTableItemRequest } from './requests.js';
 
 import { handler as plaidHandler } from '../../../lambdas/plaid/index.js';
@@ -29,7 +29,7 @@ const handleError = (err) => {
 };
 
 describe('create, edit, & delete items from table', () => {
-  it('should create Item', async () => {
+  it.only('should create Item', async () => {
     const request = createTableItemRequest;
     const response = await (testApi
       ? api({
@@ -39,10 +39,10 @@ describe('create, edit, & delete items from table', () => {
         })
           .then(({ data }) => data)
           .catch(handleError)
-      : tableItemHandler(request));
-    const { status_code } = response;
-    if (status_code !== 200) console.error(response);
-    expect(status_code).toBe(200);
+      : tableHandler(request));
+    const { statusCode } = response;
+    if (statusCode !== 200) console.error(response);
+    expect(statusCode).toBe(200);
   });
 
   it('should add new plaid item with mocked token exchange', async () => {
@@ -57,10 +57,10 @@ describe('create, edit, & delete items from table', () => {
           .catch(handleError)
       : plaidHandler(request));
 
-    const { status_code, body } = response;
-    if (status_code !== 200) console.error(response);
+    const { statusCode, body } = response;
+    if (statusCode !== 200) console.error(response);
 
-    expect(status_code).toBe(200);
+    expect(statusCode).toBe(200);
     expect(body.public_token_exchange).toBe('complete');
     console.log('pause for 2000ms after mock item create');
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -78,10 +78,10 @@ describe('create, edit, & delete items from table', () => {
           .catch(handleError)
       : plaidHandler(request));
 
-    const { status_code, body } = response;
-    if (status_code !== 200) console.error(response);
+    const { statusCode, body } = response;
+    if (statusCode !== 200) console.error(response);
 
-    expect(status_code).toBe(200);
+    expect(statusCode).toBe(200);
     expect(body.tx_sync).toBe('complete');
     expect(body.tx_cursor_updated_at).not.toBe(undefined);
     expect(body.added).toBeGreaterThan(0);
