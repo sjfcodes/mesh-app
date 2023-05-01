@@ -4,6 +4,18 @@ import lambdaConfig from '../../../../lambdas/plaid/utils/config.js';
 const { path } = lambdaConfig;
 const { TableName, Item } = dynamoDbConfig;
 
+const userItem = { ...Item.original };
+delete userItem.plaid_item;
+
+export const createTableUserRequest = {
+  body: {
+    TableName: TableName.user,
+    Item: userItem,
+  },
+  httpMethod: 'PUT',
+  path: path.dynamoDbTableItem,
+};
+
 export const createTableItemRequest = {
   body: {
     TableName: TableName.user,

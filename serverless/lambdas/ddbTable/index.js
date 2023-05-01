@@ -1,3 +1,4 @@
+import { marshall } from '@aws-sdk/util-dynamodb';
 import {
   DynamoDBClient,
   // /table
@@ -21,13 +22,14 @@ const client = new DynamoDBClient({ region: config.region });
 export const handler = async (event) => {
   const requestMethod = event.httpMethod;
   const requestPath = event.path;
+  const requestBody = JSON.parse(event.body);
 
   let response = {
     message: 'default',
     body: {},
   };
 
-  console.log(event);
+  console.log('event', event);
 
   let statusCode = 200;
   let Command;
@@ -49,7 +51,7 @@ export const handler = async (event) => {
             throw new Error(`Unsupported method "${requestMethod}"`);
         }
 
-        response.body = await client.send(new Command(event.body.payload));
+        response.body = await client.send(new Command(requestBody));
         break;
 
       case '/table/item':
@@ -74,24 +76,26 @@ export const handler = async (event) => {
             throw new Error(`Unsupported method "${requestMethod}"`);
         }
 
-        if (event.body.payload.Item) {
-          event.body.payload.Item = marshall(event.body.payload.Item);
+        if (requestBody.Item) {
+          requestBody.Item = marshall(requestBody.Item );
         }
 
-        if (event.body.payload.Key) {
-          event.body.payload.Key = marshall(event.body.payload.Key);
+        if (event.body.Key) {
+          requestBody.Key = marshall(requestBody.Key);
         }
 
-        if (event.body.payload.ExpressionAttributeValues) {
-          Object.entries(event.body.payload.ExpressionAttributeValues).forEach(
+        if (requestBody.ExpressionAttributeValues) {
+          Object.entries(requestBody.ExpressionAttributeValues).forEach(
             ([key, value]) => {
-              event.body.payload.ExpressionAttributeValues[key] =
-                marshall(value);
+              requestBody.ExpressionAttributeValues[key] = marshall(value);
             }
           );
         }
 
-        response = await client.send(new Command(event.body.payload));
+        console.log('event.body', event.body);
+        console.log('requestBody', requestBody);
+
+        response = await client.send(new Command(requestBody));
         break;
 
       default:

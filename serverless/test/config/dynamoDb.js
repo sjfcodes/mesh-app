@@ -16,7 +16,7 @@ const config = {
   Item: {
     original: {
       email: process.env.USER_EMAIL,
-      user_id: process.env.USER_EMAIL,
+      user_id: process.env.USER_ID,
       plaid_item: {
         [mockData.tokenExchange.item_id]: {
           access_token: mockData.tokenExchange.access_token,

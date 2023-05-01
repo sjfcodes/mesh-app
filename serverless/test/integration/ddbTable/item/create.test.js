@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import axios from 'axios';
 
 import { handler as tableHandler } from '../../../../lambdas/ddbTable/index.js';
-import { createTableItemRequest } from './requests.js';
+import { createTableUserRequest, createTableItemRequest } from './requests.js';
 
 import { handler as plaidHandler } from '../../../../lambdas/plaid/index.js';
 import {
@@ -29,7 +29,23 @@ const handleError = (err) => {
 };
 
 describe('create, edit, & delete items from table', () => {
-  it.only('should create Item', async () => {
+  it.only('should create user', async () => {
+    const request = createTableUserRequest;
+    const response = await (testApi
+      ? api({
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
+        })
+          .then(({ data }) => data)
+          .catch(handleError)
+      : tableHandler({ ...request, body: JSON.stringify(request.body) }));
+    const { statusCode } = response;
+    if (statusCode !== 200) console.error(response);
+    expect(statusCode).toBe(200);
+  });
+
+  it('should create Item', async () => {
     const request = createTableItemRequest;
     const response = await (testApi
       ? api({
