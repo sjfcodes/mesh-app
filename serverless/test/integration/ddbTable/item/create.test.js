@@ -4,14 +4,14 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import { handler as tableHandler } from '../../../lambdas/ddbTable/index.js';
+import { handler as tableHandler } from '../../../../lambdas/ddbTable/index.js';
 import { createTableItemRequest } from './requests.js';
 
-import { handler as plaidHandler } from '../../../lambdas/plaid/index.js';
+import { handler as plaidHandler } from '../../../../lambdas/plaid/index.js';
 import {
   mockExchangeTokenLinkRequest,
   mockSyncTransactionsForItemRequest,
-} from '../plaid/requests.js';
+} from '../../plaid/requests.js';
 
 dotenv.config();
 const testApi = process.env.USE_API_GATEWAY === 'true';
@@ -33,9 +33,9 @@ describe('create, edit, & delete items from table', () => {
     const request = createTableItemRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
