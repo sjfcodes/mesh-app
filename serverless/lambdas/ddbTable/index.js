@@ -25,7 +25,6 @@ export const handler = async (event) => {
   const requestBody = JSON.parse(event.body);
 
   let response = {
-    message: 'default',
     body: {},
   };
 

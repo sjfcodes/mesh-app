@@ -6,7 +6,6 @@ export const handler = async (event) => {
   const requestPath = event.path;
 
   let response = {
-    message: 'default',
     body: {},
   };
   let statusCode = 200;
