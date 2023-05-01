@@ -10,7 +10,7 @@ variable "lambda_invoke_arn" {}
 # RESOURCES #
 # # # # # # #
 
-# [/link]
+# [/table]
 module "table" {
   source = "../../templates/resource"
   api_id = var.api_id
@@ -19,7 +19,7 @@ module "table" {
   path_part = "table"
 }
 
-# [/table][POST]
+# [/table][GET]
 module "table_GET" {
   source        = "../../templates/method_integration"
   api_id        = var.api_id
