@@ -21,8 +21,8 @@ resource "aws_iam_policy" "apigateway" {
           "apigateway:PUT",
         ],
         Resource = [
-          "arn:aws:apigateway:us-east-1::/restapis",
-          "arn:aws:apigateway:us-east-1::/restapis/*"
+          "arn:aws:apigateway:${local.region}::/restapis",
+          "arn:aws:apigateway:${local.region}::/restapis/*"
         ]
       }
     ]

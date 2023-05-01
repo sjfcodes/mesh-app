@@ -21,6 +21,7 @@ resource "aws_iam_policy" "cloudwatch_logs" {
           "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/prod_plaid:log-stream:",
           "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/test_ddbTable:log-stream:",
           "arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/prod_ddbTable:log-stream:",
+          "arn:aws:logs:${local.region}:${local.account_id}:log-group::log-stream:",
         ]
       }
     ]
