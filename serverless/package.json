@@ -10,7 +10,8 @@
     "test:it:api": "export USE_API_GATEWAY=true && npm run test:it",
     "test:it:local": "npm run test:it",
     "format": "prettier --write \"lambdas/**/*.{js,mjs}\"",
-    "deploy:all": "npm run format && cd lambdas && npm run deploy:all"
+    "logs:plaid" :"aws logs tail \"/aws/lambda/test_plaid\" --follow --profile mesh-app_terraform_deployer",
+    "logs:ddbTable" :"aws logs tail \"/aws/lambda/test_ddbTable\" --follow --profile mesh-app_terraform_deployer"
   },
   "keywords": [],
   "author": "",
