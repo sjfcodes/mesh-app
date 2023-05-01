@@ -11,9 +11,9 @@ import {
   getUserTableRequest,
   getTransactionTableRequest,
 } from './requests.js';
+import { handleAxiosError } from '../../utils/helpers.js';
 
 dotenv.config();
-const { Item } = dynamoDb;
 const testApi = process.env.USE_API_GATEWAY === 'true';
 
 const api = axios.create({
@@ -22,11 +22,6 @@ const api = axios.create({
 });
 
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
-
-const handleError = (err) => {
-  let message = err.data || err.response?.data || err;
-  console.error(message);
-};
 
 describe('read tables', () => {
   it.only('should get user table', async () => {
@@ -38,13 +33,13 @@ describe('read tables', () => {
           data: request.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : tableHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
 
-    expect(statusCode).toBe(200);
+    expect(body.statusCode).toBe(200);
   });
 
   it('should get transaction table', async () => {
@@ -56,12 +51,12 @@ describe('read tables', () => {
           data: request.event.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : tableHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
 
-    expect(statusCode).toBe(200);
+    expect(body.statusCode).toBe(200);
   });
 });

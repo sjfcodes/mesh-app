@@ -8,10 +8,7 @@ import dynamoDb from '../../config/dynamoDb.js';
 import mockData from '../plaid/mockData/plaid.js';
 
 import { handler as tableItemHandler } from '../../../lambdas/crudDynamoDbTableItem/index.js';
-import {
-  getTableItemRequest,
-  updateTableItemRequest,
-} from './requests.js';
+import { getTableItemRequest, updateTableItemRequest } from './requests.js';
 
 import { handler as plaidHandler } from '../../../lambdas/plaid/index.js';
 import {
@@ -22,6 +19,7 @@ import {
   getUserItemsRequest,
   // getUserAccountsBalancesRequest,
 } from '../plaid/requests.js';
+import { handleAxiosError } from '../../../utils/helpers.js';
 
 dotenv.config();
 const { Item } = dynamoDb;
@@ -34,11 +32,6 @@ const api = axios.create({
 
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
 
-const handleError = (err) => {
-  let message = err.data || err.response?.data || err;
-  console.error(message);
-};
-
 describe('create, edit, & delete items from table', () => {
   it('should get table item', async () => {
     const request = getTableItemRequest;
@@ -49,13 +42,13 @@ describe('create, edit, & delete items from table', () => {
           data: request.event.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : tableItemHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
 
-    expect(statusCode).toBe(200);
+    expect(body.statusCode).toBe(200);
     expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.id.S).toBe(
       mockData.tokenExchange.item_id
     );
@@ -74,13 +67,13 @@ describe('create, edit, & delete items from table', () => {
           data: request.event.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : tableItemHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
 
-    expect(statusCode).toBe(200);
+    expect(body.statusCode).toBe(200);
     // expect unchanged
     expect(body.Attributes.email.S).toBe(Item.original.email);
     // expect changed
@@ -96,15 +89,15 @@ describe('create, edit, & delete items from table', () => {
           data: request.event.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : plaidHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
 
     const item = Object.values(body.items)[0];
 
-    expect(statusCode).toBe(200);
+    expect(body.statusCode).toBe(200);
     expect(body.last_activity).not.toBe(undefined);
     expect(item).not.toHaveProperty('access_token');
     expect(item).toHaveProperty('accounts');
@@ -127,13 +120,13 @@ describe('create, edit, & delete items from table', () => {
           data: request.event.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : plaidHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
 
-    expect(statusCode).toBe(200);
+    expect(body.statusCode).toBe(200);
     expect(body.accounts.length).toBeGreaterThan(0);
   });
 
@@ -158,12 +151,12 @@ describe('create, edit, & delete items from table', () => {
   //         data: request.event.body,
   //       })
   //         .then(({ data }) => data)
-  //         .catch(handleError)
+  //         .catch(handleAxiosError)
   //     : plaidHandler(request));
 
-  //   const { statusCode, body } = response;
-  //   if (statusCode !== 200) console.error(response);
-  //   expect(statusCode).toBe(200);
+  //   const { body } = response;
+  //   if (body.statusCode !== 200) console.error(response);
+  //   expect(body.statusCode).toBe(200);
   //   expect(Array.isArray(body.account)).toBe(true);
 
   //   const account = Object.values(body.account)[0];
@@ -180,12 +173,12 @@ describe('create, edit, & delete items from table', () => {
           data: request.event.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : plaidHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
-    expect(statusCode).toBe(200);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
+    expect(body.statusCode).toBe(200);
     expect(body.transactions?.length).toBe(3);
 
     const transaction = body.transactions[0];
@@ -212,12 +205,12 @@ describe('create, edit, & delete items from table', () => {
           data: request.event.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : plaidHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
-    expect(statusCode).toBe(200);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
+    expect(body.statusCode).toBe(200);
     expect(body.transactions?.length).toBe(0);
 
     const transaction = body.transactions[0];
@@ -246,13 +239,13 @@ describe('create, edit, & delete items from table', () => {
           data: request.event.body,
         })
           .then(({ data }) => data)
-          .catch(handleError)
+          .catch(handleAxiosError)
       : plaidHandler(request));
 
-    const { statusCode, body } = response;
-    if (statusCode !== 200) console.error(response);
+    const { body } = response;
+    if (body.statusCode !== 200) console.error(response);
 
-    expect(statusCode).toBe(200);
+    expect(body.statusCode).toBe(200);
     expect(body.logo).not.toBe(null);
   });
 });
