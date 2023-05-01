@@ -16,7 +16,7 @@ const config = {
   },
   path: {
     ddbTable: '/table',
-    dynamoDbTableItem: '/dynamodbtableitem',
+    dynamoDbTableItem: '/table/item',
     linkTokenCreate: '/link/token-create',
     itemTokenExchange: '/item/token-exchange',
     itemTokenExchangeTest: '/item/token-exchange/test',

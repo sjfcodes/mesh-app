@@ -1,8 +1,14 @@
 import {
+  DynamoDBClient,
+  // /table
   CreateTableCommand,
   DeleteTableCommand,
   DescribeTableCommand,
-  DynamoDBClient,
+  // /table/item
+  DeleteItemCommand,
+  GetItemCommand,
+  PutItemCommand,
+  UpdateItemCommand,
 } from '@aws-sdk/client-dynamodb';
 
 import config from './utils/config.js';
@@ -13,6 +19,9 @@ import config from './utils/config.js';
 const client = new DynamoDBClient({ region: config.region });
 
 export const handler = async (event) => {
+  const requestMethod = event.requestMethod;
+  const requestPath = event.path;
+
   let response = {
     message: 'default',
     body: {},
@@ -22,29 +31,78 @@ export const handler = async (event) => {
 
   let statusCode = 200;
   let Command;
-  const httpMethod = event.httpMethod;
 
   try {
-    switch (httpMethod) {
-      case 'DELETE':
-        Command = DeleteTableCommand;
+    switch (requestPath) {
+      case '/table':
+        switch (requestMethod) {
+          case 'DELETE':
+            Command = DeleteTableCommand;
+            break;
+          case 'GET':
+            Command = DescribeTableCommand;
+            break;
+          case 'PUT':
+            Command = CreateTableCommand;
+            break;
+          default:
+            throw new Error(`Unsupported method "${requestMethod}"`);
+        }
+
+        response.body = await client.send(new Command(event.body.payload));
         break;
-      case 'GET':
-        Command = DescribeTableCommand;
+
+      case '/table/item':
+        switch (requestMethod) {
+          case 'DELETE':
+            Command = DeleteItemCommand;
+            break;
+
+          case 'GET':
+            Command = GetItemCommand;
+            break;
+
+          case 'POST':
+            Command = UpdateItemCommand;
+            break;
+
+          case 'PUT':
+            Command = PutItemCommand;
+            break;
+
+          default:
+            throw new Error(`Unsupported method "${requestMethod}"`);
+        }
+
+        if (event.body.payload.Item) {
+          event.body.payload.Item = marshall(event.body.payload.Item);
+        }
+
+        if (event.body.payload.Key) {
+          event.body.payload.Key = marshall(event.body.payload.Key);
+        }
+
+        if (event.body.payload.ExpressionAttributeValues) {
+          Object.entries(event.body.payload.ExpressionAttributeValues).forEach(
+            ([key, value]) => {
+              event.body.payload.ExpressionAttributeValues[key] =
+                marshall(value);
+            }
+          );
+        }
+
+        response = await client.send(new Command(event.body.payload));
         break;
-      case 'PUT':
-        Command = CreateTableCommand;
-        break;
+
       default:
-        throw new Error(`Unsupported httpMethod "${httpMethod}"`);
+        throw new Error(`Unsupported path: "${requestPath}"`);
     }
 
-    response.body = await client.send(new Command(event.body.payload));
     response.message = 'success';
   } catch (error) {
     console.error(error);
     response.message = error.message;
-    statusCode = 400;
+    statusCode = 500;
   }
 
   return {
