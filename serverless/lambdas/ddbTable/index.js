@@ -13,9 +13,15 @@ import config from './utils/config.js';
 const client = new DynamoDBClient({ region: config.region });
 
 export const handler = async (event) => {
+  let response = {
+    message: 'default',
+    body: {},
+  };
+
+  console.log(event);
+
   let statusCode = 200;
   let Command;
-  let response;
   const httpMethod = event.httpMethod;
 
   try {
@@ -33,21 +39,21 @@ export const handler = async (event) => {
         throw new Error(`Unsupported httpMethod "${httpMethod}"`);
     }
 
-    response = await client.send(new Command(event.body.payload));
-  } catch (err) {
-    console.error(err);
+    response.body = await client.send(new Command(event.body.payload));
+    response.message = 'success';
+  } catch (error) {
+    console.error(error);
+    response.message = error.message;
     statusCode = 400;
-    response = err.message;
   }
 
   return {
-    body: response,
+    body: JSON.stringify(response),
     headers: {
       'Access-Control-Allow-Origin': '*', // Required for CORS support to work
       'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
       'Content-Type': 'application/json',
     },
-    path: event.path,
-    status_code: statusCode,
+    statusCode,
   };
 };

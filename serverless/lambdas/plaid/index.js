@@ -116,6 +116,6 @@ export const handler = async (event) => {
       'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
       'Content-Type': 'application/json',
     },
-    statusCode: statusCode,
+    statusCode,
   };
 };
