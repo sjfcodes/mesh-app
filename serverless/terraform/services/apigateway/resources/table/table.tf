@@ -56,6 +56,6 @@ module "table_item_PUT" {
 output "table_GET" {
   value = module.table_GET
 }
-output "table_PUT" {
+output "table_item_PUT" {
   value = module.table_item_PUT
 }

@@ -33,7 +33,8 @@ resource "aws_api_gateway_deployment" "this" {
       module.item.item_tokenExchange_POST,
       module.item.item_tokenExchange_mock_POST,
       module.item.item_updateLogin_PUT,
-      module.ddbTable.table_GET
+      module.ddbTable.table_GET,
+      module.ddbTable.table_item_PUT,
     ]))
   }
 
