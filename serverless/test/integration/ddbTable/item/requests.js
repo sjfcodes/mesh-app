@@ -7,7 +7,7 @@ const { TableName, Item } = dynamoDbConfig;
 const userItem = { ...Item.original };
 delete userItem.plaid_item;
 
-export const createTableUserRequest = {
+export const addUserRequest = {
   body: {
     TableName: TableName.user,
     Item: userItem,
@@ -16,7 +16,7 @@ export const createTableUserRequest = {
   path: path.dynamoDbTableItem,
 };
 
-export const createTableItemRequest = {
+export const addUserItemRequest = {
   body: {
     TableName: TableName.user,
     Item: Item.original,

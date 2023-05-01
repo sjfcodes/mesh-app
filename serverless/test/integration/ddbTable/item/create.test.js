@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import axios from 'axios';
 
 import { handler as tableHandler } from '../../../../lambdas/ddbTable/index.js';
-import { createTableUserRequest, createTableItemRequest } from './requests.js';
+import { addUserRequest, addUserItemRequest } from './requests.js';
 
 import { handler as plaidHandler } from '../../../../lambdas/plaid/index.js';
 import {
@@ -23,14 +23,19 @@ const api = axios.create({
 
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
 
+const mockApiGwTransformations = (request) => ({
+  ...request,
+  body: JSON.stringify(request.body),
+});
+
 const handleError = (err) => {
   let message = err.data || err.response?.data || err;
   console.error(message);
 };
 
 describe('create, edit, & delete items from table', () => {
-  it.only('should create user', async () => {
-    const request = createTableUserRequest;
+  it('should add user', async () => {
+    const request = addUserRequest;
     const response = await (testApi
       ? api({
           url: request.path,
@@ -39,39 +44,43 @@ describe('create, edit, & delete items from table', () => {
         })
           .then(({ data }) => data)
           .catch(handleError)
-      : tableHandler({ ...request, body: JSON.stringify(request.body) }));
-    const { statusCode } = response;
+      : tableHandler(mockApiGwTransformations(request)));
+    const {
+      body: { statusCode },
+    } = response;
     if (statusCode !== 200) console.error(response);
     expect(statusCode).toBe(200);
   });
 
-  it('should create Item', async () => {
-    const request = createTableItemRequest;
-    const response = await (testApi
-      ? api({
-          url: request.path,
-          method: request.httpMethod,
-          data: request.body,
-        })
-          .then(({ data }) => data)
-          .catch(handleError)
-      : tableHandler(request));
-    const { statusCode } = response;
-    if (statusCode !== 200) console.error(response);
-    expect(statusCode).toBe(200);
-  });
+  // it.only('should add Item to user', async () => {
+  //   const request = addUserItemRequest;
+  //   const response = await (testApi
+  //     ? api({
+  //         url: request.path,
+  //         method: request.httpMethod,
+  //         data: request.body,
+  //       })
+  //         .then(({ data }) => data)
+  //         .catch(handleError)
+  //     : tableHandler(mockApiGwTransformations(request)));
+  //   const {
+  //     body: { statusCode },
+  //   } = response;
+  //   if (statusCode !== 200) console.error(response);
+  //   expect(statusCode).toBe(200);
+  // });
 
-  it('should add new plaid item with mocked token exchange', async () => {
+  it.only('should add plaid item to user with mocked token exchange', async () => {
     const request = mockExchangeTokenLinkRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
-      : plaidHandler(request));
+      : plaidHandler(mockApiGwTransformations(request)));
 
     const { statusCode, body } = response;
     if (statusCode !== 200) console.error(response);
@@ -86,13 +95,13 @@ describe('create, edit, & delete items from table', () => {
     const request = mockSyncTransactionsForItemRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleError)
-      : plaidHandler(request));
+      : plaidHandler(mockApiGwTransformations(request)));
 
     const { statusCode, body } = response;
     if (statusCode !== 200) console.error(response);

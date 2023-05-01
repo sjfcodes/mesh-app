@@ -4,6 +4,7 @@ import mockPlaid from './mockData/plaid.js';
 
 const { TableName, path } = lambdaConfig;
 const { params } = dynamoDbConfig;
+const { headers } = params;
 
 export const createTokenLinkRequest = {
   body: {
@@ -14,7 +15,7 @@ export const createTokenLinkRequest = {
     httpMethod: 'PUT',
     path: path.linkTokenCreate,
   },
-  params,
+  headers,
 };
 
 export const mockExchangeTokenLinkRequest = {
@@ -29,11 +30,9 @@ export const mockExchangeTokenLinkRequest = {
       user_id: '02f25056-fe04-49a0-8c07-c509a245ff8e',
     },
   },
-  event: {
-    httpMethod: 'POST',
-    path: path.itemTokenExchangeTest,
-  },
-  params,
+  httpMethod: 'POST',
+  path: path.itemTokenExchangeTest,
+  headers,
 };
 
 export const mockSyncTransactionsForItemRequest = {
@@ -44,10 +43,9 @@ export const mockSyncTransactionsForItemRequest = {
       tx_cursor: mockPlaid.txCursor,
     },
   },
-  event: {
-    httpMethod: 'PUT',
-    path: path.testItemTransactionSync,
-  },
+  httpMethod: 'PUT',
+  path: path.testItemTransactionSync,
+  headers,
   params: {
     ...params,
     querystring: {
@@ -58,10 +56,9 @@ export const mockSyncTransactionsForItemRequest = {
 
 export const getTransactionsForAccountWithBandsRequest = {
   body: {},
-  event: {
-    httpMethod: 'GET',
-    path: path.itemAccountTransaction,
-  },
+  httpMethod: 'GET',
+  path: path.itemAccountTransaction,
+  headers,
   params: {
     ...params,
     querystring: {
@@ -75,10 +72,9 @@ export const getTransactionsForAccountWithBandsRequest = {
 
 export const getTransactionsForAccountWithoutBandsRequest = {
   body: {},
-  event: {
-    httpMethod: 'GET',
-    path: path.itemAccountTransaction,
-  },
+  httpMethod: 'GET',
+  path: path.itemAccountTransaction,
+  headers,
   params: {
     ...params,
     querystring: {
@@ -90,28 +86,23 @@ export const getTransactionsForAccountWithoutBandsRequest = {
 
 export const getUserItemsRequest = {
   body: {},
-  event: {
-    httpMethod: 'GET',
-    path: path.userItem,
-  },
-  params,
+  httpMethod: 'GET',
+  path: path.userItem,
+  headers,
 };
 
 export const getUserAccountsRequest = {
   body: {},
-  event: {
-    httpMethod: 'GET',
-    path: path.itemAccount,
-  },
-  params,
+  httpMethod: 'GET',
+  path: path.itemAccount,
+  headers,
 };
 
 export const getUserAccountsBalancesRequest = {
   body: {},
-  event: {
-    httpMethod: 'GET',
-    path: path.itemAccountBalance,
-  },
+  httpMethod: 'GET',
+  path: path.itemAccountBalance,
+  headers,
   params: {
     ...params,
     querystring: {
@@ -122,10 +113,9 @@ export const getUserAccountsBalancesRequest = {
 
 export const getInstitutionByIdRequest = {
   body: {},
-  event: {
-    httpMethod: 'GET',
-    path: path.itemInstitution,
-  },
+  httpMethod: 'GET',
+  path: path.itemInstitution,
+  headers,
   params: {
     ...params,
     querystring: { institution_id: 'ins_115585' },

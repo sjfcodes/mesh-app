@@ -5,7 +5,7 @@ dotenv.config();
 
 const config = {
   params: {
-    header: {
+    headers: {
       Authorization: process.env.AUTH_TOKEN,
     },
   },
