@@ -2,12 +2,14 @@ import dynamoDbConfig from '../../../config/dynamoDb.js';
 import lambdaConfig from '../../../../lambdas/plaid/utils/config.js';
 
 const { path } = lambdaConfig;
-const { TableName, Item } = dynamoDbConfig;
+const { TableName, Item, params } = dynamoDbConfig;
+const { headers } = params;
 
 const userItem = { ...Item.original };
 userItem.plaid_item = {};
 
 export const addUserRequest = {
+  headers,
   body: {
     TableName: TableName.user,
     Item: userItem,
@@ -17,6 +19,7 @@ export const addUserRequest = {
 };
 
 export const addUserItemRequest = {
+  headers,
   body: {
     TableName: TableName.user,
     Item: Item.original,
@@ -26,17 +29,18 @@ export const addUserItemRequest = {
 };
 
 export const getTableItemRequest = {
-  body: {
-    TableName: TableName.user,
-    Key: {
-      email: Item.original.email,
-    },
-  },
+  headers,
   httpMethod: 'GET',
   path: path.ddbTableItem,
+  queryStringParameters: {
+    TableName: TableName.user,
+    Key: 'email',
+    Value: Item.original.email,
+  },
 };
 
 export const updateTableItemRequest = {
+  headers,
   body: {
     TableName: TableName.user,
     Key: { email: Item.original.email },
@@ -51,6 +55,7 @@ export const updateTableItemRequest = {
 };
 
 export const deleteTableItemRequest = {
+  headers,
   body: {
     TableName: TableName.user,
     Key: { email: Item.original.email },
@@ -60,6 +65,7 @@ export const deleteTableItemRequest = {
 };
 
 export const createPlaidItemPayload = {
+  headers,
   body: {
     TableName: TableName.user,
     Item: Item.original,

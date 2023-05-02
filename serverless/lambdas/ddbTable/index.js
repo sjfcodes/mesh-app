@@ -22,7 +22,12 @@ const client = new DynamoDBClient({ region: config.region });
 export const handler = async (event) => {
   const requestMethod = event.httpMethod;
   const requestPath = event.path;
-  const requestBody = JSON.parse(event.body);
+  const requestBody = event.body ? JSON.parse(event.body) : {};
+
+  let queryStringParameters = event.queryStringParameters;
+  if (typeof queryStringParameters === 'string') {
+    queryStringParameters = JSON.parse(queryStringParameters);
+  }
 
   let response = {};
 
@@ -73,23 +78,47 @@ export const handler = async (event) => {
             throw new Error(`Unsupported method "${requestMethod}"`);
         }
 
+        const commandInput = {};
+
+        if (requestBody.TableName) {
+          commandInput.TableName = requestBody.TableName;
+        }
+        if (queryStringParameters.TableName) {
+          commandInput.TableName = queryStringParameters.TableName;
+        }
+
         if (requestBody.Item) {
-          requestBody.Item = marshall(requestBody.Item);
+          commandInput.Item = marshall(requestBody.Item);
+        }
+        if (queryStringParameters.Item) {
+          commandInput.Item = marshall(queryStringParameters.Item);
         }
 
         if (requestBody.Key) {
-          requestBody.Key = marshall(requestBody.Key);
+          commandInput.Key = marshall(requestBody.Key);
+        }
+        if (queryStringParameters.Key && queryStringParameters.Value) {
+          commandInput.Key = marshall({
+            [queryStringParameters.Key]: queryStringParameters.Value,
+          });
         }
 
         if (requestBody.ExpressionAttributeValues) {
           Object.entries(requestBody.ExpressionAttributeValues).forEach(
             ([key, value]) => {
-              requestBody.ExpressionAttributeValues[key] = marshall(value);
+              commandInput.ExpressionAttributeValues[key] = marshall(value);
             }
           );
         }
+        if (queryStringParameters.ExpressionAttributeValues) {
+          Object.entries(
+            queryStringParameters.ExpressionAttributeValues
+          ).forEach(([key, value]) => {
+            commandInput.ExpressionAttributeValues[key] = marshall(value);
+          });
+        }
 
-        response.data = await client.send(new Command(requestBody));
+        response.data = await client.send(new Command(commandInput));
         break;
 
       default:

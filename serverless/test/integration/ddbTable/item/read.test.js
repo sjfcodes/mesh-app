@@ -43,14 +43,14 @@ describe('create, edit, & delete items from table', () => {
       ? api({
           url: request.path,
           method: request.httpMethod,
-          data: request.body,
+          params: request.queryStringParameters,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
       : ddbHandler(mockApiGwRequestTransformations(request)));
 
     const body = parseLambdaResponse(testApi, response);
-    if (body.data?.statusCode !== 200) console.error(response);
+    if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
     expect(
