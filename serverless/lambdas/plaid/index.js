@@ -5,12 +5,8 @@ export const handler = async (event) => {
   const requestMethod = event.httpMethod;
   const requestPath = event.path;
 
-  let response = {
-    body: {},
-  };
+  let response = {};
   let statusCode = 200;
-
-  console.log(event);
 
   try {
     const app = new App(event);
@@ -21,23 +17,23 @@ export const handler = async (event) => {
       case 'GET':
         switch (requestPath) {
           case config.path.userItem:
-            response.body = await app.handleGetItems();
+            response = await app.handleGetItems();
             break;
 
           case config.path.itemInstitution:
-            response.body = await app.handleGetItemInstitutionById();
+            response = await app.handleGetItemInstitutionById();
             break;
 
           case config.path.itemAccount:
-            response.body = await app.handleGetItemAccounts();
+            response = await app.handleGetItemAccounts();
             break;
 
           case config.path.itemAccountBalance:
-            response.body = await app.handleGetItemAccountBalances();
+            response = await app.handleGetItemAccountBalances();
             break;
 
           case config.path.itemAccountTransaction:
-            response.body = await app.handleGetUserAccountTransactions();
+            response = await app.handleGetUserAccountTransactions();
             break;
 
           default:
@@ -49,16 +45,16 @@ export const handler = async (event) => {
         switch (requestPath) {
           case config.path.itemTransactionSync:
             const summary = await app.handleUserItemSyncTransactions();
-            response.body = { tx_sync: 'complete', ...summary };
+            response = { tx_sync: 'complete', ...summary };
             break;
 
           case config.path.testItemTransactionSync:
             const testSummary = await app.handleUserItemSyncTransactionsTest();
-            response.body = { tx_sync: 'complete', ...testSummary };
+            response = { tx_sync: 'complete', ...testSummary };
             break;
 
           case config.path.itemUpdateLogin:
-            response.body = await app.handleUpdateUserItemLogin();
+            response = await app.handleUpdateUserItemLogin();
             break;
 
           default:
@@ -69,22 +65,22 @@ export const handler = async (event) => {
       case 'POST':
         switch (requestPath) {
           case config.path.itemAccount:
-            response.body = await app.handleGetItemAccounts();
+            response = await app.handleGetItemAccounts();
             break;
 
           case config.path.linkTokenCreate:
-            response.body = await app.handleLinkTokenCreateUpdate();
+            response = await app.handleLinkTokenCreateUpdate();
             break;
 
           case config.path.itemTokenExchange:
             const { item_id } = await app.handleItemTokenExchange();
-            response.body = { public_token_exchange: 'complete', item_id };
+            response = { public_token_exchange: 'complete', item_id };
             break;
 
-          case config.path.itemTokenExchangeTest:
+          case config.path.itemTokenExchangeMock:
             const { item_id: testItemId } =
-              await app.handleItemTokenExchangeTest();
-            response.body = {
+              await app.handleItemTokenExchangeMock();
+            response = {
               public_token_exchange: 'complete',
               item_id: testItemId,
             };
@@ -100,14 +96,14 @@ export const handler = async (event) => {
     }
   } catch (error) {
     console.error(error);
-    response.body.message = error.message;
+    response.message = error.message;
     if (error?.response) {
-      response.body = error.response;
+      response = error.response;
     }
     statusCode = 500;
   }
 
-  response.body.statusCode = statusCode;
+  response.statusCode = statusCode;
 
   // must follow expected formatted response
   return {

@@ -20,7 +20,7 @@ export const createTokenLinkRequest = {
 
 export const mockExchangeTokenLinkRequest = {
   body: {
-    path: path.itemTokenExchangeTest,
+    path: path.itemTokenExchangeMock,
     payload: {
       accounts: mockPlaid.accounts,
       institution_id: mockPlaid.institutionId,
@@ -31,7 +31,7 @@ export const mockExchangeTokenLinkRequest = {
     },
   },
   httpMethod: 'POST',
-  path: path.itemTokenExchangeTest,
+  path: path.itemTokenExchangeMock,
   headers,
 };
 

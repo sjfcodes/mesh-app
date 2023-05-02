@@ -5,7 +5,7 @@ const { path } = lambdaConfig;
 const { TableName, Item } = dynamoDbConfig;
 
 const userItem = { ...Item.original };
-delete userItem.plaid_item;
+userItem.plaid_item = {};
 
 export const addUserRequest = {
   body: {

@@ -19,7 +19,7 @@ const config = {
     dynamoDbTableItem: '/table/item',
     linkTokenCreate: '/link/token-create',
     itemTokenExchange: '/item/token-exchange',
-    itemTokenExchangeTest: '/item/token_exchange/mock',
+    itemTokenExchangeMock: '/item/token_exchange/mock',
     userItem: '/item',
     itemAccount: '/item/account',
     itemAccountBalance: '/item/account/balance',

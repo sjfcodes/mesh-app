@@ -24,9 +24,7 @@ export const handler = async (event) => {
   const requestPath = event.path;
   const requestBody = JSON.parse(event.body);
 
-  let response = {
-    body: {},
-  };
+  let response = {};
 
   console.log('event', event);
 
@@ -50,7 +48,7 @@ export const handler = async (event) => {
             throw new Error(`Unsupported method "${requestMethod}"`);
         }
 
-        response.body = await client.send(new Command(requestBody));
+        response = await client.send(new Command(requestBody));
         break;
 
       case '/table/item':
@@ -94,21 +92,21 @@ export const handler = async (event) => {
         console.log('event.body', event.body);
         console.log('requestBody', requestBody);
 
-        response.body = await client.send(new Command(requestBody));
+        response = await client.send(new Command(requestBody));
         break;
 
       default:
         throw new Error(`Unsupported path: "${requestPath}"`);
     }
 
-    response.body.message = 'success';
+    response.message = 'success';
   } catch (error) {
     console.error(error);
-    response.body.message = error.message;
+    response.message = error.message;
     statusCode = 500;
   }
 
-  response.body.statusCode = statusCode;
+  response.statusCode = statusCode;
 
   // must follow expected formatted response
   return {
