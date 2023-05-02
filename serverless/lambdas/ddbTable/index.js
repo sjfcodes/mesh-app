@@ -30,7 +30,6 @@ export const handler = async (event) => {
 
   let statusCode = 200;
   let Command;
-  let CommandInput;
 
   try {
     switch (requestPath) {

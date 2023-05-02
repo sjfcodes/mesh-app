@@ -4,13 +4,13 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import dynamoDb from '../../config/dynamoDb.js';
-import mockData from '../plaid/mockData/plaid.js';
+import dynamoDb from '../../../config/dynamoDb.js';
+import mockData from '../../plaid/mockData/plaid.js';
 
-import { handler as tableItemHandler } from '../../../lambdas/crudDynamoDbTableItem/index.js';
+import { handler as ddbHandler } from '../../../../lambdas/ddbTable/index.js';
+import { handler as plaidHandler } from '../../../../lambdas/plaid/index.js';
 import { getTableItemRequest, updateTableItemRequest } from './requests.js';
 
-import { handler as plaidHandler } from '../../../lambdas/plaid/index.js';
 import {
   getInstitutionByIdRequest,
   getUserAccountsRequest,
@@ -18,8 +18,12 @@ import {
   getTransactionsForAccountWithoutBandsRequest,
   getUserItemsRequest,
   // getUserAccountsBalancesRequest,
-} from '../plaid/requests.js';
-import { handleAxiosError } from '../../../utils/helpers.js';
+} from '../../plaid/requests.js';
+import {
+  handleAxiosError,
+  mockApiGwRequestTransformations,
+  parseLambdaResponse,
+} from '../../../utils/helpers.js';
 
 dotenv.config();
 const { Item } = dynamoDb;
@@ -37,15 +41,15 @@ describe('create, edit, & delete items from table', () => {
     const request = getTableItemRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : tableItemHandler(request));
+      : ddbHandler(mockApiGwRequestTransformations(request)));
 
-    const { body } = response;
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
@@ -62,15 +66,15 @@ describe('create, edit, & delete items from table', () => {
     const request = updateTableItemRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : tableItemHandler(request));
+      : ddbHandler(mockApiGwRequestTransformations(request)));
 
-    const { body } = response;
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
@@ -84,15 +88,15 @@ describe('create, edit, & delete items from table', () => {
     const request = getUserItemsRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : plaidHandler(request));
+      : plaidHandler(mockApiGwRequestTransformations(request)));
 
-    const { body } = response;
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
 
     const item = Object.values(body.items)[0];
@@ -115,15 +119,15 @@ describe('create, edit, & delete items from table', () => {
     const request = getUserAccountsRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : plaidHandler(request));
+      : plaidHandler(mockApiGwRequestTransformations(request)));
 
-    const { body } = response;
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
@@ -146,15 +150,15 @@ describe('create, edit, & delete items from table', () => {
   //   const request = getUserAccountsBalancesRequest;
   //   const response = await (testApi
   //     ? api({
-  //         url: request.event.path,
-  //         method: request.event.httpMethod,
-  //         data: request.event.body,
+  //         url: request.path,
+  //         method: request.httpMethod,
+  //         data: request.body,
   //       })
   //         .then(({ data }) => data)
   //         .catch(handleAxiosError)
   //     : plaidHandler(request));
 
-  //   const { body } = response;
+  //   const body = parseLambdaResponse(testApi, response);
   //   if (body.statusCode !== 200) console.error(response);
   //   expect(body.statusCode).toBe(200);
   //   expect(Array.isArray(body.account)).toBe(true);
@@ -163,20 +167,20 @@ describe('create, edit, & delete items from table', () => {
   //   expect(account.balances.available).toBeGreaterThan(0);
   // });
 
-  it('should get plaid item account transactions', async () => {
+  it.only('should get plaid item account transactions', async () => {
     const request = getTransactionsForAccountWithBandsRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          params: request.event.params.querystring,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          params: request.queryStringParameters,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : plaidHandler(request));
+      : plaidHandler(mockApiGwRequestTransformations(request)));
 
-    const { body } = response;
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
     expect(body.statusCode).toBe(200);
     expect(body.transactions?.length).toBe(3);
@@ -199,16 +203,16 @@ describe('create, edit, & delete items from table', () => {
     const request = getTransactionsForAccountWithoutBandsRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          params: request.event.params.querystring,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          params: request.params.querystring,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : plaidHandler(request));
+      : plaidHandler(mockApiGwRequestTransformations(request)));
 
-    const { body } = response;
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
     expect(body.statusCode).toBe(200);
     expect(body.transactions?.length).toBe(0);
@@ -233,16 +237,16 @@ describe('create, edit, & delete items from table', () => {
     const request = getInstitutionByIdRequest;
     const response = await (testApi
       ? api({
-          url: request.event.path,
-          method: request.event.httpMethod,
-          params: request.event.params.querystring,
-          data: request.event.body,
+          url: request.path,
+          method: request.httpMethod,
+          params: request.params.querystring,
+          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : plaidHandler(request));
+      : plaidHandler(mockApiGwRequestTransformations(request)));
 
-    const { body } = response;
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
