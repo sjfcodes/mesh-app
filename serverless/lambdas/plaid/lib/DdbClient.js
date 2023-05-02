@@ -79,11 +79,7 @@ class DdbClient {
       }
     }
 
-    return {
-      userId: Item.user_id.S,
-      email: Item.email.S,
-      plaid_item: Item.plaid_item.M,
-    };
+    return unmarshall(Item);
   }
 
   async readItemByItemId(email, itemId) {

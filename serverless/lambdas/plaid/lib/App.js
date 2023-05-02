@@ -8,7 +8,7 @@ class App {
     this.ddbClient = ddbClient;
     this.user = {};
     this.requestPath = event.path;
-    this.payload = event.body;
+    this.payload = JSON.parse(event.body)?.payload || {};
     this.queryString = event.queryStringParameters;
   }
 
@@ -52,11 +52,11 @@ class App {
     return { accounts, item_id: tokenExchange.item_id };
   }
 
-  async handleItemTokenExchangeTest() {
+  async handleItemTokenExchangeMock() {
     await this.ddbClient.writeUserLastActivity(this.user.email);
-
     // include item_id for future api calls
     const formattedAccounts = this.payload.accounts.map((account) => ({
+
       ...account,
       item_id: this.payload.public_token.item_id,
     }));
@@ -135,7 +135,7 @@ class App {
 
     if (!lowerBand || !upperBand) {
       const nowInMs = Date.now();
-      const monthInMs = 60 * 60 * 24 * 30 * 1000
+      const monthInMs = 60 * 60 * 24 * 30 * 1000;
       upperBand = new Date(nowInMs).toISOString().substring(0, 10);
       lowerBand = new Date(nowInMs - monthInMs).toISOString().substring(0, 10);
     }

@@ -89,9 +89,6 @@ export const handler = async (event) => {
           );
         }
 
-        console.log('event.body', event.body);
-        console.log('requestBody', requestBody);
-
         response = await client.send(new Command(requestBody));
         break;
 

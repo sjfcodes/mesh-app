@@ -30,7 +30,7 @@ const mockApiGwTransformations = (request) => ({
 });
 
 describe('create, edit, & delete items from table', () => {
-  it.only('should add user', async () => {
+  it('should add user', async () => {
     const request = addUserRequest;
     const response = await (testApi
       ? api({
@@ -42,7 +42,7 @@ describe('create, edit, & delete items from table', () => {
           .catch(handleAxiosError)
       : tableHandler(mockApiGwTransformations(request)));
 
-    let body; 
+    let body;
     try {
       body = JSON.parse(response.body);
     } catch (error) {
@@ -64,7 +64,12 @@ describe('create, edit, & delete items from table', () => {
           .catch(handleAxiosError)
       : plaidHandler(mockApiGwTransformations(request)));
 
-    const { body } = response;
+    let body;
+    try {
+      body = JSON.parse(response.body);
+    } catch (error) {
+      body = response.body;
+    }
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
@@ -85,7 +90,12 @@ describe('create, edit, & delete items from table', () => {
           .catch(handleAxiosError)
       : plaidHandler(mockApiGwTransformations(request)));
 
-    const { body } = response;
+    let body;
+    try {
+      body = JSON.parse(response.body);
+    } catch (error) {
+      body = response.body;
+    }
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
