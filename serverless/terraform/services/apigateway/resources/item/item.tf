@@ -10,6 +10,7 @@ variable "lambda_invoke_arn" {}
 # RESOURCES #
 # # # # # # #
 
+#####################################################
 # [/item]
 module "item" {
   source = "../../templates/resource"
@@ -18,6 +19,38 @@ module "item" {
   parent_id = var.parent_id
   path_part = "item"
 }
+#####################################################
+
+#####################################################
+# [/item/account]
+module "item_account" {
+  source = "../../templates/resource"
+  api_id = var.api_id
+
+  parent_id = module.item.id
+  path_part = "account"
+}
+
+# [/item/account/transaction]
+module "item_account_transaction" {
+  source = "../../templates/resource"
+  api_id = var.api_id
+
+  parent_id = module.item_account.id
+  path_part = "transaction"
+}
+
+# [/item/account][PUT]
+module "item_account_transaction_GET" {
+  source        = "../../templates/method_integration"
+  api_id        = var.api_id
+  authorizer_id = var.authorizer_id
+
+  resource_id       = module.item_account_transaction.id
+  http_method       = "GET"
+  lambda_invoke_arn = var.lambda_invoke_arn
+}
+#####################################################
 
 #####################################################
 # [/item/sync]
@@ -132,6 +165,9 @@ module "item_updateLogin_PUT" {
 # # # # # #
 # OUTPUTS #
 # # # # # #
+output "item_account_transaction_GET" {
+  value = module.item_account_transaction_GET
+}
 output "item_sync_PUT" {
   value = module.item_sync_PUT
 }
