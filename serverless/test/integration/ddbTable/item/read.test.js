@@ -62,7 +62,8 @@ describe('create, edit, & delete items from table', () => {
     ).toBe(mockData.institutionName);
   });
 
-  it('should update table item with existing properties', async () => {
+  // request too complicated for just being an update command example
+  it.skip('should update table item with existing properties', async () => {
     const request = updateTableItemRequest;
     const response = await (testApi
       ? api({

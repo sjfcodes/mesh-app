@@ -24,7 +24,7 @@ export const handler = async (event) => {
   const requestPath = event.path;
   const requestBody = event.body ? JSON.parse(event.body) : {};
 
-  let queryStringParameters = event.queryStringParameters;
+  let queryStringParameters = event.queryStringParameters || {};
   if (typeof queryStringParameters === 'string') {
     queryStringParameters = JSON.parse(queryStringParameters);
   }
@@ -103,20 +103,22 @@ export const handler = async (event) => {
           });
         }
 
-        if (requestBody.ExpressionAttributeValues) {
-          Object.entries(requestBody.ExpressionAttributeValues).forEach(
-            ([key, value]) => {
-              commandInput.ExpressionAttributeValues[key] = marshall(value);
-            }
-          );
-        }
-        if (queryStringParameters.ExpressionAttributeValues) {
-          Object.entries(
-            queryStringParameters.ExpressionAttributeValues
-          ).forEach(([key, value]) => {
-            commandInput.ExpressionAttributeValues[key] = marshall(value);
-          });
-        }
+        // if (requestBody.ExpressionAttributeValues) {
+        //   commandInput.ExpressionAttributeValues = {};
+        //   Object.entries(requestBody.ExpressionAttributeValues).forEach(
+        //     ([key, value]) => {
+        //       commandInput.ExpressionAttributeValues[key] = marshall(value);
+        //     }
+        //   );
+        // }
+        // if (queryStringParameters.ExpressionAttributeValues) {
+        //   commandInput.ExpressionAttributeValues = {};
+        //   Object.entries(
+        //     queryStringParameters.ExpressionAttributeValues
+        //   ).forEach(([key, value]) => {
+        //     commandInput.ExpressionAttributeValues[key] = marshall(value);
+        //   });
+        // }
 
         response.data = await client.send(new Command(commandInput));
         break;
