@@ -39,6 +39,17 @@ module "item" {
   path_part = "item"
 }
 
+# [/table/item][GET]
+module "table_item_GET" {
+  source        = "../../templates/method_integration"
+  api_id        = var.api_id
+  authorizer_id = var.authorizer_id
+
+  resource_id       = module.item.id
+  http_method       = "GET"
+  lambda_invoke_arn = var.lambda_invoke_arn
+}
+
 # [/table/item][PUT]
 module "table_item_PUT" {
   source        = "../../templates/method_integration"
@@ -55,6 +66,9 @@ module "table_item_PUT" {
 # # # # # #
 output "table_GET" {
   value = module.table_GET
+}
+output "table_item_GET" {
+  value = module.table_item_GET
 }
 output "table_item_PUT" {
   value = module.table_item_PUT

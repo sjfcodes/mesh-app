@@ -37,6 +37,7 @@ resource "aws_api_gateway_deployment" "this" {
       module.item.item_updateLogin_PUT,
       module.link.link_tokenCreate_POST,
       module.ddbTable.table_GET,
+      module.ddbTable.table_item_GET,
       module.ddbTable.table_item_PUT,
     ]))
   }
