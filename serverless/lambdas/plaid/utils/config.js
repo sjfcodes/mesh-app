@@ -26,8 +26,8 @@ const config = {
     itemAccountTransaction: '/item/account/transaction',
     itemInstitution: '/item/institution',
     itemUpdateLogin: '/item/update_login',
-    itemTransactionSync: '/item/sync',
-    testItemTransactionSync: '/item/sync/test',
+    itemSync: '/item/sync',
+    itemSyncMock: '/item/sync/mock',
   },
   itemKeys: {
     lastActivity: 'last_activity',

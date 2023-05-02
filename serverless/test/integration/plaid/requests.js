@@ -44,7 +44,7 @@ export const mockSyncTransactionsForItemRequest = {
     },
   },
   httpMethod: 'PUT',
-  path: path.testItemTransactionSync,
+  path: path.itemSyncMock,
   headers,
   params: {
     ...params,

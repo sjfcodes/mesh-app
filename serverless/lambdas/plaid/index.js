@@ -43,12 +43,12 @@ export const handler = async (event) => {
 
       case 'PUT':
         switch (requestPath) {
-          case config.path.itemTransactionSync:
+          case config.path.itemSync:
             const summary = await app.handleUserItemSyncTransactions();
             response = { tx_sync: 'complete', ...summary };
             break;
 
-          case config.path.testItemTransactionSync:
+          case config.path.itemSyncMock:
             const testSummary = await app.handleUserItemSyncTransactionsTest();
             response = { tx_sync: 'complete', ...testSummary };
             break;
