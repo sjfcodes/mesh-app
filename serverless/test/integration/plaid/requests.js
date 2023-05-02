@@ -46,10 +46,8 @@ export const mockSyncTransactionsForItemRequest = {
   httpMethod: 'PUT',
   path: path.itemSyncMock,
   headers,
-  params: {
-    querystring: {
-      item_id: mockPlaid.tokenExchange.item_id,
-    },
+  queryStringParameters: {
+    item_id: mockPlaid.tokenExchange.item_id,
   },
 };
 
@@ -71,11 +69,9 @@ export const getTransactionsForAccountWithoutBandsRequest = {
   httpMethod: 'GET',
   path: path.itemAccountTransaction,
   headers,
-  params: {
-    querystring: {
-      account_id: mockPlaid.accounts[1].id,
-      item_id: mockPlaid.tokenExchange.item_id,
-    },
+  queryStringParameters: {
+    account_id: mockPlaid.accounts[1].id,
+    item_id: mockPlaid.tokenExchange.item_id,
   },
 };
 
@@ -98,10 +94,8 @@ export const getUserAccountsBalancesRequest = {
   httpMethod: 'GET',
   path: path.itemAccountBalance,
   headers,
-  params: {
-    querystring: {
-      item_id: mockPlaid.tokenExchange.item_id,
-    },
+  queryStringParameters: {
+    item_id: mockPlaid.tokenExchange.item_id,
   },
 };
 
@@ -110,7 +104,7 @@ export const getInstitutionByIdRequest = {
   httpMethod: 'GET',
   path: path.itemInstitution,
   headers,
-  params: {
-    querystring: { institution_id: 'ins_115585' },
+  queryStringParameters: {
+    institution_id: 'ins_115585',
   },
 };
