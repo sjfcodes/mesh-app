@@ -49,6 +49,7 @@ resource "aws_lambda_function" "this" {
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
   runtime = "nodejs18.x"
+  timeout = 30
 
   environment {
     variables = {
@@ -88,7 +89,8 @@ data "aws_iam_policy_document" "this" {
     actions = [
       "dynamodb:GetItem",
       "dynamodb:PutItem",
-      "dynamodb:UpdateItem"
+      "dynamodb:UpdateItem",
+      "dynamodb:BatchWriteItem"
     ]
     resources = [
       "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}",
