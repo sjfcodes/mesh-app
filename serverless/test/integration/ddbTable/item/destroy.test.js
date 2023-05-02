@@ -4,7 +4,7 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import { handler as tableItemHandler } from '../../../lambdas/crudDynamoDbTableItem/index.js';
+import { handler as tableItemHandler } from '../../../../lambdas/ddbTable/index';
 import { deleteTableItemRequest } from './requests.js';
 import { handleAxiosError } from '../../../utils/helpers.js';
 
