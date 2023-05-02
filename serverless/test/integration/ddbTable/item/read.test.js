@@ -50,15 +50,15 @@ describe('create, edit, & delete items from table', () => {
       : ddbHandler(mockApiGwRequestTransformations(request)));
 
     const body = parseLambdaResponse(testApi, response);
-    if (body.statusCode !== 200) console.error(response);
+    if (body.data?.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
-    expect(body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.id.S).toBe(
-      mockData.tokenExchange.item_id
-    );
     expect(
-      body.Item.plaid_item.M[mockData.tokenExchange.item_id].M.institution_name
-        .S
+      body.data?.Item.plaid_item.M[mockData.tokenExchange.item_id].M.id.S
+    ).toBe(mockData.tokenExchange.item_id);
+    expect(
+      body.data?.Item.plaid_item.M[mockData.tokenExchange.item_id].M
+        .institution_name.S
     ).toBe(mockData.institutionName);
   });
 
@@ -79,9 +79,9 @@ describe('create, edit, & delete items from table', () => {
 
     expect(body.statusCode).toBe(200);
     // expect unchanged
-    expect(body.Attributes.email.S).toBe(Item.original.email);
+    expect(body.data?.Attributes.email.S).toBe(Item.original.email);
     // expect changed
-    expect(body.Attributes.verified.BOOL).toBe(true);
+    expect(body.data?.Attributes.verified.BOOL).toBe(true);
   });
 
   it('should get plaid items for one user', async () => {
@@ -99,10 +99,10 @@ describe('create, edit, & delete items from table', () => {
     const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
 
-    const item = Object.values(body.items)[0];
+    const item = Object.values(body.data?.items)[0];
 
     expect(body.statusCode).toBe(200);
-    expect(body.last_activity).not.toBe(undefined);
+    expect(body.data?.last_activity).not.toBe(undefined);
     expect(item).not.toHaveProperty('access_token');
     expect(item).toHaveProperty('accounts');
     expect(item).toHaveProperty('created_at');
@@ -131,7 +131,7 @@ describe('create, edit, & delete items from table', () => {
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
-    expect(body.accounts.length).toBeGreaterThan(0);
+    expect(body.data?.accounts.length).toBeGreaterThan(0);
   });
 
   /**
@@ -161,13 +161,13 @@ describe('create, edit, & delete items from table', () => {
   //   const body = parseLambdaResponse(testApi, response);
   //   if (body.statusCode !== 200) console.error(response);
   //   expect(body.statusCode).toBe(200);
-  //   expect(Array.isArray(body.account)).toBe(true);
+  //   expect(Array.isArray(body.data?.account)).toBe(true);
 
-  //   const account = Object.values(body.account)[0];
+  //   const account = Object.values(body.data?.account)[0];
   //   expect(account.balances.available).toBeGreaterThan(0);
   // });
 
-  it.only('should get plaid item account transactions', async () => {
+  it('should get plaid item account transactions', async () => {
     const request = getTransactionsForAccountWithBandsRequest;
     const response = await (testApi
       ? api({
@@ -183,9 +183,9 @@ describe('create, edit, & delete items from table', () => {
     const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
     expect(body.statusCode).toBe(200);
-    expect(body.transactions?.length).toBe(3);
+    expect(body.data?.transactions?.length).toBe(3);
 
-    const transaction = body.transactions[0];
+    const transaction = body.data?.transactions[0];
     expect(transaction).toHaveProperty('created_at');
     expect(transaction).toHaveProperty('updated_at');
     expect(transaction).toHaveProperty('transaction_id');
@@ -205,7 +205,7 @@ describe('create, edit, & delete items from table', () => {
       ? api({
           url: request.path,
           method: request.httpMethod,
-          params: request.params.querystring,
+          params: request.queryStringParameters,
           data: request.body,
         })
           .then(({ data }) => data)
@@ -215,9 +215,9 @@ describe('create, edit, & delete items from table', () => {
     const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
     expect(body.statusCode).toBe(200);
-    expect(body.transactions?.length).toBe(0);
+    expect(body.data?.transactions?.length).toBe(0);
 
-    const transaction = body.transactions[0];
+    const transaction = body.data?.transactions[0];
     if (transaction) {
       expect(transaction).toHaveProperty('created_at');
       expect(transaction).toHaveProperty('updated_at');
@@ -239,7 +239,7 @@ describe('create, edit, & delete items from table', () => {
       ? api({
           url: request.path,
           method: request.httpMethod,
-          params: request.params.querystring,
+          params: request.queryStringParameters,
           data: request.body,
         })
           .then(({ data }) => data)
@@ -250,6 +250,6 @@ describe('create, edit, & delete items from table', () => {
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
-    expect(body.logo).not.toBe(null);
+    expect(body.data?.logo).not.toBe(null);
   });
 });

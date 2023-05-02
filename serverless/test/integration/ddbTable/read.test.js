@@ -4,8 +4,6 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import dynamoDb from '../../config/dynamoDb.js';
-
 import { handler as tableHandler } from '../../../lambdas/ddbTable/index.js';
 import {
   getUserTableRequest,
@@ -24,7 +22,7 @@ const api = axios.create({
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
 
 describe('read tables', () => {
-  it.only('should get user table', async () => {
+  it('should get user table', async () => {
     const request = getUserTableRequest;
     const response = await (testApi
       ? api({
