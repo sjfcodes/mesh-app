@@ -89,7 +89,7 @@ export const handler = async (event) => {
           );
         }
 
-        response = await client.send(new Command(requestBody));
+        response.data = await client.send(new Command(requestBody));
         break;
 
       default:
