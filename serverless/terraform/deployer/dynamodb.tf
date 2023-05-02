@@ -50,7 +50,8 @@ resource "aws_iam_policy" "dynamodb" {
           "dynamodb:DeleteItem",
           "dynamodb:GetItem",
           "dynamodb:PutItem",
-          "dynamodb:UpdateItem"
+          "dynamodb:UpdateItem",
+          "dynamodb:BatchWriteItem"
         ]
         Resource = [
           "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.users",
