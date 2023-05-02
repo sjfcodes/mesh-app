@@ -76,21 +76,18 @@ export const getTransactionsForAccountWithoutBandsRequest = {
 };
 
 export const getUserItemsRequest = {
-  body: {},
   httpMethod: 'GET',
   path: path.userItem,
   headers,
 };
 
 export const getUserAccountsRequest = {
-  body: {},
   httpMethod: 'GET',
   path: path.itemAccount,
   headers,
 };
 
 export const getUserAccountsBalancesRequest = {
-  body: {},
   httpMethod: 'GET',
   path: path.itemAccountBalance,
   headers,
@@ -100,7 +97,6 @@ export const getUserAccountsBalancesRequest = {
 };
 
 export const getInstitutionByIdRequest = {
-  body: {},
   httpMethod: 'GET',
   path: path.itemInstitution,
   headers,

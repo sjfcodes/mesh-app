@@ -8,7 +8,7 @@ class App {
     this.ddbClient = ddbClient;
     this.user = {};
     this.requestPath = event.path;
-    this.payload = JSON.parse(event.body)?.payload || {};
+    this.payload = event.body ? JSON.parse(event.body)?.payload : {};
     this.queryString = event.queryStringParameters;
   }
 
@@ -56,7 +56,6 @@ class App {
     await this.ddbClient.writeUserLastActivity(this.user.email);
     // include item_id for future api calls
     const formattedAccounts = this.payload.accounts.map((account) => ({
-
       ...account,
       item_id: this.payload.public_token.item_id,
     }));

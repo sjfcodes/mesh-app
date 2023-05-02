@@ -91,7 +91,6 @@ describe('create, edit, & delete items from table', () => {
       ? api({
           url: request.path,
           method: request.httpMethod,
-          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
@@ -122,7 +121,6 @@ describe('create, edit, & delete items from table', () => {
       ? api({
           url: request.path,
           method: request.httpMethod,
-          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
@@ -175,7 +173,6 @@ describe('create, edit, & delete items from table', () => {
           url: request.path,
           method: request.httpMethod,
           params: request.queryStringParameters,
-          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
@@ -207,7 +204,6 @@ describe('create, edit, & delete items from table', () => {
           url: request.path,
           method: request.httpMethod,
           params: request.queryStringParameters,
-          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
@@ -241,7 +237,6 @@ describe('create, edit, & delete items from table', () => {
           url: request.path,
           method: request.httpMethod,
           params: request.queryStringParameters,
-          data: request.body,
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
