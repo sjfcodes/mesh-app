@@ -4,19 +4,19 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import { handler as tableHandler } from '../../../../lambdas/ddbTable/index.js';
+import { handler as tableHandler } from '../../../lambdas/ddbTable/index.js';
 import { addUserRequest, addUserItemRequest } from './requests.js';
 
-import { handler as plaidHandler } from '../../../../lambdas/plaid/index.js';
+import { handler as plaidHandler } from '../../../lambdas/plaid/index.js';
 import {
   mockExchangeTokenLinkRequest,
   mockSyncTransactionsForItemRequest,
-} from '../../plaid/requests.js';
+} from '../plaid/requests.js';
 import {
   handleAxiosError,
   mockApiGwRequestTransformations,
   parseLambdaResponse,
-} from '../../../utils/helpers.js';
+} from '../../utils/helpers.js';
 
 dotenv.config();
 const testApi = process.env.USE_API_GATEWAY === 'true';
@@ -63,7 +63,7 @@ describe('create, edit, & delete items from table', () => {
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
-    expect(body.public_token_exchange).toBe('complete');
+    expect(body.data.public_token_exchange).toBe('complete');
     console.log('pause for 2000ms after mock item create');
     await new Promise((resolve) => setTimeout(resolve, 2000));
   });
@@ -84,9 +84,9 @@ describe('create, edit, & delete items from table', () => {
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
-    expect(body.tx_sync).toBe('complete');
-    expect(body.tx_cursor_updated_at).not.toBe(undefined);
-    expect(body.added).toBeGreaterThan(0);
+    expect(body.data.tx_sync).toBe('complete');
+    expect(body.data.tx_cursor_updated_at).not.toBe(undefined);
+    expect(body.data.added).toBeGreaterThan(0);
     console.log('pause for 2000ms after tx sync');
     await new Promise((resolve) => setTimeout(resolve, 2000));
   });

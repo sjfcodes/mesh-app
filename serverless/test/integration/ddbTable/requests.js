@@ -1,63 +1,75 @@
-import lambdaConfig from '../../../lambdas/plaid/utils/config.js';
 import dynamoDbConfig from '../../config/dynamoDb.js';
+import lambdaConfig from '../../../lambdas/plaid/utils/config.js';
 
 const { path } = lambdaConfig;
-const { TableName } = dynamoDbConfig;
+const { TableName, Item, params } = dynamoDbConfig;
+const { headers } = params;
 
-////////////////
-// USER TABLE //
-////////////////
+const userItem = { ...Item.original };
+userItem.plaid_item = {};
 
-export const getUserTableRequest = {
+export const addUserRequest = {
+  headers,
   body: {
-    path: null,
-    payload: {
-      TableName: TableName.user,
-    },
+    TableName: TableName.user,
+    Item: userItem,
   },
+  httpMethod: 'PUT',
+  path: path.ddbTableItem,
+};
+
+export const addUserItemRequest = {
+  headers,
+  body: {
+    TableName: TableName.user,
+    Item: Item.original,
+  },
+  httpMethod: 'PUT',
+  path: path.ddbTableItem,
+};
+
+export const getTableItemRequest = {
+  headers,
   httpMethod: 'GET',
-  path: path.ddbTable,
-};
-
-export const deleteUserTableRequest = {
-  body: {
-    path: null,
-    payload: {
-      TableName: TableName.user,
-    },
-  },
-  event: {
-    httpMethod: 'DELETE',
-    path: path.ddbTable,
+  path: path.ddbTableItem,
+  queryStringParameters: {
+    TableName: TableName.user,
+    Key: 'email',
+    Value: Item.original.email,
   },
 };
 
-///////////////////////
-// TRANSACTION TABLE //
-///////////////////////
-
-export const getTransactionTableRequest = {
+export const updateTableItemRequest = {
+  headers,
   body: {
-    path: null,
-    payload: {
-      TableName: TableName.transaction,
+    TableName: TableName.user,
+    Key: { email: Item.original.email },
+    UpdateExpression: 'SET verified = :verified',
+    ExpressionAttributeValues: {
+      ':verified': Item.update.verified,
     },
+    ReturnValues: 'ALL_NEW', //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
   },
-  event: {
-    httpMethod: 'GET',
-    path: path.ddbTable,
-  },
+  httpMethod: 'POST',
+  path: path.ddbTableItem,
 };
 
-export const deleteTransactionTableRequest = {
+export const deleteTableItemRequest = {
+  headers,
   body: {
-    path: null,
-    payload: {
-      TableName: TableName.transaction,
-    },
+    TableName: TableName.user,
+    Key: { email: Item.original.email },
   },
-  event: {
-    httpMethod: 'DELETE',
-    path: path.ddbTable,
+  httpMethod: 'DELETE',
+  path: path.ddbTableItem,
+};
+
+export const createPlaidItemPayload = {
+  headers,
+  body: {
+    TableName: TableName.user,
+    Item: Item.original,
   },
+  httpMethod: 'PUT',
+  path: path.ddbTableItem,
 };
