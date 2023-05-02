@@ -30,6 +30,7 @@ export const handler = async (event) => {
 
   let statusCode = 200;
   let Command;
+  let CommandInput;
 
   try {
     switch (requestPath) {
@@ -77,7 +78,7 @@ export const handler = async (event) => {
           requestBody.Item = marshall(requestBody.Item);
         }
 
-        if (event.body.Key) {
+        if (requestBody.Key) {
           requestBody.Key = marshall(requestBody.Key);
         }
 

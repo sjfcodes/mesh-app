@@ -7,10 +7,14 @@ export const handleAxiosError = (error) => {
   return error.body || error.response?.data;
 };
 
-export const mockApiGwRequestTransformations = (request) => ({
-  ...request,
-  body: JSON.stringify(request.body),
-});
+export const mockApiGwRequestTransformations = (request) => {
+  const mock = { ...request };
+  if (request.body) {
+    mock.body = JSON.stringify(request.body);
+  }
+
+  return mock;
+};
 
 export const parseLambdaResponse = (testApi, response) => {
   try {

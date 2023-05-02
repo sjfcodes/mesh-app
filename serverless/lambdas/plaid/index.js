@@ -8,6 +8,8 @@ export const handler = async (event) => {
   let response = {};
   let statusCode = 200;
 
+  console.log(event);
+
   try {
     const app = new App(event);
 
