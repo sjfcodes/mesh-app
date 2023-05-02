@@ -4,12 +4,15 @@
 variable "env" {}
 variable "region" {}
 variable "account_id" {}
+variable "PLAID_CLIENT_ID" {}
+variable "PLAID_ENV" {}
+variable "PLAID_SECRET_DEVELOPMENT" {}
+variable "PLAID_SECRET_SANDBOX" {}
 
 variable "table_transactions_name" {}
 variable "table_users_name" {}
 variable "path" {
   default = "../../lambdas"
-
 }
 variable "lambda_name" {}
 
@@ -53,8 +56,12 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = {
-      USER_TABLE_NAME        = var.table_users_name
-      TRANSACTION_TABLE_NAME = var.table_transactions_name
+      USER_TABLE_NAME          = var.table_users_name
+      TRANSACTION_TABLE_NAME   = var.table_transactions_name
+      PLAID_CLIENT_ID          = var.PLAID_CLIENT_ID
+      PLAID_ENV                = var.PLAID_ENV
+      PLAID_SECRET_DEVELOPMENT = var.PLAID_SECRET_DEVELOPMENT
+      PLAID_SECRET_SANDBOX     = var.PLAID_SECRET_SANDBOX
     }
   }
 

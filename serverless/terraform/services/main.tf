@@ -3,6 +3,18 @@
 variable "env" {
   default = "test"
 }
+variable "PLAID_CLIENT_ID" {
+  sensitive = true
+}
+variable "PLAID_ENV" {
+  sensitive = true
+}
+variable "PLAID_SECRET_DEVELOPMENT" {
+  sensitive = true
+}
+variable "PLAID_SECRET_SANDBOX" {
+  sensitive = true
+}
 
 terraform {
   required_providers {
@@ -47,6 +59,11 @@ module "lambda_plaid" {
   table_users_name        = module.dynamodb_table_users.table_name
 
   lambda_name = "plaid"
+
+  PLAID_CLIENT_ID          = var.PLAID_CLIENT_ID
+  PLAID_ENV                = var.PLAID_ENV
+  PLAID_SECRET_DEVELOPMENT = var.PLAID_SECRET_DEVELOPMENT
+  PLAID_SECRET_SANDBOX     = var.PLAID_SECRET_SANDBOX
 }
 
 module "lambda_ddbTable" {
@@ -58,6 +75,11 @@ module "lambda_ddbTable" {
   table_users_name        = module.dynamodb_table_users.table_name
 
   lambda_name = "ddbTable"
+
+  PLAID_CLIENT_ID          = ""
+  PLAID_ENV                = ""
+  PLAID_SECRET_DEVELOPMENT = ""
+  PLAID_SECRET_SANDBOX     = ""
 }
 
 module "apigateway" {
@@ -66,8 +88,8 @@ module "apigateway" {
   account_id = var.account_id
   source     = "./apigateway"
 
-  lambda_plaid_function_name = module.lambda_plaid.function_name
-  lambda_plaid_invoke_arn    = module.lambda_plaid.invoke_arn
+  lambda_plaid_function_name    = module.lambda_plaid.function_name
+  lambda_plaid_invoke_arn       = module.lambda_plaid.invoke_arn
   lambda_ddbTable_function_name = module.lambda_ddbTable.function_name
   lambda_ddbTable_invoke_arn    = module.lambda_ddbTable.invoke_arn
 }

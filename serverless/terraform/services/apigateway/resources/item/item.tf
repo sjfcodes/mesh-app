@@ -19,6 +19,17 @@ module "item" {
   parent_id = var.parent_id
   path_part = "item"
 }
+
+# [/item][GET]
+module "item_GET" {
+  source        = "../../templates/method_integration"
+  api_id        = var.api_id
+  authorizer_id = var.authorizer_id
+
+  resource_id       = module.item.id
+  http_method       = "GET"
+  lambda_invoke_arn = var.lambda_invoke_arn
+}
 #####################################################
 
 #####################################################
@@ -31,6 +42,17 @@ module "item_account" {
   path_part = "account"
 }
 
+# [/item/account][GET]
+module "item_account_GET" {
+  source        = "../../templates/method_integration"
+  api_id        = var.api_id
+  authorizer_id = var.authorizer_id
+
+  resource_id       = module.item_account.id
+  http_method       = "GET"
+  lambda_invoke_arn = var.lambda_invoke_arn
+}
+
 # [/item/account/transaction]
 module "item_account_transaction" {
   source = "../../templates/resource"
@@ -40,13 +62,35 @@ module "item_account_transaction" {
   path_part = "transaction"
 }
 
-# [/item/account][PUT]
+# [/item/account/transaction][GET]
 module "item_account_transaction_GET" {
   source        = "../../templates/method_integration"
   api_id        = var.api_id
   authorizer_id = var.authorizer_id
 
   resource_id       = module.item_account_transaction.id
+  http_method       = "GET"
+  lambda_invoke_arn = var.lambda_invoke_arn
+}
+#####################################################
+
+#####################################################
+# [/item/institution]
+module "item_institution" {
+  source = "../../templates/resource"
+  api_id = var.api_id
+
+  parent_id = module.item.id
+  path_part = "institution"
+}
+
+# [/item/institution][GET]
+module "item_institution_GET" {
+  source        = "../../templates/method_integration"
+  api_id        = var.api_id
+  authorizer_id = var.authorizer_id
+
+  resource_id       = module.item_institution.id
   http_method       = "GET"
   lambda_invoke_arn = var.lambda_invoke_arn
 }
@@ -165,8 +209,17 @@ module "item_updateLogin_PUT" {
 # # # # # #
 # OUTPUTS #
 # # # # # #
+output "item_GET" {
+  value = module.item_GET
+}
+output "item_account_GET" {
+  value = module.item_account_GET
+}
 output "item_account_transaction_GET" {
   value = module.item_account_transaction_GET
+}
+output "item_institution_GET" {
+  value = module.item_institution_GET
 }
 output "item_sync_PUT" {
   value = module.item_sync_PUT
