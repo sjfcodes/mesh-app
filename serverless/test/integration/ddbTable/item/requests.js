@@ -13,7 +13,7 @@ export const addUserRequest = {
     Item: userItem,
   },
   httpMethod: 'PUT',
-  path: path.dynamoDbTableItem,
+  path: path.ddbTableItem,
 };
 
 export const addUserItemRequest = {
@@ -22,7 +22,7 @@ export const addUserItemRequest = {
     Item: Item.original,
   },
   httpMethod: 'PUT',
-  path: path.dynamoDbTableItem,
+  path: path.ddbTableItem,
 };
 
 export const getTableItemRequest = {
@@ -33,7 +33,7 @@ export const getTableItemRequest = {
     },
   },
   httpMethod: 'GET',
-  path: path.dynamoDbTableItem,
+  path: path.ddbTableItem,
 };
 
 export const updateTableItemRequest = {
@@ -47,7 +47,7 @@ export const updateTableItemRequest = {
     ReturnValues: 'ALL_NEW', //   https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-dynamodb/enums/returnvalue.html
   },
   httpMethod: 'POST',
-  path: path.dynamoDbTableItem,
+  path: path.ddbTableItem,
 };
 
 export const deleteTableItemRequest = {
@@ -56,7 +56,7 @@ export const deleteTableItemRequest = {
     Key: { email: Item.original.email },
   },
   httpMethod: 'DELETE',
-  path: path.dynamoDbTableItem,
+  path: path.ddbTableItem,
 };
 
 export const createPlaidItemPayload = {
@@ -65,5 +65,5 @@ export const createPlaidItemPayload = {
     Item: Item.original,
   },
   httpMethod: 'PUT',
-  path: path.dynamoDbTableItem,
+  path: path.ddbTableItem,
 };
