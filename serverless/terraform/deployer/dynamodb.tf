@@ -51,13 +51,18 @@ resource "aws_iam_policy" "dynamodb" {
           "dynamodb:GetItem",
           "dynamodb:PutItem",
           "dynamodb:UpdateItem",
-          "dynamodb:BatchWriteItem"
+          "dynamodb:BatchWriteItem",
+          "dynamodb:Query"
         ]
         Resource = [
           "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.users",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.users/*",
           "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.users",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.users/*",
           "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.transactions",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.transactions/*",
           "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.transactions",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.transactions/*",
         ]
       },
     ]
