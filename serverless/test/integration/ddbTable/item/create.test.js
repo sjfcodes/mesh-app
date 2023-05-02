@@ -12,7 +12,11 @@ import {
   mockExchangeTokenLinkRequest,
   mockSyncTransactionsForItemRequest,
 } from '../../plaid/requests.js';
-import { handleAxiosError } from '../../../utils/helpers.js';
+import {
+  handleAxiosError,
+  mockApiGwRequestTransformations,
+  parseLambdaResponse,
+} from '../../../utils/helpers.js';
 
 dotenv.config();
 const testApi = process.env.USE_API_GATEWAY === 'true';
@@ -23,11 +27,6 @@ const api = axios.create({
 });
 
 console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
-
-const mockApiGwTransformations = (request) => ({
-  ...request,
-  body: JSON.stringify(request.body),
-});
 
 describe('create, edit, & delete items from table', () => {
   it('should add user', async () => {
@@ -40,15 +39,11 @@ describe('create, edit, & delete items from table', () => {
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : tableHandler(mockApiGwTransformations(request)));
+      : tableHandler(mockApiGwRequestTransformations(request)));
 
-    let body;
-    try {
-      body = JSON.parse(response.body);
-    } catch (error) {
-      body = response.body;
-    }
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.log(body);
+
     expect(body.statusCode).toBe(200);
   });
 
@@ -62,14 +57,9 @@ describe('create, edit, & delete items from table', () => {
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : plaidHandler(mockApiGwTransformations(request)));
+      : plaidHandler(mockApiGwRequestTransformations(request)));
 
-    let body;
-    try {
-      body = JSON.parse(response.body);
-    } catch (error) {
-      body = response.body;
-    }
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
@@ -88,14 +78,9 @@ describe('create, edit, & delete items from table', () => {
         })
           .then(({ data }) => data)
           .catch(handleAxiosError)
-      : plaidHandler(mockApiGwTransformations(request)));
+      : plaidHandler(mockApiGwRequestTransformations(request)));
 
-    let body;
-    try {
-      body = JSON.parse(response.body);
-    } catch (error) {
-      body = response.body;
-    }
+    const body = parseLambdaResponse(testApi, response);
     if (body.statusCode !== 200) console.error(response);
 
     expect(body.statusCode).toBe(200);
