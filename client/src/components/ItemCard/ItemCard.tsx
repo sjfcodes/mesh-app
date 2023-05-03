@@ -10,6 +10,7 @@ import usePlaidItems from '../../hooks/usePlaidItems';
 import ButtonUpdateItem from '../ButtonUpdateItem/ButtonUpdateItem';
 
 import './style.scss';
+import Loader from '../Loader/Loader';
 
 interface Props {
   item: ItemType;
@@ -48,6 +49,10 @@ const ItemCard = ({ item }: Props) => {
     e.stopPropagation();
     syncItemTransactions(item.id);
   };
+
+  if (!institution) {
+    return <Loader />;
+  }
 
   return (
     <div className="ma-item-card">
