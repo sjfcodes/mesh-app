@@ -1,5 +1,8 @@
 @import './variables.scss';
 
+button{
+  text-transform: lowercase;
+}
 /* Base */
 html,
 body {
@@ -12,6 +15,7 @@ body {
   }
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+  letter-spacing: .01rem;
 }
 
 html {

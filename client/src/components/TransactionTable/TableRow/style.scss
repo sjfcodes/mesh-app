@@ -5,11 +5,14 @@ div.ma-transactions-table-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  text-transform: lowercase;
+  margin-bottom: .75rem;
+  opacity: .8;
   & div {
     & .ma-table-category {
       padding-left: .75rem;
-      font-size: 0.6rem;
-      color: $theme-color-2-0
+      font-size: 0.8rem;
+      color: $theme-color-2-0;
     }
     & .ma-table-name {
       // border: 1px solid green;
