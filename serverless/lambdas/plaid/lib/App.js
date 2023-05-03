@@ -18,6 +18,8 @@ class App {
     const tokenPayload = token.split('.')[1];
     const decrypted = JSON.parse(Buffer.from(tokenPayload, 'base64'));
 
+    console.log({ decrypted });
+
     const user = await this.ddbClient.readUserByTokenEmail(
       decrypted.email,
       this.requestPath
@@ -240,7 +242,7 @@ class App {
     );
 
     const response = await this.plaidClient.updateItemLogin(
-      this.user.userId,
+      this.user.user_id,
       accessToken
     );
 
