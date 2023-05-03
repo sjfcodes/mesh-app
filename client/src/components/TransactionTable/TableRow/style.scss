@@ -4,9 +4,6 @@ div.ma-transactions-table-row {
   // border: 1px solid red;
   display: flex;
   justify-content: space-between;
-  &:nth-child(even) {
-    background-color: $theme-color-background-1;
-  }
   & div {
     & .ma-table-category {
       padding-left: 1.5rem;
@@ -18,7 +15,8 @@ div.ma-transactions-table-row {
       padding-left: 3rem;
     }
     & .ma-table-amount {
-      // border: 1px solid orange;
+      border: 1px solid orange;
+      margin-inline: .5em;
       &.deposit {
         color: greenyellow;
       }
