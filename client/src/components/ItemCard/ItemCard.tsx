@@ -57,9 +57,15 @@ const ItemCard = ({ item }: Props) => {
   return (
     <div className="ma-item-card">
       <div className="ma-item-card-header">
-        <h3 style={{ color: institution.primary_color || '' }}>
-          {institution && institution.name}
-        </h3>
+        {institution &&
+          institution.name
+            .split('-')
+            .map((section) => (
+              <h3 style={{ color: institution.primary_color || '' }}>
+                {' '}
+                {section}
+              </h3>
+            ))}
       </div>
       <div className="ma-item-card-body">
         <a href={institution.url || ''} target="_blank" rel="noreferrer">
@@ -74,21 +80,21 @@ const ItemCard = ({ item }: Props) => {
               <h3>last activity</h3>
               <p>{diffBetweenCurrentTime(lastActivity)}</p>
             </li>
+            <li>
+              <h3>last sync</h3>
+              <p>{itemLastSyncDate}</p>
+            </li>
             {/* <li>
               <h3>routing #</h3>
               <p>{institution.routing_numbers}</p>
             </li> */}
             <li>
-              <h3>last sync</h3>
-              <p>{itemLastSyncDate}</p>
+              <ButtonUpdateItem itemId={item.id} />
             </li>
             <li>
               <DefaultButton onClick={handleSyncItem} isLoading={isLoading}>
-                sync transactions
+                sync txs
               </DefaultButton>
-            </li>
-            <li>
-              <ButtonUpdateItem itemId={item.id} />
             </li>
           </ul>
         </div>

@@ -31,7 +31,7 @@ const ButtonUpdateItem = ({ itemId }: Props) => {
   return (
     <>
       <DefaultButton onClick={initiateLink} isLoading={isLoading}>
-        Update Login
+        re-link
       </DefaultButton>
 
       {token != null && token.length > 0 && (

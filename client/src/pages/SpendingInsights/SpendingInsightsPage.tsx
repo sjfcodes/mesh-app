@@ -5,6 +5,7 @@ import useTransactions from '../../hooks/usePlaidTransactions';
 import TopVendors from '../../components/TopTransactions/TopTransactions';
 
 import './style.scss';
+// import SectionHeader from '../../components/SectionHeader/SectionHeader';
 
 export default function SpendingInsights() {
   // grab transactions from most recent month and filter out transfers and payments
@@ -25,7 +26,7 @@ export default function SpendingInsights() {
 
   return (
     <main className="spending-insights">
-      <h2>monthly spending</h2>
+      {/* <SectionHeader text="categories" /> */}
       <CategoriesChart filteredTransactions={filteredTransactions} />
       <TopVendors filteredTransactions={filteredTransactions} />
     </main>
