@@ -9,7 +9,7 @@ const { REACT_APP_AWS_API_GATEWAY, REACT_APP_AWS_API_GATEWAY_STAGE } =
 
 const url = REACT_APP_AWS_API_GATEWAY + '/' + REACT_APP_AWS_API_GATEWAY_STAGE;
 
-const getAuthToken = async () =>
+export const getAuthToken = async () =>
   (await Auth.currentSession()).getIdToken().getJwtToken();
 
 // setup token

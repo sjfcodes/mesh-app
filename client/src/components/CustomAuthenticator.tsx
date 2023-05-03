@@ -46,7 +46,7 @@ const components = {
           padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
           level={3}
         >
-          welcome 2 ⺵esh-app
+          ⺵esh-app
         </Heading>
       );
     },

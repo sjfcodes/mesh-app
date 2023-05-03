@@ -1,11 +1,12 @@
-// import { useNavigate } from 'react-router-dom';
+import { Auth } from 'aws-amplify';
+
 import UserCard from '../UserCard/UserCard';
 
 import './style.scss';
 
 const Header = () => {
   // const navigate = useNavigate();
-  const handleClick = () => {
+  const reloadPage = () => {
     /**
      * navigate to accounts and reload does not work.
      * FooterNav contains local state responsible for
@@ -17,12 +18,19 @@ const Header = () => {
     window.location.reload();
   };
 
+  const copyAuthToClipboard = async () => {
+    const auth = (await Auth.currentSession()).getIdToken().getJwtToken();
+    navigator.clipboard.writeText(auth);
+  };
+
   return (
-    <header onClick={handleClick}>
-      <div className="ma-header-left">
+    <header>
+      <div className="ma-header-left" onClick={reloadPage}>
         <UserCard />
       </div>
-      <h1 className="crosshatch">⺵esh</h1>
+      <h1 onClick={copyAuthToClipboard} className="crosshatch">
+        ⺵esh
+      </h1>
     </header>
   );
 };
