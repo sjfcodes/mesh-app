@@ -33,7 +33,7 @@
   },
   "scripts": {
     "build": "export REACT_APP_AWS_API_GATEWAY_STAGE=prod && react-scripts build",
-    "deploy": "npm run format && npm run build && ./deploy.sh ./build",
+    "deploy:prod": "npm run format && npm run build && ./deploy.sh ./build",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
     "start": "react-scripts start",
     "start:prod": "export REACT_APP_AWS_API_GATEWAY_STAGE=prod && npm run start",

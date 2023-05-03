@@ -20,7 +20,8 @@ div.ma-item-card {
       font-size: inherit;
       text-align: center;
       font-weight: bold;
-      text-transform: uppercase;
+      text-transform: lowercase;
+      opacity: .6;
     }
   }
   & .ma-item-card-body {
@@ -40,6 +41,7 @@ div.ma-item-card {
         transform: scale(1.025);
       }
       img {
+        opacity: .7;
         height: calc(148px - (0.5em * 2));
         min-width: calc(148px - (0.5em * 2));
       }
