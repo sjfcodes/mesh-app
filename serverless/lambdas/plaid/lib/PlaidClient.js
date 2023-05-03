@@ -57,7 +57,9 @@ class PlaidClient {
   }
 
   async updateItemLogin(userId, accessToken) {
-    if (!userId || !accessToken) throw new Error('missing required arguments!');
+    if (!userId) throw new Error('missing userId!');
+    if (!accessToken) throw new Error('missing accessToken!');
+
     const request = {
       user: { client_user_id: userId },
       client_name: config.appName,

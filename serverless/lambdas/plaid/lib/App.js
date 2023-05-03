@@ -134,7 +134,7 @@ class App {
     let upperBand = upper_band;
     let lowerBand = lower_band;
 
-    if(!upperBand) {
+    if (!upperBand) {
       // default to current day
       upperBand = new Date(nowInMs).toISOString().substring(0, 10);
     }
