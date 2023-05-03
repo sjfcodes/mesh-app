@@ -30,11 +30,11 @@ const { Item } = dynamoDb;
 const testApi = process.env.USE_API_GATEWAY === 'true';
 
 const api = axios.create({
-  baseURL: process.env.AWS_API_GATEWAY,
+  baseURL: process.env.AWS_API_GW_DEV,
   headers: { Authorization: process.env.AUTH_TOKEN },
 });
 
-console.log(`TESTING: ${testApi ? 'AWS_API_GATEWAY' : 'LOCAL'}`);
+console.log(`TESTING: ${testApi ? 'AWS_API_GW_DEV' : 'LOCAL'}`);
 
 describe('create, edit, & delete items from table', () => {
   it('should get table item', async () => {
