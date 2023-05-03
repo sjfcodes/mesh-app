@@ -13,15 +13,18 @@ class App {
   }
 
   async setUserByToken(token) {
-    if (!token) throw new Error('Missing required arguments');
+    if (!token) throw new Error('missing token!');
     // decode & parse jwt payload
     const tokenPayload = token.split('.')[1];
     const decrypted = JSON.parse(Buffer.from(tokenPayload, 'base64'));
 
-    this.user = await this.ddbClient.readUserByTokenEmail(
+    const user = await this.ddbClient.readUserByTokenEmail(
       decrypted.email,
       this.requestPath
     );
+
+    console.log('setting user:', user);
+    this.user = user;
   }
 
   async handleLinkTokenCreateUpdate() {
