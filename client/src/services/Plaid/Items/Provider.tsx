@@ -51,7 +51,7 @@ export function ItemsProvider(props: any) {
     setIsLoading(true);
     const { data } = await apiSyncItemTransactions(itemId);
     dispatch({ type: 'SUCCESSFUL_ITEM_SYNC', payload: data });
-    console.log(data)
+    console.log(data);
     setLastActivity(data.body.tx_cursor_updated_at);
     setIsLoading(false);
   }, []);
