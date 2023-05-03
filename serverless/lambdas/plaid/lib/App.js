@@ -128,14 +128,19 @@ class App {
   }
 
   async handleGetUserAccountTransactions() {
+    const nowInMs = Date.now();
+    const monthInMs = 60 * 60 * 24 * 30 * 1000;
     const { account_id, item_id, lower_band, upper_band } = this.queryString;
     let upperBand = upper_band;
     let lowerBand = lower_band;
 
-    if (!lowerBand || !upperBand) {
-      const nowInMs = Date.now();
-      const monthInMs = 60 * 60 * 24 * 30 * 1000;
+    if(!upperBand) {
+      // default to current day
       upperBand = new Date(nowInMs).toISOString().substring(0, 10);
+    }
+
+    if (!lowerBand) {
+      // default to last 30 days
       lowerBand = new Date(nowInMs - monthInMs).toISOString().substring(0, 10);
     }
 
