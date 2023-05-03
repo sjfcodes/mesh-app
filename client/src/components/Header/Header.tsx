@@ -6,7 +6,6 @@ import './style.scss';
 const Header = () => {
   // const navigate = useNavigate();
   const handleClick = () => {
-    // navigate('/accounts');
     /**
      * navigate to accounts and reload does not work.
      * FooterNav contains local state responsible for
@@ -23,7 +22,7 @@ const Header = () => {
       <div className="ma-header-left">
         <UserCard />
       </div>
-      <h1 className='crosshatch'>⺵esh</h1>
+      <h1 className="crosshatch">⺵esh</h1>
     </header>
   );
 };

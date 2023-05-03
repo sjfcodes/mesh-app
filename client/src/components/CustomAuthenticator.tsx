@@ -51,7 +51,7 @@ const components = {
       );
     },
     Footer() {
-      const { toResetPassword } = useAuthenticator();
+      // const { toResetPassword } = useAuthenticator();
 
       return (
         <View textAlign="center">

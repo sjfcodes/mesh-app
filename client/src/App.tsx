@@ -20,6 +20,7 @@ import SpendingInsights from './pages/SpendingInsights/SpendingInsightsPage';
 
 import './App.scss';
 import TransactionTimeline from './components/TransactionTimeline';
+import { ROUTE } from './util/constants';
 
 Amplify.configure(currentConfig);
 
@@ -43,9 +44,9 @@ function App() {
                   <Header />
                   <Routes>
                     <Route path="/" element={<PlaidItemsPage />} />
-                    <Route path="/accounts" element={<PlaidItemsPage />} />
-                    <Route path="/timeline" element={<TransactionTimeline />} />
-                    <Route path="/categories" element={<SpendingInsights />} />
+                    <Route path={ROUTE.ACCOUNTS} element={<PlaidItemsPage />} />
+                    <Route path={ROUTE.TRANSACTIONS} element={<TransactionTimeline />} />
+                    <Route path={ROUTE.SPENDING} element={<SpendingInsights />} />
                   </Routes>
                   <NavBar />
                 </AssetsProvider>
