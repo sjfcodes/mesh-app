@@ -59,7 +59,7 @@ const ItemCard = ({ item }: Props) => {
       <div className="ma-item-card-header">
         {institution &&
           institution.name
-            .split('-')
+            ?.split('-')
             .map((section) => (
               <h3 style={{ color: institution.primary_color || '' }}>
                 {' '}
