@@ -24,6 +24,7 @@ export const ItemsContext = createContext<ItemsContextShape>(
  * @desc Maintains the Items context state and provides functions to update that state.
  */
 export function ItemsProvider(props: any) {
+  const [isLoading, setIsLoading] = useState(false);
   const [plaidItem, dispatch] = useReducer(plaidItemsReducer, {} as ItemsState);
   const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [lastActivity, setLastActivity] = useState('');
@@ -32,37 +33,28 @@ export function ItemsProvider(props: any) {
    * @desc Requests all Items that belong to an individual User.
    */
   const getAllItems = useCallback(async () => {
+    setIsLoading(true);
     const {
       data: {
         body: { items, last_activity },
       },
     } = await apiGetItemsByUser();
-    setLastActivity(last_activity);
     dispatch({
       type: 'SUCCESSFUL_ITEM_GET',
       payload: items,
     });
+    setLastActivity(last_activity);
+    setIsLoading(false);
   }, []);
 
   const syncItemTransactions = useCallback(async (itemId: string) => {
+    setIsLoading(true);
     const { data } = await apiSyncItemTransactions(itemId);
-    console.log(data);
     dispatch({ type: 'SUCCESSFUL_ITEM_SYNC', payload: data });
+    console.log(data)
+    setLastActivity(data.body.tx_cursor_updated_at);
+    setIsLoading(false);
   }, []);
-
-  /**
-   * @desc Will delete all accounts that belong to an individual User.
-   * There is no api request as apiDeleteItemById in items delete all related transactions
-   */
-  const deleteAccountsByUserId = useCallback(
-    (itemId: string, accountId: string) => {
-      dispatch({
-        type: 'SUCCESSFUL_ACCOUNT_DELETE',
-        payload: { itemId, accountId },
-      });
-    },
-    []
-  );
 
   useEffect(() => {
     getAllItems();
@@ -93,16 +85,16 @@ export function ItemsProvider(props: any) {
       lastActivity,
       plaidItem,
       sortedItems,
+      isLoading,
       getAllItems,
-      deleteAccountsByUserId,
       syncItemTransactions,
     };
   }, [
     lastActivity,
     plaidItem,
     sortedItems,
+    isLoading,
     getAllItems,
-    deleteAccountsByUserId,
     syncItemTransactions,
   ]);
 

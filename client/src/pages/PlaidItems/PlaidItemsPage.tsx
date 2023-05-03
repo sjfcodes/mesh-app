@@ -9,8 +9,7 @@ import './style.scss';
 const PlaidItemsPage = () => {
   const { sortedItems } = usePlaidItems();
 
-  // if (!sortedItems.length) {
-  if (true) {
+  if (!sortedItems.length) {
     return <Loader />;
   }
 

@@ -6,6 +6,9 @@ div.ma-loader-wrapper {
   // border: 1px solid red;
   display: flex;
   justify-content: center;
+  margin-block: -2rem;
+  margin-right: -1rem;
+  transform: scale(.5);
   & div.lds-roller {
     // border: 1px solid orange;
     display: inline-block;

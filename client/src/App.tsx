@@ -45,8 +45,14 @@ function App() {
                   <Routes>
                     <Route path="/" element={<PlaidItemsPage />} />
                     <Route path={ROUTE.ACCOUNTS} element={<PlaidItemsPage />} />
-                    <Route path={ROUTE.TRANSACTIONS} element={<TransactionTimeline />} />
-                    <Route path={ROUTE.SPENDING} element={<SpendingInsights />} />
+                    <Route
+                      path={ROUTE.TRANSACTIONS}
+                      element={<TransactionTimeline />}
+                    />
+                    <Route
+                      path={ROUTE.SPENDING}
+                      element={<SpendingInsights />}
+                    />
                   </Routes>
                   <NavBar />
                 </AssetsProvider>

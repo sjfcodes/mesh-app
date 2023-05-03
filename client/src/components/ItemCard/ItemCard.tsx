@@ -19,7 +19,7 @@ interface Props {
 const ItemCard = ({ item }: Props) => {
   const { institutionsById, getItemInstitution, formatLogoSrc } =
     useInstitutions();
-  const { syncItemTransactions, lastActivity } = usePlaidItems();
+  const { syncItemTransactions, lastActivity, isLoading } = usePlaidItems();
   const [institution, setInstitution] = useState<Institution>({
     country_codes: [],
     institution_id: '',
@@ -83,7 +83,7 @@ const ItemCard = ({ item }: Props) => {
               <p>{itemLastSyncDate}</p>
             </li>
             <li>
-              <DefaultButton onClick={handleSyncItem}>
+              <DefaultButton onClick={handleSyncItem} isLoading={isLoading}>
                 sync transactions
               </DefaultButton>
             </li>
