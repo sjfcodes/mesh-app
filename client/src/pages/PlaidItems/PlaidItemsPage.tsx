@@ -1,5 +1,6 @@
 import ButtonLinkBank from '../../components/ButtonLinkBank/ButtonLinkBank';
 import ItemCard from '../../components/ItemCard/ItemCard';
+import SectionHeader from '../../components/SectionHeader/SectionHeader';
 import usePlaidItems from '../../hooks/usePlaidItems';
 
 import './style.scss';
@@ -9,6 +10,8 @@ const PlaidItemsPage = () => {
 
   return (
     <main id="ma-plaid-items-page">
+      <SectionHeader text="accounts" />
+
       <div>
         {sortedItems.map((item) => (
           <div id="itemCards" key={item.id}>

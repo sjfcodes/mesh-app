@@ -60,8 +60,8 @@ const FooterNav = () => {
           </AppButton>
           <AppButton
             label="spending"
-            className={selected === '/spending' ? 'ma-border-1-0' : ''}
-            onClick={() => handleSelection('/spending')}
+            className={selected === '/categories' ? 'ma-border-1-0' : ''}
+            onClick={() => handleSelection('/categories')}
           >
             <HiOutlinePresentationChartLine size={iconSize} />
           </AppButton>

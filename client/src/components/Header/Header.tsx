@@ -23,7 +23,7 @@ const Header = () => {
       <div className="ma-header-left">
         <UserCard />
       </div>
-      <h1>mesh</h1>
+      <h1 className='crosshatch'>⺵esh</h1>
     </header>
   );
 };

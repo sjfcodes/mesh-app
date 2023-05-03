@@ -45,7 +45,7 @@ function App() {
                     <Route path="/" element={<PlaidItemsPage />} />
                     <Route path="/accounts" element={<PlaidItemsPage />} />
                     <Route path="/timeline" element={<TransactionTimeline />} />
-                    <Route path="/spending" element={<SpendingInsights />} />
+                    <Route path="/categories" element={<SpendingInsights />} />
                   </Routes>
                   <NavBar />
                 </AssetsProvider>

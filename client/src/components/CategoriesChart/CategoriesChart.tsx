@@ -4,6 +4,7 @@ import { Cell, ResponsiveContainer, Pie, PieChart, Legend } from 'recharts';
 import { Categories, TransactionType } from '../../types';
 
 import './style.scss';
+import SectionHeader from '../SectionHeader/SectionHeader';
 
 interface Props {
   filteredTransactions: TransactionType[];
@@ -45,7 +46,7 @@ export default function CategoriesChart({ filteredTransactions }: Props) {
 
   return (
     <div className="spending-categories">
-      <h4 className="holdingsHeading">Categories</h4>
+      <SectionHeader text="categories" />
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>

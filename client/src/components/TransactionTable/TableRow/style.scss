@@ -22,10 +22,10 @@ div.ma-transactions-table-row {
       // border: 1px solid orange;
       padding-inline: .5em;
       &.deposit {
-        color: rgba(172, 255, 47, 0.556);
+        color: $theme-color-green-0;
       }
       &.withdrawal {
-        color: rgba(255, 0, 0, 0.552);
+        color: $theme-color-red-0;
       }
     }
   }

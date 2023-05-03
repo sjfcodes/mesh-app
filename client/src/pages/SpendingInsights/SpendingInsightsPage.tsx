@@ -25,7 +25,7 @@ export default function SpendingInsights() {
 
   return (
     <main className="spending-insights">
-      <h2>Monthly Spending</h2>
+      <h2>monthly spending</h2>
       <CategoriesChart filteredTransactions={filteredTransactions} />
       <TopVendors filteredTransactions={filteredTransactions} />
     </main>
