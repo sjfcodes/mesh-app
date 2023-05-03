@@ -37,6 +37,7 @@ resource "aws_api_gateway_deployment" "this" {
       module.item.item_institution_GET,
       module.item.item_institution_CORS,
       module.item.item_sync_PUT,
+      module.item.item_sync_CORS,
       module.item.item_sync_mock_PUT,
       module.item.item_tokenExchange_POST,
       module.item.item_tokenExchange_mock_POST,

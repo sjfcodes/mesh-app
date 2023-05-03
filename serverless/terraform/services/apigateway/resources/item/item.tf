@@ -143,6 +143,15 @@ module "item_sync_PUT" {
   http_method       = "PUT"
   lambda_invoke_arn = var.lambda_invoke_arn
 }
+
+# [/item/sync][CORS OPTIONS]
+module "item_sync_CORS" {
+  source = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id        = var.api_id
+  api_resource_id = module.item_sync.id
+}
 #####################################################
 
 #####################################################
@@ -259,6 +268,9 @@ output "item_institution_CORS" {
 }
 output "item_sync_PUT" {
   value = module.item_sync_PUT
+}
+output "item_sync_CORS" {
+  value = module.item_sync_CORS
 }
 output "item_sync_mock_PUT" {
   value = module.item_sync_mock_PUT

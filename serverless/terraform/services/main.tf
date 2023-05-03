@@ -4,9 +4,6 @@
 variable "PLAID_CLIENT_ID" {
   sensitive = true
 }
-variable "PLAID_ENV" {
-  sensitive = true
-}
 variable "PLAID_SECRET_DEVELOPMENT" {
   sensitive = true
 }
@@ -58,10 +55,13 @@ module "lambda_plaid" {
 
   lambda_name = "plaid"
 
-  PLAID_CLIENT_ID          = var.PLAID_CLIENT_ID
-  PLAID_ENV                = var.PLAID_ENV
-  PLAID_SECRET_DEVELOPMENT = var.PLAID_SECRET_DEVELOPMENT
-  PLAID_SECRET_SANDBOX     = var.PLAID_SECRET_SANDBOX
+  PLAID_CLIENT_ID = var.PLAID_CLIENT_ID
+  PLAID_ENV = (
+    terraform.workspace == "prod" ? "development" : "sandbox"
+  )
+  PLAID_SECRET = (
+    terraform.workspace == "prod" ? var.PLAID_SECRET_DEVELOPMENT : var.PLAID_SECRET_SANDBOX
+  )
 }
 
 module "lambda_ddbTable" {
@@ -74,10 +74,9 @@ module "lambda_ddbTable" {
 
   lambda_name = "ddbTable"
 
-  PLAID_CLIENT_ID          = ""
-  PLAID_ENV                = ""
-  PLAID_SECRET_DEVELOPMENT = ""
-  PLAID_SECRET_SANDBOX     = ""
+  PLAID_CLIENT_ID = ""
+  PLAID_ENV       = ""
+  PLAID_SECRET    = ""
 }
 
 module "apigateway" {

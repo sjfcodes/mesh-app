@@ -6,8 +6,9 @@ variable "region" {}
 variable "account_id" {}
 variable "PLAID_CLIENT_ID" {}
 variable "PLAID_ENV" {}
-variable "PLAID_SECRET_DEVELOPMENT" {}
-variable "PLAID_SECRET_SANDBOX" {}
+variable "PLAID_SECRET" {
+  sensitive = true
+}
 
 variable "table_transactions_name" {}
 variable "table_users_name" {}
@@ -59,14 +60,13 @@ resource "aws_lambda_function" "this" {
       USER_TABLE_NAME = (
         terraform.workspace == "prod" ? "mesh-app.users" : var.table_users_name
       )
-      TRANSACTION_TABLE_NAME   = var.table_transactions_name
-      TRANSACTION_TABLE_NAME   = (
+      TRANSACTION_TABLE_NAME = var.table_transactions_name
+      TRANSACTION_TABLE_NAME = (
         terraform.workspace == "prod" ? "mesh-app.plaid.transactions" : var.table_transactions_name
       )
-      PLAID_CLIENT_ID          = var.PLAID_CLIENT_ID
-      PLAID_ENV                = var.PLAID_ENV
-      PLAID_SECRET_DEVELOPMENT = var.PLAID_SECRET_DEVELOPMENT
-      PLAID_SECRET_SANDBOX     = var.PLAID_SECRET_SANDBOX
+      PLAID_CLIENT_ID = var.PLAID_CLIENT_ID
+      PLAID_ENV       = var.PLAID_ENV
+      PLAID_SECRET    = var.PLAID_SECRET
     }
   }
 
