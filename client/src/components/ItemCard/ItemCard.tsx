@@ -58,14 +58,12 @@ const ItemCard = ({ item }: Props) => {
     <div className="ma-item-card">
       <div className="ma-item-card-header">
         {institution &&
-          institution.name
-            ?.split('-')
-            .map((section) => (
-              <h3 style={{ color: institution.primary_color || '' }}>
-                {' '}
-                {section}
-              </h3>
-            ))}
+          institution.name?.split('-').map((section, key) => (
+            <h3 style={{ color: institution.primary_color || '' }} key={key}>
+              {' '}
+              {section}
+            </h3>
+          ))}
       </div>
       <div className="ma-item-card-body">
         <a href={institution.url || ''} target="_blank" rel="noreferrer">
