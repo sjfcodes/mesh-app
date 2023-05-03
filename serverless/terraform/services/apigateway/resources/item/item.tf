@@ -81,6 +81,15 @@ module "item_account_transaction_GET" {
   http_method       = "GET"
   lambda_invoke_arn = var.lambda_invoke_arn
 }
+
+# [/item/account/transaction][CORS OPTIONS]
+module "item_account_transaction_CORS" {
+  source = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id        = var.api_id
+  api_resource_id = module.item_account_transaction.id
+}
 #####################################################
 
 #####################################################
@@ -102,6 +111,15 @@ module "item_institution_GET" {
   resource_id       = module.item_institution.id
   http_method       = "GET"
   lambda_invoke_arn = var.lambda_invoke_arn
+}
+
+# [/item/institution][CORS OPTIONS]
+module "item_institution_CORS" {
+  source = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id        = var.api_id
+  api_resource_id = module.item_institution.id
 }
 #####################################################
 
@@ -230,8 +248,14 @@ output "item_account_GET" {
 output "item_account_transaction_GET" {
   value = module.item_account_transaction_GET
 }
+output "item_account_transaction_CORS" {
+  value = module.item_account_transaction_CORS
+}
 output "item_institution_GET" {
   value = module.item_institution_GET
+}
+output "item_institution_CORS" {
+  value = module.item_institution_CORS
 }
 output "item_sync_PUT" {
   value = module.item_sync_PUT
