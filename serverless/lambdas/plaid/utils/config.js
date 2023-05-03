@@ -11,8 +11,8 @@ const config = {
   redirectUri: 'https://www.mesh-app.net',
   jwks: `https://cognito-idp.${awsRegion}.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
   TableName: {
-    user: process.env.USER_TABLE_NAME /* prod or test table */,
-    transaction: process.env.TRANSACTION_TABLE_NAME /* prod or test table */,
+    users: process.env.USER_TABLE_NAME /* prod or test table */,
+    transactions: process.env.TRANSACTION_TABLE_NAME /* prod or test table */,
   },
   path: {
     ddbTable: '/table',

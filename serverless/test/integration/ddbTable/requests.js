@@ -11,7 +11,7 @@ userItem.plaid_item = {};
 export const addUserRequest = {
   headers,
   body: {
-    TableName: TableName.user,
+    TableName: TableName.users,
     Item: userItem,
   },
   httpMethod: 'PUT',
@@ -21,7 +21,7 @@ export const addUserRequest = {
 export const addUserItemRequest = {
   headers,
   body: {
-    TableName: TableName.user,
+    TableName: TableName.users,
     Item: Item.original,
   },
   httpMethod: 'PUT',
@@ -33,7 +33,7 @@ export const getTableItemRequest = {
   httpMethod: 'GET',
   path: path.ddbTableItem,
   queryStringParameters: {
-    TableName: TableName.user,
+    TableName: TableName.users,
     Key: 'email',
     Value: Item.original.email,
   },
@@ -42,7 +42,7 @@ export const getTableItemRequest = {
 export const updateTableItemRequest = {
   headers,
   body: {
-    TableName: TableName.user,
+    TableName: TableName.users,
     Key: { email: Item.original.email },
     UpdateExpression: 'SET verified = :verified',
     ExpressionAttributeValues: {
@@ -57,7 +57,7 @@ export const updateTableItemRequest = {
 export const deleteTableItemRequest = {
   headers,
   body: {
-    TableName: TableName.user,
+    TableName: TableName.users,
     Key: { email: Item.original.email },
   },
   httpMethod: 'DELETE',
@@ -67,7 +67,7 @@ export const deleteTableItemRequest = {
 export const createPlaidItemPayload = {
   headers,
   body: {
-    TableName: TableName.user,
+    TableName: TableName.users,
     Item: Item.original,
   },
   httpMethod: 'PUT',

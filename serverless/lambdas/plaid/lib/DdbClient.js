@@ -29,7 +29,7 @@ class DdbClient {
     if (!email) throw new Error('missing argument email!');
     await this.client.send(
       new UpdateItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: { S: email } },
         UpdateExpression: `SET #last = :date`,
         ExpressionAttributeNames: {
@@ -48,7 +48,7 @@ class DdbClient {
     if (!requestPath) throw new Error('missing argument requestPath!');
     const { Item } = await this.client.send(
       new GetItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
       })
     );
@@ -88,7 +88,7 @@ class DdbClient {
 
     const { Item } = await this.client.send(
       new GetItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
         ProjectionExpression: `#items.#item`,
         ExpressionAttributeNames: {
@@ -120,7 +120,7 @@ class DdbClient {
       },
     } = await this.client.send(
       new GetItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
         ProjectionExpression: `#items, #activity`,
         ExpressionAttributeNames: {
@@ -157,7 +157,7 @@ class DdbClient {
 
     const response = await this.client.send(
       new QueryCommand({
-        TableName: config.TableName.transaction,
+        TableName: config.TableName.transactions,
         IndexName: 'item_id-account_id-created_at-index',
         Select: 'ALL_ATTRIBUTES',
         KeyConditionExpression:
@@ -191,7 +191,7 @@ class DdbClient {
   //   const formatted = itemId + '::' + accountId;
   //   const response = await this.client.send(
   //     new GetItemCommand({
-  //       TableName: config.TableName.transaction,
+  //       TableName: config.TableName.transactions,
   //       Key: {
   //         [PARTITION_KEY]: { S: formatted },
   //         [SORT_KEY]: { S: transactionId },
@@ -212,7 +212,7 @@ class DdbClient {
 
     await this.client.send(
       new UpdateItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
         UpdateExpression: `SET #items.#item.#cursor = :cursor, #items.#item.#cursorUpdated = :cursorUpdated, #items.#item.#updated = :updated`,
         ExpressionAttributeNames: {
@@ -247,7 +247,7 @@ class DdbClient {
 
     await this.client.send(
       new UpdateItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
         UpdateExpression: `SET #items.#item = :map`,
         ExpressionAttributeNames: {
@@ -316,7 +316,7 @@ class DdbClient {
 
       const response = await this.client.send(
         new BatchWriteItemCommand({
-          RequestItems: { [config.TableName.transaction]: requestBatch },
+          RequestItems: { [config.TableName.transactions]: requestBatch },
         })
       );
 

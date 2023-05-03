@@ -56,8 +56,13 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = {
-      USER_TABLE_NAME          = var.table_users_name
+      USER_TABLE_NAME = (
+        terraform.workspace == "prod" ? "mesh-app.users" : var.table_users_name
+      )
       TRANSACTION_TABLE_NAME   = var.table_transactions_name
+      TRANSACTION_TABLE_NAME   = (
+        terraform.workspace == "prod" ? "mesh-app.plaid.transactions" : var.table_transactions_name
+      )
       PLAID_CLIENT_ID          = var.PLAID_CLIENT_ID
       PLAID_ENV                = var.PLAID_ENV
       PLAID_SECRET_DEVELOPMENT = var.PLAID_SECRET_DEVELOPMENT
@@ -103,8 +108,9 @@ data "aws_iam_policy_document" "this" {
     resources = [
       "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}**",
       "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}**",
-      # "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}/*",
-      # "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}/*"
+      # support legacy for now
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/mesh-app.users**",
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/mesh-app.plaid.transactions**",
     ]
   }
 }

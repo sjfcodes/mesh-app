@@ -8,7 +8,7 @@ const { headers } = params;
 
 export const createTokenLinkRequest = {
   body: {
-    TableName: TableName.user,
+    TableName: TableName.users,
     path: path.linkTokenCreate,
   },
   event: {

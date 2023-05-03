@@ -3,10 +3,25 @@ import { Auth } from 'aws-amplify';
 import { toast } from 'react-toastify';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import DuplicateItemToastMessage from '../components/DuplicateItemToast';
+const {
+  REACT_APP_AWS_API_GW_DEV,
+  REACT_APP_AWS_API_GW_PROD,
+  REACT_APP_USE_API_GW,
+} = process.env;
 
-const { REACT_APP_AWS_API_GW_URL, REACT_APP_AWS_API_GW_STAGE } = process.env;
+const USE_STAGE = {
+  DEV: REACT_APP_AWS_API_GW_DEV,
+  PROD: REACT_APP_AWS_API_GW_PROD,
+};
 
-const url = REACT_APP_AWS_API_GW_URL + '/' + REACT_APP_AWS_API_GW_STAGE;
+const TARGET_STAGE = REACT_APP_USE_API_GW || 'DEV';
+
+// @ts-ignore
+const url = USE_STAGE[TARGET_STAGE];
+
+if (!url) {
+  throw new Error('missing backend url!◊');
+}
 
 export const getAuthToken = async () =>
   (await Auth.currentSession()).getIdToken().getJwtToken();
@@ -45,7 +60,6 @@ export const exchangeToken = async (
         },
       },
     });
-
   } catch (err) {
     // @ts-ignore TODO: resolve this ignore
     if (err.response && err.response.status === 409) {

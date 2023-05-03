@@ -17,12 +17,14 @@ import {
   mockApiGwRequestTransformations,
   parseLambdaResponse,
 } from '../../utils/helpers.js';
+import config from '../../config/dynamoDb.js';
 
 dotenv.config();
-const testApi = process.env.USE_API_GATEWAY === 'true';
+const testApi = config.targetApiUrl;
+
 
 const api = axios.create({
-  baseURL: process.env.AWS_API_GW_DEV,
+  baseURL: testApi,
   headers: { Authorization: process.env.AUTH_TOKEN },
 });
 

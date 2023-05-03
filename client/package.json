@@ -32,12 +32,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "build": "export REACT_APP_AWS_API_GW_STAGE=prod && react-scripts build",
+    "build": "export REACT_APP_USE_API_GW=PROD && react-scripts build",
     "deploy:prod": "npm run format && npm run build && ./deploy.sh ./build",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
     "start": "react-scripts start",
-    "start:prod": "export REACT_APP_AWS_API_GW_STAGE=prod && npm run start",
-    "start:dev": "export REACT_APP_AWS_API_GW_STAGE=dev && npm run start",
+    "start:prod": "export REACT_APP_USE_API_GW=PROD && npm run start",
+    "start:dev": "export REACT_APP_USE_API_GW=DEV && npm run start",
     "test": "react-scripts test"
   },
   "eslintConfig": {
