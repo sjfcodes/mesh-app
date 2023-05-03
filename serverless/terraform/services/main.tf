@@ -1,8 +1,6 @@
 # DOCS: https://developer.hashicorp.com/terraform/language
 # setting env variable
-variable "env" {
-  default = "test"
-}
+
 variable "PLAID_CLIENT_ID" {
   sensitive = true
 }
@@ -27,9 +25,9 @@ terraform {
   backend "s3" {
     profile        = "mesh-app_terraform_deployer"
     bucket         = "mesh-app-tfstate"
-    key            = "test/terraform.tfstate"
+    key            = "terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "test_mesh-app_tfstate_lock"
+    dynamodb_table = "mesh-app_tfstate_lock"
   }
 }
 
@@ -39,19 +37,19 @@ provider "aws" {
 }
 
 module "dynamodb_table_users" {
-  env      = var.env
+  env      = terraform.workspace
   app_name = var.app_name
   source   = "./dynamodb/table/users"
 }
 
 module "dynamodb_table_transactions" {
-  env      = var.env
+  env      = terraform.workspace
   app_name = var.app_name
   source   = "./dynamodb/table/transactions"
 }
 
 module "lambda_plaid" {
-  env                     = var.env
+  env                     = terraform.workspace
   region                  = var.region
   account_id              = var.account_id
   source                  = "./lambda"
@@ -67,7 +65,7 @@ module "lambda_plaid" {
 }
 
 module "lambda_ddbTable" {
-  env                     = var.env
+  env                     = terraform.workspace
   region                  = var.region
   account_id              = var.account_id
   source                  = "./lambda"
@@ -83,7 +81,7 @@ module "lambda_ddbTable" {
 }
 
 module "apigateway" {
-  env        = var.env
+  env        = terraform.workspace
   region     = var.region
   account_id = var.account_id
   source     = "./apigateway"

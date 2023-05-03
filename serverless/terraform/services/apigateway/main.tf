@@ -30,6 +30,7 @@ resource "aws_api_gateway_deployment" "this" {
     #       It will stabilize to only change when resources change afterwards.
     redeployment = sha1(jsonencode([
       module.item.item_GET,
+      module.item.item_CORS,
       module.item.item_account_GET,
       module.item.item_account_transaction_GET,
       module.item.item_institution_GET,
