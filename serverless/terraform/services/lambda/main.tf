@@ -101,10 +101,10 @@ data "aws_iam_policy_document" "this" {
       "dynamodb:Query"
     ]
     resources = [
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}",
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}/*",
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}",
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}/*"
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}**",
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}**",
+      # "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}/*",
+      # "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}/*"
     ]
   }
 }

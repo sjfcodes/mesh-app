@@ -21,7 +21,6 @@ resource "aws_iam_policy" "dynamodb" {
         ]
         Resource = [
           "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app_tfstate_lock",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/*_mesh-app_tfstate_lock",
         ]
       },
       {
@@ -53,10 +52,8 @@ resource "aws_iam_policy" "dynamodb" {
           "dynamodb:Query"
         ]
         Resource = [
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.users",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.users/*",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.transactions",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.transactions/*",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.users**",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.transactions**",
         ]
       },
     ]
