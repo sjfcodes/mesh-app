@@ -23,7 +23,7 @@ export interface ItemsContextShape {
   lastActivity: string;
   plaidItem: { [item_id: string]: ItemType };
   sortedItems: ItemType[];
+  isLoading: boolean;
   getAllItems: (userId: string, refresh: boolean) => void;
-  deleteAccountsByUserId: (userId: string) => void;
   syncItemTransactions: (itemId: string) => void;
 }

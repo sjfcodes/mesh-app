@@ -1,0 +1,9 @@
+@import '../../variables.scss';
+
+h4.ma-section-header {
+  // border-bottom: 1px dotted $theme-color-1-0;
+  color: $theme-color-2-0;
+  text-align: center;
+  text-decoration: underline;
+  font-size: 2rem;
+}

@@ -7,8 +7,10 @@ import { AccountType } from '../../types';
 import TransactionsTable from '../TransactionTable/TransactionsTable';
 import useTransactions from '../../hooks/usePlaidTransactions';
 
-import './style.scss';
 import useInstitutions from '../../hooks/usePlaidInstitutions';
+import Loader from '../Loader/Loader';
+
+import './style.scss';
 
 interface Props {
   account: AccountType;
@@ -48,7 +50,11 @@ export default function AccountCard({ account }: Props) {
             {currencyFilter(account.current_balance)}
           </p>
         </div>
-        <p>{transactionsShown ? 'HIDE' : 'SHOW'}</p>
+        {!itemAccountTransaction[accountId]?.length ? (
+          <Loader />
+        ) : (
+          <p>{transactionsShown ? 'hide' : 'show'}</p>
+        )}
       </div>
       <div className="ma-account-footer">
         {transactionsShown && (

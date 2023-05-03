@@ -2,11 +2,10 @@
 
 div.spending-categories {
   // border: 1px solid red;
-  & > h4 {
-    color: $theme-color-2-0;
-  }
   & div.chart-wrapper {
+    text-transform: lowercase;
     height: 25vh;
     width: 100%;
+    opacity: 0.5;
   }
 }

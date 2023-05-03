@@ -8,6 +8,7 @@ import { HiOutlinePresentationChartLine } from 'react-icons/hi';
 import './style.scss';
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
+import { ROUTE } from '../../util/constants';
 
 const iconSize = '2em';
 
@@ -15,7 +16,7 @@ const FooterNav = () => {
   const navigate = useNavigate();
   const { signOut } = useUser();
   const [selected, setSelected] = useState(
-    localStorage.getItem('ma-selected-app') || ''
+    /*localStorage.getItem('ma-selected-app') || */ ''
   );
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const FooterNav = () => {
       if (signOut) signOut({ type: 'SIGN_OUT' });
       route = '/';
     }
-    localStorage.setItem('ma-selected-app', route);
+    // localStorage.setItem('ma-selected-app', route);
     setSelected(route);
   };
   return (
@@ -46,22 +47,22 @@ const FooterNav = () => {
         <div className="sections">
           <AppButton
             label="accounts"
-            className={selected === '/accounts' ? 'ma-border-1-0' : ''}
-            onClick={() => handleSelection('/accounts')}
+            className={selected === ROUTE.ACCOUNTS ? 'ma-border-1-0' : ''}
+            onClick={() => handleSelection(ROUTE.ACCOUNTS)}
           >
             <BsBank size={iconSize} />
           </AppButton>
           <AppButton
-            label="timeline"
-            className={selected === '/timeline' ? 'ma-border-1-0' : ''}
-            onClick={() => handleSelection('/timeline')}
+            label="transactions"
+            className={selected === ROUTE.TRANSACTIONS ? 'ma-border-1-0' : ''}
+            onClick={() => handleSelection(ROUTE.TRANSACTIONS)}
           >
             <BsListOl size={iconSize} />
           </AppButton>
           <AppButton
             label="spending"
-            className={selected === '/spending' ? 'ma-border-1-0' : ''}
-            onClick={() => handleSelection('/spending')}
+            className={selected === ROUTE.SPENDING ? 'ma-border-1-0' : ''}
+            onClick={() => handleSelection(ROUTE.SPENDING)}
           >
             <HiOutlinePresentationChartLine size={iconSize} />
           </AppButton>

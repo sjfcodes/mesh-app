@@ -1,0 +1,19 @@
+{
+  "name": "crud-dynamo-db-table",
+  "version": "1.0.0",
+  "description": "lambda function",
+  "type": "module",
+  "main": "index.test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:dev": "./deploy.sh dev-ddbTable",
+    "deploy:prod": "./deploy.sh ddbTable"
+  },
+  "keywords": [],
+  "author": "sjfcodes@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.241.0",
+    "@aws-sdk/util-dynamodb": "^3.321.1"
+  }
+}

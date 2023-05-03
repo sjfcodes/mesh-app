@@ -32,25 +32,30 @@ const TopVendors = ({ filteredTransactions }: Props) => {
     return namesArray;
   }, [namesObject, vendorCount]);
 
-  const handleSelectVendorCount = (e: any) => setVendorCount(e.target.value);
+  const handleSelectVendorCount = (e: any) =>
+    setVendorCount(parseInt(e.target.value));
   return (
     <div className="top-transactions">
       <div className="header">
-        <h2>
-          Top {vendorCount} {pluralize('transactions', vendorCount)}
-        </h2>
+        <h2>top</h2>
         <select value={vendorCount} onChange={handleSelectVendorCount}>
-          <option value={5}>5 transactions</option>
-          <option value={10}>10 transactions</option>
-          <option value={15}>15 transactions</option>
-          <option value={20}>20 transactions</option>
+          <option value={1}>1</option>
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={15}>15</option>
+          <option value={20}>20</option>
         </select>
+        <div>
+          <h2>{pluralize('transaction', vendorCount)}</h2>
+        </div>
       </div>
       <ol>
         {sortedNames.map((vendor: any[], index) => (
           <li key={index}>
-            <p className="vendor">{vendor[0]}</p>
-            <p className="amount">{currencyFilter(vendor[1])}</p>
+            <div>
+              <p className="vendor">{vendor[0]}</p>
+              <p className="amount">{currencyFilter(vendor[1])}</p>
+            </div>
           </li>
         ))}
       </ol>

@@ -1,11 +1,11 @@
 import * as dotenv from 'dotenv';
-import mockData from '../integration/crudPlaid/mockData/plaid';
+import mockData from '../integration/plaid/mockData/plaid';
 
 dotenv.config();
 
 const config = {
   params: {
-    header: {
+    headers: {
       Authorization: process.env.AUTH_TOKEN,
     },
   },
@@ -16,7 +16,7 @@ const config = {
   Item: {
     original: {
       email: process.env.USER_EMAIL,
-      user_id: process.env.USER_EMAIL,
+      user_id: process.env.USER_ID,
       plaid_item: {
         [mockData.tokenExchange.item_id]: {
           access_token: mockData.tokenExchange.access_token,

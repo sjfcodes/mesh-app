@@ -5,6 +5,7 @@ import { PlaidTransactionType, TransactionType } from '../types';
 
 import { currencyFilter } from '../util';
 import TransactionsTable from './TransactionTable/TransactionsTable';
+import Loader from './Loader/Loader';
 
 export default function TransactionTimeline() {
   const { allTransactions } = useTransactions();
@@ -76,7 +77,7 @@ export default function TransactionTimeline() {
       {formattedTxs.length ? (
         <TransactionsTable transactions={formattedTxs} fullHeight />
       ) : (
-        ''
+        <Loader />
       )}
     </main>
   );

@@ -67,7 +67,7 @@ paths:
                             $ref: '#/components/schemas/DDbItemUserId/properties/user_id'
                   headers:
                     $ref: '#/components/schemas/LambdaResponseHeaders'
-                  status_code:
+                  statusCode:
                     $ref: '#/components/schemas/LambdaStatusCode200'
         '400':
           description: failed operation operation
@@ -148,7 +148,7 @@ paths:
                                 example: a new thing
                   headers:
                     $ref: '#/components/schemas/LambdaResponseHeaders'
-                  status_code:
+                  statusCode:
                     $ref: '#/components/schemas/LambdaStatusCode200'
         '400':
           description: failed operation operation
@@ -207,7 +207,7 @@ paths:
                         example: GL6JcUAcW8neE5x
                   headers:
                     $ref: '#/components/schemas/LambdaResponseHeaders'
-                  status_code:
+                  statusCode:
                     $ref: '#/components/schemas/LambdaStatusCode200'
 
         '400':
@@ -341,7 +341,7 @@ components:
           example: Requested resource not found
         headers:
           $ref: '#/components/schemas/LambdaResponseHeaders'
-        status_code:
+        statusCode:
           $ref: '#/components/schemas/LambdaStatusCode400'
     LambdaStatusCode200:
       type: number

@@ -30,35 +30,37 @@ const TransactionsTable = ({ transactions, fullHeight = false }: Props) => {
   }
 
   return (
-    <div className="ma-transactions-table">
-      <TableHeader />
-      {transactions.map((txData) => {
-        const { transaction: tx } = txData;
-        if (!tx) return null;
-        const toRender = [];
-        const amount = tx.amount * -1;
-        const toDisplay = formatDate(tx.date);
+    <>
+      <div className="ma-transactions-table">
+        <TableHeader />
+        {transactions.map((txData) => {
+          const { transaction: tx } = txData;
+          if (!tx) return null;
+          const toRender = [];
+          const amount = tx.amount * -1;
+          const toDisplay = formatDate(tx.date);
 
-        if (!dateIsCurrent(toDisplay)) {
+          if (!dateIsCurrent(toDisplay)) {
+            toRender.push(
+              <div key={`tr-date-${toDisplay}`} className="ma-table-row-date">
+                <p>{getDateDisplay(tx.date)}</p>
+              </div>
+            );
+          }
+
           toRender.push(
-            <div key={`tr-date-${toDisplay}`} className="ma-table-row-date">
-              <p>{getDateDisplay(tx.date)}</p>
-            </div>
+            <TableRow
+              key={tx.transaction_id}
+              category={tx.category}
+              name={tx.name}
+              amount={amount}
+            />
           );
-        }
 
-        toRender.push(
-          <TableRow
-            key={tx.transaction_id}
-            category={tx.category}
-            name={tx.name}
-            amount={amount}
-          />
-        );
-
-        return toRender;
-      })}
-    </div>
+          return toRender;
+        })}
+      </div>
+    </>
   );
 };
 

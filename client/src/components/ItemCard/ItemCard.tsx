@@ -10,6 +10,7 @@ import usePlaidItems from '../../hooks/usePlaidItems';
 import ButtonUpdateItem from '../ButtonUpdateItem/ButtonUpdateItem';
 
 import './style.scss';
+import Loader from '../Loader/Loader';
 
 interface Props {
   item: ItemType;
@@ -18,7 +19,7 @@ interface Props {
 const ItemCard = ({ item }: Props) => {
   const { institutionsById, getItemInstitution, formatLogoSrc } =
     useInstitutions();
-  const { syncItemTransactions, lastActivity } = usePlaidItems();
+  const { syncItemTransactions, lastActivity, isLoading } = usePlaidItems();
   const [institution, setInstitution] = useState<Institution>({
     country_codes: [],
     institution_id: '',
@@ -49,12 +50,22 @@ const ItemCard = ({ item }: Props) => {
     syncItemTransactions(item.id);
   };
 
+  if (!institution) {
+    return <Loader />;
+  }
+
   return (
     <div className="ma-item-card">
       <div className="ma-item-card-header">
-        <h3 style={{ color: institution.primary_color || '' }}>
-          {institution && institution.name}
-        </h3>
+        {institution &&
+          institution.name
+            ?.split('-')
+            .map((section) => (
+              <h3 style={{ color: institution.primary_color || '' }}>
+                {' '}
+                {section}
+              </h3>
+            ))}
       </div>
       <div className="ma-item-card-body">
         <a href={institution.url || ''} target="_blank" rel="noreferrer">
@@ -69,21 +80,21 @@ const ItemCard = ({ item }: Props) => {
               <h3>last activity</h3>
               <p>{diffBetweenCurrentTime(lastActivity)}</p>
             </li>
+            <li>
+              <h3>last sync</h3>
+              <p>{itemLastSyncDate}</p>
+            </li>
             {/* <li>
               <h3>routing #</h3>
               <p>{institution.routing_numbers}</p>
             </li> */}
             <li>
-              <h3>last sync</h3>
-              <p>{itemLastSyncDate}</p>
-            </li>
-            <li>
-              <DefaultButton onClick={handleSyncItem}>
-                sync transactions
-              </DefaultButton>
-            </li>
-            <li>
               <ButtonUpdateItem itemId={item.id} />
+            </li>
+            <li>
+              <DefaultButton onClick={handleSyncItem} isLoading={isLoading}>
+                sync txs
+              </DefaultButton>
             </li>
           </ul>
         </div>

@@ -20,13 +20,14 @@ div.ma-item-card {
       font-size: inherit;
       text-align: center;
       font-weight: bold;
-      text-transform: uppercase;
+      text-transform: lowercase;
+      opacity: .6;
     }
   }
   & .ma-item-card-body {
     height: 148px;
     display: flex;
-    padding: 0.5rem;
+    padding: 0.7rem;
     & a {
       &:hover {
         color: $theme-color-2-0;
@@ -40,6 +41,7 @@ div.ma-item-card {
         transform: scale(1.025);
       }
       img {
+        opacity: .5;
         height: calc(148px - (0.5em * 2));
         min-width: calc(148px - (0.5em * 2));
       }
@@ -75,7 +77,6 @@ div.ma-item-card {
             padding-right: 0.25rem;
             text-align: end;
             font-weight: bold;
-            text-transform: uppercase;
             font-size: 0.75rem;
           }
           & p {

@@ -2,28 +2,48 @@
 
 div.top-transactions {
   & > div.header {
+    // border: solid 1px red;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    & > h2 {
-      margin-block: 1rem;
-      color: $theme-color-2-0;
+    justify-content: flex-end;
+    margin-inline: 0.5rem;
+    margin-block: 1rem;
+    & div {
+      // border: solid 1px yellow;
+      width: 7rem;
     }
     & > select {
+      margin-inline: 1rem;
+      border: solid 1px $theme-color-background-1;
+      border-radius: $border-radius-0;
+      background-color: $theme-color-background-0;
+      padding: 0.5rem 1rem;
+      color: $theme-color-2-0;
+      font-size: 1.3rem;
     }
   }
   & ol {
-    width: 100%;
-    padding-inline: 2rem;
+    &::-webkit-scrollbar-track {
+      background-color: red;
+      color: green;
+    }
     & li {
-      // border: 1px solid salmon;
-      & p.vendor {
-        text-transform: lowercase;
-      }
-      & p.amount {
-        text-align: end;
-        // margin-block: .5rem;
-        color: red;
+      & div {
+        // border: 1px solid salmon;
+        border-bottom: 1px solid $theme-color-background-1;
+        padding-bottom: 0.6rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        & p.vendor {
+          // border: 1px solid yellow;
+          text-transform: lowercase;
+        }
+        & p.amount {
+          // border: 1px solid green;
+          margin-right: 1rem;
+          color: $theme-color-red-0;
+        }
       }
     }
   }

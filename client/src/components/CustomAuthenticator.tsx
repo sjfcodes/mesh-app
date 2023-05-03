@@ -32,7 +32,7 @@ const components = {
     return (
       <View textAlign="center" padding={tokens.space.large}>
         <Text color={tokens.colors.neutral[80]}>
-          &copy; All Rights Reserved
+          &copy; all rights reserved
         </Text>
       </View>
     );
@@ -46,23 +46,23 @@ const components = {
           padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
           level={3}
         >
-          Welcome to Mesh
+          welcome 2 ⺵esh-app
         </Heading>
       );
     },
     Footer() {
-      const { toResetPassword } = useAuthenticator();
+      // const { toResetPassword } = useAuthenticator();
 
       return (
         <View textAlign="center">
-          <Button
+          {/* <Button
             fontWeight="normal"
             onClick={toResetPassword}
             size="small"
             variation="link"
           >
-            Reset Password
-          </Button>
+            rest password
+          </Button> */}
         </View>
       );
     },

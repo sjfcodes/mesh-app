@@ -45,7 +45,6 @@ export default function CategoriesChart({ filteredTransactions }: Props) {
 
   return (
     <div className="spending-categories">
-      <h4 className="holdingsHeading">Categories</h4>
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>

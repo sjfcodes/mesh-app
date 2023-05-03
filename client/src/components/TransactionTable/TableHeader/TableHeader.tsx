@@ -6,10 +6,10 @@ const TableHeader = () => {
   return (
     <div className="ma-transactions-table-header">
       <div className="ma-table-name">
-        <p>Description</p>
+        <p>description</p>
       </div>
       <div className="ma-table-amount">
-        <p>Amount</p>
+        <p>amount</p>
       </div>
     </div>
   );

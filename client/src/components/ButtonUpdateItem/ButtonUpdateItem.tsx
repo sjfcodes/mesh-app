@@ -15,19 +15,24 @@ const ButtonUpdateItem = ({ itemId }: Props) => {
   } = useUser();
   const { generateLinkToken, linkTokens } = useLink();
   const [token, setToken] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setToken(linkTokens.byItem[itemId]);
   }, [linkTokens, itemId]);
 
   const initiateLink = async () => {
+    setIsLoading(true);
     // only generate a link token upon a click from end-user to add a bank;
     // if done earlier, it may expire before end-user actually activates Link to add a bank.
     await generateLinkToken(userId, itemId);
+    setIsLoading(false);
   };
   return (
     <>
-      <DefaultButton onClick={initiateLink}>Update Login</DefaultButton>
+      <DefaultButton onClick={initiateLink} isLoading={isLoading}>
+        re-link
+      </DefaultButton>
 
       {token != null && token.length > 0 && (
         // Link will not render unless there is a link token

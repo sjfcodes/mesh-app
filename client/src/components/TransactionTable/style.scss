@@ -8,11 +8,17 @@ div.ma-transactions-table {
   vertical-align: text-top;
   font-size: inherit;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   & div.ma-table-row-date {
     // border: 1px solid yellow;
+    opacity: .6;
+    letter-spacing: .1rem;
     & p {
       border-top: 1px solid $theme-color-1-0;
-      color: $theme-color-2-0;
+      // color: $theme-color-2-0;
     }
   }
 }
