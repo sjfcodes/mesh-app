@@ -37,7 +37,6 @@ export function ItemsProvider(props: any) {
     const {
       data: { data },
     } = await apiGetItemsByUser();
-    console.log(data);
     dispatch({
       type: 'SUCCESSFUL_ITEM_GET',
       payload: data.items,

@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useMemo,
-  useReducer,
-} from 'react';
+import React, { createContext, useCallback, useMemo, useReducer } from 'react';
 
 import {
   getItemInstitution as apiGetInstitutionById,
@@ -39,9 +34,9 @@ export const InstitutionsProvider = (props: any) => {
    */
   const getItemInstitution = useCallback(async (id: string) => {
     const {
-      data: { body: institutions },
+      data: { data },
     } = await apiGetInstitutionById(id);
-    dispatch({ type: 'SUCCESSFUL_GET', payload: institutions[0] });
+    dispatch({ type: 'SUCCESSFUL_GET', payload: data[0] });
   }, []);
 
   const getItemAccountBalances = useCallback(
