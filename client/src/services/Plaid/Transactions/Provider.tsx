@@ -1,4 +1,11 @@
-import { createContext, useCallback, useMemo, useReducer, useRef } from 'react';
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import { TransactionType } from '../../../types';
 import { getItemAccountTransactions as apiGetItemAccountTransactions } from '../../../util/api';
 import transactionsReducer from './reducer';
@@ -17,6 +24,7 @@ export const TransactionsContext = createContext<TransactionsContextShape>(
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props: any) {
+  const [isLoading, setIsLoading] = useState({});
   const [itemAccountTransaction, dispatch] = useReducer(
     transactionsReducer,
     initialState
@@ -35,11 +43,15 @@ export function TransactionsProvider(props: any) {
    */
   const getItemAccountTransactions = useCallback(
     async (itemId: string, accountId: string, refresh: boolean) => {
+      setIsLoading({
+        ...isLoading,
+        [accountId]: true,
+      });
       if (!hasRequested.current.byAccount[accountId] || refresh) {
         hasRequested.current.byAccount[accountId] = true;
         const {
           data: {
-            body: { transactions },
+            data: { transactions },
           },
         } = await apiGetItemAccountTransactions(itemId, accountId);
         dispatch({
@@ -47,6 +59,10 @@ export function TransactionsProvider(props: any) {
           payload: { transactions, accountId },
         });
       }
+      setIsLoading({
+        ...isLoading,
+        [accountId]: false,
+      });
     },
     []
   );
@@ -82,11 +98,12 @@ export function TransactionsProvider(props: any) {
       );
 
     return {
+      isLoading,
       allTransactions,
       itemAccountTransaction,
       getItemAccountTransactions,
     };
-  }, [itemAccountTransaction, getItemAccountTransactions]);
+  }, [isLoading, itemAccountTransaction, getItemAccountTransactions]);
 
   return <TransactionsContext.Provider value={value} {...props} />;
 }

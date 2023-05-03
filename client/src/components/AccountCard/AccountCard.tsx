@@ -19,7 +19,7 @@ interface Props {
 export default function AccountCard({ account }: Props) {
   const [transactionsShown, setTransactionsShown] = useState(false);
   const { getItemAccountBalances } = useInstitutions();
-  const { itemAccountTransaction, getItemAccountTransactions } =
+  const { isLoading, itemAccountTransaction, getItemAccountTransactions } =
     useTransactions();
   const { id: accountId, item_id: itemId } = account;
 
@@ -50,7 +50,7 @@ export default function AccountCard({ account }: Props) {
             {currencyFilter(account.current_balance)}
           </p>
         </div>
-        {!itemAccountTransaction[accountId]?.length ? (
+        {isLoading[accountId] ? (
           <Loader />
         ) : (
           <p>{transactionsShown ? 'hide' : 'show'}</p>
