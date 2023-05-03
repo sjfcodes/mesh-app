@@ -4,10 +4,9 @@ import { toast } from 'react-toastify';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import DuplicateItemToastMessage from '../components/DuplicateItemToast';
 
-const { REACT_APP_AWS_API_GATEWAY, REACT_APP_AWS_API_GATEWAY_STAGE } =
-  process.env;
+const { REACT_APP_AWS_API_GW_URL, REACT_APP_AWS_API_GW_STAGE } = process.env;
 
-const url = REACT_APP_AWS_API_GATEWAY + '/' + REACT_APP_AWS_API_GATEWAY_STAGE;
+const url = REACT_APP_AWS_API_GW_URL + '/' + REACT_APP_AWS_API_GW_STAGE;
 
 export const getAuthToken = async () =>
   (await Auth.currentSession()).getIdToken().getJwtToken();
@@ -15,15 +14,14 @@ export const getAuthToken = async () =>
 // setup token
 export const handleLinkTokenCreateUpdate = async (itemId: string | null) => {
   const method = itemId ? 'PUT' : 'POST';
-  const route = itemId ? '/item/update_login' : '/link/token-create';
+  const route = itemId ? '/item/update_login' : '/link/token_create';
 
-  const response = await axios({
+  return await axios({
     method,
     url: url + route,
     headers: { Authorization: await getAuthToken() },
     data: { path: route, payload: { item_id: itemId } },
   });
-  return response;
 };
 
 export const exchangeToken = async (
@@ -33,8 +31,8 @@ export const exchangeToken = async (
   userId: string
 ) => {
   try {
-    const { data } = await axios({
-      url: url + '/item/token-exchange',
+    return await axios({
+      url: url + '/item/token_exchange',
       method: 'POST',
       headers: { Authorization: await getAuthToken() },
       data: {
@@ -48,7 +46,6 @@ export const exchangeToken = async (
       },
     });
 
-    return data;
   } catch (err) {
     // @ts-ignore TODO: resolve this ignore
     if (err.response && err.response.status === 409) {
@@ -107,7 +104,7 @@ export const getItemAccountBalances = async (
 export const getItemInstitution = async (instId: string) =>
   axios({
     method: 'GET',
-    url: url + '/item/institution/',
+    url: url + '/item/institution',
     params: {
       institution_id: instId,
     },

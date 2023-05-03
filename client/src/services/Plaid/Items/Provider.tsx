@@ -35,21 +35,22 @@ export function ItemsProvider(props: any) {
   const getAllItems = useCallback(async () => {
     setIsLoading(true);
     const {
-      data: {
-        body: { items, last_activity },
-      },
+      data: { data },
     } = await apiGetItemsByUser();
+    console.log(data);
     dispatch({
       type: 'SUCCESSFUL_ITEM_GET',
-      payload: items,
+      payload: data.items,
     });
-    setLastActivity(last_activity);
+    setLastActivity(data.last_activity);
     setIsLoading(false);
   }, []);
 
   const syncItemTransactions = useCallback(async (itemId: string) => {
     setIsLoading(true);
-    const { data } = await apiSyncItemTransactions(itemId);
+    const {
+      data: { data },
+    } = await apiSyncItemTransactions(itemId);
     dispatch({ type: 'SUCCESSFUL_ITEM_SYNC', payload: data });
     console.log(data);
     setLastActivity(data.body.tx_cursor_updated_at);
