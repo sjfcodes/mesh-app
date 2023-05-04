@@ -1,13 +1,22 @@
+import { useEffect } from 'react';
 import ButtonLinkBank from '../../components/ButtonLinkBank/ButtonLinkBank';
 import ItemCard from '../../components/ItemCard/ItemCard';
 import Loader from '../../components/Loader/Loader';
-// import SectionHeader from '../../components/SectionHeader/SectionHeader';
+import useAppContext from '../../hooks/useAppContext';
 import usePlaidItems from '../../hooks/usePlaidItems';
+import SectionLoader from '../../components/SectionLoader/SectionLoader';
 
 import './style.scss';
 
 const PlaidItemsPage = () => {
   const { sortedItems } = usePlaidItems();
+  const {
+    useSectionHeader: [_, setSectionHeader],
+  } = useAppContext();
+
+  useEffect(() => {
+    setSectionHeader('accounts');
+  }, [setSectionHeader]);
 
   if (!sortedItems.length) {
     return <Loader />;
@@ -15,18 +24,22 @@ const PlaidItemsPage = () => {
 
   return (
     <main id="ma-plaid-items-page">
-      {/* <SectionHeader text="accounts" /> */}
-
-      <div>
-        {sortedItems.map((item) => (
-          <div id="itemCards" key={item.id}>
-            <ItemCard item={item} />
+      {sortedItems.length ? (
+        <>
+          <div>
+            {sortedItems.map((item) => (
+              <div id="itemCards" key={item.id}>
+                <ItemCard item={item} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="add-item">
-        <ButtonLinkBank />
-      </div>
+          <div className="add-item">
+            <ButtonLinkBank />
+          </div>
+        </>
+      ) : (
+        <SectionLoader />
+      )}
     </main>
   );
 };

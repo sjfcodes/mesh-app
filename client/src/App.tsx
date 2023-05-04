@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Amplify } from 'aws-amplify';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import '@aws-amplify/ui-react/styles.css';
-import 'react-toastify/dist/ReactToastify.min.css';
+// import 'react-toastify/dist/ReactToastify.min.css';
 
 import currentConfig from './auth/config';
 import { LinkProvider } from './services/Plaid/Link/Provider';
@@ -15,23 +15,32 @@ import { ItemsProvider } from './services/Plaid/Items/Provider';
 import CustomAuthenticator from './components/CustomAuthenticator';
 import Header from './components/Header/Header';
 import NavBar from './components/FooterNav/FooterNav';
-import PlaidItemsPage from './pages/PlaidItems/PlaidItemsPage';
-import SpendingInsights from './pages/SpendingInsights/SpendingInsightsPage';
 
 import './App.scss';
-import TransactionTimeline from './components/TransactionTimeline';
 import { ROUTE } from './util/constants';
+import SectionHeader from './components/SectionHeader/SectionHeader';
+import useAppContext from './hooks/useAppContext';
+import SectionLoader from './components/SectionLoader/SectionLoader';
+
+const TimeLine = lazy(() => import('./pages/Timeline/Timeline'));
+const PlaidItemsPage = lazy(() => import('./pages/PlaidItems/PlaidItemsPage'));
+const SpendingInsights = lazy(
+  () => import('./pages/SpendingInsights/SpendingInsightsPage')
+);
 
 Amplify.configure(currentConfig);
 
-function App() {
-  toast.configure({
-    autoClose: 8000,
-    draggable: false,
-    toastClassName: 'box toast__background',
-    bodyClassName: 'toast__body',
-    hideProgressBar: true,
-  });
+const App = () => {
+  const {
+    useSectionHeader: [sectionHeaderText],
+  } = useAppContext();
+  // toast.configure({
+  //   autoClose: 8000,
+  //   draggable: false,
+  //   toastClassName: 'box toast__background',
+  //   bodyClassName: 'toast__body',
+  //   hideProgressBar: true,
+  // });
   return (
     <CustomAuthenticator>
       <InstitutionsProvider>
@@ -41,20 +50,25 @@ function App() {
               <ErrorsProvider>
                 <AssetsProvider>
                   <div className="toast__body"></div>
-                  <Header />
-                  <Routes>
-                    <Route path="/" element={<PlaidItemsPage />} />
-                    <Route path={ROUTE.ACCOUNTS} element={<PlaidItemsPage />} />
-                    <Route
-                      path={ROUTE.TRANSACTIONS}
-                      element={<TransactionTimeline />}
-                    />
-                    <Route
-                      path={ROUTE.SPENDING}
-                      element={<SpendingInsights />}
-                    />
-                  </Routes>
-                  <NavBar />
+                  <Suspense fallback={<SectionLoader />}>
+                    <Header />
+                    {sectionHeaderText && (
+                      <SectionHeader text={sectionHeaderText} />
+                    )}
+                    <Routes>
+                      <Route path="/" element={<TimeLine />} />
+                      <Route
+                        path={ROUTE.ACCOUNTS}
+                        element={<PlaidItemsPage />}
+                      />
+                      <Route path={ROUTE.TRANSACTIONS} element={<TimeLine />} />
+                      <Route
+                        path={ROUTE.SPENDING}
+                        element={<SpendingInsights />}
+                      />
+                    </Routes>
+                    <NavBar />
+                  </Suspense>
                 </AssetsProvider>
               </ErrorsProvider>
             </TransactionsProvider>
@@ -63,6 +77,6 @@ function App() {
       </InstitutionsProvider>
     </CustomAuthenticator>
   );
-}
+};
 
 export default App;

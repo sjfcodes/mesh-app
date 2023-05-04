@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { TransactionType } from '../../types';
-import TableHeader from './TableHeader/TableHeader';
 import TableRow from './TableRow/TableRow';
 
 import './style.scss';
@@ -32,7 +31,6 @@ const TransactionsTable = ({ transactions, fullHeight = false }: Props) => {
   return (
     <>
       <div className="ma-transactions-table">
-        <TableHeader />
         {transactions.map((txData) => {
           const { transaction: tx } = txData;
           if (!tx) return null;

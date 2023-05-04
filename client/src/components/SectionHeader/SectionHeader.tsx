@@ -5,5 +5,9 @@ interface Props {
 }
 
 export default function SectionHeader({ text }: Props) {
-  return <h4 className="ma-section-header">{text}</h4>;
+  return (
+    <div className="ma-section-header">
+      <p>{text}</p>
+    </div>
+  );
 }

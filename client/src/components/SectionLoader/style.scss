@@ -1,0 +1,9 @@
+@import '../../variables.scss';
+
+div.ma-section-loader {
+  // border: 1px solid red;
+  height: $body-height;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

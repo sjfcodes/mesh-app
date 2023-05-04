@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { PlaidTransactionType, TransactionType } from '../types';
 import useTransactions from './usePlaidTransactions';
 import usePlaidItems from './usePlaidItems';
@@ -6,7 +6,20 @@ import { currencyFilter } from '../util';
 
 const useFormattedTransactions = () => {
   const { allAccounts } = usePlaidItems();
-  const { allTransactions } = useTransactions();
+  const { allTransactions, loadingMap, getItemAccountTransactions } =
+    useTransactions();
+
+  useEffect(() => {
+    const hasLoaded = Object.keys(loadingMap);
+    const needsLoading = allAccounts.filter(
+      ({ id }) => !hasLoaded.includes(id)
+    );
+
+    needsLoading.map(({ item_id: itemId, id: accountId }) => {
+      return getItemAccountTransactions(itemId, accountId);
+    });
+  }, [allAccounts]);
+
   const formattedTxs: TransactionType[] = useMemo(() => {
     if (!allTransactions.length) return [];
 
@@ -14,6 +27,7 @@ const useFormattedTransactions = () => {
 
     const processTx = (txData: TransactionType) => {
       const { transaction: tx } = txData;
+      if (!tx.category || !Array.isArray(tx.category)) tx.category = ['~'];
       if (tx?.name?.includes('Online Banking Transfer')) {
         if (tx.name.includes('To')) {
           /**
