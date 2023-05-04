@@ -53,20 +53,15 @@ resource "aws_lambda_function" "this" {
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
   runtime = "nodejs18.x"
-  timeout = 30
+  timeout = 180
 
   environment {
     variables = {
-      USER_TABLE_NAME = (
-        terraform.workspace == "prod" ? "mesh-app.users" : var.table_users_name
-      )
+      USER_TABLE_NAME        = var.table_users_name
       TRANSACTION_TABLE_NAME = var.table_transactions_name
-      TRANSACTION_TABLE_NAME = (
-        terraform.workspace == "prod" ? "mesh-app.plaid.transactions" : var.table_transactions_name
-      )
-      PLAID_CLIENT_ID = var.PLAID_CLIENT_ID
-      PLAID_ENV       = var.PLAID_ENV
-      PLAID_SECRET    = var.PLAID_SECRET
+      PLAID_CLIENT_ID        = var.PLAID_CLIENT_ID
+      PLAID_ENV              = var.PLAID_ENV
+      PLAID_SECRET           = var.PLAID_SECRET
     }
   }
 
