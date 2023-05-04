@@ -33,8 +33,9 @@
   },
   "scripts": {
     "build": "export REACT_APP_USE_API_GW=PROD && react-scripts build",
-    "deploy:prod": "npm run format && npm run build && ./deploy.sh ./build",
+    "deploy:prod": "npm run lint && npm run format && npm run build && ./deploy.sh ./build",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint": "npx eslint --max-warnings 0 .",
     "start": "react-scripts start",
     "start:prod": "export REACT_APP_USE_API_GW=PROD && npm run start",
     "start:dev": "export REACT_APP_USE_API_GW=DEV && npm run start",
