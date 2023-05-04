@@ -2,10 +2,10 @@
 
 header {
   // border: 1px solid red;
-  height: $header-height;
+  min-height: $header-height;
   width: 100%;
   display: flex;
-  align-items: flex-end;
+  // align-items: flex-end;
   justify-content: space-between;
   position: relative;
   // border-bottom: 1px solid $theme-color-1-0;

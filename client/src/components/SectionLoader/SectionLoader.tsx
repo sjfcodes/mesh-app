@@ -1,5 +1,5 @@
 import Loader from '../Loader/Loader';
-import './style.scss'
+import './style.scss';
 
 const SectionLoader = () => {
   return (
