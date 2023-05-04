@@ -24,7 +24,7 @@ export const TransactionsContext = createContext<TransactionsContextShape>(
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props: any) {
-  const [isLoading, setIsLoading] = useState({});
+  const [loadingMap, setLoadingMap] = useState({});
   const [itemAccountTransaction, dispatch] = useReducer(
     transactionsReducer,
     initialState
@@ -43,8 +43,8 @@ export function TransactionsProvider(props: any) {
    */
   const getItemAccountTransactions = useCallback(
     async (itemId: string, accountId: string, refresh: boolean) => {
-      setIsLoading({
-        ...isLoading,
+      setLoadingMap({
+        ...loadingMap,
         [accountId]: true,
       });
       if (!hasRequested.current.byAccount[accountId] || refresh) {
@@ -59,8 +59,8 @@ export function TransactionsProvider(props: any) {
           payload: { transactions, accountId },
         });
       }
-      setIsLoading({
-        ...isLoading,
+      setLoadingMap({
+        ...loadingMap,
         [accountId]: false,
       });
     },
@@ -98,12 +98,12 @@ export function TransactionsProvider(props: any) {
       );
 
     return {
-      isLoading,
+      loadingMap,
       allTransactions,
       itemAccountTransaction,
       getItemAccountTransactions,
     };
-  }, [isLoading, itemAccountTransaction, getItemAccountTransactions]);
+  }, [loadingMap, itemAccountTransaction, getItemAccountTransactions]);
 
   return <TransactionsContext.Provider value={value} {...props} />;
 }

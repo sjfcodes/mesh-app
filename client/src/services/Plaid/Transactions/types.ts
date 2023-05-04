@@ -13,7 +13,7 @@ export type TransactionsAction =
   | { type: 'DELETE_BY_USER'; payload: string };
 
 export interface TransactionsContextShape extends TransactionsState {
-  isLoading: { [accountId: string]: boolean };
+  loadingMap: { [accountId: string]: boolean };
   allTransactions: TransactionType[];
   itemAccountTransaction: { [accountId: string]: TransactionType[] };
   getItemAccountTransactions: (

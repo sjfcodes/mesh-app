@@ -19,17 +19,16 @@ interface Props {
 export default function AccountCard({ account }: Props) {
   const [transactionsShown, setTransactionsShown] = useState(false);
   const { getItemAccountBalances } = useInstitutions();
-  const { isLoading, itemAccountTransaction, getItemAccountTransactions } =
+  const { loadingMap, itemAccountTransaction, getItemAccountTransactions } =
     useTransactions();
   const { id: accountId, item_id: itemId } = account;
 
   const toggleShowTransactions = () => {
     setTransactionsShown((shown) => !shown);
+    if (!itemAccountTransaction[accountId]) {
+      getItemAccountTransactions(itemId, accountId);
+    }
   };
-
-  useEffect(() => {
-    getItemAccountTransactions(itemId, accountId);
-  }, [getItemAccountTransactions, itemAccountTransaction, itemId, accountId]);
 
   useEffect(() => {
     (async () => {
@@ -37,6 +36,12 @@ export default function AccountCard({ account }: Props) {
       // console.log({ response });
     })();
   }, [getItemAccountBalances, itemId, accountId]);
+
+  const getButtonInstruction = () => {
+    if (Array.isArray(itemAccountTransaction[accountId]))
+      return <p>{transactionsShown ? 'hide' : 'show'}</p>;
+    else return <p>load</p>;
+  };
 
   return (
     <div className="ma-account-card">
@@ -50,11 +55,7 @@ export default function AccountCard({ account }: Props) {
             {currencyFilter(account.current_balance)}
           </p>
         </div>
-        {isLoading[accountId] ? (
-          <Loader />
-        ) : (
-          <p>{transactionsShown ? 'hide' : 'show'}</p>
-        )}
+        {loadingMap[accountId] ? <Loader /> : getButtonInstruction()}
       </div>
       <div className="ma-account-footer">
         {transactionsShown && (
