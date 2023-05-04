@@ -14,9 +14,9 @@ const USE_STAGE = {
   PROD: REACT_APP_AWS_API_GW_PROD,
 };
 
-const TARGET_STAGE = REACT_APP_USE_API_GW || 'DEV';
+type stage = 'DEV' | 'PROD';
+const TARGET_STAGE: stage = (REACT_APP_USE_API_GW as stage) || ('DEV' as stage);
 
-// @ts-ignore
 const url = USE_STAGE[TARGET_STAGE];
 
 if (!url) {
@@ -39,9 +39,13 @@ export const handleLinkTokenCreateUpdate = async (itemId: string | null) => {
   });
 };
 
+type Institution = {
+  institution_id: string;
+  name: string;
+};
 export const exchangeToken = async (
   publicToken: string,
-  institution: any,
+  institution: Institution,
   accounts: PlaidLinkOnSuccessMetadata['accounts'],
   userId: string
 ) => {
@@ -60,9 +64,8 @@ export const exchangeToken = async (
         },
       },
     });
-  } catch (err) {
-    // @ts-ignore TODO: resolve this ignore
-    if (err.response && err.response.status === 409) {
+  } catch (err: any) {
+    if (err?.response && err.response.status === 409) {
       toast.error(
         <DuplicateItemToastMessage institutionName={institution.name} />
       );
@@ -99,10 +102,7 @@ export const getAllItemAccounts = async () =>
     headers: { Authorization: await getAuthToken() },
   });
 
-export const getItemAccountBalances = async (
-  itemId: string,
-  accountId: string
-) =>
+export const getItemAccountBalances = async (itemId: string) =>
   axios({
     method: 'GET',
     url: url + `/item/account/balance`,

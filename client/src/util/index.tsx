@@ -80,10 +80,11 @@ export const logEvent = (
   console.log(`Link Event: ${eventName}`, metadata, error);
 };
 
-export const logSuccess = async (
-  { institution, accounts, link_session_id }: PlaidLinkOnSuccessMetadata,
-  userId: string
-) => {
+export const logSuccess = async ({
+  institution,
+  accounts,
+  link_session_id,
+}: PlaidLinkOnSuccessMetadata) => {
   logEvent('onSuccess', {
     institution,
     accounts,
@@ -93,8 +94,7 @@ export const logSuccess = async (
 
 export const logExit = async (
   error: PlaidLinkError | null,
-  { institution, status, link_session_id, request_id }: PlaidLinkOnExitMetadata,
-  userId: string
+  { institution, status, link_session_id, request_id }: PlaidLinkOnExitMetadata
 ) => {
   logEvent(
     'onExit',

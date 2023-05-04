@@ -4,8 +4,6 @@ export type AssetsState = {
   assets: AssetType[];
 };
 
-export interface AssetsContextShape extends AssetsState {}
-
 export type AssetsAction =
   | {
       type: 'SUCCESSFUL_GET';

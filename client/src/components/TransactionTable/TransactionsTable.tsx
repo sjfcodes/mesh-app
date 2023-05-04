@@ -6,10 +6,9 @@ import './style.scss';
 
 type Props = {
   transactions: TransactionType[];
-  fullHeight?: boolean;
 };
 
-const TransactionsTable = ({ transactions, fullHeight = false }: Props) => {
+const TransactionsTable = ({ transactions }: Props) => {
   let { current } = useRef('');
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();

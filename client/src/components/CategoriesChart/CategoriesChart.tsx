@@ -39,7 +39,7 @@ export default function CategoriesChart({ filteredTransactions }: Props) {
 
   const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF42A1'];
 
-  const renderLabel = (value: any) => {
+  const renderLabel = (value: { [key: string]: string }) => {
     return `$${value.value.toLocaleString()}`;
   };
 

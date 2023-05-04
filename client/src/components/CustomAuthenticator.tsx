@@ -35,7 +35,7 @@ const components = {
 
 // https://ui.docs.amplify.aws/react/connected-components/authenticator/customization
 
-const CustomAuthenticator = ({ children }: any) => {
+const CustomAuthenticator = ({ children }: { children: JSX.Element }) => {
   return (
     <Authenticator components={components} loginMechanisms={['email']}>
       {({ signOut, user }) => (

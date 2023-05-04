@@ -11,6 +11,7 @@ const TransactionsTable = lazy(
 const Timeline = () => {
   const { formattedTxs } = useFormattedTransactions();
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     useSectionHeader: [_, setSectionHeader],
   } = useAppContext();
 
@@ -22,7 +23,7 @@ const Timeline = () => {
     <main>
       <Suspense fallback={<SectionLoader />}>
         {formattedTxs.length ? (
-          <TransactionsTable transactions={formattedTxs} fullHeight />
+          <TransactionsTable transactions={formattedTxs} />
         ) : (
           <SectionLoader />
         )}

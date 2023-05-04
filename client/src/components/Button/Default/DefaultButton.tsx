@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { MouseEventHandler, ReactNode } from 'react';
 import './style.scss';
 import Loader from '../../Loader/Loader';
 
 type props = {
   children: ReactNode;
-  onClick: any;
+  onClick: MouseEventHandler<HTMLButtonElement>;
   isLoading: boolean;
 };
 

@@ -7,13 +7,7 @@ const Button = lazy(() => import('plaid-threads/Button'));
 const TextInput = lazy(() => import('plaid-threads/TextInput'));
 const NumberInput = lazy(() => import('plaid-threads/NumberInput'));
 
-interface Props {
-  userId: string;
-}
-
-//  Allows user to input their personal assets such as a house or car.
-
-export default function Asset(props: Props) {
+export default function Asset() {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');

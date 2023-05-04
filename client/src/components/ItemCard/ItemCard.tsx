@@ -41,7 +41,7 @@ const ItemCard = ({ item }: Props) => {
     getItemInstitution(institution_id);
   }, [getItemInstitution, institution_id]);
 
-  const itemLastSyncDate = !!tx_cursor_updated_at
+  const itemLastSyncDate = tx_cursor_updated_at
     ? diffBetweenCurrentTime(tx_cursor_updated_at)
     : 'never';
 
