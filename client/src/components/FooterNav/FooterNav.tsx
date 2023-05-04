@@ -16,7 +16,7 @@ const FooterNav = () => {
   const navigate = useNavigate();
   const { signOut } = useUser();
   const [selected, setSelected] = useState(
-    /*localStorage.getItem('ma-selected-app') || */ ''
+    localStorage.getItem('ma-selected-app') || ''
   );
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const FooterNav = () => {
       if (signOut) signOut({ type: 'SIGN_OUT' });
       route = '/';
     }
-    // localStorage.setItem('ma-selected-app', route);
+    localStorage.setItem('ma-selected-app', route);
     setSelected(route);
   };
   return (

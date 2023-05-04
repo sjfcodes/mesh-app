@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Auth } from 'aws-amplify';
 import { toast } from 'react-toastify';
-import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
+import { PlaidInstitution, PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import DuplicateItemToastMessage from '../components/DuplicateItemToast';
 const {
   REACT_APP_AWS_API_GW_DEV,
@@ -39,13 +39,9 @@ export const handleLinkTokenCreateUpdate = async (itemId: string | null) => {
   });
 };
 
-type Institution = {
-  institution_id: string;
-  name: string;
-};
 export const exchangeToken = async (
   publicToken: string,
-  institution: Institution,
+  institution: PlaidInstitution | null,
   accounts: PlaidLinkOnSuccessMetadata['accounts'],
   userId: string
 ) => {
@@ -57,8 +53,8 @@ export const exchangeToken = async (
       data: {
         payload: {
           accounts,
-          institution_id: institution.institution_id,
-          institution_name: institution.name,
+          institution_id: institution?.institution_id,
+          institution_name: institution?.name,
           public_token: publicToken,
           user_id: userId,
         },
@@ -67,10 +63,10 @@ export const exchangeToken = async (
   } catch (err: any) {
     if (err?.response && err.response.status === 409) {
       toast.error(
-        <DuplicateItemToastMessage institutionName={institution.name} />
+        <DuplicateItemToastMessage institutionName={institution?.name} />
       );
     } else {
-      toast.error(`Error linking ${institution.name}`);
+      toast.error(`Error linking ${institution?.name}`);
     }
   }
 };
@@ -102,7 +98,10 @@ export const getAllItemAccounts = async () =>
     headers: { Authorization: await getAuthToken() },
   });
 
-export const getItemAccountBalances = async (itemId: string) =>
+export const getItemAccountBalances = async (
+  itemId: string,
+  accountId: string
+) =>
   axios({
     method: 'GET',
     url: url + `/item/account/balance`,
@@ -111,6 +110,7 @@ export const getItemAccountBalances = async (itemId: string) =>
     },
     params: {
       item_id: itemId,
+      account_id: accountId,
     },
   });
 

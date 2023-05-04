@@ -38,7 +38,7 @@ export default function LaunchLink(props: Props) {
     metadata: PlaidLinkOnSuccessMetadata
   ) => {
     // log and save metatdata
-    logSuccess(metadata, props.userId);
+    logSuccess(metadata);
     if (props.itemId != null) {
       // update mode: no need to exchange public token
       // await setItemState(props.itemId, 'good');
@@ -63,7 +63,7 @@ export default function LaunchLink(props: Props) {
     metadata: PlaidLinkOnExitMetadata
   ) => {
     // log and save error and metatdata
-    logExit(error, metadata, props.userId);
+    logExit(error, metadata);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(props.userId, props.itemId || null);
     }

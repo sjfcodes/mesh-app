@@ -1,10 +1,10 @@
 import React, { createContext, useMemo, useReducer } from 'react';
 
 import assetsReducer from './reducer';
-import { AssetsContextShape } from './types';
+import { AssetsState } from './types';
 
-const initialState: AssetsContextShape = { assets: [] };
-export const AssetsContext = createContext<AssetsContextShape>(initialState);
+const initialState: AssetsState = { assets: [] };
+export const AssetsContext = createContext<AssetsState>(initialState);
 
 /**
  * @desc Maintains the Properties context state
