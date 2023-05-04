@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { Amplify } from 'aws-amplify';
+import { Amplify } from '@aws-amplify/core/lib-esm/Amplify';
 // import { toast } from 'react-toastify';
 import '@aws-amplify/ui-react/styles.css';
 // import 'react-toastify/dist/ReactToastify.min.css';
@@ -16,11 +16,12 @@ import CustomAuthenticator from './components/CustomAuthenticator';
 import Header from './components/Header/Header';
 import NavBar from './components/FooterNav/FooterNav';
 
-import './App.scss';
 import { ROUTE } from './util/constants';
 import SectionHeader from './components/SectionHeader/SectionHeader';
 import useAppContext from './hooks/useAppContext';
 import SectionLoader from './components/SectionLoader/SectionLoader';
+
+import './App.scss';
 
 const TimeLine = lazy(() => import('./pages/Timeline/Timeline'));
 const PlaidItemsPage = lazy(() => import('./pages/PlaidItems/PlaidItemsPage'));
