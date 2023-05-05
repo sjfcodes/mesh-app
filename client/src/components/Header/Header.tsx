@@ -25,12 +25,14 @@ const Header = () => {
 
   return (
     <header>
-      <div className="ma-header-left" onClick={reloadPage}>
-        <UserCard />
+      <div>
+        <div className="ma-header-left" onClick={reloadPage}>
+          <UserCard />
+        </div>
+        <h1 onClick={copyAuthToClipboard}>
+          ⺵esh
+        </h1>
       </div>
-      <h1 onClick={copyAuthToClipboard} className="crosshatch">
-        ⺵esh
-      </h1>
     </header>
   );
 };

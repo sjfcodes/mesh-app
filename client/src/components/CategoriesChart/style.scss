@@ -1,10 +1,18 @@
 @import '../../variables.scss';
 
 div.spending-categories {
-  // border: 1px solid red;
+  border: 1px solid yellow;
+  height: $spending-categories-height;
+  width: 100%;
+  background-color: $theme-color-background-0;
+  z-index: 1;
+  
+  position: fixed;
+  top: calc($header-height + $section-title-height);
+
   & div.chart-wrapper {
     text-transform: lowercase;
-    height: 25vh;
+    height: $spending-categories-height;
     width: 100%;
     opacity: 0.5;
   }

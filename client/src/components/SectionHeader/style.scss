@@ -1,12 +1,18 @@
 @import '../../variables.scss';
 
 div.ma-section-header {
-  // border: 1px solid red;
-  // position: absolute;
-  margin: .5rem 2rem;
+  border: 1px solid orange;
+  height: $section-title-height;
+  width: 100%;
+  background-color: $theme-color-background-0;
+  z-index: 1;
+  
+  position: fixed;
+  top: $header-height;
+
+  padding-left: 2rem;
   p {
     color: $theme-color-1-0;
-    // text-decoration: underline;
     font-size: 1rem;
   }
 }
