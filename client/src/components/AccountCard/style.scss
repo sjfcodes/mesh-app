@@ -4,7 +4,7 @@ div.ma-account-card {
   // border: 1px solid red;
   border: 1px solid $theme-color-1-0;
   border-radius: $border-radius-0;
-  margin: .5rem;
+  margin: 0.5rem;
   & div.ma-account-header {
     margin: 1rem;
     display: flex;
@@ -18,8 +18,14 @@ div.ma-account-card {
       }
       & > p.ma-account-subtype {
         // border: 1px solid blue;
-        width: 5rem;
-        margin-left: 1rem;
+        width: 7rem;
+        margin-inline: 1rem;
+        &::before {
+          content: '[ ';
+        }
+        &::after {
+          content: ' ]';
+        }
       }
       & > p.ma-account-balance {
         &::before {
@@ -33,5 +39,24 @@ div.ma-account-card {
   }
   & div.ma-account-footer {
     // border: 1px solid cyan;
+  }
+}
+
+div.ma-box-name {
+  // border: 1px solid cyan;
+  margin-right: 1rem;
+  width: 4rem;
+}
+div.ma-box-value {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  & p:first-child {
+    color: $theme-color-background-1;
+  }
+  & p:last-child {
+    // border: 1px solid cyan;
+    width: 4.2rem;
+    text-align: end;
   }
 }

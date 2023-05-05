@@ -24,7 +24,7 @@ export function currencyFilter(value: number) {
 
   const isNegative = value < 0;
   const displayValue = value < 0 ? -value : value;
-  return `${isNegative ? '' : ''}$${displayValue
+  return `${isNegative ? '' : ''}${displayValue
     .toFixed(2)
     .replace(/(\d)(?=(\d{3})+(\.|$))/g, '$1,')}`;
 }

@@ -1,14 +1,13 @@
 import React, { Suspense, lazy, useState } from 'react';
-import startCase from 'lodash/startCase';
-import toLower from 'lodash/toLower';
+import { AccountBase } from 'plaid';
 
 import { currencyFilter } from '../../util/helpers';
 import { AccountType } from '../../types';
 import useTransactions from '../../hooks/usePlaidTransactions';
 import Loader from '../Loader/Loader';
+import SectionLoader from '../SectionLoader/SectionLoader';
 
 import './style.scss';
-import SectionLoader from '../SectionLoader/SectionLoader';
 
 const TransactionsTable = lazy(
   () => import('../TransactionTable/TransactionsTable')
@@ -16,15 +15,20 @@ const TransactionsTable = lazy(
 
 interface Props {
   account: AccountType;
+  balance: AccountBase;
   useSelectedAccount?: [string, React.Dispatch<React.SetStateAction<string>>];
 }
 
-export default function AccountCard({ account, useSelectedAccount }: Props) {
+export default function AccountCard({
+  account,
+  balance,
+  useSelectedAccount,
+}: Props) {
+  const { id: accountId, item_id: itemId } = account;
   const [selectedAccount, setSelectedAccount] =
     useSelectedAccount || useState('');
   const { loadingMap, itemAccountTransaction, getItemAccountTransactions } =
     useTransactions();
-  const { id: accountId, item_id: itemId } = account;
 
   const toggleShowTransactions = () => {
     setSelectedAccount((current) => (current === accountId ? '' : accountId));
@@ -34,26 +38,28 @@ export default function AccountCard({ account, useSelectedAccount }: Props) {
     }
   };
 
-  const getButtonInstruction = () => {
-    if (Array.isArray(itemAccountTransaction[accountId]))
-      return <p>{selectedAccount ? 'hide' : 'show'}</p>;
-    else return <p>load</p>;
-  };
-
   return (
     <Suspense fallback={<SectionLoader />}>
       <div className="ma-account-card">
         <div className="ma-account-header" onClick={toggleShowTransactions}>
           <div className="ma-account-details">
-            <h3>[{account.name}]</h3>
-            <p className="ma-account-subtype">
-              {startCase(toLower(account.subtype))}
-            </p>
+            {/* <p className="ma-account-subtype">{balance.subtype}</p>
+            <p>[{account.name}]</p>
             <p className="ma-account-balance">
-              {currencyFilter(account.current_balance)}
-            </p>
+              {currencyFilter(balance.balances.available || 0)}
+            </p> */}
+            <div className="ma-box-name">{balance.subtype}</div>
+            <div className="ma-box-name">{account.name}</div>
           </div>
-          {loadingMap[accountId] ? <Loader /> : getButtonInstruction()}
+
+          {loadingMap[accountId] ? (
+            <Loader />
+          ) : (
+            <div className="ma-box-value">
+              <p>$</p>
+              <p>{currencyFilter(balance.balances.available || 0)}</p>
+            </div>
+          )}
         </div>
         <div className="ma-account-footer">
           {selectedAccount === accountId && (

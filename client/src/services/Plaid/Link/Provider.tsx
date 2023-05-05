@@ -39,7 +39,6 @@ export function LinkProvider(props: any) {
       } = await handleLinkTokenCreateUpdate(itemId);
       if (data.link_token) {
         const token = data.link_token;
-        console.log('success', data);
 
         if (itemId != null) {
           dispatch({
@@ -52,7 +51,6 @@ export function LinkProvider(props: any) {
         }
       } else {
         dispatch({ type: 'LINK_TOKEN_ERROR', error: data });
-        console.log('error', data);
       }
       setIsLoading(false);
     },

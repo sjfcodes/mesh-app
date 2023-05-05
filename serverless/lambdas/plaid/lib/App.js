@@ -99,7 +99,7 @@ class App {
   async handleGetItemAccounts() {
     const { accounts } = await this.ddbClient.readUserAccounts(this.user.email);
 
-    return { accounts };
+    return accounts;
   }
 
   async handleGetItemAccountBalances() {
@@ -120,16 +120,7 @@ class App {
       accountIds
     );
 
-    console.log(accounts);
-
-    const formatted = accounts.reduce((prev, curr) => {
-      return {
-        ...prev,
-        [curr.account_id]: curr,
-      };
-    }, {});
-
-    return { account: formatted };
+    return accounts
   }
 
   async handleGetUserAccountTransactions() {

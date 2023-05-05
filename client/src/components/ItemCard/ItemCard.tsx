@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useState } from 'react';
-import { Institution } from 'plaid/dist/api';
+import { AccountBase, Institution } from 'plaid/dist/api';
 
 import { diffBetweenCurrentTime, formatLogoSrc } from '../../util/helpers';
 import { ItemType } from '../../types';
@@ -9,8 +9,10 @@ import DefaultButton from '../Button/Default/DefaultButton';
 import usePlaidItems from '../../hooks/usePlaidItems';
 import ButtonUpdateItem from '../ButtonUpdateItem/ButtonUpdateItem';
 
-import './style.scss';
 import Loader from '../Loader/Loader';
+import { AccountId } from '../../services/Plaid/Institutions/types';
+
+import './style.scss';
 
 interface Props {
   item: ItemType;
@@ -30,14 +32,16 @@ const defaultInstitution = {
 
 const ItemCard = ({ item }: Props) => {
   const {
+    accountBalances,
     institutionsById,
     getInstitutionsById,
     getInstitutionAccountBalances,
   } = useInstitutions();
   const { syncItemTransactions, lastActivity, isLoading } = usePlaidItems();
-  const [institution, setInstitution] =
-    useState<Institution>(defaultInstitution);
-  const useSelectedAccount = useState('');
+  const useSelectedAccount = useState('' as AccountId);
+  const [institution, setInstitution] = useState(
+    defaultInstitution as Institution
+  );
 
   useEffect(() => {
     setInstitution(institutionsById[item.institution_id] || {});
@@ -58,6 +62,26 @@ const ItemCard = ({ item }: Props) => {
   const handleSyncItem = (e: MouseEvent) => {
     e.stopPropagation();
     syncItemTransactions(item.id);
+  };
+
+  const getAccountCards = () => {
+    if (!accountBalances || !Array.isArray(accountBalances)) {
+      return [];
+    }
+
+    return item.accounts.map((account) => {
+      const balance = accountBalances.filter(
+        (balance) => balance.account_id === account.id
+      );
+      return (
+        <AccountCard
+          key={account.id}
+          account={account}
+          balance={balance[0]}
+          useSelectedAccount={useSelectedAccount}
+        />
+      );
+    });
   };
 
   if (!institution) {
@@ -92,10 +116,6 @@ const ItemCard = ({ item }: Props) => {
               <h3>last sync</h3>
               <p>{itemLastSyncDate}</p>
             </li>
-            {/* <li>
-              <h3>routing #</h3>
-              <p>{institution.routing_numbers}</p>
-            </li> */}
             <li>
               <ButtonUpdateItem itemId={item.id} />
             </li>
@@ -107,16 +127,7 @@ const ItemCard = ({ item }: Props) => {
           </ul>
         </div>
       </div>
-      <div className="ma-item-card-footer">
-        {item.accounts.length > 0 &&
-          item.accounts.map((account) => (
-            <AccountCard
-              key={account.id}
-              account={account}
-              useSelectedAccount={useSelectedAccount}
-            />
-          ))}
-      </div>
+      <div className="ma-item-card-footer">{getAccountCards()}</div>
     </div>
   );
 };
