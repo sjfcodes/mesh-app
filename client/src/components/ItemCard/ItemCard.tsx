@@ -1,7 +1,7 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { Institution } from 'plaid/dist/api';
 
-import { diffBetweenCurrentTime } from '../../util';
+import { diffBetweenCurrentTime, formatLogoSrc } from '../../util';
 import { ItemType } from '../../types';
 import useInstitutions from '../../hooks/usePlaidInstitutions';
 import AccountCard from '../AccountCard/AccountCard';
@@ -29,8 +29,11 @@ const defaultInstitution = {
 };
 
 const ItemCard = ({ item }: Props) => {
-  const { institutionsById, getItemInstitution, formatLogoSrc } =
-    useInstitutions();
+  const {
+    institutionsById,
+    getInstitutionsById,
+    getInstitutionAccountBalances,
+  } = useInstitutions();
   const { syncItemTransactions, lastActivity, isLoading } = usePlaidItems();
   const [institution, setInstitution] =
     useState<Institution>(defaultInstitution);
@@ -41,8 +44,12 @@ const ItemCard = ({ item }: Props) => {
   }, [institutionsById, item.institution_id]);
 
   useEffect(() => {
-    getItemInstitution(item.institution_id);
-  }, [getItemInstitution, item.institution_id]);
+    getInstitutionsById(item.institution_id);
+  }, [getInstitutionsById, item.institution_id]);
+
+  useEffect(() => {
+    getInstitutionAccountBalances(item.id);
+  }, [getInstitutionAccountBalances]);
 
   const itemLastSyncDate = item.tx_cursor_updated_at
     ? diffBetweenCurrentTime(item.tx_cursor_updated_at)

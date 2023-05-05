@@ -1,12 +1,10 @@
-import React, { Suspense, lazy, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import startCase from 'lodash/startCase';
 import toLower from 'lodash/toLower';
 
 import { currencyFilter } from '../../util';
 import { AccountType } from '../../types';
 import useTransactions from '../../hooks/usePlaidTransactions';
-
-import useInstitutions from '../../hooks/usePlaidInstitutions';
 import Loader from '../Loader/Loader';
 
 import './style.scss';
@@ -24,7 +22,6 @@ interface Props {
 export default function AccountCard({ account, useSelectedAccount }: Props) {
   const [selectedAccount, setSelectedAccount] =
     useSelectedAccount || useState('');
-  const { getItemAccountBalances } = useInstitutions();
   const { loadingMap, itemAccountTransaction, getItemAccountTransactions } =
     useTransactions();
   const { id: accountId, item_id: itemId } = account;
@@ -36,13 +33,6 @@ export default function AccountCard({ account, useSelectedAccount }: Props) {
       getItemAccountTransactions(itemId, accountId);
     }
   };
-
-  useEffect(() => {
-    // (async () => {
-    //   // const response = await getItemAccountBalances(itemId, accountId);
-    //   // console.log({ response });
-    // })();
-  }, [getItemAccountBalances, itemId, accountId]);
 
   const getButtonInstruction = () => {
     if (Array.isArray(itemAccountTransaction[accountId]))
