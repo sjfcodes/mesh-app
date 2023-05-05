@@ -1,5 +1,5 @@
 import React from 'react';
-import { currencyFilter } from '../../../util';
+import { currencyFilter } from '../../../util/helpers';
 
 import './style.scss';
 

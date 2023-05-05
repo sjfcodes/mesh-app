@@ -2,7 +2,7 @@ import React, { Suspense, lazy, useState } from 'react';
 import startCase from 'lodash/startCase';
 import toLower from 'lodash/toLower';
 
-import { currencyFilter } from '../../util';
+import { currencyFilter } from '../../util/helpers';
 import { AccountType } from '../../types';
 import useTransactions from '../../hooks/usePlaidTransactions';
 import Loader from '../Loader/Loader';

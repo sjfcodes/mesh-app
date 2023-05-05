@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { PlaidTransactionType, TransactionType } from '../types';
 import useTransactions from './usePlaidTransactions';
 import usePlaidItems from './usePlaidItems';
-import { currencyFilter } from '../util';
+import { currencyFilter } from '../util/helpers';
 
 const useFormattedTransactions = () => {
   const { allAccounts } = usePlaidItems();
