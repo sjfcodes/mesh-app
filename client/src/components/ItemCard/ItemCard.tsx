@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useState } from 'react';
-import { AccountBase, Institution } from 'plaid/dist/api';
+import { Institution } from 'plaid/dist/api';
 
 import { diffBetweenCurrentTime, formatLogoSrc } from '../../util/helpers';
 import { ItemType } from '../../types';
