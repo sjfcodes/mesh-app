@@ -115,7 +115,7 @@ class App {
       itemId
     );
 
-    const { accounts } = await this.plaidClient.getItemAccountBalances(
+    const { accounts } = await this.plaidClient.getInstitutionAccountBalances(
       accessToken,
       accountIds
     );
@@ -160,7 +160,7 @@ class App {
   }
 
   async handleGetItemInstitutionById() {
-    const data = await this.plaidClient.getItemInstitution(
+    const data = await this.plaidClient.getInstitutionsById(
       this.queryString.institution_id
     );
 

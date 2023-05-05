@@ -71,7 +71,7 @@ class PlaidClient {
     return data;
   }
 
-  async getItemAccountBalances(accessToken, accountIds) {
+  async getInstitutionAccountBalances(accessToken, accountIds) {
     if (!accessToken) throw new Error('missing accessToken!');
 
     const request = { access_token: accessToken };
@@ -84,7 +84,7 @@ class PlaidClient {
     return { accounts };
   }
 
-  async getItemInstitution(instId) {
+  async getInstitutionsById(instId) {
     if (!instId) throw new Error('missing required arguments!');
     const request = {
       institution_id: instId,

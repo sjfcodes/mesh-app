@@ -98,7 +98,7 @@ export const getAllItemAccounts = async () =>
     headers: { Authorization: await getAuthToken() },
   });
 
-export const getItemAccountBalances = async (
+export const getInstitutionAccountBalances = async (
   itemId: string,
   accountId: string
 ) =>
@@ -115,7 +115,7 @@ export const getItemAccountBalances = async (
   });
 
 // institutions
-export const getItemInstitution = async (instId: string) =>
+export const getInstitutionsById = async (instId: string) =>
   axios({
     method: 'GET',
     url: url + '/item/institution',
