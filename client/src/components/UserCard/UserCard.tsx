@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import usePlaidItems from '../../hooks/usePlaidItems';
 
 import useUser from '../../hooks/useUser';
-import { pluralize } from '../../util';
+import { pluralize } from '../../util/helpers';
 import AppLogo from '../AppLogo/AppLogo';
 
 import './styles.scss';

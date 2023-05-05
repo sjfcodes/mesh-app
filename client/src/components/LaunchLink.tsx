@@ -10,7 +10,7 @@ import {
 } from 'react-plaid-link';
 import { useNavigate } from 'react-router-dom';
 
-import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
+import { logEvent, logSuccess, logExit } from '../util/helpers'; // functions to log and save errors and metadata from Link events.
 import useErrors from '../hooks/useErrors';
 import useLink from '../hooks/useLink';
 import { exchangeToken } from '../util/api';

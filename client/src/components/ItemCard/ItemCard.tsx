@@ -1,7 +1,7 @@
 import { MouseEvent, useEffect, useState } from 'react';
 import { Institution } from 'plaid/dist/api';
 
-import { diffBetweenCurrentTime, formatLogoSrc } from '../../util';
+import { diffBetweenCurrentTime, formatLogoSrc } from '../../util/helpers';
 import { ItemType } from '../../types';
 import useInstitutions from '../../hooks/usePlaidInstitutions';
 import AccountCard from '../AccountCard/AccountCard';

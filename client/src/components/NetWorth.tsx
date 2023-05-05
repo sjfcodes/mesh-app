@@ -2,7 +2,7 @@ import React from 'react';
 import IconButton from 'plaid-threads/IconButton';
 import Trash from 'plaid-threads/Icons/Trash';
 
-import { currencyFilter, pluralize } from '../util';
+import { currencyFilter, pluralize } from '../util/helpers';
 import Asset from './Asset';
 import { AccountType, AssetType } from '../types';
 
