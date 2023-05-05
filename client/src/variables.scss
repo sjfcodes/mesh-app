@@ -7,5 +7,7 @@ $theme-color-green-0:  rgba(172, 255, 47, 0.556);
 $border-radius-0: .5rem; 
 
 $header-height: 7vh;
+$section-title-height: 3vh;
+$spending-categories-height: 25vh; 
 $footer-height: 12vh;
 $body-height: calc((100vh - ($header-height + $footer-height)) - 2rem);
