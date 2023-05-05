@@ -99,8 +99,8 @@ export const handler = async (event) => {
   } catch (error) {
     console.error(error);
     response.message = error.message;
-    if (error?.response) {
-      response = error.response;
+    if (error?.response?.data) {
+      response = error.response.data;
     }
     statusCode = 500;
   }
