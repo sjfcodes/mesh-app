@@ -14,7 +14,8 @@
     "logs:dev:plaid": "aws logs tail \"/aws/lambda/dev_plaid\" --follow --profile mesh-app_terraform_deployer",
     "logs:dev:ddbTable": "aws logs tail \"/aws/lambda/dev_ddbTable\" --follow --profile mesh-app_terraform_deployer",
     "logs:prod:plaid": "aws logs tail \"/aws/lambda/prod_plaid\" --follow --profile mesh-app_terraform_deployer",
-    "logs:prod:ddbTable": "aws logs tail \"/aws/lambda/prod_ddbTable\" --follow --profile mesh-app_terraform_deployer"
+    "logs:prod:ddbTable": "aws logs tail \"/aws/lambda/prod_ddbTable\" --follow --profile mesh-app_terraform_deployer",
+    "sbx": "export AWS_PROFILE=mesh-app_terraform_deployer && nodemon sandbox.js"
   },
   "keywords": [],
   "author": "",
