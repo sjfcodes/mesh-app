@@ -1,20 +1,19 @@
-import React, { createContext, useCallback, useMemo, useReducer } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 
 import {
-  getItemInstitution as apiGetInstitutionById,
-  getItemAccountBalances as apiGetItemAccountBalances,
+  getInstitutionsById as apiGetInstitutionById,
+  getInstitutionAccountBalances as apiGetItemAccountBalances,
 } from '../../../util/api';
-import plaidInstitutionsReducer from './reducer';
+import plaidInstitutionsReducer, { GET_INSTITUTION } from './reducer';
 import { InstitutionsContextShape } from './types';
 
 const initialState = {};
-
-/**
- * @desc Prepends base64 encoded logo src for use in image tags
- */
-function formatLogoSrc(src: string) {
-  return src && `data:image/jpeg;base64,${src}`;
-}
 
 export const InstitutionsContext = createContext<InstitutionsContextShape>(
   initialState as InstitutionsContextShape
@@ -24,6 +23,7 @@ export const InstitutionsContext = createContext<InstitutionsContextShape>(
  * @desc Maintains the Institutions context state and provides functions to update that state.
  */
 export const InstitutionsProvider = (props: any) => {
+  const [accountBalances, setAccountBalances] = useState({});
   const [institutionsById, dispatch] = useReducer(
     plaidInstitutionsReducer,
     initialState
@@ -32,17 +32,19 @@ export const InstitutionsProvider = (props: any) => {
   /**
    * @desc Requests details for a single Institution.
    */
-  const getItemInstitution = useCallback(async (id: string) => {
+  const getInstitutionsById = useCallback(async (id: string) => {
     const {
       data: { data },
     } = await apiGetInstitutionById(id);
-    dispatch({ type: 'SUCCESSFUL_GET', payload: data[0] });
+    dispatch({ type: GET_INSTITUTION, payload: data[0] });
   }, []);
 
-  const getItemAccountBalances = useCallback(
+  const getInstitutionAccountBalances = useCallback(
     async (itemId: string, accountId: string) => {
-      const data = apiGetItemAccountBalances(itemId, accountId);
-      console.log(data);
+      const {
+        data: { data },
+      } = await apiGetItemAccountBalances(itemId, accountId);
+      setAccountBalances(data);
     },
     []
   );
@@ -52,16 +54,18 @@ export const InstitutionsProvider = (props: any) => {
    * these from being rebuilt on every render unless institutionsById is updated in the reducer.
    */
   const value = useMemo(() => {
-    const allInstitutions = Object.values(institutionsById);
     return {
-      allInstitutions,
+      accountBalances,
       institutionsById,
-      getItemInstitution,
-      getInstitutionsById: getItemInstitution,
-      getItemAccountBalances,
-      formatLogoSrc,
+      getInstitutionsById,
+      getInstitutionAccountBalances,
     };
-  }, [institutionsById, getItemInstitution, getItemAccountBalances]);
+  }, [
+    accountBalances,
+    institutionsById,
+    getInstitutionsById,
+    getInstitutionAccountBalances,
+  ]);
 
   return <InstitutionsContext.Provider value={value} {...props} />;
 };
