@@ -60,6 +60,14 @@ export function formatDate(timestamp: string) {
 }
 
 /**
+ * @desc Prepends base64 encoded logo src for use in image tags
+ */
+export function formatLogoSrc(src: string | null | undefined): string {
+  if (!src) return '';
+  return `data:image/jpeg;base64,${src}`;
+}
+
+/**
  * @desc Checks the difference between the current time and a provided time
  */
 export function diffBetweenCurrentTime(timestamp: string) {
