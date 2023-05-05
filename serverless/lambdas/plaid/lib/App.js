@@ -18,14 +18,14 @@ class App {
     const tokenPayload = token.split('.')[1];
     const decrypted = JSON.parse(Buffer.from(tokenPayload, 'base64'));
 
-    console.log({ decrypted });
+    // console.log({ decrypted });
 
     const user = await this.ddbClient.readUserByTokenEmail(
       decrypted.email,
       this.requestPath
     );
 
-    console.log('setting user:', user);
+    // console.log('setting user:', user);
     this.user = user;
   }
 

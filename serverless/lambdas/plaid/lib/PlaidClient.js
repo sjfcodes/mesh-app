@@ -10,9 +10,7 @@ dotenv.config();
 const {
   PLAID_CLIENT_ID,
   PLAID_SECRET,
-  PLAID_ENV
-  //   PLAID_SANDBOX_REDIRECT_URI,
-  //   PLAID_DEVELOPMENT_REDIRECT_URI,
+  PLAID_ENV,
 } = process.env;
 
 const configuration = new Configuration({
@@ -75,29 +73,13 @@ class PlaidClient {
 
   async getItemAccountBalances(accessToken, accountIds) {
     if (!accessToken) throw new Error('missing accessToken!');
-    if (!accountIds.length) throw new Error('missing accountIds!');
-    /**
-     * NOTE: plaid request takes almost ~50 seconds to complete.
-     * 
-     * #. account balance can relate to txCursor.
-     * #. if item txCursor changes, 
-     *    - update account balances
-     *    - update txCursor for new balances.
-     */
 
-    console.log({ accountIds });
+    const request = { access_token: accessToken };
+    if (accountIds.length) request.options = { account_ids: accountIds };
 
-    const request = {
-      access_token: accessToken,
-      options: {
-        account_ids: accountIds,
-      },
-    };
-
-    const response = await this.client.accountsBalanceGet(request);
+    const response = await this.client.accountsGet(request);
+    // const response = await this.client.accountsBalanceGet(request);
     const accounts = response.data.accounts;
-
-    console.log({ accounts });
 
     return { accounts };
   }
