@@ -18,32 +18,35 @@ const TransactionsTable = lazy(
 
 interface Props {
   account: AccountType;
+  useSelectedAccount?: [string, React.Dispatch<React.SetStateAction<string>>];
 }
 
-export default function AccountCard({ account }: Props) {
-  const [transactionsShown, setTransactionsShown] = useState(false);
+export default function AccountCard({ account, useSelectedAccount }: Props) {
+  const [selectedAccount, setSelectedAccount] =
+    useSelectedAccount || useState('');
   const { getItemAccountBalances } = useInstitutions();
   const { loadingMap, itemAccountTransaction, getItemAccountTransactions } =
     useTransactions();
   const { id: accountId, item_id: itemId } = account;
 
   const toggleShowTransactions = () => {
-    setTransactionsShown((shown) => !shown);
+    setSelectedAccount((current) => (current === accountId ? '' : accountId));
+
     if (!itemAccountTransaction[accountId]) {
       getItemAccountTransactions(itemId, accountId);
     }
   };
 
   useEffect(() => {
-    (async () => {
-      // const response = await getItemAccountBalances(itemId, accountId);
-      // console.log({ response });
-    })();
+    // (async () => {
+    //   // const response = await getItemAccountBalances(itemId, accountId);
+    //   // console.log({ response });
+    // })();
   }, [getItemAccountBalances, itemId, accountId]);
 
   const getButtonInstruction = () => {
     if (Array.isArray(itemAccountTransaction[accountId]))
-      return <p>{transactionsShown ? 'hide' : 'show'}</p>;
+      return <p>{selectedAccount ? 'hide' : 'show'}</p>;
     else return <p>load</p>;
   };
 
@@ -63,7 +66,7 @@ export default function AccountCard({ account }: Props) {
           {loadingMap[accountId] ? <Loader /> : getButtonInstruction()}
         </div>
         <div className="ma-account-footer">
-          {transactionsShown && (
+          {selectedAccount === accountId && (
             <TransactionsTable
               transactions={itemAccountTransaction[accountId]}
             />

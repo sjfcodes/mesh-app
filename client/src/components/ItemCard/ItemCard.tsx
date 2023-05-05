@@ -16,33 +16,36 @@ interface Props {
   item: ItemType;
 }
 
+const defaultInstitution = {
+  country_codes: [],
+  institution_id: '',
+  logo: '',
+  name: '',
+  oauth: false,
+  primary_color: '',
+  products: [],
+  routing_numbers: [],
+  url: '',
+};
+
 const ItemCard = ({ item }: Props) => {
   const { institutionsById, getItemInstitution, formatLogoSrc } =
     useInstitutions();
   const { syncItemTransactions, lastActivity, isLoading } = usePlaidItems();
-  const [institution, setInstitution] = useState<Institution>({
-    country_codes: [],
-    institution_id: '',
-    logo: '',
-    name: '',
-    oauth: false,
-    primary_color: '',
-    products: [],
-    routing_numbers: [],
-    url: '',
-  });
-  const { institution_id, tx_cursor_updated_at } = item;
+  const [institution, setInstitution] =
+    useState<Institution>(defaultInstitution);
+  const useSelectedAccount = useState('');
 
   useEffect(() => {
-    setInstitution(institutionsById[institution_id] || {});
-  }, [institutionsById, institution_id]);
+    setInstitution(institutionsById[item.institution_id] || {});
+  }, [institutionsById, item.institution_id]);
 
   useEffect(() => {
-    getItemInstitution(institution_id);
-  }, [getItemInstitution, institution_id]);
+    getItemInstitution(item.institution_id);
+  }, [getItemInstitution, item.institution_id]);
 
-  const itemLastSyncDate = tx_cursor_updated_at
-    ? diffBetweenCurrentTime(tx_cursor_updated_at)
+  const itemLastSyncDate = item.tx_cursor_updated_at
+    ? diffBetweenCurrentTime(item.tx_cursor_updated_at)
     : 'never';
 
   const handleSyncItem = (e: MouseEvent) => {
@@ -100,7 +103,11 @@ const ItemCard = ({ item }: Props) => {
       <div className="ma-item-card-footer">
         {item.accounts.length > 0 &&
           item.accounts.map((account) => (
-            <AccountCard key={account.id} account={account} />
+            <AccountCard
+              key={account.id}
+              account={account}
+              useSelectedAccount={useSelectedAccount}
+            />
           ))}
       </div>
     </div>
