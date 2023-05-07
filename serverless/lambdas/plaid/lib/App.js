@@ -219,6 +219,7 @@ class App {
       tx_cursor_updated_at,
     };
   }
+
   async updateItemLogin() {
     const { accessToken } = await this.ddbClient.readItemByItemId(
       this.user.email,
