@@ -20,7 +20,7 @@ const config = {
     linkTokenCreate: '/link/token_create',
     itemTokenExchange: '/item/token_exchange',
     itemTokenExchangeMock: '/item/token_exchange/mock',
-    userItem: '/item',
+    item: '/item',
     itemAccountBalance: '/item/account/balance',
     itemAccountTransaction: '/item/account/transaction',
     itemInstitution: '/item/institution',

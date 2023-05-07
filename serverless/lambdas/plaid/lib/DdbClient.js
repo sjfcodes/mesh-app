@@ -59,7 +59,7 @@ class DdbClient {
      * for getting user last activity.
      * Skip this check for said route.
      */
-    if (requestPath !== config.path.userItem) {
+    if (requestPath !== config.path.item) {
       let shouldWriteUserLastActivity = false;
       const lastActivity = new Date(
         Item[config.itemKeys.lastActivity]?.S

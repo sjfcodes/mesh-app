@@ -54,7 +54,7 @@ class App {
       institution_name: this.payload.institution_name,
     });
 
-    return { accounts, item_id: tokenExchange.item_id };
+    return { public_token_exchange: 'complete', item_id };
   }
 
   async testExchangeTokenCreateItem() {
@@ -73,10 +73,7 @@ class App {
       institution_name: this.payload.institution_name,
     });
 
-    return {
-      accounts: formattedAccounts,
-      item_id: this.payload.public_token.item_id,
-    };
+    return { public_token_exchange: 'complete', item_id };
   }
 
   async getItems() {
@@ -114,7 +111,7 @@ class App {
       accountIds
     );
 
-    return accounts
+    return accounts;
   }
 
   async getTransactionsByAccountId() {
@@ -181,6 +178,7 @@ class App {
     );
 
     return {
+      tx_sync: 'complete',
       added: added.length,
       modified: modified.length,
       removed: removed.length,
@@ -214,6 +212,7 @@ class App {
     );
 
     return {
+      tx_sync: 'complete',
       added: added.length,
       modified: modified.length,
       removed: removed.length,
