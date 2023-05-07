@@ -8,7 +8,7 @@ class App {
     this.ddbClient = ddbClient;
     this.user = {};
     this.requestPath = event.path;
-    this.payload = event.body ? JSON.parse(event.body)?.payload : {};
+    this.payload = event.body ? JSON.parse(event.body) : {};
     this.queryString = event.queryStringParameters;
   }
 
