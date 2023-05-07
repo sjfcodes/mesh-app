@@ -23,19 +23,28 @@ if (!url) {
   throw new Error('missing backend url!◊');
 }
 
-export const getAuthToken = async () =>
-  (await Auth.currentSession()).getIdToken().getJwtToken();
+export const getAuthToken = async () => {
+  const session = await Auth.currentSession();
+
+  return session.getIdToken().getJwtToken();
+};
+
+const api = async (request: any) =>
+  axios({
+    ...request,
+    headers: { Authorization: await getAuthToken() },
+    url: url + request.url,
+  });
 
 // setup token
 export const handleLinkTokenCreateUpdate = async (itemId: string | null) => {
   const method = itemId ? 'PUT' : 'POST';
   const route = itemId ? '/item/update_login' : '/link/token_create';
 
-  return await axios({
+  return await api({
     method,
-    url: url + route,
-    headers: { Authorization: await getAuthToken() },
-    data: { path: route, payload: { item_id: itemId } },
+    url: route,
+    data: { item_id: itemId },
   });
 };
 
@@ -46,18 +55,15 @@ export const exchangeToken = async (
   userId: string
 ) => {
   try {
-    return await axios({
-      url: url + '/item/token_exchange',
+    return await api({
+      url: '/item/token_exchange',
       method: 'POST',
-      headers: { Authorization: await getAuthToken() },
       data: {
-        payload: {
-          accounts,
-          institution_id: institution?.institution_id,
-          institution_name: institution?.name,
-          public_token: publicToken,
-          user_id: userId,
-        },
+        accounts,
+        institution_id: institution?.institution_id,
+        institution_name: institution?.name,
+        public_token: publicToken,
+        user_id: userId,
       },
     });
   } catch (err: any) {
@@ -73,41 +79,33 @@ export const exchangeToken = async (
 
 // item
 export const getAllItems = async () =>
-  axios({
+  api({
     method: 'GET',
-    url: url + `/item`,
-    headers: { Authorization: await getAuthToken() },
+    url: `/item`,
   });
 export const syncItemTransactions = async (itemId: string) =>
-  axios({
+  api({
     method: 'PUT',
-    url: url + `/item/sync`,
-    headers: { Authorization: await getAuthToken() },
+    url: `/item/sync`,
     data: {
-      payload: {
-        item_id: itemId,
-      },
+      item_id: itemId,
     },
   });
 
 // item account
 export const getAllItemAccounts = async () =>
-  axios({
+  api({
     method: 'GET',
-    url: url + `/item/account`,
-    headers: { Authorization: await getAuthToken() },
+    url: `/item/account`,
   });
 
 export const getInstitutionAccountBalances = async (
   itemId: string,
   accountId: string
 ) =>
-  axios({
+  api({
     method: 'GET',
-    url: url + `/item/account/balance`,
-    headers: {
-      Authorization: await getAuthToken(),
-    },
+    url: `/item/account/balance`,
     params: {
       item_id: itemId,
       account_id: accountId,
@@ -116,26 +114,22 @@ export const getInstitutionAccountBalances = async (
 
 // institutions
 export const getInstitutionsById = async (instId: string) =>
-  axios({
+  api({
     method: 'GET',
-    url: url + '/item/institution',
+    url: '/item/institution',
     params: {
       institution_id: instId,
     },
-    headers: { Authorization: await getAuthToken() },
   });
 
 // transactions
-export const getItemAccountTransactions = async (
+export const getAccountTransactions = async (
   itemId: string,
   accountId: string
 ) =>
-  axios({
+  api({
     method: 'GET',
-    url: url + `/item/account/transaction`,
-    headers: {
-      Authorization: await getAuthToken(),
-    },
+    url: `/item/account/transaction`,
     params: {
       item_id: itemId,
       account_id: accountId,
