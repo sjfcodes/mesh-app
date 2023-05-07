@@ -47,12 +47,21 @@ export const handler = async (event) => {
     const app = new App(event);
     await app.setUserByToken(event.headers.Authorization);
 
+    /**
+     * @type {string}
+     */
     const requestMethod = event.httpMethod;
     if (!requestMethod) throw new Error('missing requestMethod');
 
+    /**
+     * @type {string}
+     */
     const requestPath = event.path;
     if (!requestPath) throw new Error('missing requestPath');
 
+    /**
+     * @type {string}
+     */
     const classMethod = routeMap[requestPath][requestMethod];
     if (!classMethod) throw new Error('missing classMethod');
 
