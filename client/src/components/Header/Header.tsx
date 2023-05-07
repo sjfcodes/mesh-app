@@ -7,14 +7,6 @@ import './style.scss';
 const Header = () => {
   // const navigate = useNavigate();
   const reloadPage = () => {
-    /**
-     * navigate to accounts and reload does not work.
-     * FooterNav contains local state responsible for
-     * keeping page url & selected app synced.
-     *
-     * Would need to move local state to shared state
-     * to allow other components to set selected app/url.
-     */
     window.location.reload();
   };
 
