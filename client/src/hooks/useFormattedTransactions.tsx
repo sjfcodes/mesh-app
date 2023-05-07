@@ -6,7 +6,7 @@ import { currencyFilter } from '../util/helpers';
 
 const useFormattedTransactions = () => {
   const { allAccounts } = usePlaidItems();
-  const { allTransactions, loadingMap, getItemAccountTransactions } =
+  const { allTransactions, loadingMap, getAccountTransactions } =
     useTransactions();
 
   useEffect(() => {
@@ -15,8 +15,8 @@ const useFormattedTransactions = () => {
       ({ id }) => !hasLoaded.includes(id)
     );
 
-    needsLoading.map(({ item_id: itemId, id: accountId }) => {
-      return getItemAccountTransactions(itemId, accountId);
+    needsLoading.forEach(({ item_id: itemId, id: accountId }) => {
+      return getAccountTransactions(itemId, accountId);
     });
   }, [allAccounts]);
 

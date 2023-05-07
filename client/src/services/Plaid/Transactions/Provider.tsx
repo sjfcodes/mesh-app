@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { TransactionType } from '../../../types';
-import { getItemAccountTransactions as apiGetItemAccountTransactions } from '../../../util/api';
+import { getAccountTransactions as apiGetItemAccountTransactions } from '../../../util/api';
 import transactionsReducer from './reducer';
 import { TransactionsContextShape } from './types';
 
@@ -41,7 +41,7 @@ export function TransactionsProvider(props: any) {
    * The api request will be bypassed if the data has already been fetched.
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getItemAccountTransactions = useCallback(
+  const getAccountTransactions = useCallback(
     async (itemId: string, accountId: string, refresh: boolean) => {
       setLoadingMap({
         ...loadingMap,
@@ -101,9 +101,9 @@ export function TransactionsProvider(props: any) {
       loadingMap,
       allTransactions,
       itemAccountTransaction,
-      getItemAccountTransactions,
+      getAccountTransactions,
     };
-  }, [loadingMap, itemAccountTransaction, getItemAccountTransactions]);
+  }, [loadingMap, itemAccountTransaction, getAccountTransactions]);
 
   return <TransactionsContext.Provider value={value} {...props} />;
 }

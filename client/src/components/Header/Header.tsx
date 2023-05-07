@@ -29,9 +29,7 @@ const Header = () => {
         <div className="ma-header-left" onClick={reloadPage}>
           <UserCard />
         </div>
-        <h1 onClick={copyAuthToClipboard}>
-          ⺵esh
-        </h1>
+        <h1 onClick={copyAuthToClipboard}>⺵esh</h1>
       </div>
     </header>
   );
