@@ -48,7 +48,7 @@ resource "aws_lambda_function" "this" {
   filename      = "${var.path}/${var.lambda_name}/${var.lambda_name}.zip"
   function_name = "${var.env}_${var.lambda_name}"
   role          = aws_iam_role.lambda.arn
-  handler       = "index.handler"
+  handler       = "src/index.handler"
 
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
