@@ -17,8 +17,5 @@ export interface InstitutionsContextShape {
   accountBalances: AccountBase[];
   institutionsById: InstitutionsById;
   getInstitutionById: (institutionId: InstitutionId) => void;
-  getBalancesByAccountId: (
-    itemId: ItemId,
-    accountId?: AccountId
-  ) => void;
+  getBalancesByAccountId: (itemId: ItemId, accountId?: AccountId) => void;
 }
