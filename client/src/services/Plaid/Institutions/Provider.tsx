@@ -7,8 +7,8 @@ import React, {
 } from 'react';
 
 import {
-  getInstitutionsById as apiGetInstitutionById,
-  getInstitutionAccountBalances as apiGetItemAccountBalances,
+  getInstitutionById as apiGetInstitutionById,
+  getBalancesByAccountId as apiGetItemAccountBalances,
 } from '../../../util/api';
 import plaidInstitutionsReducer, { GET_INSTITUTION } from './reducer';
 import { InstitutionsContextShape } from './types';
@@ -32,14 +32,14 @@ export const InstitutionsProvider = (props: any) => {
   /**
    * @desc Requests details for a single Institution.
    */
-  const getInstitutionsById = useCallback(async (id: string) => {
+  const getInstitutionById = useCallback(async (id: string) => {
     const {
       data: { data },
     } = await apiGetInstitutionById(id);
     dispatch({ type: GET_INSTITUTION, payload: data[0] });
   }, []);
 
-  const getInstitutionAccountBalances = useCallback(
+  const getBalancesByAccountId = useCallback(
     async (itemId: string, accountId: string) => {
       const {
         data: { data },
@@ -57,14 +57,14 @@ export const InstitutionsProvider = (props: any) => {
     return {
       accountBalances,
       institutionsById,
-      getInstitutionsById,
-      getInstitutionAccountBalances,
+      getInstitutionById,
+      getBalancesByAccountId,
     };
   }, [
     accountBalances,
     institutionsById,
-    getInstitutionsById,
-    getInstitutionAccountBalances,
+    getInstitutionById,
+    getBalancesByAccountId,
   ]);
 
   return <InstitutionsContext.Provider value={value} {...props} />;

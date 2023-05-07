@@ -10,8 +10,8 @@ import sortBy from 'lodash/sortBy';
 
 import { ItemType } from '../../../types';
 import {
-  getAllItems as apiGetItemsByUser,
-  syncItemTransactions as apiSyncItemTransactions,
+  getItems as apiGetItemsByUser,
+  syncTransactionsByItemId as apiSyncItemTransactions,
 } from '../../../util/api';
 import plaidItemsReducer from './reducer';
 import { ItemsContextShape, ItemsState } from './types';
@@ -32,7 +32,7 @@ export function ItemsProvider(props: any) {
   /**
    * @desc Requests all Items that belong to an individual User.
    */
-  const getAllItems = useCallback(async () => {
+  const getItems = useCallback(async () => {
     setIsLoading(true);
     const {
       data: { data },
@@ -45,7 +45,7 @@ export function ItemsProvider(props: any) {
     setIsLoading(false);
   }, []);
 
-  const syncItemTransactions = useCallback(async (itemId: string) => {
+  const syncTransactionsByItemId = useCallback(async (itemId: string) => {
     setIsLoading(true);
     const {
       data: { data },
@@ -56,8 +56,8 @@ export function ItemsProvider(props: any) {
   }, []);
 
   useEffect(() => {
-    getAllItems();
-  }, [getAllItems]);
+    getItems();
+  }, [getItems]);
 
   // update state sortedItems from data store
   useEffect(() => {
@@ -85,16 +85,16 @@ export function ItemsProvider(props: any) {
       plaidItem,
       sortedItems,
       isLoading,
-      getAllItems,
-      syncItemTransactions,
+      getItems,
+      syncTransactionsByItemId,
     };
   }, [
     lastActivity,
     plaidItem,
     sortedItems,
     isLoading,
-    getAllItems,
-    syncItemTransactions,
+    getItems,
+    syncTransactionsByItemId,
   ]);
 
   return <ItemsContext.Provider value={value} {...props} />;

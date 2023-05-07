@@ -19,23 +19,19 @@ export const handler = async (event) => {
       case 'GET':
         switch (requestPath) {
           case config.path.userItem:
-            response.data = await app.handleGetItems();
+            response.data = await app.getItems();
             break;
 
           case config.path.itemInstitution:
-            response.data = await app.handleGetItemInstitutionById();
-            break;
-
-          case config.path.itemAccount:
-            response.data = await app.handleGetItemAccounts();
+            response.data = await app.getInstitutionById();
             break;
 
           case config.path.itemAccountBalance:
-            response.data = await app.handleGetItemAccountBalances();
+            response.data = await app.getBalancesByAccountId();
             break;
 
           case config.path.itemAccountTransaction:
-            response.data = await app.handleGetUserAccountTransactions();
+            response.data = await app.getTransactionsByAccountId();
             break;
 
           default:
@@ -46,17 +42,17 @@ export const handler = async (event) => {
       case 'PUT':
         switch (requestPath) {
           case config.path.itemSync:
-            const summary = await app.handleUserItemSyncTransactions();
+            const summary = await app.syncTransactionsByItemId();
             response.data = { tx_sync: 'complete', ...summary };
             break;
 
           case config.path.itemSyncMock:
-            const testSummary = await app.handleUserItemSyncTransactionsTest();
+            const testSummary = await app.testSyncTransactionsByItemId();
             response.data = { tx_sync: 'complete', ...testSummary };
             break;
 
           case config.path.itemUpdateLogin:
-            response.data = await app.handleUpdateUserItemLogin();
+            response.data = await app.updateItemLogin();
             break;
 
           default:
@@ -66,22 +62,18 @@ export const handler = async (event) => {
 
       case 'POST':
         switch (requestPath) {
-          case config.path.itemAccount:
-            response.data = await app.handleGetItemAccounts();
-            break;
-
           case config.path.linkTokenCreate:
-            response.data = await app.handleLinkTokenCreateUpdate();
+            response.data = await app.linkTokenCreate();
             break;
 
           case config.path.itemTokenExchange:
-            const { item_id } = await app.handleItemTokenExchange();
+            const { item_id } = await app.exchangeTokenCreateItem();
             response.data = { public_token_exchange: 'complete', item_id };
             break;
 
           case config.path.itemTokenExchangeMock:
             const { item_id: testItemId } =
-              await app.handleItemTokenExchangeMock();
+              await app.testExchangeTokenCreateItem();
             response.data = {
               public_token_exchange: 'complete',
               item_id: testItemId,

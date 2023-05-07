@@ -25,7 +25,7 @@ const api = async (request: any) =>
   });
 
 // create or update token
-export const handleLinkTokenCreateUpdate = async (item_id: string | null) =>
+export const linkTokenCreate = async (item_id: string | null) =>
   api({
     method: item_id ? 'PUT' : 'POST',
     url: item_id ? '/item/update_login' : '/link/token_create',
@@ -33,7 +33,7 @@ export const handleLinkTokenCreateUpdate = async (item_id: string | null) =>
   });
 
 // crate item
-export const exchangeToken = async (
+export const exchangeTokenCreateItem = async (
   public_token: string,
   institution: PlaidInstitution | null,
   accounts: PlaidLinkOnSuccessMetadata['accounts'],
@@ -62,15 +62,12 @@ export const exchangeToken = async (
   }
 };
 
-export const getAllItems = async () => api({ method: 'GET', url: `/item` });
+export const getItems = async () => api({ method: 'GET', url: `/item` });
 
-export const syncItemTransactions = async (item_id: string) =>
+export const syncTransactionsByItemId = async (item_id: string) =>
   api({ method: 'PUT', url: `/item/sync`, data: { item_id } });
 
-export const getAllItemAccounts = async () =>
-  api({ method: 'GET', url: `/item/account` });
-
-export const getInstitutionAccountBalances = async (
+export const getBalancesByAccountId = async (
   item_id: string,
   account_id: string
 ) =>
@@ -80,7 +77,7 @@ export const getInstitutionAccountBalances = async (
     params: { item_id, account_id },
   });
 
-export const getAccountTransactions = async (
+export const getTransactionsByAccountId = async (
   item_id: string,
   account_id: string
 ) =>
@@ -91,7 +88,7 @@ export const getAccountTransactions = async (
   });
 
 // institutions
-export const getInstitutionsById = async (institution_id: string) =>
+export const getInstitutionById = async (institution_id: string) =>
   api({
     method: 'GET',
     url: '/item/institution',

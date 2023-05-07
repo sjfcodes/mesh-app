@@ -34,10 +34,10 @@ const ItemCard = ({ item }: Props) => {
   const {
     accountBalances,
     institutionsById,
-    getInstitutionsById,
-    getInstitutionAccountBalances,
+    getInstitutionById,
+    getBalancesByAccountId,
   } = useInstitutions();
-  const { syncItemTransactions, lastActivity, isLoading } = usePlaidItems();
+  const { syncTransactionsByItemId, lastActivity, isLoading } = usePlaidItems();
   const useSelectedAccount = useState('' as AccountId);
   const [institution, setInstitution] = useState(
     defaultInstitution as Institution
@@ -48,12 +48,12 @@ const ItemCard = ({ item }: Props) => {
   }, [institutionsById, item.institution_id]);
 
   useEffect(() => {
-    getInstitutionsById(item.institution_id);
-  }, [getInstitutionsById, item.institution_id]);
+    getInstitutionById(item.institution_id);
+  }, [getInstitutionById, item.institution_id]);
 
   useEffect(() => {
-    getInstitutionAccountBalances(item.id);
-  }, [getInstitutionAccountBalances]);
+    getBalancesByAccountId(item.id);
+  }, [getBalancesByAccountId]);
 
   const itemLastSyncDate = item.tx_cursor_updated_at
     ? diffBetweenCurrentTime(item.tx_cursor_updated_at)
@@ -61,7 +61,7 @@ const ItemCard = ({ item }: Props) => {
 
   const handleSyncItem = (e: MouseEvent) => {
     e.stopPropagation();
-    syncItemTransactions(item.id);
+    syncTransactionsByItemId(item.id);
   };
 
   const getAccountCards = () => {

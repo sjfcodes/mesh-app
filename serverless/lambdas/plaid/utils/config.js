@@ -21,7 +21,6 @@ const config = {
     itemTokenExchange: '/item/token_exchange',
     itemTokenExchangeMock: '/item/token_exchange/mock',
     userItem: '/item',
-    itemAccount: '/item/account',
     itemAccountBalance: '/item/account/balance',
     itemAccountTransaction: '/item/account/transaction',
     itemInstitution: '/item/institution',

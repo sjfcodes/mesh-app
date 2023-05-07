@@ -29,11 +29,11 @@ class App {
     this.user = user;
   }
 
-  async handleLinkTokenCreateUpdate() {
+  async linkTokenCreate() {
     return await this.plaidClient.createLinkTokenByUserId(this.user.userId);
   }
 
-  async handleItemTokenExchange() {
+  async exchangeTokenCreateItem() {
     const tokenExchange = await this.plaidClient.exchangePublicToken(
       this.payload.public_token
     );
@@ -57,7 +57,7 @@ class App {
     return { accounts, item_id: tokenExchange.item_id };
   }
 
-  async handleItemTokenExchangeMock() {
+  async testExchangeTokenCreateItem() {
     await this.ddbClient.writeUserLastActivity(this.user.email);
     // include item_id for future api calls
     const formattedAccounts = this.payload.accounts.map((account) => ({
@@ -79,7 +79,7 @@ class App {
     };
   }
 
-  async handleGetItems() {
+  async getItems() {
     const { items, lastActivity } = await this.ddbClient.readUserItems(
       this.user.email
     );
@@ -96,13 +96,7 @@ class App {
     return { items: formatted, last_activity: lastActivity };
   }
 
-  async handleGetItemAccounts() {
-    const { accounts } = await this.ddbClient.readUserAccounts(this.user.email);
-
-    return accounts;
-  }
-
-  async handleGetItemAccountBalances() {
+  async getBalancesByAccountId() {
     const { item_id: itemId, account_id: accountId } = this.queryString;
     const accountIds = [];
 
@@ -115,7 +109,7 @@ class App {
       itemId
     );
 
-    const { accounts } = await this.plaidClient.getInstitutionAccountBalances(
+    const { accounts } = await this.plaidClient.getBalancesByAccountId(
       accessToken,
       accountIds
     );
@@ -123,7 +117,7 @@ class App {
     return accounts
   }
 
-  async handleGetUserAccountTransactions() {
+  async getTransactionsByAccountId() {
     const nowInMs = Date.now();
     const monthInMs = 60 * 60 * 24 * 30 * 1000;
     const { account_id, item_id, lower_band, upper_band } = this.queryString;
@@ -150,15 +144,15 @@ class App {
     return { transactions };
   }
 
-  async handleGetItemInstitutionById() {
-    const data = await this.plaidClient.getInstitutionsById(
+  async getInstitutionById() {
+    const data = await this.plaidClient.getInstitutionById(
       this.queryString.institution_id
     );
 
     return data;
   }
 
-  async handleUserItemSyncTransactionsTest() {
+  async testSyncTransactionsByItemId() {
     // mock getting newTxCursor & transactions from db
     const {
       item_id: itemId,
@@ -194,7 +188,7 @@ class App {
     };
   }
 
-  async handleUserItemSyncTransactions() {
+  async syncTransactionsByItemId() {
     const { item_id: itemId } = this.payload;
     // get current txCursor value from db,
     const { accessToken, txCursor } = await this.ddbClient.readItemByItemId(
@@ -226,7 +220,7 @@ class App {
       tx_cursor_updated_at,
     };
   }
-  async handleUpdateUserItemLogin() {
+  async updateItemLogin() {
     const { accessToken } = await this.ddbClient.readItemByItemId(
       this.user.email,
       this.payload.item_id

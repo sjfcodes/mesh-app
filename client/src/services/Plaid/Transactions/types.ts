@@ -16,7 +16,7 @@ export interface TransactionsContextShape extends TransactionsState {
   loadingMap: { [accountId: string]: boolean };
   allTransactions: TransactionType[];
   itemAccountTransaction: { [accountId: string]: TransactionType[] };
-  getAccountTransactions: (
+  getTransactionsByAccountId: (
     itemId: string,
     accountId: string,
     refresh?: boolean

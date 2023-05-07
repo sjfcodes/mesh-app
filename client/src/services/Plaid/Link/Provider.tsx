@@ -5,7 +5,7 @@ import {
   useReducer,
   useState,
 } from 'react';
-import { handleLinkTokenCreateUpdate } from '../../../util/api';
+import { linkTokenCreate } from '../../../util/api';
 import linkReducer from './reducer';
 import { LinkContextShape } from './types';
 
@@ -36,7 +36,7 @@ export function LinkProvider(props: any) {
       // if itemId is not null, update mode is triggered
       const {
         data: { data },
-      } = await handleLinkTokenCreateUpdate(itemId);
+      } = await linkTokenCreate(itemId);
       if (data.link_token) {
         const token = data.link_token;
 

@@ -28,6 +28,6 @@ export interface ItemsContextShape {
   plaidItem: { [item_id: ItemId]: ItemType };
   sortedItems: ItemType[];
   isLoading: boolean;
-  getAllItems: (userId: string, refresh: boolean) => void;
-  syncItemTransactions: (itemId: ItemId) => void;
+  getItems: (userId: string, refresh: boolean) => void;
+  syncTransactionsByItemId: (itemId: ItemId) => void;
 }
