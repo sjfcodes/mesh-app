@@ -3,56 +3,41 @@ import { Auth } from 'aws-amplify';
 import { toast } from 'react-toastify';
 import { PlaidInstitution, PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import DuplicateItemToastMessage from '../components/DuplicateItemToast';
-const {
-  REACT_APP_AWS_API_GW_DEV,
-  REACT_APP_AWS_API_GW_PROD,
-  REACT_APP_USE_API_GW,
-} = process.env;
 
 const USE_STAGE = {
-  DEV: REACT_APP_AWS_API_GW_DEV,
-  PROD: REACT_APP_AWS_API_GW_PROD,
+  DEV: process.env.REACT_APP_AWS_API_GW_DEV,
+  PROD: process.env.REACT_APP_AWS_API_GW_PROD,
 };
 
 type stage = 'DEV' | 'PROD';
-const TARGET_STAGE: stage = (REACT_APP_USE_API_GW as stage) || ('DEV' as stage);
-
+const TARGET_STAGE: stage =
+  (process.env.REACT_APP_USE_API_GW as stage) || ('DEV' as stage);
 const url = USE_STAGE[TARGET_STAGE];
-
-if (!url) {
-  throw new Error('missing backend url!◊');
-}
-
-export const getAuthToken = async () => {
-  const session = await Auth.currentSession();
-
-  return session.getIdToken().getJwtToken();
-};
+if (!url) throw new Error('missing backend url!◊');
 
 const api = async (request: any) =>
   axios({
     ...request,
-    headers: { Authorization: await getAuthToken() },
     url: url + request.url,
+    headers: {
+      Authorization: (await Auth.currentSession()).getIdToken().getJwtToken(),
+    },
   });
 
-// setup token
-export const handleLinkTokenCreateUpdate = async (itemId: string | null) => {
-  const method = itemId ? 'PUT' : 'POST';
-  const route = itemId ? '/item/update_login' : '/link/token_create';
-
-  return await api({
-    method,
-    url: route,
-    data: { item_id: itemId },
+// create or update token
+export const handleLinkTokenCreateUpdate = async (item_id: string | null) =>
+  api({
+    method: item_id ? 'PUT' : 'POST',
+    url: item_id ? '/item/update_login' : '/link/token_create',
+    data: { item_id },
   });
-};
 
+// crate item
 export const exchangeToken = async (
-  publicToken: string,
+  public_token: string,
   institution: PlaidInstitution | null,
   accounts: PlaidLinkOnSuccessMetadata['accounts'],
-  userId: string
+  user_id: string
 ) => {
   try {
     return await api({
@@ -62,8 +47,8 @@ export const exchangeToken = async (
         accounts,
         institution_id: institution?.institution_id,
         institution_name: institution?.name,
-        public_token: publicToken,
-        user_id: userId,
+        public_token,
+        user_id,
       },
     });
   } catch (err: any) {
@@ -77,61 +62,38 @@ export const exchangeToken = async (
   }
 };
 
-// item
-export const getAllItems = async () =>
-  api({
-    method: 'GET',
-    url: `/item`,
-  });
-export const syncItemTransactions = async (itemId: string) =>
-  api({
-    method: 'PUT',
-    url: `/item/sync`,
-    data: {
-      item_id: itemId,
-    },
-  });
+export const getAllItems = async () => api({ method: 'GET', url: `/item` });
 
-// item account
+export const syncItemTransactions = async (item_id: string) =>
+  api({ method: 'PUT', url: `/item/sync`, data: { item_id } });
+
 export const getAllItemAccounts = async () =>
-  api({
-    method: 'GET',
-    url: `/item/account`,
-  });
+  api({ method: 'GET', url: `/item/account` });
 
 export const getInstitutionAccountBalances = async (
-  itemId: string,
-  accountId: string
+  item_id: string,
+  account_id: string
 ) =>
   api({
     method: 'GET',
     url: `/item/account/balance`,
-    params: {
-      item_id: itemId,
-      account_id: accountId,
-    },
+    params: { item_id, account_id },
   });
 
-// institutions
-export const getInstitutionsById = async (instId: string) =>
-  api({
-    method: 'GET',
-    url: '/item/institution',
-    params: {
-      institution_id: instId,
-    },
-  });
-
-// transactions
 export const getAccountTransactions = async (
-  itemId: string,
-  accountId: string
+  item_id: string,
+  account_id: string
 ) =>
   api({
     method: 'GET',
     url: `/item/account/transaction`,
-    params: {
-      item_id: itemId,
-      account_id: accountId,
-    },
+    params: { item_id, account_id },
+  });
+
+// institutions
+export const getInstitutionsById = async (institution_id: string) =>
+  api({
+    method: 'GET',
+    url: '/item/institution',
+    params: { institution_id },
   });
