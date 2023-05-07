@@ -8,27 +8,32 @@ class App {
     this.ddbClient = ddbClient;
     this.user = {};
     this.requestPath = event.path;
-    this.payload = event.body ? JSON.parse(event.body)?.payload : {};
+    this.payload = event.body ? JSON.parse(event.body) : {};
     this.queryString = event.queryStringParameters;
   }
 
   async setUserByToken(token) {
-    if (!token) throw new Error('Missing required arguments');
+    if (!token) throw new Error('missing token!');
     // decode & parse jwt payload
     const tokenPayload = token.split('.')[1];
     const decrypted = JSON.parse(Buffer.from(tokenPayload, 'base64'));
 
-    this.user = await this.ddbClient.readUserByTokenEmail(
+    // console.log({ decrypted });
+
+    const user = await this.ddbClient.readUserByTokenEmail(
       decrypted.email,
       this.requestPath
     );
+
+    // console.log('setting user:', user);
+    this.user = user;
   }
 
-  async handleLinkTokenCreateUpdate() {
+  async linkTokenCreate() {
     return await this.plaidClient.createLinkTokenByUserId(this.user.userId);
   }
 
-  async handleItemTokenExchange() {
+  async exchangeTokenCreateItem() {
     const tokenExchange = await this.plaidClient.exchangePublicToken(
       this.payload.public_token
     );
@@ -49,10 +54,10 @@ class App {
       institution_name: this.payload.institution_name,
     });
 
-    return { accounts, item_id: tokenExchange.item_id };
+    return { public_token_exchange: 'complete', item_id };
   }
 
-  async handleItemTokenExchangeMock() {
+  async testExchangeTokenCreateItem() {
     await this.ddbClient.writeUserLastActivity(this.user.email);
     // include item_id for future api calls
     const formattedAccounts = this.payload.accounts.map((account) => ({
@@ -68,13 +73,10 @@ class App {
       institution_name: this.payload.institution_name,
     });
 
-    return {
-      accounts: formattedAccounts,
-      item_id: this.payload.public_token.item_id,
-    };
+    return { public_token_exchange: 'complete', item_id };
   }
 
-  async handleGetItems() {
+  async getItems() {
     const { items, lastActivity } = await this.ddbClient.readUserItems(
       this.user.email
     );
@@ -91,13 +93,7 @@ class App {
     return { items: formatted, last_activity: lastActivity };
   }
 
-  async handleGetItemAccounts() {
-    const { accounts } = await this.ddbClient.readUserAccounts(this.user.email);
-
-    return { accounts };
-  }
-
-  async handleGetItemAccountBalances() {
+  async getBalancesByAccountId() {
     const { item_id: itemId, account_id: accountId } = this.queryString;
     const accountIds = [];
 
@@ -110,32 +106,28 @@ class App {
       itemId
     );
 
-    const { accounts } = await this.plaidClient.getItemAccountBalances(
+    const { accounts } = await this.plaidClient.getBalancesByAccountId(
       accessToken,
       accountIds
     );
 
-    console.log(accounts);
-
-    const formatted = accounts.reduce((prev, curr) => {
-      return {
-        ...prev,
-        [curr.account_id]: curr,
-      };
-    }, {});
-
-    return { account: formatted };
+    return accounts;
   }
 
-  async handleGetUserAccountTransactions() {
+  async getTransactionsByAccountId() {
+    const nowInMs = Date.now();
+    const monthInMs = 60 * 60 * 24 * 30 * 1000;
     const { account_id, item_id, lower_band, upper_band } = this.queryString;
     let upperBand = upper_band;
     let lowerBand = lower_band;
 
-    if (!lowerBand || !upperBand) {
-      const nowInMs = Date.now();
-      const monthInMs = 60 * 60 * 24 * 30 * 1000;
+    if (!upperBand) {
+      // default to current day
       upperBand = new Date(nowInMs).toISOString().substring(0, 10);
+    }
+
+    if (!lowerBand) {
+      // default to last 30 days
       lowerBand = new Date(nowInMs - monthInMs).toISOString().substring(0, 10);
     }
 
@@ -149,15 +141,15 @@ class App {
     return { transactions };
   }
 
-  async handleGetItemInstitutionById() {
-    const data = await this.plaidClient.getItemInstitution(
+  async getInstitutionById() {
+    const data = await this.plaidClient.getInstitutionById(
       this.queryString.institution_id
     );
 
     return data;
   }
 
-  async handleUserItemSyncTransactionsTest() {
+  async testSyncTransactionsByItemId() {
     // mock getting newTxCursor & transactions from db
     const {
       item_id: itemId,
@@ -186,6 +178,7 @@ class App {
     );
 
     return {
+      tx_sync: 'complete',
       added: added.length,
       modified: modified.length,
       removed: removed.length,
@@ -193,7 +186,7 @@ class App {
     };
   }
 
-  async handleUserItemSyncTransactions() {
+  async syncTransactionsByItemId() {
     const { item_id: itemId } = this.payload;
     // get current txCursor value from db,
     const { accessToken, txCursor } = await this.ddbClient.readItemByItemId(
@@ -219,20 +212,22 @@ class App {
     );
 
     return {
+      tx_sync: 'complete',
       added: added.length,
       modified: modified.length,
       removed: removed.length,
       tx_cursor_updated_at,
     };
   }
-  async handleUpdateUserItemLogin() {
+
+  async updateItemLogin() {
     const { accessToken } = await this.ddbClient.readItemByItemId(
       this.user.email,
       this.payload.item_id
     );
 
     const response = await this.plaidClient.updateItemLogin(
-      this.user.userId,
+      this.user.user_id,
       accessToken
     );
 

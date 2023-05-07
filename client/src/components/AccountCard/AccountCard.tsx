@@ -1,66 +1,74 @@
-import React, { useEffect, useState } from 'react';
-import startCase from 'lodash/startCase';
-import toLower from 'lodash/toLower';
+import React, { Suspense, lazy, useState } from 'react';
+import { AccountBase } from 'plaid';
 
-import { currencyFilter } from '../../util';
+import { currencyFilter } from '../../util/helpers';
 import { AccountType } from '../../types';
-import TransactionsTable from '../TransactionTable/TransactionsTable';
 import useTransactions from '../../hooks/usePlaidTransactions';
-
-import useInstitutions from '../../hooks/usePlaidInstitutions';
 import Loader from '../Loader/Loader';
+import SectionLoader from '../SectionLoader/SectionLoader';
 
 import './style.scss';
 
+const TransactionsTable = lazy(
+  () => import('../TransactionTable/TransactionsTable')
+);
+
 interface Props {
   account: AccountType;
+  balance: AccountBase;
+  useSelectedAccount?: [string, React.Dispatch<React.SetStateAction<string>>];
 }
 
-export default function AccountCard({ account }: Props) {
-  const [transactionsShown, setTransactionsShown] = useState(false);
-  const { getItemAccountBalances } = useInstitutions();
-  const { itemAccountTransaction, getItemAccountTransactions } =
-    useTransactions();
+export default function AccountCard({
+  account,
+  balance,
+  useSelectedAccount,
+}: Props) {
   const { id: accountId, item_id: itemId } = account;
+  const [selectedAccount, setSelectedAccount] =
+    useSelectedAccount || useState('');
+  const { loadingMap, itemAccountTransaction, getTransactionsByAccountId } =
+    useTransactions();
 
   const toggleShowTransactions = () => {
-    setTransactionsShown((shown) => !shown);
+    setSelectedAccount((current) => (current === accountId ? '' : accountId));
+
+    if (!itemAccountTransaction[accountId]) {
+      getTransactionsByAccountId(itemId, accountId);
+    }
   };
 
-  useEffect(() => {
-    getItemAccountTransactions(itemId, accountId);
-  }, [getItemAccountTransactions, itemAccountTransaction, itemId, accountId]);
-
-  useEffect(() => {
-    (async () => {
-      // const response = await getItemAccountBalances(itemId, accountId);
-      // console.log({ response });
-    })();
-  }, [getItemAccountBalances, itemId, accountId]);
-
   return (
-    <div className="ma-account-card">
-      <div className="ma-account-header" onClick={toggleShowTransactions}>
-        <div className="ma-account-details">
-          <h3>[{account.name}]</h3>
-          <p className="ma-account-subtype">
-            {startCase(toLower(account.subtype))}
-          </p>
-          <p className="ma-account-balance">
-            {currencyFilter(account.current_balance)}
-          </p>
+    <Suspense fallback={<SectionLoader />}>
+      <div className="ma-account-card">
+        <div className="ma-account-header" onClick={toggleShowTransactions}>
+          <div className="ma-account-details">
+            {/* <p className="ma-account-subtype">{balance.subtype}</p>
+            <p>[{account.name}]</p>
+            <p className="ma-account-balance">
+              {currencyFilter(balance.balances.available || 0)}
+            </p> */}
+            <div className="ma-box-name">{balance.subtype}</div>
+            <div className="ma-box-name">{account.name}</div>
+          </div>
+
+          {loadingMap[accountId] ? (
+            <Loader />
+          ) : (
+            <div className="ma-box-value">
+              <p>$</p>
+              <p>{currencyFilter(balance.balances.available || 0)}</p>
+            </div>
+          )}
         </div>
-        {!itemAccountTransaction[accountId]?.length ? (
-          <Loader />
-        ) : (
-          <p>{transactionsShown ? 'hide' : 'show'}</p>
-        )}
+        <div className="ma-account-footer">
+          {selectedAccount === accountId && (
+            <TransactionsTable
+              transactions={itemAccountTransaction[accountId]}
+            />
+          )}
+        </div>
       </div>
-      <div className="ma-account-footer">
-        {transactionsShown && (
-          <TransactionsTable transactions={itemAccountTransaction[accountId]} />
-        )}
-      </div>
-    </div>
+    </Suspense>
   );
 }

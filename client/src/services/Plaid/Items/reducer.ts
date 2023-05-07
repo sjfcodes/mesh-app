@@ -21,7 +21,6 @@ const plaidItemsReducer = (state: ItemsState, action: ItemsAction) => {
         return state;
       }
 
-      alert("tx's sync'd to database. Reload page to get new transactions.");
       return state;
 
     case 'SUCCESSFUL_DELETE_ITEM':

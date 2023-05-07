@@ -1,6 +1,13 @@
-import { createContext, useCallback, useMemo, useReducer, useRef } from 'react';
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import { TransactionType } from '../../../types';
-import { getItemAccountTransactions as apiGetItemAccountTransactions } from '../../../util/api';
+import { getTransactionsByAccountId as apiGetItemAccountTransactions } from '../../../util/api';
 import transactionsReducer from './reducer';
 import { TransactionsContextShape } from './types';
 
@@ -17,6 +24,7 @@ export const TransactionsContext = createContext<TransactionsContextShape>(
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props: any) {
+  const [loadingMap, setLoadingMap] = useState({});
   const [itemAccountTransaction, dispatch] = useReducer(
     transactionsReducer,
     initialState
@@ -33,13 +41,17 @@ export function TransactionsProvider(props: any) {
    * The api request will be bypassed if the data has already been fetched.
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getItemAccountTransactions = useCallback(
+  const getTransactionsByAccountId = useCallback(
     async (itemId: string, accountId: string, refresh: boolean) => {
+      setLoadingMap({
+        ...loadingMap,
+        [accountId]: true,
+      });
       if (!hasRequested.current.byAccount[accountId] || refresh) {
         hasRequested.current.byAccount[accountId] = true;
         const {
           data: {
-            body: { transactions },
+            data: { transactions },
           },
         } = await apiGetItemAccountTransactions(itemId, accountId);
         dispatch({
@@ -47,6 +59,10 @@ export function TransactionsProvider(props: any) {
           payload: { transactions, accountId },
         });
       }
+      setLoadingMap({
+        ...loadingMap,
+        [accountId]: false,
+      });
     },
     []
   );
@@ -82,11 +98,12 @@ export function TransactionsProvider(props: any) {
       );
 
     return {
+      loadingMap,
       allTransactions,
       itemAccountTransaction,
-      getItemAccountTransactions,
+      getTransactionsByAccountId,
     };
-  }, [itemAccountTransaction, getItemAccountTransactions]);
+  }, [loadingMap, itemAccountTransaction, getTransactionsByAccountId]);
 
   return <TransactionsContext.Provider value={value} {...props} />;
 }

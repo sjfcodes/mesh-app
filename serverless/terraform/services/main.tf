@@ -1,12 +1,7 @@
 # DOCS: https://developer.hashicorp.com/terraform/language
 # setting env variable
-variable "env" {
-  default = "test"
-}
+
 variable "PLAID_CLIENT_ID" {
-  sensitive = true
-}
-variable "PLAID_ENV" {
   sensitive = true
 }
 variable "PLAID_SECRET_DEVELOPMENT" {
@@ -27,9 +22,9 @@ terraform {
   backend "s3" {
     profile        = "mesh-app_terraform_deployer"
     bucket         = "mesh-app-tfstate"
-    key            = "test/terraform.tfstate"
+    key            = "terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "test_mesh-app_tfstate_lock"
+    dynamodb_table = "mesh-app_tfstate_lock"
   }
 }
 
@@ -39,19 +34,19 @@ provider "aws" {
 }
 
 module "dynamodb_table_users" {
-  env      = var.env
+  env      = terraform.workspace
   app_name = var.app_name
   source   = "./dynamodb/table/users"
 }
 
 module "dynamodb_table_transactions" {
-  env      = var.env
+  env      = terraform.workspace
   app_name = var.app_name
   source   = "./dynamodb/table/transactions"
 }
 
 module "lambda_plaid" {
-  env                     = var.env
+  env                     = terraform.workspace
   region                  = var.region
   account_id              = var.account_id
   source                  = "./lambda"
@@ -60,14 +55,17 @@ module "lambda_plaid" {
 
   lambda_name = "plaid"
 
-  PLAID_CLIENT_ID          = var.PLAID_CLIENT_ID
-  PLAID_ENV                = var.PLAID_ENV
-  PLAID_SECRET_DEVELOPMENT = var.PLAID_SECRET_DEVELOPMENT
-  PLAID_SECRET_SANDBOX     = var.PLAID_SECRET_SANDBOX
+  PLAID_CLIENT_ID = var.PLAID_CLIENT_ID
+  PLAID_ENV = (
+    terraform.workspace == "prod" ? "development" : "sandbox"
+  )
+  PLAID_SECRET = (
+    terraform.workspace == "prod" ? var.PLAID_SECRET_DEVELOPMENT : var.PLAID_SECRET_SANDBOX
+  )
 }
 
 module "lambda_ddbTable" {
-  env                     = var.env
+  env                     = terraform.workspace
   region                  = var.region
   account_id              = var.account_id
   source                  = "./lambda"
@@ -76,14 +74,13 @@ module "lambda_ddbTable" {
 
   lambda_name = "ddbTable"
 
-  PLAID_CLIENT_ID          = ""
-  PLAID_ENV                = ""
-  PLAID_SECRET_DEVELOPMENT = ""
-  PLAID_SECRET_SANDBOX     = ""
+  PLAID_CLIENT_ID = ""
+  PLAID_ENV       = ""
+  PLAID_SECRET    = ""
 }
 
 module "apigateway" {
-  env        = var.env
+  env        = terraform.workspace
   region     = var.region
   account_id = var.account_id
   source     = "./apigateway"
@@ -96,4 +93,8 @@ module "apigateway" {
 
 output "apigw_resource_id" {
   value = "https://${module.apigateway.apigw_resource_id}.execute-api.us-east-1.amazonaws.com"
+}
+
+output "workspace_stage" {
+  value = terraform.workspace
 }

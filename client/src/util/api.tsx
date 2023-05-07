@@ -1,132 +1,96 @@
 import axios from 'axios';
 import { Auth } from 'aws-amplify';
 import { toast } from 'react-toastify';
-import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
+import { PlaidInstitution, PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import DuplicateItemToastMessage from '../components/DuplicateItemToast';
 
-const { REACT_APP_AWS_API_GATEWAY, REACT_APP_AWS_API_GATEWAY_STAGE } =
-  process.env;
-
-const url = REACT_APP_AWS_API_GATEWAY + '/' + REACT_APP_AWS_API_GATEWAY_STAGE;
-
-const getAuthToken = async () =>
-  (await Auth.currentSession()).getIdToken().getJwtToken();
-
-// setup token
-export const handleLinkTokenCreateUpdate = async (itemId: string | null) => {
-  const method = itemId ? 'PUT' : 'POST';
-  const route = itemId ? '/item/update_login' : '/link/token-create';
-
-  const response = await axios({
-    method,
-    url: url + route,
-    headers: { Authorization: await getAuthToken() },
-    data: { path: route, payload: { item_id: itemId } },
-  });
-  return response;
+const USE_STAGE = {
+  DEV: process.env.REACT_APP_AWS_API_GW_DEV,
+  PROD: process.env.REACT_APP_AWS_API_GW_PROD,
 };
 
-export const exchangeToken = async (
-  publicToken: string,
-  institution: any,
+type stage = 'DEV' | 'PROD';
+const TARGET_STAGE: stage =
+  (process.env.REACT_APP_USE_API_GW as stage) || ('DEV' as stage);
+const url = USE_STAGE[TARGET_STAGE];
+if (!url) throw new Error('missing backend url!◊');
+
+const api = async (request: any) =>
+  axios({
+    ...request,
+    url: url + request.url,
+    headers: {
+      Authorization: (await Auth.currentSession()).getIdToken().getJwtToken(),
+    },
+  });
+
+// create or update token
+export const linkTokenCreate = async (item_id: string | null) =>
+  api({
+    method: item_id ? 'PUT' : 'POST',
+    url: item_id ? '/item/update_login' : '/link/token_create',
+    data: { item_id },
+  });
+
+// crate item
+export const exchangeTokenCreateItem = async (
+  public_token: string,
+  institution: PlaidInstitution | null,
   accounts: PlaidLinkOnSuccessMetadata['accounts'],
-  userId: string
+  user_id: string
 ) => {
   try {
-    const { data } = await axios({
-      url: url + '/item/token-exchange',
+    return await api({
+      url: '/item/token_exchange',
       method: 'POST',
-      headers: { Authorization: await getAuthToken() },
       data: {
-        payload: {
-          accounts,
-          institution_id: institution.institution_id,
-          institution_name: institution.name,
-          public_token: publicToken,
-          user_id: userId,
-        },
+        accounts,
+        institution_id: institution?.institution_id,
+        institution_name: institution?.name,
+        public_token,
+        user_id,
       },
     });
-
-    return data;
-  } catch (err) {
-    // @ts-ignore TODO: resolve this ignore
-    if (err.response && err.response.status === 409) {
+  } catch (err: any) {
+    if (err?.response && err.response.status === 409) {
       toast.error(
-        <DuplicateItemToastMessage institutionName={institution.name} />
+        <DuplicateItemToastMessage institutionName={institution?.name} />
       );
     } else {
-      toast.error(`Error linking ${institution.name}`);
+      toast.error(`Error linking ${institution?.name}`);
     }
   }
 };
 
-// item
-export const getAllItems = async () =>
-  axios({
-    method: 'GET',
-    url: url + `/item`,
-    headers: { Authorization: await getAuthToken() },
-  });
-export const syncItemTransactions = async (itemId: string) =>
-  axios({
-    method: 'PUT',
-    url: url + `/item/sync`,
-    headers: { Authorization: await getAuthToken() },
-    data: {
-      payload: {
-        item_id: itemId,
-      },
-    },
-  });
+export const getItems = async () => api({ method: 'GET', url: `/item` });
 
-// item account
-export const getAllItemAccounts = async () =>
-  axios({
-    method: 'GET',
-    url: url + `/item/account`,
-    headers: { Authorization: await getAuthToken() },
-  });
+export const syncTransactionsByItemId = async (item_id: string) =>
+  api({ method: 'PUT', url: `/item/sync`, data: { item_id } });
 
-export const getItemAccountBalances = async (
-  itemId: string,
-  accountId: string
+export const getBalancesByAccountId = async (
+  item_id: string,
+  account_id: string
 ) =>
-  axios({
+  api({
     method: 'GET',
-    url: url + `/item/account/balance`,
-    headers: {
-      Authorization: await getAuthToken(),
-    },
-    params: {
-      item_id: itemId,
-    },
+    url: `/item/account/balance`,
+    params: { item_id, account_id },
+  });
+
+export const getTransactionsByAccountId = async (
+  item_id: string,
+  account_id: string
+) =>
+  api({
+    method: 'GET',
+    url: `/item/account/transaction`,
+    params: { item_id, account_id },
   });
 
 // institutions
-export const getItemInstitution = async (instId: string) =>
-  axios({
+export const getInstitutionById = async (institution_id: string) =>
+  api({
     method: 'GET',
-    url: url + '/item/institution/',
-    params: {
-      institution_id: instId,
-    },
-    headers: { Authorization: await getAuthToken() },
-  });
-
-// transactions
-export const getItemAccountTransactions = async (
-  itemId: string,
-  accountId: string
-) =>
-  axios({
-    method: 'GET',
-    url: url + `/item/account/transaction`,
-    headers: {
-      Authorization: await getAuthToken(),
-    },
-    params: {
-      item_id: itemId,
-      account_id: accountId,
-    },
+    url: '/item/institution',
+    params: { institution_id },
   });

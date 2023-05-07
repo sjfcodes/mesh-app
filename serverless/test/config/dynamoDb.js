@@ -3,15 +3,33 @@ import mockData from '../integration/plaid/mockData/plaid';
 
 dotenv.config();
 
+const {
+  env: { USE_API_GATEWAY, AWS_API_GW_DEV, AWS_API_GW_PROD },
+} = process;
+
+const targetEnv = USE_API_GATEWAY || 'DEV'
+
+if(targetEnv === 'PROD') throw new Error('PROD not yet supported, could possibly erase data!')
+
+const AWS_API_GW_TARGET = {
+  DEV: AWS_API_GW_DEV,
+  PROD: AWS_API_GW_PROD,
+}[targetEnv];
+
+const targetApiUrl = AWS_API_GW_TARGET;
+
+console.log({ targetApiUrl });
+
 const config = {
+  targetApiUrl,
   params: {
     headers: {
       Authorization: process.env.AUTH_TOKEN,
     },
   },
   TableName: {
-    user: process.env.USER_TABLE_NAME /* prod or test table */,
-    transaction: process.env.TRANSACTION_TABLE_NAME /* prod or test table */,
+    users: `mesh-app.${targetEnv.toLowerCase()}.users`,
+    transactions: `mesh-app.${targetEnv.toLowerCase()}.transactions`
   },
   Item: {
     original: {

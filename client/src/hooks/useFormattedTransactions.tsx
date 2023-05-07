@@ -1,22 +1,33 @@
-import { useMemo } from 'react';
-import usePlaidItems from '../hooks/usePlaidItems';
-import useTransactions from '../hooks/usePlaidTransactions';
+import { useEffect, useMemo } from 'react';
 import { PlaidTransactionType, TransactionType } from '../types';
+import useTransactions from './usePlaidTransactions';
+import usePlaidItems from './usePlaidItems';
+import { currencyFilter } from '../util/helpers';
 
-import { currencyFilter } from '../util';
-import TransactionsTable from './TransactionTable/TransactionsTable';
-import Loader from './Loader/Loader';
-
-export default function TransactionTimeline() {
-  const { allTransactions } = useTransactions();
+const useFormattedTransactions = () => {
   const { allAccounts } = usePlaidItems();
+  const { allTransactions, loadingMap, getTransactionsByAccountId } =
+    useTransactions();
+
+  useEffect(() => {
+    const hasLoaded = Object.keys(loadingMap);
+    const needsLoading = allAccounts.filter(
+      ({ id }) => !hasLoaded.includes(id)
+    );
+
+    needsLoading.forEach(({ item_id: itemId, id: accountId }) => {
+      return getTransactionsByAccountId(itemId, accountId);
+    });
+  }, [allAccounts]);
 
   const formattedTxs: TransactionType[] = useMemo(() => {
     if (!allTransactions.length) return [];
+
     const processed = [] as TransactionType[];
 
     const processTx = (txData: TransactionType) => {
       const { transaction: tx } = txData;
+      if (!tx.category || !Array.isArray(tx.category)) tx.category = ['~'];
       if (tx?.name?.includes('Online Banking Transfer')) {
         if (tx.name.includes('To')) {
           /**
@@ -72,13 +83,7 @@ export default function TransactionTimeline() {
     return processed;
   }, [allAccounts, allTransactions]);
 
-  return (
-    <main>
-      {formattedTxs.length ? (
-        <TransactionsTable transactions={formattedTxs} fullHeight />
-      ) : (
-        <Loader />
-      )}
-    </main>
-  );
-}
+  return { formattedTxs };
+};
+
+export default useFormattedTransactions;

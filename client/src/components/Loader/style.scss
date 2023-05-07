@@ -16,7 +16,7 @@ div.ma-loader-wrapper {
     width: 80px;
     height: 80px;
     & div {
-      animation: lds-roller 2.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      animation: lds-roller 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
       transform-origin: 40px 40px;
       &:after {
         content: ' ';
@@ -89,12 +89,12 @@ div.ma-loader-wrapper {
   }
 }
 @keyframes lds-roller {
-  // 0% {
-  //   transform: rotate(0deg);
-  // }
-  25% {
-    transform: rotate(30deg);
+  0% {
+    transform: rotate(0deg);
   }
+  // 25% {
+  //   transform: rotate(30deg);
+  // }
   // 50% {
   //   transform: rotate(180deg);
   // }

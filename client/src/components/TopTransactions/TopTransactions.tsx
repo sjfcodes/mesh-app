@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 
 import { Categories, TransactionType } from '../../types';
-import { currencyFilter, pluralize } from '../../util';
+import { currencyFilter, pluralize } from '../../util/helpers';
 
 import './style.scss';
 

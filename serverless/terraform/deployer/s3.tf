@@ -24,8 +24,7 @@ resource "aws_iam_policy" "s3" {
           "s3:DeleteObject"
         ],
         Resource = [
-          "arn:aws:s3:::mesh-app-tfstate/test/*",
-          "arn:aws:s3:::mesh-app-tfstate/prod/*",
+          "arn:aws:s3:::mesh-app-tfstate/**",
         ]
       }
     ]

@@ -24,7 +24,7 @@ export function currencyFilter(value: number) {
 
   const isNegative = value < 0;
   const displayValue = value < 0 ? -value : value;
-  return `${isNegative ? '' : ''}$${displayValue
+  return `${isNegative ? '' : ''}${displayValue
     .toFixed(2)
     .replace(/(\d)(?=(\d{3})+(\.|$))/g, '$1,')}`;
 }
@@ -60,6 +60,14 @@ export function formatDate(timestamp: string) {
 }
 
 /**
+ * @desc Prepends base64 encoded logo src for use in image tags
+ */
+export function formatLogoSrc(src: string | null | undefined): string {
+  if (!src) return '';
+  return `data:image/jpeg;base64,${src}`;
+}
+
+/**
  * @desc Checks the difference between the current time and a provided time
  */
 export function diffBetweenCurrentTime(timestamp: string) {
@@ -80,10 +88,11 @@ export const logEvent = (
   console.log(`Link Event: ${eventName}`, metadata, error);
 };
 
-export const logSuccess = async (
-  { institution, accounts, link_session_id }: PlaidLinkOnSuccessMetadata,
-  userId: string
-) => {
+export const logSuccess = async ({
+  institution,
+  accounts,
+  link_session_id,
+}: PlaidLinkOnSuccessMetadata) => {
   logEvent('onSuccess', {
     institution,
     accounts,
@@ -93,8 +102,7 @@ export const logSuccess = async (
 
 export const logExit = async (
   error: PlaidLinkError | null,
-  { institution, status, link_session_id, request_id }: PlaidLinkOnExitMetadata,
-  userId: string
+  { institution, status, link_session_id, request_id }: PlaidLinkOnExitMetadata
 ) => {
   logEvent(
     'onExit',

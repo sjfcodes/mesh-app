@@ -4,6 +4,11 @@ footer {
   // border: 1px solid greenyellow;
   border-top: 1px solid $theme-color-1-0;
   height: $footer-height;
+  width: 100%;
+  background-color: $theme-color-background-0;
+
+  position: fixed;
+  bottom: 0;
   & > div {
     display: flex;
     align-items: center;

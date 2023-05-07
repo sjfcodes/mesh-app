@@ -6,8 +6,9 @@ variable "region" {}
 variable "account_id" {}
 variable "PLAID_CLIENT_ID" {}
 variable "PLAID_ENV" {}
-variable "PLAID_SECRET_DEVELOPMENT" {}
-variable "PLAID_SECRET_SANDBOX" {}
+variable "PLAID_SECRET" {
+  sensitive = true
+}
 
 variable "table_transactions_name" {}
 variable "table_users_name" {}
@@ -52,16 +53,15 @@ resource "aws_lambda_function" "this" {
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
   runtime = "nodejs18.x"
-  timeout = 30
+  timeout = 180
 
   environment {
     variables = {
-      USER_TABLE_NAME          = var.table_users_name
-      TRANSACTION_TABLE_NAME   = var.table_transactions_name
-      PLAID_CLIENT_ID          = var.PLAID_CLIENT_ID
-      PLAID_ENV                = var.PLAID_ENV
-      PLAID_SECRET_DEVELOPMENT = var.PLAID_SECRET_DEVELOPMENT
-      PLAID_SECRET_SANDBOX     = var.PLAID_SECRET_SANDBOX
+      USER_TABLE_NAME        = var.table_users_name
+      TRANSACTION_TABLE_NAME = var.table_transactions_name
+      PLAID_CLIENT_ID        = var.PLAID_CLIENT_ID
+      PLAID_ENV              = var.PLAID_ENV
+      PLAID_SECRET           = var.PLAID_SECRET
     }
   }
 
@@ -101,10 +101,11 @@ data "aws_iam_policy_document" "this" {
       "dynamodb:Query"
     ]
     resources = [
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}",
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}/*",
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}",
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}/*"
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_transactions_name}**",
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.table_users_name}**",
+      # support legacy for now
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/mesh-app.users**",
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/mesh-app.plaid.transactions**",
     ]
   }
 }

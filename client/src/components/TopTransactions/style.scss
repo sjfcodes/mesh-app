@@ -1,8 +1,10 @@
 @import '../../variables.scss';
 
 div.top-transactions {
+  // border: solid 1px green;
+  position: absolute;
+  top: calc($header-height + $section-title-height + $spending-categories-height);
   & > div.header {
-    // border: solid 1px red;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -24,7 +26,7 @@ div.top-transactions {
   }
   & ol {
     &::-webkit-scrollbar-track {
-      background-color: red;
+      // background-color: red;
       color: green;
     }
     & li {

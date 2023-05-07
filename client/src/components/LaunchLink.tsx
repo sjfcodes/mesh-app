@@ -10,10 +10,10 @@ import {
 } from 'react-plaid-link';
 import { useNavigate } from 'react-router-dom';
 
-import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
+import { logEvent, logSuccess, logExit } from '../util/helpers'; // functions to log and save errors and metadata from Link events.
 import useErrors from '../hooks/useErrors';
 import useLink from '../hooks/useLink';
-import { exchangeToken } from '../util/api';
+import { exchangeTokenCreateItem } from '../util/api';
 
 interface Props {
   isOauth?: boolean;
@@ -38,7 +38,7 @@ export default function LaunchLink(props: Props) {
     metadata: PlaidLinkOnSuccessMetadata
   ) => {
     // log and save metatdata
-    logSuccess(metadata, props.userId);
+    logSuccess(metadata);
     if (props.itemId != null) {
       // update mode: no need to exchange public token
       // await setItemState(props.itemId, 'good');
@@ -46,7 +46,7 @@ export default function LaunchLink(props: Props) {
       // regular link mode: exchange public token for access token
     } else {
       // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
-      await exchangeToken(
+      await exchangeTokenCreateItem(
         publicToken,
         metadata.institution,
         metadata.accounts,
@@ -63,7 +63,7 @@ export default function LaunchLink(props: Props) {
     metadata: PlaidLinkOnExitMetadata
   ) => {
     // log and save error and metatdata
-    logExit(error, metadata, props.userId);
+    logExit(error, metadata);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(props.userId, props.itemId || null);
     }

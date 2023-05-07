@@ -1,12 +1,15 @@
 @import '../../variables.scss';
 
 main#ma-plaid-items-page {
+  // border: 1px solid red;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  position: fixed;
+  top: calc($header-height + $section-title-height);
   & div.add-item {
-    // border: 1px solid red;
     // display: flex;
     // justify-content: center;
     margin-block: 1rem;

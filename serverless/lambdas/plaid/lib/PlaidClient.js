@@ -9,17 +9,9 @@ dotenv.config();
 
 const {
   PLAID_CLIENT_ID,
+  PLAID_SECRET,
   PLAID_ENV,
-  PLAID_SECRET_DEVELOPMENT,
-  PLAID_SECRET_SANDBOX,
-  //   PLAID_SANDBOX_REDIRECT_URI,
-  //   PLAID_DEVELOPMENT_REDIRECT_URI,
 } = process.env;
-
-// The Plaid secret is unique per environment. Note that there is also a separate production key,
-// though we do not account for that here.
-const PLAID_SECRET =
-  PLAID_ENV === 'development' ? PLAID_SECRET_DEVELOPMENT : PLAID_SECRET_SANDBOX;
 
 const configuration = new Configuration({
   basePath: PlaidEnvironments[PLAID_ENV],
@@ -63,7 +55,9 @@ class PlaidClient {
   }
 
   async updateItemLogin(userId, accessToken) {
-    if (!userId || !accessToken) throw new Error('missing required arguments!');
+    if (!userId) throw new Error('missing userId!');
+    if (!accessToken) throw new Error('missing accessToken!');
+
     const request = {
       user: { client_user_id: userId },
       client_name: config.appName,
@@ -77,36 +71,20 @@ class PlaidClient {
     return data;
   }
 
-  async getItemAccountBalances(accessToken, accountIds) {
+  async getBalancesByAccountId(accessToken, accountIds) {
     if (!accessToken) throw new Error('missing accessToken!');
-    if (!accountIds.length) throw new Error('missing accountIds!');
-    /**
-     * NOTE: plaid request takes almost ~50 seconds to complete.
-     * 
-     * #. account balance can relate to txCursor.
-     * #. if item txCursor changes, 
-     *    - update account balances
-     *    - update txCursor for new balances.
-     */
 
-    console.log({ accountIds });
+    const request = { access_token: accessToken };
+    if (accountIds.length) request.options = { account_ids: accountIds };
 
-    const request = {
-      access_token: accessToken,
-      options: {
-        account_ids: accountIds,
-      },
-    };
-
-    const response = await this.client.accountsBalanceGet(request);
+    const response = await this.client.accountsGet(request);
+    // const response = await this.client.accountsBalanceGet(request);
     const accounts = response.data.accounts;
-
-    console.log({ accounts });
 
     return { accounts };
   }
 
-  async getItemInstitution(instId) {
+  async getInstitutionById(instId) {
     if (!instId) throw new Error('missing required arguments!');
     const request = {
       institution_id: instId,

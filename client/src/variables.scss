@@ -1,11 +1,13 @@
 $theme-color-background-0: #0e1013;
 $theme-color-background-1: #35383d;
-$theme-color-1-0: rgba(128, 128, 128, 0.669);
-$theme-color-2-0: #61dcfb8c;
+$theme-color-1-0: rgba(128, 128, 128, 0.819);
+$theme-color-2-0: #61dcfbb0;
 $theme-color-red-0: rgba(255, 0, 0, 0.552);
 $theme-color-green-0:  rgba(172, 255, 47, 0.556);
 $border-radius-0: .5rem; 
 
 $header-height: 7vh;
+$section-title-height: 3vh;
+$spending-categories-height: 25vh; 
 $footer-height: 12vh;
 $body-height: calc((100vh - ($header-height + $footer-height)) - 2rem);

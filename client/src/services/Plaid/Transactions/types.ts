@@ -13,9 +13,10 @@ export type TransactionsAction =
   | { type: 'DELETE_BY_USER'; payload: string };
 
 export interface TransactionsContextShape extends TransactionsState {
+  loadingMap: { [accountId: string]: boolean };
   allTransactions: TransactionType[];
   itemAccountTransaction: { [accountId: string]: TransactionType[] };
-  getItemAccountTransactions: (
+  getTransactionsByAccountId: (
     itemId: string,
     accountId: string,
     refresh?: boolean

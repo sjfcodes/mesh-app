@@ -29,10 +29,8 @@ resource "aws_iam_policy" "lambda" {
           "lambda:RemovePermission",
         ],
         Resource = [
-          "arn:aws:lambda:${local.region}:${local.account_id}:function:test_plaid",
-          "arn:aws:lambda:${local.region}:${local.account_id}:function:prod_plaid",
-          "arn:aws:lambda:${local.region}:${local.account_id}:function:test_ddbTable",
-          "arn:aws:lambda:${local.region}:${local.account_id}:function:prod_ddbTable",
+          "arn:aws:lambda:${local.region}:${local.account_id}:function:*_plaid",
+          "arn:aws:lambda:${local.region}:${local.account_id}:function:*_ddbTable",
         ]
       }
     ]

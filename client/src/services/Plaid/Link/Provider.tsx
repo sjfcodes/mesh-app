@@ -1,5 +1,11 @@
-import { createContext, useCallback, useMemo, useReducer } from 'react';
-import { handleLinkTokenCreateUpdate } from '../../../util/api';
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
+import { linkTokenCreate } from '../../../util/api';
 import linkReducer from './reducer';
 import { LinkContextShape } from './types';
 
@@ -17,6 +23,7 @@ export const LinkContext = createContext<LinkContextShape>(
  * @desc Maintains the Link context state and fetches link tokens to update that state.
  */
 export function LinkProvider(props: any) {
+  const [isLoading, setIsLoading] = useState(false);
   const [linkTokens, dispatch] = useReducer(linkReducer, initialState);
 
   /**
@@ -25,13 +32,13 @@ export function LinkProvider(props: any) {
 
   const generateLinkToken = useCallback(
     async (userId: string, itemId: string | null) => {
+      setIsLoading(true);
       // if itemId is not null, update mode is triggered
       const {
-        data: { body },
-      } = await handleLinkTokenCreateUpdate(itemId);
-      if (body.link_token) {
-        const token = body.link_token;
-        console.log('success', body);
+        data: { data },
+      } = await linkTokenCreate(itemId);
+      if (data.link_token) {
+        const token = data.link_token;
 
         if (itemId != null) {
           dispatch({
@@ -43,9 +50,9 @@ export function LinkProvider(props: any) {
           dispatch({ type: 'LINK_TOKEN_CREATED', id: userId, token: token });
         }
       } else {
-        dispatch({ type: 'LINK_TOKEN_ERROR', error: body });
-        console.log('error', body);
+        dispatch({ type: 'LINK_TOKEN_ERROR', error: data });
       }
+      setIsLoading(false);
     },
     []
   );
@@ -69,11 +76,12 @@ export function LinkProvider(props: any) {
 
   const value = useMemo(
     () => ({
-      generateLinkToken,
-      deleteLinkToken,
+      isLoading,
       linkTokens,
+      deleteLinkToken,
+      generateLinkToken,
     }),
-    [linkTokens, generateLinkToken, deleteLinkToken]
+    [isLoading, linkTokens, generateLinkToken, deleteLinkToken]
   );
 
   return <LinkContext.Provider value={value} {...props} />;

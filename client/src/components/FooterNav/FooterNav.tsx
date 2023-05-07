@@ -16,7 +16,7 @@ const FooterNav = () => {
   const navigate = useNavigate();
   const { signOut } = useUser();
   const [selected, setSelected] = useState(
-    /*localStorage.getItem('ma-selected-app') || */ ''
+    localStorage.getItem('ma-selected-app') || ''
   );
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const FooterNav = () => {
       if (signOut) signOut({ type: 'SIGN_OUT' });
       route = '/';
     }
-    // localStorage.setItem('ma-selected-app', route);
+    localStorage.setItem('ma-selected-app', route);
     setSelected(route);
   };
   return (
@@ -46,18 +46,18 @@ const FooterNav = () => {
         </div>
         <div className="sections">
           <AppButton
+            label="txs"
+            className={selected === ROUTE.TRANSACTIONS ? 'ma-border-1-0' : ''}
+            onClick={() => handleSelection(ROUTE.TRANSACTIONS)}
+          >
+            <BsListOl size={iconSize} />
+          </AppButton>
+          <AppButton
             label="accounts"
             className={selected === ROUTE.ACCOUNTS ? 'ma-border-1-0' : ''}
             onClick={() => handleSelection(ROUTE.ACCOUNTS)}
           >
             <BsBank size={iconSize} />
-          </AppButton>
-          <AppButton
-            label="transactions"
-            className={selected === ROUTE.TRANSACTIONS ? 'ma-border-1-0' : ''}
-            onClick={() => handleSelection(ROUTE.TRANSACTIONS)}
-          >
-            <BsListOl size={iconSize} />
           </AppButton>
           <AppButton
             label="spending"

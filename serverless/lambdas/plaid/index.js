@@ -1,115 +1,74 @@
 import config from './utils/config.js';
 import App from './lib/App.js';
 
-export const handler = async (event) => {
-  const requestMethod = event.httpMethod;
-  const requestPath = event.path;
+const GET = 'GET';
+const PUT = 'PUT';
+const POST = 'POST';
 
+const routeMap = {
+  [config.path.item]: {
+    [GET]: 'getItems',
+  },
+  [config.path.itemInstitution]: {
+    [GET]: 'getInstitutionById',
+  },
+  [config.path.itemAccountBalance]: {
+    [GET]: 'getBalancesByAccountId',
+  },
+  [config.path.itemAccountTransaction]: {
+    [GET]: 'getTransactionsByAccountId',
+  },
+  [config.path.itemSync]: {
+    [PUT]: 'syncTransactionsByItemId',
+  },
+  [config.path.itemSyncMock]: {
+    [PUT]: 'testSyncTransactionsByItemId',
+  },
+  [config.path.itemUpdateLogin]: {
+    [PUT]: 'updateItemLogin',
+  },
+  [config.path.linkTokenCreate]: {
+    [POST]: 'linkTokenCreate',
+  },
+  [config.path.itemTokenExchange]: {
+    [POST]: 'exchangeTokenCreateItem',
+  },
+  [config.path.itemTokenExchangeMock]: {
+    [POST]: 'testExchangeTokenCreateItem',
+  },
+};
+
+export const handler = async (event) => {
+  console.log(event);
   let response = {};
   let statusCode = 200;
 
-  console.log(event);
-
   try {
     const app = new App(event);
-
     await app.setUserByToken(event.headers.Authorization);
 
-    switch (requestMethod) {
-      case 'GET':
-        switch (requestPath) {
-          case config.path.userItem:
-            response.data = await app.handleGetItems();
-            break;
+    const requestMethod = event.httpMethod;
+    if (!requestMethod) throw new Error('missing requestMethod');
 
-          case config.path.itemInstitution:
-            response.data = await app.handleGetItemInstitutionById();
-            break;
+    const requestPath = event.path;
+    if (!requestPath) throw new Error('missing requestPath');
 
-          case config.path.itemAccount:
-            response.data = await app.handleGetItemAccounts();
-            break;
+    const classMethod = routeMap[requestPath][requestMethod];
+    if (!classMethod) throw new Error('missing classMethod');
 
-          case config.path.itemAccountBalance:
-            response.data = await app.handleGetItemAccountBalances();
-            break;
-
-          case config.path.itemAccountTransaction:
-            response.data = await app.handleGetUserAccountTransactions();
-            break;
-
-          default:
-            throw Error(`requestPath:"${requestPath}" not found!`);
-        }
-        break;
-
-      case 'PUT':
-        switch (requestPath) {
-          case config.path.itemSync:
-            const summary = await app.handleUserItemSyncTransactions();
-            response.data = { tx_sync: 'complete', ...summary };
-            break;
-
-          case config.path.itemSyncMock:
-            const testSummary = await app.handleUserItemSyncTransactionsTest();
-            response.data = { tx_sync: 'complete', ...testSummary };
-            break;
-
-          case config.path.itemUpdateLogin:
-            response.data = await app.handleUpdateUserItemLogin();
-            break;
-
-          default:
-            throw Error(`requestPath:"${requestPath}" not found!`);
-        }
-        break;
-
-      case 'POST':
-        switch (requestPath) {
-          case config.path.itemAccount:
-            response.data = await app.handleGetItemAccounts();
-            break;
-
-          case config.path.linkTokenCreate:
-            response.data = await app.handleLinkTokenCreateUpdate();
-            break;
-
-          case config.path.itemTokenExchange:
-            const { item_id } = await app.handleItemTokenExchange();
-            response.data = { public_token_exchange: 'complete', item_id };
-            break;
-
-          case config.path.itemTokenExchangeMock:
-            const { item_id: testItemId } =
-              await app.handleItemTokenExchangeMock();
-            response.data = {
-              public_token_exchange: 'complete',
-              item_id: testItemId,
-            };
-            break;
-
-          default:
-            throw Error(`requestPath:"${requestPath}" not found!`);
-        }
-        break;
-
-      default:
-        throw new Error(`Unsupported method: "${requestMethod}"`);
-    }
+    response.data = await app[classMethod]();
   } catch (error) {
     console.error(error);
     response.message = error.message;
-    if (error?.response) {
-      response = error.response;
+    if (error?.response?.data) {
+      response = error.response.data;
     }
     statusCode = 500;
   }
 
-  response.statusCode = statusCode;
-
   // must follow expected formatted response
   return {
-    body: JSON.stringify(response),
+    body: JSON.stringify({ ...response, statusCode }),
     headers: {
       'Access-Control-Allow-Origin': '*', // Required for CORS support to work
       'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS

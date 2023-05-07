@@ -9,20 +9,17 @@ const ButtonLinkBank = () => {
   const {
     user: { sub: userId },
   } = useUser();
-  const { generateLinkToken, linkTokens } = useLink();
+  const { generateLinkToken, linkTokens, isLoading } = useLink();
   const [token, setToken] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
   }, [linkTokens, userId]);
 
   const initiateLink = async () => {
-    setIsLoading(true);
     // only generate a link token upon a click from end-user to add a bank;
     // if done earlier, it may expire before end-user actually activates Link to add a bank.
     await generateLinkToken(userId, null);
-    setIsLoading(false);
   };
   return (
     <>

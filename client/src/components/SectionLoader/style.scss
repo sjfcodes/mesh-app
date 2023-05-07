@@ -1,0 +1,17 @@
+@import '../../variables.scss';
+
+div.ma-section-loader {
+  // border: 1px solid red;
+  min-height: calc(100vh + 10px);
+  margin: -1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $theme-color-background-0;
+  & div.ma-loader-wrapper {
+    // border: 1px solid orange;
+    position: fixed;
+    top: 50vh;
+    transform: scale(2);
+  }
+}

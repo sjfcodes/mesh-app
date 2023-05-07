@@ -1,12 +1,16 @@
 import { AccountType, ItemType } from '../../../types';
+
+export type ItemId = string;
+export type UserId = string;
+
 export interface ItemsState {
-  [itemId: string]: ItemType;
+  [itemId: ItemId]: ItemType;
 }
 
 export type ItemsAction =
   | {
       type: 'SUCCESSFUL_ITEM_GET';
-      payload: { [item_d: string]: ItemType };
+      payload: { [item_d: ItemId]: ItemType };
     }
   | {
       type: 'SUCCESSFUL_ITEM_SYNC';
@@ -15,15 +19,15 @@ export type ItemsAction =
   | { type: 'SUCCESSFUL_DELETE_ITEM'; payload: string }
   | {
       type: 'SUCCESSFUL_ACCOUNT_DELETE';
-      payload: { itemId: string; accountId: string };
+      payload: { itemId: ItemId; accountId: string };
     };
 
 export interface ItemsContextShape {
   allAccounts: AccountType[];
   lastActivity: string;
-  plaidItem: { [item_id: string]: ItemType };
+  plaidItem: { [item_id: ItemId]: ItemType };
   sortedItems: ItemType[];
   isLoading: boolean;
-  getAllItems: (userId: string, refresh: boolean) => void;
-  syncItemTransactions: (itemId: string) => void;
+  getItems: (userId: string, refresh: boolean) => void;
+  syncTransactionsByItemId: (itemId: ItemId) => void;
 }

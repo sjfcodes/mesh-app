@@ -22,7 +22,8 @@ export type LinkAction =
   | { type: 'DELETE_ITEM_LINK_TOKEN'; id: string };
 
 export interface LinkContextShape extends LinkState {
-  generateLinkToken: (userId: string, itemId: string | null) => Promise<void>;
-  deleteLinkToken: (userId: string | null, itemId: string | null) => void;
+  isLoading: boolean;
   linkTokens: LinkState;
+  deleteLinkToken: (userId: string | null, itemId: string | null) => void;
+  generateLinkToken: (userId: string, itemId: string | null) => Promise<void>;
 }

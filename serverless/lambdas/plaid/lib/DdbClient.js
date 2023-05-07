@@ -29,11 +29,11 @@ class DdbClient {
     if (!email) throw new Error('missing argument email!');
     await this.client.send(
       new UpdateItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: { S: email } },
         UpdateExpression: `SET #last = :date`,
         ExpressionAttributeNames: {
-          '#last': config.itemKeys.lastActivity,
+          '#last': config.property.lastActivity,
         },
         ExpressionAttributeValues: {
           ':date': { S: getTimestamp() },
@@ -48,7 +48,7 @@ class DdbClient {
     if (!requestPath) throw new Error('missing argument requestPath!');
     const { Item } = await this.client.send(
       new GetItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
       })
     );
@@ -59,10 +59,10 @@ class DdbClient {
      * for getting user last activity.
      * Skip this check for said route.
      */
-    if (requestPath !== config.path.userItem) {
+    if (requestPath !== config.path.item) {
       let shouldWriteUserLastActivity = false;
       const lastActivity = new Date(
-        Item[config.itemKeys.lastActivity]?.S
+        Item[config.property.lastActivity]?.S
       ).getTime();
 
       if (!isNaN(lastActivity)) {
@@ -88,18 +88,18 @@ class DdbClient {
 
     const { Item } = await this.client.send(
       new GetItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
         ProjectionExpression: `#items.#item`,
         ExpressionAttributeNames: {
-          '#items': config.itemKeys.plaidItem,
+          '#items': config.property.plaidItem,
           '#item': itemId,
         },
       })
     );
 
     const {
-      [config.itemKeys.plaidItem]: { [itemId]: item },
+      [config.property.plaidItem]: { [itemId]: item },
     } = unmarshall(Item);
 
     return {
@@ -115,17 +115,17 @@ class DdbClient {
     if (!email) throw new Error('missing email!');
     const {
       Item: {
-        [config.itemKeys.lastActivity]: { S: lastActivity },
-        [config.itemKeys.plaidItem]: { M: plaidItems },
+        [config.property.lastActivity]: { S: lastActivity },
+        [config.property.plaidItem]: { M: plaidItems },
       },
     } = await this.client.send(
       new GetItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
         ProjectionExpression: `#items, #activity`,
         ExpressionAttributeNames: {
-          '#items': config.itemKeys.plaidItem,
-          '#activity': config.itemKeys.lastActivity,
+          '#items': config.property.plaidItem,
+          '#activity': config.property.lastActivity,
         },
       })
     );
@@ -157,7 +157,7 @@ class DdbClient {
 
     const response = await this.client.send(
       new QueryCommand({
-        TableName: config.TableName.transaction,
+        TableName: config.TableName.transactions,
         IndexName: 'item_id-account_id-created_at-index',
         Select: 'ALL_ATTRIBUTES',
         KeyConditionExpression:
@@ -191,7 +191,7 @@ class DdbClient {
   //   const formatted = itemId + '::' + accountId;
   //   const response = await this.client.send(
   //     new GetItemCommand({
-  //       TableName: config.TableName.transaction,
+  //       TableName: config.TableName.transactions,
   //       Key: {
   //         [PARTITION_KEY]: { S: formatted },
   //         [SORT_KEY]: { S: transactionId },
@@ -212,14 +212,14 @@ class DdbClient {
 
     await this.client.send(
       new UpdateItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
         UpdateExpression: `SET #items.#item.#cursor = :cursor, #items.#item.#cursorUpdated = :cursorUpdated, #items.#item.#updated = :updated`,
         ExpressionAttributeNames: {
-          '#items': config.itemKeys.plaidItem,
+          '#items': config.property.plaidItem,
           '#item': itemId,
-          '#cursor': config.itemKeys.txCursor,
-          '#cursorUpdated': config.itemKeys.txCursorUpdatedAt,
+          '#cursor': config.property.txCursor,
+          '#cursorUpdated': config.property.txCursorUpdatedAt,
           '#updated': 'updated_at',
         },
         ExpressionAttributeValues: {
@@ -247,11 +247,11 @@ class DdbClient {
 
     await this.client.send(
       new UpdateItemCommand({
-        TableName: config.TableName.user,
+        TableName: config.TableName.users,
         Key: { email: marshall(email) },
         UpdateExpression: `SET #items.#item = :map`,
         ExpressionAttributeNames: {
-          '#items': config.itemKeys.plaidItem,
+          '#items': config.property.plaidItem,
           '#item': tokenExchange.item_id,
         },
         ExpressionAttributeValues: {
@@ -261,8 +261,8 @@ class DdbClient {
             accounts: accounts,
             institution_name: institution_name,
             institution_id: institution_id,
-            [config.itemKeys.txCursor]: '',
-            [config.itemKeys.txCursorUpdatedAt]: '',
+            [config.property.txCursor]: '',
+            [config.property.txCursorUpdatedAt]: '',
             created_at: now,
             updated_at: now,
           }),
@@ -316,7 +316,7 @@ class DdbClient {
 
       const response = await this.client.send(
         new BatchWriteItemCommand({
-          RequestItems: { [config.TableName.transaction]: requestBatch },
+          RequestItems: { [config.TableName.transactions]: requestBatch },
         })
       );
 

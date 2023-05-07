@@ -2,7 +2,7 @@ import React from 'react';
 import IconButton from 'plaid-threads/IconButton';
 import Trash from 'plaid-threads/Icons/Trash';
 
-import { currencyFilter, pluralize } from '../util';
+import { currencyFilter, pluralize } from '../util/helpers';
 import Asset from './Asset';
 import { AccountType, AssetType } from '../types';
 
@@ -59,7 +59,7 @@ export default function NetWorth(props: Props) {
               <div className="holdingsList">
                 <div className="assetsHeaderContainer">
                   <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
-                  <Asset userId={props.userId} />
+                  <Asset />
                 </div>
 
                 <div className="data">
@@ -124,7 +124,7 @@ export default function NetWorth(props: Props) {
               <div className="holdingsList">
                 <div className="assetsHeaderContainer">
                   <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
-                  <Asset userId={props.userId} />
+                  <Asset />
                 </div>
                 <div className="data">
                   <p className="title">Assets</p>

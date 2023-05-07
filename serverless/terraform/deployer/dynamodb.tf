@@ -20,8 +20,7 @@ resource "aws_iam_policy" "dynamodb" {
           "dynamodb:DeleteItem"
         ]
         Resource = [
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/test_mesh-app_tfstate_lock",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/prod_mesh-app_tfstate_lock",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app_tfstate_lock",
         ]
       },
       {
@@ -37,10 +36,8 @@ resource "aws_iam_policy" "dynamodb" {
           "dynamodb:ListTagsOfResource",
         ]
         Resource = [
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.users",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.users",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.transactions",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.transactions",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.users",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.transactions",
         ]
       },
       {
@@ -55,14 +52,8 @@ resource "aws_iam_policy" "dynamodb" {
           "dynamodb:Query"
         ]
         Resource = [
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.users",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.users/*",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.users",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.users/*",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.transactions",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.test.transactions/*",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.transactions",
-          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.prod.transactions/*",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.users**",
+          "arn:aws:dynamodb:${local.region}:${local.account_id}:table/mesh-app.*.transactions**",
         ]
       },
     ]
