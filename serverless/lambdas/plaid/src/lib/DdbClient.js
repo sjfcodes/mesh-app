@@ -30,7 +30,7 @@ class DdbClient {
     await this.client.send(
       new UpdateItemCommand({
         TableName: config.TableName.users,
-        Key: { email: { S: email } },
+        Key: { email: convertToAttr(email) },
         UpdateExpression: `SET #last = :date`,
         ExpressionAttributeNames: {
           '#last': config.property.lastActivity,
@@ -43,13 +43,19 @@ class DdbClient {
     );
   }
 
+  /**
+   *
+   * @param {import('@aws-sdk/util-dynamodb').NativeAttributeValue} email
+   * @param {string} requestPath
+   * @returns
+   */
   async readUserByTokenEmail(email, requestPath) {
     if (!email) throw new Error('missing argument email!');
     if (!requestPath) throw new Error('missing argument requestPath!');
     const { Item } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.users,
-        Key: { email: marshall(email) },
+        Key: { email: convertToAttr(email) },
       })
     );
 
@@ -82,6 +88,12 @@ class DdbClient {
     return unmarshall(Item);
   }
 
+  /**
+   *
+   * @param {import('@aws-sdk/util-dynamodb').NativeAttributeValue} email
+   * @param {string} itemId
+   * @returns
+   */
   async readItemByItemId(email, itemId) {
     if (!email) throw new Error('missing email!');
     if (!itemId) throw new Error('missing itemId!');
@@ -89,7 +101,7 @@ class DdbClient {
     const { Item } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.users,
-        Key: { email: marshall(email) },
+        Key: { email: convertToAttr(email) },
         ProjectionExpression: `#items.#item`,
         ExpressionAttributeNames: {
           '#items': config.property.plaidItem,
@@ -111,6 +123,11 @@ class DdbClient {
     };
   }
 
+  /**
+   *
+   * @param {import('@aws-sdk/util-dynamodb').NativeAttributeValue} email
+   * @returns
+   */
   async readUserItems(email) {
     if (!email) throw new Error('missing email!');
     const {
@@ -121,7 +138,7 @@ class DdbClient {
     } = await this.client.send(
       new GetItemCommand({
         TableName: config.TableName.users,
-        Key: { email: marshall(email) },
+        Key: { email: convertToAttr(email) },
         ProjectionExpression: `#items, #activity`,
         ExpressionAttributeNames: {
           '#items': config.property.plaidItem,
@@ -146,6 +163,14 @@ class DdbClient {
     return { accounts: allAccounts };
   }
 
+  /**
+   *
+   * @param {string} itemId
+   * @param {string} accountId
+   * @param {string} upperBand
+   * @param {string} lowerBand
+   * @returns
+   */
   async readAccountTransactions(itemId, accountId, upperBand, lowerBand) {
     if (!itemId) throw new Error('missing itemId!');
     if (!accountId) throw new Error('missing accountId!');
@@ -153,7 +178,6 @@ class DdbClient {
     if (!lowerBand) throw new Error('missing lowerBand!');
 
     const formatted = itemId + '::' + accountId;
-    console.log(formatted);
 
     const response = await this.client.send(
       new QueryCommand({
@@ -167,9 +191,12 @@ class DdbClient {
           '#createdAt': 'created_at',
         },
         ExpressionAttributeValues: {
-          ':partitionValue': marshall(formatted),
-          ':lowerBand': marshall(lowerBand),
-          ':upperBand': marshall(upperBand),
+          // @ts-ignore
+          ':partitionValue': convertToAttr(formatted),
+          // @ts-ignore
+          ':lowerBand': convertToAttr(lowerBand),
+          // @ts-ignore
+          ':upperBand': convertToAttr(upperBand),
         },
       })
     );
@@ -183,37 +210,23 @@ class DdbClient {
     return { transactions };
   }
 
-  // async readAccountTransaction(itemId, accountId, transactionId) {
-  //   if (!itemId) throw new Error('missing itemId!');
-  //   if (!accountId) throw new Error('missing accountId!');
-  //   if (!transaction) throw new Error('missing transaction!');
-
-  //   const formatted = itemId + '::' + accountId;
-  //   const response = await this.client.send(
-  //     new GetItemCommand({
-  //       TableName: config.TableName.transactions,
-  //       Key: {
-  //         [PARTITION_KEY]: { S: formatted },
-  //         [SORT_KEY]: { S: transactionId },
-  //       },
-  //     })
-  //   );
-
-  //   return { transaction: {} };
-  // }
-
+  /**
+   *
+   * @param {string} email
+   * @param {string} itemId
+   * @param {string} newTxCursor
+   * @returns
+   */
   async writeUserItemTxCursor(email, itemId, newTxCursor) {
     if (!email || !itemId || newTxCursor === undefined)
       throw new Error('missing required arguments!');
-
-    console.log(`writeUserItemTxCursor(${email}, ${itemId}, ${newTxCursor})`);
 
     const now = getTimestamp();
 
     await this.client.send(
       new UpdateItemCommand({
         TableName: config.TableName.users,
-        Key: { email: marshall(email) },
+        Key: { email: convertToAttr(email) },
         UpdateExpression: `SET #items.#item.#cursor = :cursor, #items.#item.#cursorUpdated = :cursorUpdated, #items.#item.#updated = :updated`,
         ExpressionAttributeNames: {
           '#items': config.property.plaidItem,
@@ -223,9 +236,12 @@ class DdbClient {
           '#updated': 'updated_at',
         },
         ExpressionAttributeValues: {
-          ':cursor': marshall(newTxCursor),
-          ':cursorUpdated': marshall(now),
-          ':updated': marshall(now),
+          // @ts-ignore
+          ':cursor': convertToAttr(newTxCursor),
+          // @ts-ignore
+          ':cursorUpdated': convertToAttr(now),
+          // @ts-ignore
+          ':updated': convertToAttr(now),
         },
         ReturnValues: 'UPDATED_NEW',
       })
@@ -248,7 +264,7 @@ class DdbClient {
     await this.client.send(
       new UpdateItemCommand({
         TableName: config.TableName.users,
-        Key: { email: marshall(email) },
+        Key: { email: convertToAttr(email) },
         UpdateExpression: `SET #items.#item = :map`,
         ExpressionAttributeNames: {
           '#items': config.property.plaidItem,
@@ -273,8 +289,10 @@ class DdbClient {
   }
 
   async writeUserItemTransaction({ itemId, added, modified, removed }) {
-    if (!itemId || !added || !modified || !removed)
+    if (!itemId || !added || !modified || !removed) {
       throw new Error('missing required arguments!');
+    }
+
     console.log(
       `writeUserItemTransaction(${JSON.stringify({
         itemId,
@@ -300,7 +318,6 @@ class DdbClient {
 
         if (isNew) requestItem.created_at = tx.date || now;
         if (isRemoved) requestItem.transaction = 'removed';
-
         return { PutRequest: { Item: marshall(requestItem) } };
       });
     };
@@ -328,6 +345,7 @@ class DdbClient {
       config.dynamoDbBatchRequestLength
     );
 
+    console.log(requestQueue)
     const responses = [];
     const loopCount = requestQueue.length;
     for (let i = 0; i < loopCount; i++) {

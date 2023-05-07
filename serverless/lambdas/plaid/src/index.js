@@ -39,7 +39,6 @@ const routeMap = {
 };
 
 export const handler = async (event) => {
-  console.log(event);
   let response = {};
   let statusCode = 200;
 
@@ -58,6 +57,8 @@ export const handler = async (event) => {
      */
     const requestPath = event.path;
     if (!requestPath) throw new Error('missing requestPath');
+
+    console.log(requestMethod, ':', requestPath);
 
     /**
      * @type {string}
