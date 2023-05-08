@@ -13,8 +13,8 @@ class App {
   }
 
   /**
-   * 
-   * @param {string} token 
+   *
+   * @param {string} token
    */
   async setUserByToken(token) {
     if (!token) throw new Error('missing token!');
@@ -205,6 +205,22 @@ class App {
     const { newTxCursor, added, modified, removed } =
       await this.plaidClient.itemSyncTransactions(accessToken, txCursor);
 
+    const updated_accounts = [];
+
+    if (!newTxCursor) {
+      return {
+        tx_cursor_updated_at: null,
+        updated_accounts,
+      };
+    }
+    [...added, ...modified, ...removed].forEach((tx) => {
+      // @ts-ignore
+      const account_id = tx.account_id;
+      if (account_id && !updated_accounts.includes(account_id)) {
+        updated_accounts.push(account_id);
+      }
+    });
+
     // write items to db before writing cursor to db
     await this.ddbClient.writeUserItemTransaction({
       itemId,
@@ -218,13 +234,9 @@ class App {
       itemId,
       newTxCursor
     );
-
     return {
-      tx_sync: 'complete',
-      added: added.length,
-      modified: modified.length,
-      removed: removed.length,
       tx_cursor_updated_at,
+      updated_accounts,
     };
   }
 

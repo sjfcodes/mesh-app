@@ -1,6 +1,7 @@
 import {
   createContext,
   useCallback,
+  useEffect,
   useMemo,
   useReducer,
   useRef,
@@ -10,6 +11,9 @@ import { TransactionType } from '../../../types';
 import { getTransactionsByAccountId as apiGetItemAccountTransactions } from '../../../util/api';
 import transactionsReducer from './reducer';
 import { TransactionsContextShape } from './types';
+import usePlaidItems from '../../../hooks/usePlaidItems';
+import { ItemId, UpdateAccounts } from '../Items/types';
+import { AccountId } from '../Institutions/types';
 
 const initialState = {};
 
@@ -24,6 +28,7 @@ export const TransactionsContext = createContext<TransactionsContextShape>(
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props: any) {
+  const { updateAccounts, setUpdateAccounts } = usePlaidItems();
   const [loadingMap, setLoadingMap] = useState({});
   const [itemAccountTransaction, dispatch] = useReducer(
     transactionsReducer,
@@ -31,10 +36,30 @@ export function TransactionsProvider(props: any) {
   );
 
   const hasRequested = useRef<{
-    byAccount: { [accountId: string]: boolean };
+    byAccount: { [accountId: AccountId]: boolean };
   }>({
     byAccount: {},
   });
+
+  useEffect(() => {
+    /**
+     * if an item sync returns a list of accounts to update,
+     * loop through accounts and reload txs for each account
+     */
+    const itemIds = Object.keys(updateAccounts);
+    if (!itemIds?.length) return;
+    itemIds.forEach((itemId) => {
+      const accountIds = updateAccounts[itemId];
+      if (!accountIds?.length) return;
+
+      accountIds.forEach((accountId) => {
+        getTransactionsByAccountId(itemId, accountId, true);
+      });
+      const shallowCopy = { ...updateAccounts } as UpdateAccounts;
+      delete shallowCopy[itemId];
+      setUpdateAccounts(shallowCopy);
+    });
+  }, [updateAccounts]);
 
   /**
    * @desc Requests all Transactions that belong to an individual Account.
@@ -42,7 +67,7 @@ export function TransactionsProvider(props: any) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getTransactionsByAccountId = useCallback(
-    async (itemId: string, accountId: string, refresh: boolean) => {
+    async (itemId: ItemId, accountId: AccountId, refresh: boolean) => {
       setLoadingMap({
         ...loadingMap,
         [accountId]: true,
