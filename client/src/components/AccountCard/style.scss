@@ -50,7 +50,7 @@ div.ma-box-value {
   // border: 1px solid cyan;
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
   color: $theme-color-green-0;
 
   & p:first-child {
