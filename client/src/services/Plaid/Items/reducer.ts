@@ -19,7 +19,7 @@ const plaidItemsReducer = (state: ItemsState, action: ItemsAction) => {
       if (!action.payload.tx_cursor_updated_at || !action.payload.item_id) {
         return state;
       }
-      console.log('SUCCESSFUL_ITEM_SYNC')
+      console.log('SUCCESSFUL_ITEM_SYNC');
       return {
         ...state,
         [action.payload.item_id]: {
