@@ -43,17 +43,22 @@ div.ma-account-card {
 }
 
 div.ma-box-name {
-  // border: 1px solid cyan;
   margin-right: 1rem;
   width: 4rem;
 }
 div.ma-box-value {
+  // border: 1px solid cyan;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
+  color: $theme-color-green-0;
+
   & p:first-child {
-    color: $theme-color-background-1;
+    // color: $theme-color-green-1;
+    transform: scale(0.7);
+    line-height: 12px;
   }
+
   & p:last-child {
     // border: 1px solid cyan;
     width: 4.2rem;
