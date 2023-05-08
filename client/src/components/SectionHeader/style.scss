@@ -6,13 +6,14 @@ div.ma-section-header {
   width: 100%;
   background-color: $theme-color-background-0;
   z-index: 1;
-  
+
   position: fixed;
   top: $header-height;
-
-  padding-left: 2rem;
+  text-align: center;
+  text-transform: capitalize;
+  border-bottom: 1px solid $theme-color-background-1;
   p {
     color: $theme-color-1-0;
-    font-size: 1rem;
+    font-size: 2rem;
   }
 }
