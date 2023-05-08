@@ -59,12 +59,23 @@ export function ItemsProvider(props: any) {
       });
     }
     setLastActivity(data.tx_cursor_updated_at);
+    dispatch({
+      type: 'SUCCESSFUL_ITEM_SYNC',
+      payload: {
+        tx_cursor_updated_at: data.tx_cursor_updated_at,
+        item_id: itemId,
+      },
+    });
     setIsLoading(false);
   }, []);
 
   useEffect(() => {
     getItems();
   }, [getItems]);
+
+  useEffect(() => {
+    console.log(plaidItem);
+  }, [plaidItem]);
 
   // update state sortedItems from data store
   useEffect(() => {

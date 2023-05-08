@@ -15,6 +15,19 @@ const plaidItemsReducer = (state: ItemsState, action: ItemsAction) => {
         ...action.payload,
       };
 
+    case 'SUCCESSFUL_ITEM_SYNC':
+      if (!action.payload.tx_cursor_updated_at || !action.payload.item_id) {
+        return state;
+      }
+      console.log('SUCCESSFUL_ITEM_SYNC')
+      return {
+        ...state,
+        [action.payload.item_id]: {
+          ...state[action.payload.item_id],
+          tx_cursor_updated_at: action.payload.tx_cursor_updated_at,
+        },
+      };
+
     default:
       console.warn('unknown action');
       return state;
