@@ -204,7 +204,7 @@ class DdbClient {
     let transactions = [];
 
     if (response.Items?.length) {
-      transactions = response.Items.map((tx) => unmarshall(tx));
+      transactions = response.Items.map((tx) => unmarshall(tx)).reverse();
     }
 
     return { transactions };
