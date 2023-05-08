@@ -32,7 +32,7 @@ class App {
   }
 
   async linkTokenCreate() {
-    return await this.plaidClient.createLinkTokenByUserId(this.user.userId);
+    return await this.plaidClient.createLinkTokenByUserId(this.user.user_id);
   }
 
   async exchangeTokenCreateItem() {

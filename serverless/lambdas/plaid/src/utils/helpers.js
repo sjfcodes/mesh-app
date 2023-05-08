@@ -6,9 +6,7 @@
  * @returns
  */
 export const splitListIntoSmallerLists = (list, maxLength) => {
-  [list, maxLength].forEach((arg) => {
-    if (!arg) throw new Error(`missing ${arg}`);
-  });
+  guard({ list, maxLength })
 
   let requestQueue = [[]];
   let pointer = 0;
@@ -29,4 +27,18 @@ export const splitListIntoSmallerLists = (list, maxLength) => {
   }
 
   return requestQueue;
+};
+
+export const guard = (object) => {
+  if (Array.isArray(object) || typeof object !== 'object') {
+    throw new Error('guard arg must be object');
+  }
+
+  const errors = [];
+
+  Object.entries(object).forEach(([key, value]) => {
+    if (!value) errors.push(`missing ${key}`);
+  });
+
+  if (errors.length) throw new Error(errors.join('! ') + '!');
 };

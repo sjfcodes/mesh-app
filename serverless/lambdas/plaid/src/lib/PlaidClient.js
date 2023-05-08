@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import { Configuration, PlaidApi, PlaidEnvironments, Products } from 'plaid';
 
 import config from '../utils/config.js';
+import { guard } from '../utils/helpers.js';
 
 // https://plaid.com/docs/api/tokens/#linktokencreate
 
@@ -98,9 +99,7 @@ class PlaidClient {
    * @returns
    */
   async getBalancesByAccountId(accessToken, accountIds) {
-    [accessToken, accountIds].forEach((arg) => {
-      if (!arg) throw new Error(`missing ${arg}`);
-    });
+    guard({ accessToken, accountIds })
 
     const request = { access_token: accessToken };
     if (accountIds.length) request.options = { account_ids: accountIds };
@@ -146,9 +145,7 @@ class PlaidClient {
    * @returns
    */
   async itemSyncTransactions(accessToken, cursor) {
-    [accessToken, cursor].forEach((arg) => {
-      if (!arg) throw new Error(`missing ${arg}`);
-    });
+    guard({ accessToken })
 
     // New transaction updates since "cursor"
     let added = [];
