@@ -25,7 +25,7 @@ div.ma-item-card {
     }
   }
   & .ma-item-card-body {
-    height: 148px;
+    min-height: 148px;
     display: flex;
     padding: 0.7rem;
     & a {
