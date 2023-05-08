@@ -37,7 +37,7 @@ const ItemCard = ({ item }: Props) => {
     getInstitutionById,
     getBalancesByAccountId,
   } = useInstitutions();
-  const { syncTransactionsByItemId, lastActivity, isLoading } = usePlaidItems();
+  const { syncTransactionsByItemId, isLoading } = usePlaidItems();
   const useSelectedAccount = useState('' as AccountId);
   const [institution, setInstitution] = useState(
     defaultInstitution as Institution
@@ -108,10 +108,6 @@ const ItemCard = ({ item }: Props) => {
         </a>
         <div className="ma-item-card-details">
           <ul>
-            <li>
-              <h3>last activity</h3>
-              <p>{diffBetweenCurrentTime(lastActivity)}</p>
-            </li>
             <li>
               <h3>last sync</h3>
               <p>{itemLastSyncDate}</p>

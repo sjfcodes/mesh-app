@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import usePlaidItems from '../../hooks/usePlaidItems';
 
 import useUser from '../../hooks/useUser';
-import { pluralize } from '../../util/helpers';
+import { diffBetweenCurrentTime, pluralize } from '../../util/helpers';
 import AppLogo from '../AppLogo/AppLogo';
 
 import './styles.scss';
 
 export default function UserCard() {
   const { user } = useUser();
-  const { plaidItem, allAccounts } = usePlaidItems();
+  const { plaidItem, allAccounts, lastActivity } = usePlaidItems();
   const [connections, setConnections] = useState('');
 
   useEffect(() => {
@@ -40,6 +40,12 @@ export default function UserCard() {
         <li>
           <h3>connection</h3>
           <p>{connections}</p>
+        </li>
+        <li>
+          <h3>last activity</h3>
+          <p>
+            {lastActivity ? diffBetweenCurrentTime(lastActivity) : 'loading'}
+          </p>
         </li>
       </ul>
     </div>
