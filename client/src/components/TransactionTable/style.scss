@@ -8,7 +8,6 @@ div.ma-transactions-table {
   vertical-align: text-top;
   font-size: inherit;
 
-  // position: fixed;
 
   &::-webkit-scrollbar {
     display: none;
@@ -23,4 +22,9 @@ div.ma-transactions-table {
       // color: $theme-color-2-0;
     }
   }
+}
+
+div#root main > div.ma-transactions-table {
+  position: fixed;
+  top: calc($header-height + $section-title-height);
 }
