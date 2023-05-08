@@ -28,23 +28,6 @@ export function currencyFilter(value: number) {
     .toFixed(2)
     .replace(/(\d)(?=(\d{3})+(\.|$))/g, '$1,')}`;
 }
-
-const months = [
-  null,
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
 export function formatDate(
   timestamp: string,
   option: 'yyyy.mm.dd' | 'mm.dd.yyyy' = 'yyyy.mm.dd'
