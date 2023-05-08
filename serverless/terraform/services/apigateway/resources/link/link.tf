@@ -39,7 +39,7 @@ module "link_tokenCreate_POST" {
   lambda_invoke_arn = var.lambda_invoke_arn
 }
 
-# [/item/update_login][CORS OPTIONS]
+# [/link/update_login][CORS OPTIONS]
 module "link_tokenCreate_CORS" {
   source = "squidfunk/api-gateway-enable-cors/aws"
   version = "0.3.3"
