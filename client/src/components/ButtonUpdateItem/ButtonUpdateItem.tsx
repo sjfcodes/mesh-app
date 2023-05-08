@@ -4,9 +4,10 @@ import useLink from '../../hooks/useLink';
 import DefaultButton from '../Button/Default/DefaultButton';
 import LaunchLink from '../LaunchLink';
 import LinkTokenError from '../LinkTokenError';
+import { ItemId } from '../../services/Plaid/Items/types';
 
 type Props = {
-  itemId: string;
+  itemId: ItemId;
 };
 
 const ButtonUpdateItem = ({ itemId }: Props) => {

@@ -1,4 +1,5 @@
 import { PlaidLinkError } from 'react-plaid-link';
+import { ItemId } from '../Items/types';
 
 export interface LinkToken {
   [key: string]: string;
@@ -24,6 +25,6 @@ export type LinkAction =
 export interface LinkContextShape extends LinkState {
   isLoading: boolean;
   linkTokens: LinkState;
-  deleteLinkToken: (userId: string | null, itemId: string | null) => void;
-  generateLinkToken: (userId: string, itemId: string | null) => Promise<void>;
+  deleteLinkToken: (userId: string | null, itemId: ItemId | null) => void;
+  generateLinkToken: (userId: string, itemId: ItemId | null) => Promise<void>;
 }
