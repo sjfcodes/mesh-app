@@ -67,6 +67,8 @@ const ItemCard = ({ item }: Props) => {
       if (lastTxSyncMs < thresholdMs) {
         syncTransactionsByItemId(item.id);
       }
+    } else {
+      syncTransactionsByItemId(item.id);
     }
   }, []);
 
@@ -79,6 +81,7 @@ const ItemCard = ({ item }: Props) => {
       const balance = accountBalances.filter(
         (balance) => balance.account_id === account.id
       );
+
       return (
         <AccountCard
           key={account.id}

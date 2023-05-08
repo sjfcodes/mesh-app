@@ -19,9 +19,14 @@ interface Props {
   useSelectedAccount?: [string, React.Dispatch<React.SetStateAction<string>>];
 }
 
+const defaultBalance = {
+  subtype: 'na',
+  balances: {},
+};
+
 export default function AccountCard({
   account,
-  balance,
+  balance = defaultBalance as AccountBase,
   useSelectedAccount,
 }: Props) {
   const { id: accountId, item_id: itemId } = account;
@@ -43,11 +48,6 @@ export default function AccountCard({
       <div className="ma-account-card">
         <div className="ma-account-header" onClick={toggleShowTransactions}>
           <div className="ma-account-details">
-            {/* <p className="ma-account-subtype">{balance.subtype}</p>
-            <p>[{account.name}]</p>
-            <p className="ma-account-balance">
-              {currencyFilter(balance.balances.available || 0)}
-            </p> */}
             <div className="ma-box-name">{balance.subtype}</div>
             <div className="ma-box-name">{account.name}</div>
           </div>
@@ -57,7 +57,11 @@ export default function AccountCard({
           ) : (
             <div className="ma-box-value">
               <p>$</p>
-              <p>{currencyFilter(balance.balances.available || 0)}</p>
+              <p>
+                {balance.balances.available
+                  ? currencyFilter(balance.balances.available)
+                  : 'na'}
+              </p>
             </div>
           )}
         </div>
