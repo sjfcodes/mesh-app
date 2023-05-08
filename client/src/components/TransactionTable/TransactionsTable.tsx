@@ -11,7 +11,16 @@ type Props = {
 const TransactionsTable = ({ transactions }: Props) => {
   let { current } = useRef('');
 
-  const formatDate = (date: string) => new Date(date).toLocaleDateString();
+  const formatDate = (date: string) => {
+    if (!date) return 'na';
+    const values = date.split('-');
+    const yyyy = values[0];
+    const [mm, dd] = [values[1], values[2]].map((str) =>
+      str.charAt(0) === '0' ? str.substring(1) : str
+    );
+
+    return [mm, dd, yyyy].join('.');
+  };
   const dateIsCurrent = (date: string) => date === current;
 
   const getDateDisplay = (dateStr: string) => {

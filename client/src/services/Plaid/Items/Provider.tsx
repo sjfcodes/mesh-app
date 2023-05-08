@@ -73,10 +73,6 @@ export function ItemsProvider(props: any) {
     getItems();
   }, [getItems]);
 
-  useEffect(() => {
-    console.log(plaidItem);
-  }, [plaidItem]);
-
   // update state sortedItems from data store
   useEffect(() => {
     const newItems: ItemType[] = plaidItem ? Object.values(plaidItem) : [];
