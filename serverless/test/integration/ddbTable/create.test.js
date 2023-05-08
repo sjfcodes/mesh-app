@@ -4,10 +4,10 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 
-import { handler as tableHandler } from '../../../lambdas/ddbTable/index.js';
-import { addUserRequest, addUserItemRequest } from './requests.js';
+import { handler as tableHandler } from '../../../lambdas/ddbTable/src/index.js';
+import { addUserRequest } from './requests.js';
 
-import { handler as plaidHandler } from '../../../lambdas/plaid/index.js';
+import { handler as plaidHandler } from '../../../lambdas/plaid/src/index.js';
 import {
   mockExchangeTokenLinkRequest,
   mockSyncTransactionsForItemRequest,
@@ -21,7 +21,6 @@ import config from '../../config/dynamoDb.js';
 
 dotenv.config();
 const testApi = config.targetApiUrl;
-
 
 const api = axios.create({
   baseURL: testApi,

@@ -1,5 +1,5 @@
 import dynamoDbConfig from '../../config/dynamoDb.js';
-import lambdaConfig from '../../../lambdas/plaid/utils/config.js';
+import lambdaConfig from '../../../lambdas/plaid/src/utils/config.js';
 
 const { path } = lambdaConfig;
 const { TableName, Item, params } = dynamoDbConfig;

@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid';
+import { Configuration, PlaidApi, PlaidEnvironments, Products } from 'plaid';
 
 import config from '../utils/config.js';
 
@@ -7,11 +7,7 @@ import config from '../utils/config.js';
 
 dotenv.config();
 
-const {
-  PLAID_CLIENT_ID,
-  PLAID_SECRET,
-  PLAID_ENV,
-} = process.env;
+const { PLAID_CLIENT_ID, PLAID_SECRET, PLAID_ENV } = process.env;
 
 const configuration = new Configuration({
   basePath: PlaidEnvironments[PLAID_ENV],
@@ -29,13 +25,23 @@ class PlaidClient {
     this.client = new PlaidApi(configuration);
   }
 
-  async createLinkTokenByUserId(userId) {
-    if (!userId) throw new Error('missing required arguments!');
+  /**
+   *
+   * @param {string} client_user_id
+   * @returns
+   */
+  async createLinkTokenByUserId(client_user_id) {
+    if (!client_user_id) throw new Error('missing required arguments!');
+    /**
+     * @type {import('plaid').LinkTokenCreateRequest}
+     */
     const request = {
-      user: { client_user_id: userId },
+      user: { client_user_id },
       client_name: config.appName,
+      // @ts-ignore
       products: ['auth'],
       language: 'en',
+      // @ts-ignore
       country_codes: ['US'],
       redirect_uri: config.redirectUri,
     };
@@ -44,24 +50,38 @@ class PlaidClient {
     return data;
   }
 
-  async exchangePublicToken(publicToken) {
-    if (!publicToken) throw new Error('missing required arguments!');
+  /**
+   *
+   * @param {string} public_token
+   * @returns
+   */
+  async exchangePublicToken(public_token) {
+    if (!public_token) throw new Error('missing required arguments!');
     const { data } = await this.client.itemPublicTokenExchange({
-      public_token: publicToken,
+      public_token,
     });
 
-    // { access_token, user_id, request_id }
     return data;
   }
 
+  /**
+   *
+   * @param {string} userId
+   * @param {string} accessToken
+   * @returns
+   */
   async updateItemLogin(userId, accessToken) {
     if (!userId) throw new Error('missing userId!');
     if (!accessToken) throw new Error('missing accessToken!');
 
+    /**
+     * @type {import('plaid').LinkTokenCreateRequest}
+     */
     const request = {
       user: { client_user_id: userId },
       client_name: config.appName,
       language: 'en',
+      // @ts-ignore
       country_codes: ['US'],
       redirect_uri: config.redirectUri,
       access_token: accessToken,
@@ -71,6 +91,12 @@ class PlaidClient {
     return data;
   }
 
+  /**
+   *
+   * @param {string} accessToken
+   * @param {string[]} accountIds
+   * @returns
+   */
   async getBalancesByAccountId(accessToken, accountIds) {
     if (!accessToken) throw new Error('missing accessToken!');
 
@@ -84,10 +110,19 @@ class PlaidClient {
     return { accounts };
   }
 
-  async getInstitutionById(instId) {
-    if (!instId) throw new Error('missing required arguments!');
+  /**
+   *
+   * @param {string} institution_id
+   * @returns
+   */
+  async getInstitutionById(institution_id) {
+    if (!institution_id) throw new Error('missing required arguments!');
+    /**
+     * @type {import('plaid').InstitutionsGetByIdRequest}
+     */
     const request = {
-      institution_id: instId,
+      institution_id,
+      // @ts-ignore
       country_codes: ['US'],
       options: {
         include_optional_metadata: true,
@@ -102,10 +137,16 @@ class PlaidClient {
     return response;
   }
 
+  /**
+   *
+   * @param {string} accessToken
+   * @param {string} cursor
+   * @returns
+   */
   async itemSyncTransactions(accessToken, cursor) {
     if (!accessToken || cursor === undefined)
       throw new Error('missing required arguments!');
-    console.log(`itemSyncTransactions(${accessToken}, ${cursor})`);
+
     // New transaction updates since "cursor"
     let added = [];
     let modified = [];

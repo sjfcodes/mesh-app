@@ -8,6 +8,7 @@ import {
 import { linkTokenCreate } from '../../../util/api';
 import linkReducer from './reducer';
 import { LinkContextShape } from './types';
+import { ItemId } from '../Items/types';
 
 const initialState = {
   byUser: {}, // normal case
@@ -31,7 +32,7 @@ export function LinkProvider(props: any) {
    */
 
   const generateLinkToken = useCallback(
-    async (userId: string, itemId: string | null) => {
+    async (userId: string, itemId: ItemId | null) => {
       setIsLoading(true);
       // if itemId is not null, update mode is triggered
       const {
@@ -58,7 +59,7 @@ export function LinkProvider(props: any) {
   );
 
   const deleteLinkToken = useCallback(
-    async (userId: string, itemId: string) => {
+    async (userId: string, itemId: ItemId) => {
       if (userId != null) {
         dispatch({
           type: 'DELETE_USER_LINK_TOKEN',

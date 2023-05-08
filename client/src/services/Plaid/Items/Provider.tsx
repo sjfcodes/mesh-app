@@ -14,7 +14,8 @@ import {
   syncTransactionsByItemId as apiSyncItemTransactions,
 } from '../../../util/api';
 import plaidItemsReducer from './reducer';
-import { ItemsContextShape, ItemsState } from './types';
+import { ItemId, ItemsContextShape, ItemsState, UpdateAccounts } from './types';
+import { AccountId } from '../Institutions/types';
 
 export const ItemsContext = createContext<ItemsContextShape>(
   {} as ItemsContextShape
@@ -28,6 +29,7 @@ export function ItemsProvider(props: any) {
   const [plaidItem, dispatch] = useReducer(plaidItemsReducer, {} as ItemsState);
   const [sortedItems, setSortedItems] = useState([] as ItemType[]);
   const [lastActivity, setLastActivity] = useState('');
+  const [updateAccounts, setUpdateAccounts] = useState({} as UpdateAccounts);
 
   /**
    * @desc Requests all Items that belong to an individual User.
@@ -45,14 +47,19 @@ export function ItemsProvider(props: any) {
     setIsLoading(false);
   }, []);
 
-  const syncTransactionsByItemId = useCallback(async (itemId: string) => {
+  const syncTransactionsByItemId = useCallback(async (itemId: ItemId) => {
     setIsLoading(true);
     const {
       data: { data },
     } = await apiSyncItemTransactions(itemId);
-    dispatch({ type: 'SUCCESSFUL_ITEM_SYNC', payload: data });
+    if (data.updated_accounts.length) {
+      setUpdateAccounts({
+        ...updateAccounts,
+        [itemId]: data.updated_accounts as AccountId[],
+      });
+    }
     setLastActivity(data.tx_cursor_updated_at);
-    window.location.reload();
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -85,16 +92,20 @@ export function ItemsProvider(props: any) {
       plaidItem,
       sortedItems,
       isLoading,
+      updateAccounts,
       getItems,
       syncTransactionsByItemId,
+      setUpdateAccounts,
     };
   }, [
     lastActivity,
     plaidItem,
     sortedItems,
     isLoading,
+    updateAccounts,
     getItems,
     syncTransactionsByItemId,
+    setUpdateAccounts,
   ]);
 
   return <ItemsContext.Provider value={value} {...props} />;

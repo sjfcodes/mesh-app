@@ -12,20 +12,22 @@ class App {
     this.queryString = event.queryStringParameters;
   }
 
+  /**
+   *
+   * @param {string} token
+   */
   async setUserByToken(token) {
     if (!token) throw new Error('missing token!');
     // decode & parse jwt payload
     const tokenPayload = token.split('.')[1];
-    const decrypted = JSON.parse(Buffer.from(tokenPayload, 'base64'));
-
-    // console.log({ decrypted });
+    const buffer = Buffer.from(tokenPayload, 'base64').toString();
+    const decrypted = JSON.parse(buffer);
 
     const user = await this.ddbClient.readUserByTokenEmail(
       decrypted.email,
       this.requestPath
     );
 
-    // console.log('setting user:', user);
     this.user = user;
   }
 
@@ -38,10 +40,12 @@ class App {
       this.payload.public_token
     );
 
+    const item_id = tokenExchange.item_id;
+
     // include item_id for future api calls
     const formattedAccounts = this.payload.accounts.map((account) => ({
       ...account,
-      item_id: tokenExchange.item_id,
+      item_id,
     }));
 
     await this.ddbClient.writeUserLastActivity(this.user.email);
@@ -60,9 +64,10 @@ class App {
   async testExchangeTokenCreateItem() {
     await this.ddbClient.writeUserLastActivity(this.user.email);
     // include item_id for future api calls
+    const item_id = this.payload.public_token.item_id;
     const formattedAccounts = this.payload.accounts.map((account) => ({
       ...account,
-      item_id: this.payload.public_token.item_id,
+      item_id,
     }));
 
     await this.ddbClient.writeUserPlaidItem({
@@ -95,6 +100,9 @@ class App {
 
   async getBalancesByAccountId() {
     const { item_id: itemId, account_id: accountId } = this.queryString;
+    /**
+     * @type {string[]}
+     */
     const accountIds = [];
 
     if (accountId) {
@@ -197,6 +205,22 @@ class App {
     const { newTxCursor, added, modified, removed } =
       await this.plaidClient.itemSyncTransactions(accessToken, txCursor);
 
+    const updated_accounts = [];
+
+    if (!newTxCursor) {
+      return {
+        tx_cursor_updated_at: null,
+        updated_accounts,
+      };
+    }
+    [...added, ...modified, ...removed].forEach((tx) => {
+      // @ts-ignore
+      const account_id = tx.account_id;
+      if (account_id && !updated_accounts.includes(account_id)) {
+        updated_accounts.push(account_id);
+      }
+    });
+
     // write items to db before writing cursor to db
     await this.ddbClient.writeUserItemTransaction({
       itemId,
@@ -210,13 +234,9 @@ class App {
       itemId,
       newTxCursor
     );
-
     return {
-      tx_sync: 'complete',
-      added: added.length,
-      modified: modified.length,
-      removed: removed.length,
       tx_cursor_updated_at,
+      updated_accounts,
     };
   }
 

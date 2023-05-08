@@ -31,7 +31,7 @@ export default function UserCard() {
       <ul>
         <li>
           <h3>env</h3>
-          <p>{process.env.REACT_APP_PLAID_ENV}</p>
+          <p>{process.env.REACT_APP_USE_API_GW?.toLowerCase()}</p>
         </li>
         <li>
           <h3>user</h3>

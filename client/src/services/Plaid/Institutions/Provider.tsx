@@ -11,7 +11,8 @@ import {
   getBalancesByAccountId as apiGetItemAccountBalances,
 } from '../../../util/api';
 import plaidInstitutionsReducer, { GET_INSTITUTION } from './reducer';
-import { InstitutionsContextShape } from './types';
+import { AccountId, InstitutionsContextShape } from './types';
+import { ItemId } from '../Items/types';
 
 const initialState = {};
 
@@ -40,7 +41,7 @@ export const InstitutionsProvider = (props: any) => {
   }, []);
 
   const getBalancesByAccountId = useCallback(
-    async (itemId: string, accountId: string) => {
+    async (itemId: ItemId, accountId: AccountId) => {
       const {
         data: { data },
       } = await apiGetItemAccountBalances(itemId, accountId);

@@ -1,4 +1,6 @@
 import { CognitoAttributes } from '@aws-amplify/ui';
+import { ItemId } from './services/Plaid/Items/types';
+import { AccountId, InstitutionId } from './services/Plaid/Institutions/types';
 
 export interface AssetType {
   id: string;
@@ -10,8 +12,8 @@ export interface AssetType {
 }
 
 export interface AccountType {
-  id: string;
-  item_id: string;
+  id: AccountId;
+  item_id: ItemId;
   user_id: string;
   plaid_account_id: string;
   name: string;
@@ -37,9 +39,9 @@ export interface AccountType {
 }
 
 export interface ItemType {
-  id: string;
+  id: ItemId;
   accounts: AccountType[];
-  institution_id: string;
+  institution_id: InstitutionId;
   tx_cursor: string;
   tx_cursor_updated_at: string;
   created_at: string;
@@ -79,7 +81,7 @@ export type PaymentMetaType = {
 };
 
 export interface PlaidTransactionType {
-  account_id: string;
+  account_id: AccountId;
   account_owner: string;
   amount: number;
   authorized_date: string;
