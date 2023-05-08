@@ -6,6 +6,11 @@ export interface TransactionsState {
   [transactionId: number]: PlaidTransactionType;
 }
 
+/**
+ * string formatted as YYYY-MM-DD
+ */
+export type DateBand = string; 
+
 export type TransactionsAction =
   | {
       type: 'SUCCESSFUL_GET';

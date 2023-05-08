@@ -5,6 +5,7 @@ import { PlaidInstitution, PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import DuplicateItemToastMessage from '../components/DuplicateItemToast';
 import { ItemId } from '../services/Plaid/Items/types';
 import { AccountId, InstitutionId } from '../services/Plaid/Institutions/types';
+import { DateBand } from '../services/Plaid/Transactions/types';
 
 const USE_STAGE = {
   DEV: process.env.REACT_APP_AWS_API_GW_DEV,
@@ -81,12 +82,14 @@ export const getBalancesByAccountId = async (
 
 export const getTransactionsByAccountId = async (
   item_id: ItemId,
-  account_id: AccountId
+  account_id: AccountId,
+  lower_band?: DateBand,
+  upper_band?: DateBand
 ) =>
   api({
     method: 'GET',
     url: `/item/account/transaction`,
-    params: { item_id, account_id },
+    params: { item_id, account_id, lower_band, upper_band },
   });
 
 // institutions
