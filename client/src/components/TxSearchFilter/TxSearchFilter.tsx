@@ -1,10 +1,10 @@
 import React from 'react';
-import useTxSearchFilter from '../../hooks/useTxSearchFilter';
 
 import './style.scss';
+import useTransactions from '../../hooks/usePlaidTransactions';
 
 const TxSearchFilter = () => {
-  const { dateBand, setDateBand } = useTxSearchFilter();
+  const { dateBand, setDateBand } = useTransactions();
 
   const handleSetDateBand: React.FormEventHandler<HTMLInputElement> = (e) => {
     const { name, value } = e.target as HTMLInputElement;

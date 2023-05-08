@@ -14,6 +14,7 @@ import { TransactionsContextShape } from './types';
 import usePlaidItems from '../../../hooks/usePlaidItems';
 import { ItemId, UpdateAccounts } from '../Items/types';
 import { AccountId } from '../Institutions/types';
+import useTxSearchFilter from './useTxSearchFilter';
 
 const initialState = {};
 
@@ -28,12 +29,17 @@ export const TransactionsContext = createContext<TransactionsContextShape>(
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props: any) {
+  const [dateBand, setDateBand] = useTxSearchFilter();
   const { updateAccounts, setUpdateAccounts } = usePlaidItems();
   const [loadingMap, setLoadingMap] = useState({});
   const [itemAccountTransaction, dispatch] = useReducer(
     transactionsReducer,
     initialState
   );
+
+  useEffect(() => {
+    console.log({ dateBand });
+  }, [dateBand]);
 
   const hasRequested = useRef<{
     byAccount: { [accountId: AccountId]: boolean };
@@ -127,8 +133,16 @@ export function TransactionsProvider(props: any) {
       allTransactions,
       itemAccountTransaction,
       getTransactionsByAccountId,
+      dateBand,
+      setDateBand,
     };
-  }, [loadingMap, itemAccountTransaction, getTransactionsByAccountId]);
+  }, [
+    loadingMap,
+    itemAccountTransaction,
+    getTransactionsByAccountId,
+    dateBand,
+    setDateBand,
+  ]);
 
   return <TransactionsContext.Provider value={value} {...props} />;
 }

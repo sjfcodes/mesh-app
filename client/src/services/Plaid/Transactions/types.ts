@@ -9,7 +9,7 @@ export interface TransactionsState {
 /**
  * string formatted as YYYY-MM-DD
  */
-export type DateBand = string; 
+export type DateBand = string;
 
 export type TransactionsAction =
   | {
@@ -18,6 +18,16 @@ export type TransactionsAction =
     }
   | { type: 'DELETE_BY_ITEM'; payload: string }
   | { type: 'DELETE_BY_USER'; payload: string };
+
+export type DateBandState = {
+  lowerBand: DateBand;
+  upperBand: DateBand;
+  errorMessage: string;
+};
+export type DateBandStateAction = {
+  lowerBand?: DateBand;
+  upperBand?: DateBand;
+};
 
 export interface TransactionsContextShape extends TransactionsState {
   loadingMap: { [accountId: AccountId]: boolean };
@@ -28,4 +38,6 @@ export interface TransactionsContextShape extends TransactionsState {
     accountId: AccountId,
     refresh?: boolean
   ) => void;
+  dateBand: DateBandState;
+  setDateBand: (action: DateBandStateAction) => void;
 }
