@@ -6,8 +6,12 @@ $theme-color-red-0: rgba(255, 0, 0, 0.552);
 $theme-color-green-0:  rgba(172, 255, 47, 0.556);
 $border-radius-0: .5rem; 
 
-$header-height: 7vh;
+$device-padding: 0.5rem;
+$opacity-75: 0.75;
+$opacity-50: 0.50;
+
+$header-height: 10vh;
 $section-title-height: 3vh;
 $spending-categories-height: 25vh; 
-$footer-height: 12vh;
+$footer-height: 11vh;
 $body-height: calc((100vh - ($header-height + $footer-height)) - 2rem);

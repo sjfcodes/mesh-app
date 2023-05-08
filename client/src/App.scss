@@ -3,6 +3,7 @@
 button {
   text-transform: lowercase;
 }
+
 /* Base */
 html,
 body,
@@ -18,7 +19,6 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
-  // overflow: hidden;
   letter-spacing: 0.01rem;
 }
 
@@ -34,17 +34,11 @@ html {
     // border: 1px solid orange;
     font-size: 1rem;
     background: $theme-color-background-0;
-
-    opacity: 1;
-    transition: opacity 5s ease-out; /* It slowly shows the element as we place the mouse on the box and when the time reaches 2 seconds, it is fully visible. */
-    -webkit-transition: opacity 5s ease-out;
-    -moz-transition: opacity 5s ease-in-out;
   }
   & div#root {
     // border: 1px solid yellow;
     main {
       // border: 1px solid green;
-      // border: 1px solid $theme-color-1-0;
       height: $body-height;
       overflow: scroll;
     }

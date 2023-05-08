@@ -1,3 +1,5 @@
+@import '../../variables.scss';
+
 .App-logo {
     height: 100px;
     width: 100px;
@@ -5,7 +7,7 @@
     margin: -18px;
     // border: #61DBFB solid 1px;
     // border-radius: 50%;
-    opacity: .4;
+    opacity: $opacity-75;
   }
   
   @media (prefers-reduced-motion: no-preference) {

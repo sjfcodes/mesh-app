@@ -1,6 +1,9 @@
 @import '../../variables.scss';
 
+$image-height: calc(148px - (0.5em * 2));
+
 div.ma-item-card {
+  border: 1px solid red;
   border: 1px solid $theme-color-1-0;
   border-radius: $border-radius-0;
   font-size: 1rem;
@@ -12,6 +15,7 @@ div.ma-item-card {
   }
 
   & .ma-item-card-header {
+    border: 1px solid orange;
     padding-block: 0.5rem;
     border-bottom: 1px solid $theme-color-1-0;
     min-height: 3.5rem;
@@ -21,13 +25,14 @@ div.ma-item-card {
       text-align: center;
       font-weight: bold;
       text-transform: lowercase;
-      opacity: .6;
+      opacity: $opacity-75;
     }
   }
   & .ma-item-card-body {
-    min-height: 148px;
+    border: 1px solid yellow;
+    min-height: 100%;
     display: flex;
-    padding: 0.7rem;
+    padding: $device-padding;
     & a {
       &:hover {
         color: $theme-color-2-0;
@@ -41,14 +46,14 @@ div.ma-item-card {
         transform: scale(1.025);
       }
       img {
-        opacity: .5;
-        height: calc(148px - (0.5em * 2));
-        min-width: calc(148px - (0.5em * 2));
+        opacity: $opacity-75;
+        height: $image-height;
+        min-width: $image-height;
       }
     }
     & .ma-item-card-details {
-      // border: 1px solid yellowgreen;
-      height: 100%;
+      border: 1px solid green;
+      height: $image-height;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -56,16 +61,17 @@ div.ma-item-card {
       justify-content: space-between;
 
       & ul {
-        // border: 1px solid purple;
+        border: 1px solid blue;
         margin: 0 0;
+        height: 100%;
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        justify-content: flex-end;
+        justify-content: space-between;
         padding: 0;
         & > li {
-          // border: 1px solid green;
+          border: 1px solid purple;
           display: flex;
           align-items: center;
           line-height: 1.175rem;
