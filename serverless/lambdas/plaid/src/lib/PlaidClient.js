@@ -31,7 +31,7 @@ class PlaidClient {
    * @returns
    */
   async createLinkTokenByUserId(client_user_id) {
-    if (!client_user_id) throw new Error('missing required arguments!');
+    if (!client_user_id) throw new Error('missing client_user_id!');
     /**
      * @type {import('plaid').LinkTokenCreateRequest}
      */
@@ -56,7 +56,7 @@ class PlaidClient {
    * @returns
    */
   async exchangePublicToken(public_token) {
-    if (!public_token) throw new Error('missing required arguments!');
+    if (!public_token) throw new Error('missing public_token!');
     const { data } = await this.client.itemPublicTokenExchange({
       public_token,
     });
@@ -98,7 +98,9 @@ class PlaidClient {
    * @returns
    */
   async getBalancesByAccountId(accessToken, accountIds) {
-    if (!accessToken) throw new Error('missing accessToken!');
+    [accessToken, accountIds].forEach((arg) => {
+      if (!arg) throw new Error(`missing ${arg}`);
+    });
 
     const request = { access_token: accessToken };
     if (accountIds.length) request.options = { account_ids: accountIds };
@@ -116,7 +118,7 @@ class PlaidClient {
    * @returns
    */
   async getInstitutionById(institution_id) {
-    if (!institution_id) throw new Error('missing required arguments!');
+    if (!institution_id) throw new Error('missing institution_id!');
     /**
      * @type {import('plaid').InstitutionsGetByIdRequest}
      */
@@ -144,8 +146,9 @@ class PlaidClient {
    * @returns
    */
   async itemSyncTransactions(accessToken, cursor) {
-    if (!accessToken || cursor === undefined)
-      throw new Error('missing required arguments!');
+    [accessToken, cursor].forEach((arg) => {
+      if (!arg) throw new Error(`missing ${arg}`);
+    });
 
     // New transaction updates since "cursor"
     let added = [];

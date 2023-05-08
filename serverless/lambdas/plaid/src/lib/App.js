@@ -213,6 +213,7 @@ class App {
         updated_accounts,
       };
     }
+
     [...added, ...modified, ...removed].forEach((tx) => {
       // @ts-ignore
       const account_id = tx.account_id;

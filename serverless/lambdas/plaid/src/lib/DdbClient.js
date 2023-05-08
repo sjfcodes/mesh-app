@@ -218,8 +218,9 @@ class DdbClient {
    * @returns
    */
   async writeUserItemTxCursor(email, itemId, newTxCursor) {
-    if (!email || !itemId || newTxCursor === undefined)
-      throw new Error('missing required arguments!');
+    [email, itemId, newTxCursor].forEach((arg) => {
+      if (!arg) throw new Error(`missing ${arg}`);
+    });
 
     const now = getTimestamp();
 
@@ -256,8 +257,9 @@ class DdbClient {
     institution_id,
     institution_name,
   }) {
-    if (!email || !tokenExchange || !accounts)
-      throw new Error('missing required arguments!');
+    [email, tokenExchange, accounts].forEach((arg) => {
+      if (!arg) throw new Error(`missing ${arg}`);
+    });
 
     const now = getTimestamp();
 
@@ -289,9 +291,9 @@ class DdbClient {
   }
 
   async writeUserItemTransaction({ itemId, added, modified, removed }) {
-    if (!itemId || !added || !modified || !removed) {
-      throw new Error('missing required arguments!');
-    }
+    [itemId, added, modified, removed].forEach((arg) => {
+      if (!arg) throw new Error(`missing ${arg}`);
+    });
 
     console.log(
       `writeUserItemTransaction(${JSON.stringify({
@@ -345,7 +347,7 @@ class DdbClient {
       config.dynamoDbBatchRequestLength
     );
 
-    console.log(requestQueue)
+    console.log(requestQueue);
     const responses = [];
     const loopCount = requestQueue.length;
     for (let i = 0; i < loopCount; i++) {
