@@ -26,5 +26,5 @@ div.ma-transactions-table {
 
 div#root main > div.ma-transactions-table {
   position: fixed;
-  top: calc($header-height + $section-title-height);
+  top: calc($header-height + $section-title-height + $search-filter-height);
 }

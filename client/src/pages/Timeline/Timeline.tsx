@@ -4,6 +4,10 @@ import useFormattedTransactions from '../../hooks/useFormattedTransactions';
 import useAppContext from '../../hooks/useAppContext';
 import SectionLoader from '../../components/SectionLoader/SectionLoader';
 
+const TxSearchFilter = lazy(
+  () => import('../../components/TxSearchFilter/TxSearchFilter')
+);
+
 const TransactionsTable = lazy(
   () => import('../../components/TransactionTable/TransactionsTable')
 );
@@ -20,15 +24,17 @@ const Timeline = () => {
   }, [setSectionHeader]);
 
   return (
-    <main>
-      <Suspense fallback={<SectionLoader />}>
+    <Suspense fallback={<SectionLoader />}>
+      {formattedTxs.length && <TxSearchFilter />}
+
+      <main>
         {formattedTxs.length ? (
           <TransactionsTable transactions={formattedTxs} />
         ) : (
           <SectionLoader />
         )}
-      </Suspense>
-    </main>
+      </main>
+    </Suspense>
   );
 };
 

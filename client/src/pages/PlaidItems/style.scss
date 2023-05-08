@@ -8,7 +8,7 @@ main#ma-plaid-items-page {
   justify-content: space-between;
 
   position: fixed;
-  top: calc($header-height + $section-title-height);
+  top: calc($header-height + $section-title-height + $search-filter-height);
   & div.add-item {
     // display: flex;
     // justify-content: center;
