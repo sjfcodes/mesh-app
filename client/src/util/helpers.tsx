@@ -45,18 +45,29 @@ const months = [
   'December',
 ];
 
-/**
- * @desc Returns formatted date.
- */
-export function formatDate(timestamp: string) {
-  if (timestamp) {
-    // slice will return the first 10 char(date)of timestamp
-    // coming in as: 2019-05-07T15:41:30.520Z
-    const [y, m, d] = timestamp.slice(0, 10).split('-');
-    return `${months[+m]} ${d}, ${y}`;
-  }
+export function formatDate(
+  timestamp: string,
+  option: 'yyyy.mm.dd' | 'mm.dd.yyyy' = 'yyyy.mm.dd'
+) {
+  let values, yyyy, mm, dd;
+  if (!timestamp) return 'na';
+  const date = new Date(timestamp).toISOString().split('T')[0];
+  switch (option) {
+    case 'yyyy.mm.dd':
+      return date;
 
-  return '';
+    case 'mm.dd.yyyy':
+      values = date.toString().split('-');
+      yyyy = values[0];
+      [mm, dd] = [values[1], values[2]].map((str) =>
+        str.charAt(0) === '0' ? str.substring(1) : str
+      );
+
+      return [mm, dd, yyyy].join('.');
+
+    default:
+      return 'na';
+  }
 }
 
 /**
