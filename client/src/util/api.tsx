@@ -31,7 +31,7 @@ export const linkTokenCreate = async (item_id: ItemId | null) =>
   api({
     method: item_id ? 'PUT' : 'POST',
     url: item_id ? '/item/update_login' : '/link/token_create',
-    data: { item_id },
+    data: item_id ? { item_id } : {},
   });
 
 // create item
