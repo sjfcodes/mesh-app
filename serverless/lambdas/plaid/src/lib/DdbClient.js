@@ -12,7 +12,7 @@ import {
   QueryCommand,
 } from '@aws-sdk/client-dynamodb';
 import config from '../utils/config.js';
-import { splitListIntoSmallerLists } from '../utils/helpers.js';
+import { guard, splitListIntoSmallerLists } from '../utils/helpers.js';
 
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html#dynamodb-example-table-read-write-writing-an-item
 const PARTITION_KEY = 'item_id::account_id';
@@ -218,8 +218,7 @@ class DdbClient {
    * @returns
    */
   async writeUserItemTxCursor(email, itemId, newTxCursor) {
-    if (!email || !itemId || newTxCursor === undefined)
-      throw new Error('missing required arguments!');
+    guard({ email, itemId, newTxCursor });
 
     const now = getTimestamp();
 
@@ -256,8 +255,7 @@ class DdbClient {
     institution_id,
     institution_name,
   }) {
-    if (!email || !tokenExchange || !accounts)
-      throw new Error('missing required arguments!');
+    guard({ email, tokenExchange, accounts, institution_id, institution_name })
 
     const now = getTimestamp();
 
@@ -289,9 +287,7 @@ class DdbClient {
   }
 
   async writeUserItemTransaction({ itemId, added, modified, removed }) {
-    if (!itemId || !added || !modified || !removed) {
-      throw new Error('missing required arguments!');
-    }
+    guard({ itemId, added, modified, removed })
 
     console.log(
       `writeUserItemTransaction(${JSON.stringify({
@@ -345,7 +341,7 @@ class DdbClient {
       config.dynamoDbBatchRequestLength
     );
 
-    console.log(requestQueue)
+    console.log(requestQueue);
     const responses = [];
     const loopCount = requestQueue.length;
     for (let i = 0; i < loopCount; i++) {

@@ -21,6 +21,15 @@ module "item_tokenExchange_POST" {
   http_method       = "POST"
   lambda_invoke_arn = var.lambda_invoke_arn
 }
+# [/item/token_exchange][CORS OPTIONS]
+module "item_tokenExchange_CORS" {
+  source = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id        = var.api_id
+  api_resource_id = module.item_tokenExchange.id
+}
+
 
 # [/item/tokenExchange/mock]
 module "item_tokenExchange_mock" {
@@ -48,6 +57,9 @@ module "item_tokenExchange_mock_POST" {
 
 output "item_tokenExchange_POST" {
   value = module.item_tokenExchange_POST
+}
+output "item_tokenExchange_CORS" {
+  value = module.item_tokenExchange_CORS
 }
 output "item_tokenExchange_mock_POST" {
   value = module.item_tokenExchange_mock_POST

@@ -53,7 +53,7 @@ const syncTransactionsByItemId = async () => {
 };
 
 (async () => {
-  const response = await syncTransactionsByItemId();
+  // const response = await syncTransactionsByItemId();
   // console.log('sbx response:', response);
-  console.log(JSON.parse(response.body).data);
+  // console.log(JSON.parse(response.body).data);
 })();

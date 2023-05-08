@@ -14,6 +14,6 @@ div.spending-categories {
     text-transform: lowercase;
     height: $spending-categories-height;
     width: 100%;
-    opacity: 0.5;
+    opacity: $opacity-75;
   }
 }

@@ -4,13 +4,13 @@ describe('splitListIntoSmallerLists()', () => {
   it('should throw error when list not provided', () => {
     const maxLength = 25;
     const result = () => splitListIntoSmallerLists(null, maxLength);
-    expect(result).toThrow('missing required arguments!');
+    expect(result).toThrow('missing list!');
   });
 
   it('should throw error when maxLength not provided', () => {
     const list = Array.from(Array(100).keys());
     const result = () => splitListIntoSmallerLists(list, null);
-    expect(result).toThrow('missing required arguments!');
+    expect(result).toThrow('missing maxLength!');
   });
 
   it('should split an array of 100 into arrays of 25', () => {

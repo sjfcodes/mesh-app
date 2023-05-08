@@ -8,7 +8,6 @@ div.ma-transactions-table {
   vertical-align: text-top;
   font-size: inherit;
 
-  // position: fixed;
 
   &::-webkit-scrollbar {
     display: none;
@@ -16,11 +15,16 @@ div.ma-transactions-table {
 
   & div.ma-table-row-date {
     // border: 1px solid yellow;
-    opacity: 0.6;
+    opacity: $opacity-75;
     letter-spacing: 0.1rem;
     & p {
       border-top: 1px solid $theme-color-1-0;
       // color: $theme-color-2-0;
     }
   }
+}
+
+div#root main > div.ma-transactions-table {
+  position: fixed;
+  top: calc($header-height + $section-title-height);
 }

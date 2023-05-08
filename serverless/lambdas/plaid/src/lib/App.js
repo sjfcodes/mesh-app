@@ -32,7 +32,7 @@ class App {
   }
 
   async linkTokenCreate() {
-    return await this.plaidClient.createLinkTokenByUserId(this.user.userId);
+    return await this.plaidClient.createLinkTokenByUserId(this.user.user_id);
   }
 
   async exchangeTokenCreateItem() {
@@ -213,6 +213,7 @@ class App {
         updated_accounts,
       };
     }
+
     [...added, ...modified, ...removed].forEach((tx) => {
       // @ts-ignore
       const account_id = tx.account_id;

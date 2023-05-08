@@ -14,10 +14,15 @@ export interface UpdateAccounts {
   [itemId: ItemId]: AccountId[];
 }
 
-export type ItemsAction = {
-  type: 'SUCCESSFUL_ITEM_GET';
-  payload: { [item_d: ItemId]: ItemType };
-};
+export type ItemsAction =
+  | {
+      type: 'SUCCESSFUL_ITEM_GET';
+      payload: { [item_d: ItemId]: ItemType };
+    }
+  | {
+      type: 'SUCCESSFUL_ITEM_SYNC';
+      payload: { tx_cursor_updated_at: TxCursorUpdatedAt; item_id: ItemId };
+    };
 
 export interface ItemsContextShape {
   allAccounts: AccountType[];

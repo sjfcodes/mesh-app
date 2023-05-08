@@ -19,7 +19,7 @@ module "link" {
   path_part = "link"
 }
 
-# [/link/tokenCreate]
+# [/link/token_create]
 module "link_tokenCreate" {
   source = "../../templates/resource"
   api_id = var.api_id
@@ -28,7 +28,7 @@ module "link_tokenCreate" {
   path_part = "token_create"
 }
 
-# [/link/tokenCreate][POST]
+# [/link/token_create][POST]
 module "link_tokenCreate_POST" {
   source        = "../../templates/method_integration"
   api_id        = var.api_id
@@ -39,9 +39,21 @@ module "link_tokenCreate_POST" {
   lambda_invoke_arn = var.lambda_invoke_arn
 }
 
+# [/link/update_login][CORS OPTIONS]
+module "link_tokenCreate_CORS" {
+  source = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id        = var.api_id
+  api_resource_id = module.link_tokenCreate.id
+}
+
 # # # # # #
 # OUTPUTS #
 # # # # # #
 output "link_tokenCreate_POST" {
   value = module.link_tokenCreate_POST
+}
+output "link_tokenCreate_CORS" {
+  value = module.link_tokenCreate_CORS
 }

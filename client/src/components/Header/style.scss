@@ -6,12 +6,14 @@ header {
   width: 100%;
   background-color: $theme-color-background-0;
   z-index: 1;
-  
+  padding-top: calc($device-padding * 0.5);
+  padding-inline: $device-padding;
+
   position: fixed;
 
   & > div {
+    // border: 1px solid orange;
     width: 100%;
-    // border: 1px solid yellow;
     display: flex;
     justify-content: space-between;
     position: relative;
@@ -21,14 +23,13 @@ header {
       width: 100%;
     }
     & > h1 {
-      // border: 1px solid greenyellow;
+      // border: 1px solid yellow;
       position: absolute;
       bottom: -0.1rem;
-      right: 0rem;
+      right: $device-padding;
       margin: 0 0 0 0;
       font-size: 36px;
-      color: $theme-color-2-0;
-      opacity: 0.5;
+      color: $theme-color-3-0;
     }
   }
 }

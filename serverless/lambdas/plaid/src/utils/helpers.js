@@ -1,12 +1,13 @@
 /**
  * Split long list into smaller lists of specified length
  *
- * @param {transaction[]} list
+ * @param {Object[]} list
  * @param {number} maxLength
  * @returns
  */
 export const splitListIntoSmallerLists = (list, maxLength) => {
-  if (!list || !maxLength) throw new Error('missing required arguments!');
+  guard({ list, maxLength })
+
   let requestQueue = [[]];
   let pointer = 0;
 
@@ -26,4 +27,18 @@ export const splitListIntoSmallerLists = (list, maxLength) => {
   }
 
   return requestQueue;
+};
+
+export const guard = (object) => {
+  if (Array.isArray(object) || typeof object !== 'object') {
+    throw new Error('guard arg must be object');
+  }
+
+  const errors = [];
+
+  Object.entries(object).forEach(([key, value]) => {
+    if (!value) errors.push(`missing ${key}`);
+  });
+
+  if (errors.length) throw new Error(errors.join('! ') + '!');
 };
