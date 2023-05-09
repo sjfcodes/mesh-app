@@ -6,6 +6,8 @@ import {
   PlaidLinkOnEventMetadata,
   PlaidLinkError,
 } from 'react-plaid-link';
+import { ItemAccountId, ItemId } from '../services/Plaid/Items/types';
+import { AccountId } from '../services/Plaid/Institutions/types';
 
 /**
  * @desc small helper for pluralizing words for display given a string of items
@@ -28,6 +30,7 @@ export function currencyFilter(value: number) {
     .toFixed(2)
     .replace(/(\d)(?=(\d{3})+(\.|$))/g, '$1,')}`;
 }
+
 export function formatDate(
   timestamp: string,
   option: 'yyyy.mm.dd' | 'mm.dd.yyyy' = 'yyyy.mm.dd'
@@ -109,3 +112,8 @@ export const logExit = async (
     error
   );
 };
+
+export const formatLoadingKey = (
+  itemId: ItemId,
+  accountId: AccountId
+): ItemAccountId => `${itemId}::${accountId}`;

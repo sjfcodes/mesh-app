@@ -59,15 +59,20 @@ const ItemCard = ({ item }: Props) => {
     : 'never';
 
   useEffect(() => {
-    if (item.tx_cursor_updated_at) {
-      const target = 10;
-      const thresholdMs = Date.now() - target * 60 * 1000;
-      const lastTxSyncMs = new Date(item.tx_cursor_updated_at).getTime();
+    /**
+     * auto call sync transactions if item has never been synced
+     * or item has not been synced in {target} minutes
+     */
+    if (!item.tx_cursor_updated_at) {
+      syncTransactionsByItemId(item.id);
+      return;
+    }
 
-      if (lastTxSyncMs < thresholdMs) {
-        syncTransactionsByItemId(item.id);
-      }
-    } else {
+    const target = 10;
+    const thresholdMs = Date.now() - target * 60 * 1000;
+    const lastTxSyncMs = new Date(item.tx_cursor_updated_at).getTime();
+
+    if (lastTxSyncMs < thresholdMs) {
       syncTransactionsByItemId(item.id);
     }
   }, []);

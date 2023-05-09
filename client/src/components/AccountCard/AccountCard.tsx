@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useState } from 'react';
 import { AccountBase } from 'plaid';
 
-import { currencyFilter } from '../../util/helpers';
+import { currencyFilter, formatLoadingKey } from '../../util/helpers';
 import { AccountType } from '../../types';
 import useTransactions from '../../hooks/usePlaidTransactions';
 import Loader from '../Loader/Loader';
@@ -52,7 +52,7 @@ export default function AccountCard({
             <div className="ma-box-name">{account.name}</div>
           </div>
 
-          {loadingMap[accountId] ? (
+          {loadingMap[formatLoadingKey(itemId, accountId)] ? (
             <Loader />
           ) : (
             <div className="ma-box-value">
@@ -60,7 +60,7 @@ export default function AccountCard({
               <p>
                 {balance.balances.available
                   ? currencyFilter(balance.balances.available)
-                  : 'na'}
+                  : '...'}
               </p>
             </div>
           )}

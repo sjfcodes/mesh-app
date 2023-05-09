@@ -1,6 +1,6 @@
 import { PlaidTransactionType, TransactionType } from '../../../types';
 import { AccountId } from '../Institutions/types';
-import { ItemId } from '../Items/types';
+import { ItemAccountId, ItemId } from '../Items/types';
 
 export interface TransactionsState {
   [transactionId: number]: PlaidTransactionType;
@@ -29,8 +29,21 @@ export type DateBandStateAction = {
   upperBand?: DateBand;
 };
 
+export type LoadingMapState = {
+  [key: ItemAccountId]: boolean;
+};
+export type LoadingMapAction = {
+  itemId: ItemId;
+  accountId: AccountId;
+  loading: boolean
+}
+
 export interface TransactionsContextShape extends TransactionsState {
-  loadingMap: { [accountId: AccountId]: boolean };
+  loadingMap: { [itemAccountId: ItemAccountId]: boolean };
+  setLoadingMap: (
+    state: LoadingMapState,
+    action: LoadingMapAction
+  ) => LoadingMapState;
   allTransactions: TransactionType[];
   itemAccountTransaction: { [accountId: AccountId]: TransactionType[] };
   getTransactionsByAccountId: (

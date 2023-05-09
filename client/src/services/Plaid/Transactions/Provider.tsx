@@ -37,10 +37,6 @@ export function TransactionsProvider(props: any) {
     initialState
   );
 
-  useEffect(() => {
-    console.log({ dateBand });
-  }, [dateBand]);
-
   const hasRequested = useRef<{
     byAccount: { [accountId: AccountId]: boolean };
   }>({
