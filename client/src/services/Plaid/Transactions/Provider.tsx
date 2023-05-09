@@ -5,16 +5,20 @@ import {
   useMemo,
   useReducer,
   useRef,
-  useState,
 } from 'react';
 import { TransactionType } from '../../../types';
 import { getTransactionsByAccountId as apiGetItemAccountTransactions } from '../../../util/api';
 import transactionsReducer from './reducer';
-import { TransactionsContextShape } from './types';
+import {
+  LoadingMapAction,
+  LoadingMapState,
+  TransactionsContextShape,
+} from './types';
 import usePlaidItems from '../../../hooks/usePlaidItems';
-import { ItemId, UpdateAccounts } from '../Items/types';
 import { AccountId } from '../Institutions/types';
 import useTxSearchFilter from './useTxSearchFilter';
+import { formatLoadingKey } from '../../../util/helpers';
+import { ItemId } from '../Items/types';
 
 const initialState = {};
 
@@ -31,7 +35,13 @@ export const TransactionsContext = createContext<TransactionsContextShape>(
 export function TransactionsProvider(props: any) {
   const [dateBand, setDateBand] = useTxSearchFilter();
   const { updateAccounts, setUpdateAccounts } = usePlaidItems();
-  const [loadingMap, setLoadingMap] = useState({});
+  const [loadingMap, setLoadingMap] = useReducer(
+    (state: LoadingMapState, action: LoadingMapAction) => {
+      const key = formatLoadingKey(action.itemId, action.accountId);
+      return { ...state, [key]: action.loading };
+    },
+    {}
+  );
   const [itemAccountTransaction, dispatch] = useReducer(
     transactionsReducer,
     initialState
@@ -45,53 +55,62 @@ export function TransactionsProvider(props: any) {
 
   useEffect(() => {
     /**
-     * if an item sync returns a list of accounts to update,
+     * if an item sync returned a list of accounts to update,
      * loop through accounts and reload txs for each account
      */
-    const itemIds = Object.keys(updateAccounts);
-    if (!itemIds?.length) return;
-    itemIds.forEach((itemId) => {
-      const accountIds = updateAccounts[itemId];
-      if (!accountIds?.length) return;
+    if (!updateAccounts?.length) return;
 
-      accountIds.forEach((accountId) => {
-        getTransactionsByAccountId(itemId, accountId, true);
-      });
-      const shallowCopy = { ...updateAccounts } as UpdateAccounts;
-      delete shallowCopy[itemId];
-      setUpdateAccounts(shallowCopy);
-    });
+    updateAccounts
+      .map((itemAccountId) => itemAccountId.split('::'))
+      .forEach(([itemId, accountId]) =>
+        getTransactionsByAccountId(itemId, accountId, true)
+      );
+
+    // reset accounts list
+    setUpdateAccounts([]);
   }, [updateAccounts]);
 
+  useEffect(() => {
+    /**
+     * reload already loaded transactions when date bands change
+     */
+    Object.keys(loadingMap)
+      .map((itemAccountId) => itemAccountId.split('::'))
+      .forEach(([itemId, accountId]) =>
+        getTransactionsByAccountId(itemId, accountId, true)
+      );
+  }, [dateBand]);
+
   /**
-   * @desc Requests all Transactions that belong to an individual Account.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
+   * Requests transactions within current filter ranges for an account.
+   * Skip request if data has already fetched.
+   * Use 'refresh' parameter to force a new request.
    */
   const getTransactionsByAccountId = useCallback(
-    async (itemId: ItemId, accountId: AccountId, refresh: boolean) => {
-      setLoadingMap({
-        ...loadingMap,
-        [accountId]: true,
-      });
+    async (itemId: ItemId, accountId: AccountId, refresh?: boolean) => {
+      setLoadingMap({ itemId, accountId, loading: true });
+
       if (!hasRequested.current.byAccount[accountId] || refresh) {
         hasRequested.current.byAccount[accountId] = true;
         const {
           data: {
             data: { transactions },
           },
-        } = await apiGetItemAccountTransactions(itemId, accountId);
+        } = await apiGetItemAccountTransactions(
+          itemId,
+          accountId,
+          dateBand.lowerBand,
+          dateBand.upperBand
+        );
+
         dispatch({
           type: 'SUCCESSFUL_GET',
           payload: { transactions, accountId },
         });
       }
-      setLoadingMap({
-        ...loadingMap,
-        [accountId]: false,
-      });
+      setLoadingMap({ itemId, accountId, loading: false });
     },
-    []
+    [dateBand]
   );
 
   /**
