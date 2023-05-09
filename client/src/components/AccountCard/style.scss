@@ -3,22 +3,33 @@
 div.ma-account-card {
   // border: 1px solid red;
   border: 1px solid $theme-color-1-0;
+  border-bottom: none;
   border-radius: $border-radius-0;
   margin: 0.5rem;
   z-index: 1;
 
+  div.ma-transactions-table {
+    // border: 1px solid orange;
+    height: $account-tx-list-height;
+  }
   & div.ma-account-header {
-    margin: 1rem;
+    
+    padding-inline: $account-header-padding;
+    height: $account-header-height;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    border-bottom: 1px solid $theme-color-1-0;
+    
+    &.ma-account-not-focused {
+      background-color: $theme-color-background-1;
+      border-radius: $border-radius-0;
+    }
 
     & div.ma-account-details {
       // border: 1px solid green;
       display: flex;
     }
-  }
-  &:hover {
-    border: 1px solid $theme-color-3-0;
   }
 }
 

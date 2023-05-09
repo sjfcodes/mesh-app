@@ -2,16 +2,20 @@
 
 main#ma-plaid-items-page {
   // border: 1px solid red;
+
   width: 100%;
+  height: $tx-timeline-height;
+  padding-top: $tx-search-filter-height;
+  padding-bottom: $footer-height;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   position: fixed;
-  top: calc($header-height + $section-title-height + $search-filter-height);
+  top: calc($header-height + $section-title-height);
+
   & div.add-item {
-    // display: flex;
-    // justify-content: center;
     margin-block: 1rem;
     width: 100%;
     & button {

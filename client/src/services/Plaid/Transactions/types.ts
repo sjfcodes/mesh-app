@@ -35,8 +35,8 @@ export type LoadingMapState = {
 export type LoadingMapAction = {
   itemId: ItemId;
   accountId: AccountId;
-  loading: boolean
-}
+  loading: boolean;
+};
 
 export interface TransactionsContextShape extends TransactionsState {
   loadingMap: { [itemAccountId: ItemAccountId]: boolean };

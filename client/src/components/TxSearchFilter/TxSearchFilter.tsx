@@ -28,7 +28,7 @@ const TxSearchFilter = () => {
             value={dateBand.lowerBand}
           />
         </div>
-        <p>to</p>
+        <p>{'->'}</p>
         <div>
           <input
             type="date"

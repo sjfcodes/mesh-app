@@ -11,7 +11,7 @@ export interface ItemsState {
 
 export type ItemAccountId = string;
 
-export type UpdateAccounts = ItemAccountId[]
+export type UpdateAccounts = ItemAccountId[];
 
 export type ItemsAction =
   | {

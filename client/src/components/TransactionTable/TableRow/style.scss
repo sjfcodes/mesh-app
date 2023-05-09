@@ -8,11 +8,12 @@ div.ma-transactions-table-row {
   text-transform: lowercase;
   margin-bottom: .75rem;
   opacity: $opacity-75;
+
   & div {
     & .ma-table-category {
       padding-left: .75rem;
       font-size: 0.8rem;
-      color: $theme-color-2-0;
+      color: $theme-color-3-0;
     }
     & .ma-table-name {
       // border: 1px solid green;
