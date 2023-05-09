@@ -15,14 +15,12 @@ const TxSearchFilter = () => {
   return (
     <div className="ma-tx-search-filter">
       <div className="ma-search-filter-header">
-        <p>TxSearchFilter</p>
         {dateBand.errorMessage && (
           <p className="ma-filter-error">error: {dateBand.errorMessage}</p>
         )}
       </div>
       <form>
         <div>
-          <label htmlFor="lowerBand">oldest</label>
           <input
             type="date"
             name="lowerBand"
@@ -30,8 +28,8 @@ const TxSearchFilter = () => {
             value={dateBand.lowerBand}
           />
         </div>
+        <p>to</p>
         <div>
-          <label htmlFor="upperBand">newest</label>
           <input
             type="date"
             name="upperBand"

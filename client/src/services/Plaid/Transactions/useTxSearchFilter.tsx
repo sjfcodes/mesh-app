@@ -6,12 +6,14 @@ import {
 import { formatDate } from '../../../util/helpers';
 
 const now = new Date();
-const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
-const pastXDays = new Date(now.getTime() - thirtyDaysMs);
+
+const lookBackDays = 14
+const lookBackDaysMs = lookBackDays * 24 * 60 * 60 * 1000;
+const pastXDays = new Date(now.getTime() - lookBackDaysMs);
 const dateBandDefault = {
   upperBand: formatDate(now.toISOString(), 'yyyy.mm.dd'),
   lowerBand: formatDate(pastXDays.toISOString(), 'yyyy.mm.dd'),
-  errorMessage: '...',
+  errorMessage: '',
 };
 
 const useTxSearchFilter = () => {
