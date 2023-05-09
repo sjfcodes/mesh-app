@@ -2,13 +2,16 @@
 
 footer {
   // border: 1px solid greenyellow;
-  border-top: 1px solid $theme-color-1-0;
-  height: $footer-height;
+
   width: 100%;
+  height: $footer-height;
   background-color: $theme-color-background-1;
+  backdrop-filter: blur(5px);
 
   position: fixed;
   bottom: 0;
+
+  // app buttons
   & > div {
     display: flex;
     align-items: center;
@@ -16,6 +19,7 @@ footer {
     & > div {
       padding: 1rem;
     }
+    
     & > .sections {
       // border: 1px solid purple;
       width: 82%;

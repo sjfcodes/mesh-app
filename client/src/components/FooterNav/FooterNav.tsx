@@ -5,10 +5,11 @@ import { GiExitDoor } from 'react-icons/gi';
 import { BsBank, BsListOl } from 'react-icons/bs';
 import { HiOutlinePresentationChartLine } from 'react-icons/hi';
 
-import './style.scss';
 import { useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 import { ROUTE } from '../../util/constants';
+
+import './style.scss';
 
 const iconSize = '2em';
 

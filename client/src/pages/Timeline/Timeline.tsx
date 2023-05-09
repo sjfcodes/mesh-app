@@ -27,13 +27,11 @@ const Timeline = () => {
     <Suspense fallback={<SectionLoader />}>
       {formattedTxs.length && <TxSearchFilter />}
 
-      <main>
-        {formattedTxs.length ? (
-          <TransactionsTable transactions={formattedTxs} />
-        ) : (
-          <SectionLoader />
-        )}
-      </main>
+      {formattedTxs.length ? (
+        <TransactionsTable transactions={formattedTxs} />
+      ) : (
+        <SectionLoader />
+      )}
     </Suspense>
   );
 };

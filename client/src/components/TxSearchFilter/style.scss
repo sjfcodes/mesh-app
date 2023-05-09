@@ -4,13 +4,18 @@ $mt: 1vh;
 
 div.ma-tx-search-filter {
   // border: 1px solid red;
+
+  width: 100%;
+  height: $tx-search-filter-height;
+  background-color: $theme-color-background-1;
+  // border-bottom: 1px solid $theme-color-1-0;
+  backdrop-filter: blur(5px);
+
   position: fixed;
   top: calc($header-height + $section-title-height);
 
-  width: 100%;
-  height: $search-filter-height;
-  background-color: $theme-color-background-1;
   z-index: 1;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,22 +28,40 @@ div.ma-tx-search-filter {
   }
   & form {
     // border: 1px solid orange;
+
+    z-index: 1;
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 
     & p {
       margin-inline: 2rem;
+      color: $theme-color-3-0;
     }
 
     & div {
-      // border: 1px solid yellow;
       & input {
-        background-color: $theme-color-background-0;
-        color: $theme-color-2-0;
+        // border: 1px solid yellow;å
+
         border: none;
+        background-color: transparent;
+
+        color: $theme-color-2-0;
         transform: scale(1.3);
+
+        &::-webkit-datetime-edit-year-field {
+          color: $theme-color-orange-025;
+        }
+        &::-webkit-datetime-edit-text {
+          color: $theme-color-orange-025;
+          padding: 0 0.3em;
+        }
+        &::-webkit-calendar-picker-indicator {
+          // background: transparent;
+          // margin-right: -1rem;
+        }
       }
     }
   }

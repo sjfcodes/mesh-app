@@ -46,7 +46,12 @@ export default function AccountCard({
   return (
     <Suspense fallback={<SectionLoader />}>
       <div className="ma-account-card">
-        <div className="ma-account-header" onClick={toggleShowTransactions}>
+        <div
+          className={`ma-account-header ${
+            selectedAccount !== accountId ? 'ma-account-not-focused' : ''
+          }`}
+          onClick={toggleShowTransactions}
+        >
           <div className="ma-account-details">
             <div className="ma-box-name">{balance.subtype}</div>
             <div className="ma-box-name">{account.name}</div>
@@ -65,13 +70,9 @@ export default function AccountCard({
             </div>
           )}
         </div>
-        <div className="ma-account-footer">
-          {selectedAccount === accountId && (
-            <TransactionsTable
-              transactions={itemAccountTransaction[accountId]}
-            />
-          )}
-        </div>
+        {selectedAccount === accountId && (
+          <TransactionsTable transactions={itemAccountTransaction[accountId]} />
+        )}
       </div>
     </Suspense>
   );
