@@ -83,8 +83,8 @@ export const getBalancesByAccountId = async (
 export const getTransactionsByAccountId = async (
   item_id: ItemId,
   account_id: AccountId,
-  lower_band?: DateBand,
-  upper_band?: DateBand
+  lower_band: DateBand,
+  upper_band: DateBand
 ) =>
   api({
     method: 'GET',
