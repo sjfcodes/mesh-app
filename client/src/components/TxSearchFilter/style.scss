@@ -1,13 +1,15 @@
 @import '../../variables.scss';
 
+$mt:1vh;
+
 div.ma-tx-search-filter {
   // border: 1px solid red;
 
-  margin-top: 1vh;
+  margin-top: $mt;
   position: fixed;
   top: calc($header-height + $section-title-height);
   width: 100%;
-  height: $search-filter-height;
+  height: calc($search-filter-height - $mt);
   background-color: $theme-color-background-0;
   z-index: 1;
 
