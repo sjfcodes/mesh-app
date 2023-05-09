@@ -1,5 +1,5 @@
 $theme-color-background-0: #0e1013;
-$theme-color-background-1: #35383d;
+$theme-color-background-1: #35383d8a;
 
 $theme-color-1-0: rgba(128, 128, 128, 1);
 $theme-color-2-0: rgba(247, 147, 26, .75);;
@@ -18,6 +18,6 @@ $opacity-50: 0.50;
 $header-height: 10vh;
 $section-title-height: 5vh;
 $spending-categories-height: 25vh;
-$search-filter-height: 9vh;
+$search-filter-height: 7vh;
 $footer-height: 11vh;
 $body-height: calc((100vh - ($header-height + $footer-height)) - 2rem);
