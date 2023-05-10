@@ -2,7 +2,6 @@
 
 div.ma-transactions-table {
   // border: 1px solid red;
-
   width: 100%;
   height: 100%;
   
@@ -22,6 +21,7 @@ div.ma-transactions-table {
 }
 
 div#root > div.ma-transactions-table {
+  // border: 1px solid yellow;
   position: fixed;
   top: $header-height;
   height: $tx-timeline-height;
