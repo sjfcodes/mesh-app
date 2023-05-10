@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 
-import './style.scss'
+import './style.scss';
 
 import useFormattedTransactions from '../../hooks/useFormattedTransactions';
 import SectionLoader from '../../components/SectionLoader/SectionLoader';
