@@ -4,17 +4,18 @@ $mt: 1vh;
 
 div.ma-tx-search-filter {
   // border: 1px solid red;
-
-  width: 100%;
-  height: $tx-search-filter-height;
-  background-color: $theme-color-background-1;
-  // border-bottom: 1px solid $theme-color-1-0;
-  backdrop-filter: blur(5px);
-
   position: fixed;
-  top: calc($header-height + $section-title-height);
-
+  top: $header-height;
   z-index: 1;
+
+  width: inherit;
+  max-width: inherit;
+  height: $tx-search-filter-height;
+
+  background-color: $theme-color-background-1;
+  backdrop-filter: blur(5px);
+  padding-inline: $device-padding;
+
 
   display: flex;
   justify-content: center;
@@ -57,10 +58,6 @@ div.ma-tx-search-filter {
         &::-webkit-datetime-edit-text {
           color: $theme-color-orange-025;
           padding: 0 0.3em;
-        }
-        &::-webkit-calendar-picker-indicator {
-          // background: transparent;
-          // margin-right: -1rem;
         }
       }
     }

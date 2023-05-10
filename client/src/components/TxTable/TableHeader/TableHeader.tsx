@@ -4,7 +4,7 @@ import './style.scss';
 
 const TableHeader = () => {
   return (
-    <div className="ma-transactions-table-header">
+    <div className="ma-tx-table-header">
       <div className="ma-table-name">
         <p>description</p>
       </div>

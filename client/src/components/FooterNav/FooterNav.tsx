@@ -61,9 +61,9 @@ const FooterNav = () => {
             <BsBank size={iconSize} />
           </AppButton>
           <AppButton
-            label="spending"
-            className={selected === ROUTE.SPENDING ? 'ma-border-1-0' : ''}
-            onClick={() => handleSelection(ROUTE.SPENDING)}
+            label="insights"
+            className={selected === ROUTE.INSIGHTS ? 'ma-border-1-0' : ''}
+            onClick={() => handleSelection(ROUTE.INSIGHTS)}
           >
             <HiOutlinePresentationChartLine size={iconSize} />
           </AppButton>

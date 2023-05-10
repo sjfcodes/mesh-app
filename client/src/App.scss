@@ -1,45 +1,36 @@
 @import './variables.scss';
 
-button {
-  text-transform: lowercase;
-}
-
-/* Base */
-html,
-body,
-div#root,
-footer {
-  &::-webkit-scrollbar {
-    display: none !important;
-  }
+* ::-webkit-scrollbar {
+  display: none;
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  letter-spacing: 0.01rem;
 }
-
 html {
-  // border: 1px solid red;
   font-size: 16px;
-  color: $theme-color-1-0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  max-width: 650px;
-  margin: 0 auto;
   body {
     // border: 1px solid orange;
-    font-size: 1rem;
+    height: 100vh;
+    width: 100vw;
     background: $theme-color-background-0;
-  }
-  & div#root {
-    // border: 1px solid yellow;
-    main {
-      // border: 1px solid green;
-      overflow: scroll;
+    color: $theme-color-1-0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: 0.01rem;
+
+    & div#root {
+      // border: 1px solid yellow;
+      width: inherit;
+      height: inherit;
+      overflow-y: scroll;
+
+      margin: 0 auto;
+
+      font-size: 1rem;
+      max-width: $app-max-width;
     }
   }
 }
@@ -54,4 +45,8 @@ p {
   font-size: 1rem;
   margin: 0 0 0 0;
   padding: 0 0 0 0;
+}
+
+button {
+  text-transform: lowercase;
 }

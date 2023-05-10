@@ -1,0 +1,75 @@
+@import '../../variables.scss';
+
+$selector-height: 4rem;
+
+div.tx-top-x {
+  // border: solid 1px red;
+  position: fixed;
+  top: $header-height;
+
+  width: inherit;
+  max-width: inherit;
+  height: $tx-top-x-height;
+  overflow-y: scroll;
+
+
+  padding-top: calc($tx-search-filter-height + $spending-categories-height + $selector-height);
+  padding-bottom: $footer-height;
+
+  & > div.ma-top-tx-selector {
+    // border: solid 1px orange;
+    // extended position from: client/src/components/CategoriesChart/style.scss 
+    position: fixed;
+    top: calc($header-height + $tx-search-filter-height + $spending-categories-height);
+    z-index: 1;
+
+    width: inherit;
+    max-width: inherit;
+    height: $selector-height;
+
+    display: flex;
+    justify-content: flex-end;
+
+    background-color: $theme-color-background-1;
+    backdrop-filter: blur(5px);
+
+    & div {
+      // border: 1px solid yellow;
+      width: fit-content;
+      height: inherit;
+
+      display: flex;
+      padding: 0.5rem;
+
+      & > select {
+        margin-left: 1rem;
+        border-radius: $border-radius-0;
+        background-color: $theme-color-background-0;
+        padding: 0.5rem 1rem;
+        color: $theme-color-2-0;
+        font-size: 1.3rem;
+      }
+    }
+  }
+
+  & ol {
+    margin-block: 0;
+    & li div {
+      // background-color: green;
+      border-bottom: 1px solid $theme-color-background-1;
+      padding-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      & p.vendor {
+        // border: 1px solid blue;
+        text-transform: lowercase;
+      }
+      & p.amount {
+        // border: 1px solid purple;
+        margin-right: 1rem;
+        color: $theme-color-red-0;
+      }
+    }
+  }
+}

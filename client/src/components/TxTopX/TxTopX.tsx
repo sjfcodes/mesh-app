@@ -1,16 +1,17 @@
 import React, { useMemo, useState } from 'react';
 
 import { Categories, TransactionType } from '../../types';
-import { currencyFilter, pluralize } from '../../util/helpers';
+import { currencyFilter } from '../../util/helpers';
 
 import './style.scss';
 
 interface Props {
   filteredTransactions: TransactionType[];
 }
+const topTxOptions = [8, 16, 24, 32];
 
 const TopVendors = ({ filteredTransactions }: Props) => {
-  const [vendorCount, setVendorCount] = useState(5);
+  const [vendorCount, setVendorCount] = useState(topTxOptions[3]);
   const namesObject = useMemo((): Categories => {
     return filteredTransactions.reduce((obj: Categories, txData) => {
       const { transaction: tx } = txData;
@@ -35,18 +36,17 @@ const TopVendors = ({ filteredTransactions }: Props) => {
   const handleSelectVendorCount = (e: any) =>
     setVendorCount(parseInt(e.target.value));
   return (
-    <div className="top-transactions">
-      <div className="header">
-        <h2>top</h2>
-        <select value={vendorCount} onChange={handleSelectVendorCount}>
-          <option value={1}>1</option>
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={15}>15</option>
-          <option value={20}>20</option>
-        </select>
+    <div className="tx-top-x">
+      <div className="ma-top-tx-selector">
         <div>
-          <h2>{pluralize('transaction', vendorCount)}</h2>
+          <h2>display</h2>
+          <select value={vendorCount} onChange={handleSelectVendorCount}>
+            {topTxOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       <ol>
