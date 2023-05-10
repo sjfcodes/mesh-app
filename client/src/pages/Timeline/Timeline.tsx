@@ -4,7 +4,7 @@ import useFormattedTransactions from '../../hooks/useFormattedTransactions';
 import SectionLoader from '../../components/SectionLoader/SectionLoader';
 
 const TransactionsTable = lazy(
-  () => import('../../components/TransactionTable/TransactionsTable')
+  () => import('../../components/TxTable/TxTable')
 );
 
 const Timeline = () => {

@@ -10,7 +10,7 @@ import SectionLoader from '../SectionLoader/SectionLoader';
 import './style.scss';
 
 const TransactionsTable = lazy(
-  () => import('../TransactionTable/TransactionsTable')
+  () => import('../TxTable/TxTable')
 );
 
 interface Props {
