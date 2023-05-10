@@ -1,0 +1,56 @@
+@import '../../variables.scss';
+
+div.top-transactions {
+  border: solid 1px red;
+  position: fixed;
+  top: $header-height;
+  width: 100%;
+  height: $tx-timeline-height;
+  overflow-y: scroll;
+
+  padding-top: calc(
+    $tx-search-filter-height + $spending-categories-height
+  );
+  padding-bottom: $footer-height;
+
+  & > div.header {
+    border: solid 1px orange;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-inline: 0.5rem;
+    margin-block: 1rem;
+
+    & div {
+      width: 7rem;
+    }
+
+    & > select {
+      border: 1px solid yellow;
+      margin-inline: 1rem;
+      border-radius: $border-radius-0;
+      background-color: $theme-color-background-0;
+      padding: 0.5rem 1rem;
+      color: $theme-color-2-0;
+      font-size: 1.3rem;
+    }
+  }
+
+  & ol li div {
+    // background-color: green;
+    border-bottom: 1px solid $theme-color-background-1;
+    padding-bottom: 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    & p.vendor {
+      // border: 1px solid blue;
+      text-transform: lowercase;
+    }
+    & p.amount {
+      // border: 1px solid purple;
+      margin-right: 1rem;
+      color: $theme-color-red-0;
+    }
+  }
+}

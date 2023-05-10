@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 import CategoriesChart from '../../components/CategoriesChart/CategoriesChart';
-import TopVendors from '../../components/TopTransactions/TopTransactions';
+import TopVendors from '../../components/TxTopX/TxTopX';
 
 import useFormattedTransactions from '../../hooks/useFormattedTransactions';
 import SectionLoader from '../../components/SectionLoader/SectionLoader';
