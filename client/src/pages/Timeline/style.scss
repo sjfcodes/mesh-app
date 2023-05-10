@@ -1,23 +1,20 @@
 @import '../../variables.scss';
 main#ma-tx-table {
-  // border: 1px solid red;
+  border: 1px solid red;
+  position: fixed;
+  top: $header-height;
+
   width: inherit;
   max-width: inherit;
   height: $tx-timeline-height;
   
-  padding-top: $tx-search-filter-height;
-  padding-bottom: $footer-height;
-  
   & > div.ma-tx-table {
-    // border: 1px solid orange;
+    border: 1px solid orange;
     width: inherit;
     max-width: inherit;
-    height: $tx-timeline-height;
+    height: inherit;
     
-    position: fixed;
-    top: $header-height;
-    
-    padding-top: inherit;
-    padding-bottom: inherit;
+    padding-top: $tx-search-filter-height;
+    padding-bottom: $footer-height;
   }
 }
