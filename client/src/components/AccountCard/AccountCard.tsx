@@ -9,9 +9,7 @@ import SectionLoader from '../SectionLoader/SectionLoader';
 
 import './style.scss';
 
-const TransactionsTable = lazy(
-  () => import('../TxTable/TxTable')
-);
+const TransactionsTable = lazy(() => import('../TxTable/TxTable'));
 
 interface Props {
   account: AccountType;
