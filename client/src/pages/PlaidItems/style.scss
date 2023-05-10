@@ -3,8 +3,14 @@
 main#ma-plaid-items-page {
   // border: 1px solid red;
 
-  width: 100%;
+  position: fixed;
+  top: $header-height;
+
+  width: inherit;
+  max-width: inherit;
   height: $tx-timeline-height;
+  overflow-y: scroll;
+
   padding-top: $tx-search-filter-height;
   padding-bottom: $footer-height;
 
@@ -12,8 +18,6 @@ main#ma-plaid-items-page {
   flex-direction: column;
   justify-content: space-between;
 
-  position: fixed;
-  top: $header-height;
 
   & div.add-item {
     margin-block: 1rem;
