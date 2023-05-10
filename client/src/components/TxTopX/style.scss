@@ -4,9 +4,12 @@ div.tx-top-x {
   // border: solid 1px red;
   position: fixed;
   top: $header-height;
-  width: 100%;
+
+  width: inherit;
+  max-width: inherit;
   height: $tx-top-x-height;
   overflow-y: scroll;
+
 
   padding-top: calc($tx-search-filter-height + $spending-categories-height);
   padding-bottom: $footer-height;
