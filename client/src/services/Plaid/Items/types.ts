@@ -1,5 +1,4 @@
 import { AccountType, ItemType } from '../../../types';
-import { AccountId } from '../Institutions/types';
 
 export type ItemId = string;
 export type UserId = string;
@@ -10,9 +9,9 @@ export interface ItemsState {
   [itemId: ItemId]: ItemType;
 }
 
-export interface UpdateAccounts {
-  [itemId: ItemId]: AccountId[];
-}
+export type ItemAccountId = string;
+
+export type UpdateAccounts = ItemAccountId[];
 
 export type ItemsAction =
   | {

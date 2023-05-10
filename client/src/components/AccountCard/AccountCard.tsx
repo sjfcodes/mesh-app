@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useState } from 'react';
 import { AccountBase } from 'plaid';
 
-import { currencyFilter } from '../../util/helpers';
+import { currencyFilter, formatLoadingKey } from '../../util/helpers';
 import { AccountType } from '../../types';
 import useTransactions from '../../hooks/usePlaidTransactions';
 import Loader from '../Loader/Loader';
@@ -46,13 +46,18 @@ export default function AccountCard({
   return (
     <Suspense fallback={<SectionLoader />}>
       <div className="ma-account-card">
-        <div className="ma-account-header" onClick={toggleShowTransactions}>
+        <div
+          className={`ma-account-header ${
+            selectedAccount !== accountId ? 'ma-account-not-focused' : ''
+          }`}
+          onClick={toggleShowTransactions}
+        >
           <div className="ma-account-details">
             <div className="ma-box-name">{balance.subtype}</div>
             <div className="ma-box-name">{account.name}</div>
           </div>
 
-          {loadingMap[accountId] ? (
+          {loadingMap[formatLoadingKey(itemId, accountId)] ? (
             <Loader />
           ) : (
             <div className="ma-box-value">
@@ -60,18 +65,14 @@ export default function AccountCard({
               <p>
                 {balance.balances.available
                   ? currencyFilter(balance.balances.available)
-                  : 'na'}
+                  : '...'}
               </p>
             </div>
           )}
         </div>
-        <div className="ma-account-footer">
-          {selectedAccount === accountId && (
-            <TransactionsTable
-              transactions={itemAccountTransaction[accountId]}
-            />
-          )}
-        </div>
+        {selectedAccount === accountId && (
+          <TransactionsTable transactions={itemAccountTransaction[accountId]} />
+        )}
       </div>
     </Suspense>
   );

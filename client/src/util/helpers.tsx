@@ -6,6 +6,8 @@ import {
   PlaidLinkOnEventMetadata,
   PlaidLinkError,
 } from 'react-plaid-link';
+import { ItemAccountId, ItemId } from '../services/Plaid/Items/types';
+import { AccountId } from '../services/Plaid/Institutions/types';
 
 /**
  * @desc small helper for pluralizing words for display given a string of items
@@ -29,34 +31,29 @@ export function currencyFilter(value: number) {
     .replace(/(\d)(?=(\d{3})+(\.|$))/g, '$1,')}`;
 }
 
-const months = [
-  null,
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
+export function formatDate(
+  timestamp: string,
+  option: 'yyyy.mm.dd' | 'mm.dd.yyyy' = 'yyyy.mm.dd'
+) {
+  let values, yyyy, mm, dd;
+  if (!timestamp) return 'na';
+  const date = new Date(timestamp).toISOString().split('T')[0];
+  switch (option) {
+    case 'yyyy.mm.dd':
+      return date;
 
-/**
- * @desc Returns formatted date.
- */
-export function formatDate(timestamp: string) {
-  if (timestamp) {
-    // slice will return the first 10 char(date)of timestamp
-    // coming in as: 2019-05-07T15:41:30.520Z
-    const [y, m, d] = timestamp.slice(0, 10).split('-');
-    return `${months[+m]} ${d}, ${y}`;
+    case 'mm.dd.yyyy':
+      values = date.toString().split('-');
+      yyyy = values[0];
+      [mm, dd] = [values[1], values[2]].map((str) =>
+        str.charAt(0) === '0' ? str.substring(1) : str
+      );
+
+      return [mm, dd, yyyy].join('.');
+
+    default:
+      return 'na';
   }
-
-  return '';
 }
 
 /**
@@ -115,3 +112,8 @@ export const logExit = async (
     error
   );
 };
+
+export const formatLoadingKey = (
+  itemId: ItemId,
+  accountId: AccountId
+): ItemAccountId => `${itemId}::${accountId}`;

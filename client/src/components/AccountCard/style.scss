@@ -3,42 +3,33 @@
 div.ma-account-card {
   // border: 1px solid red;
   border: 1px solid $theme-color-1-0;
+  border-bottom: none;
   border-radius: $border-radius-0;
   margin: 0.5rem;
+  z-index: 1;
+
+  div.ma-transactions-table {
+    // border: 1px solid orange;
+    height: $account-tx-list-height;
+  }
   & div.ma-account-header {
-    margin: 1rem;
+    
+    padding-inline: $account-header-padding;
+    height: $account-header-height;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    border-bottom: 1px solid $theme-color-1-0;
+    
+    &.ma-account-not-focused {
+      background-color: $theme-color-background-1;
+      border-radius: $border-radius-0;
+    }
+
     & div.ma-account-details {
       // border: 1px solid green;
       display: flex;
-
-      & > h3 {
-        // border: 1px solid yellow;
-      }
-      & > p.ma-account-subtype {
-        // border: 1px solid blue;
-        width: 7rem;
-        margin-inline: 1rem;
-        &::before {
-          content: '[ ';
-        }
-        &::after {
-          content: ' ]';
-        }
-      }
-      & > p.ma-account-balance {
-        &::before {
-          content: ': ';
-        }
-      }
     }
-  }
-  &:hover {
-    border: 1px solid $theme-color-3-0;
-  }
-  & div.ma-account-footer {
-    // border: 1px solid cyan;
   }
 }
 
@@ -46,11 +37,12 @@ div.ma-box-name {
   margin-right: 1rem;
   width: 4rem;
 }
+
 div.ma-box-value {
   // border: 1px solid cyan;
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
   color: $theme-color-green-0;
 
   & p:first-child {

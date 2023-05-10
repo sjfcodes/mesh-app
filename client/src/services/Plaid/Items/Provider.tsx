@@ -16,6 +16,7 @@ import {
 import plaidItemsReducer from './reducer';
 import { ItemId, ItemsContextShape, ItemsState, UpdateAccounts } from './types';
 import { AccountId } from '../Institutions/types';
+import { formatLoadingKey } from '../../../util/helpers';
 
 export const ItemsContext = createContext<ItemsContextShape>(
   {} as ItemsContextShape
@@ -53,9 +54,12 @@ export function ItemsProvider(props: any) {
       data: { data },
     } = await apiSyncItemTransactions(itemId);
     if (data.updated_accounts.length) {
+      const formatted = data.updated_accounts.map((accountId: AccountId) =>
+        formatLoadingKey(itemId, accountId)
+      );
       setUpdateAccounts({
         ...updateAccounts,
-        [itemId]: data.updated_accounts as AccountId[],
+        ...formatted,
       });
     }
     setLastActivity(data.tx_cursor_updated_at);
@@ -72,10 +76,6 @@ export function ItemsProvider(props: any) {
   useEffect(() => {
     getItems();
   }, [getItems]);
-
-  useEffect(() => {
-    console.log(plaidItem);
-  }, [plaidItem]);
 
   // update state sortedItems from data store
   useEffect(() => {
@@ -97,6 +97,7 @@ export function ItemsProvider(props: any) {
       (list, accounts) => [...list, ...accounts],
       []
     );
+
     return {
       allAccounts,
       lastActivity,

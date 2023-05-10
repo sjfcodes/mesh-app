@@ -2,22 +2,27 @@ import { useEffect, useMemo } from 'react';
 import { PlaidTransactionType, TransactionType } from '../types';
 import useTransactions from './usePlaidTransactions';
 import usePlaidItems from './usePlaidItems';
-import { currencyFilter } from '../util/helpers';
+import { currencyFilter, formatLoadingKey } from '../util/helpers';
+import { ItemAccountId } from '../services/Plaid/Items/types';
 
 const useFormattedTransactions = () => {
   const { allAccounts } = usePlaidItems();
   const { allTransactions, loadingMap, getTransactionsByAccountId } =
     useTransactions();
 
+  /**
+   * determine which accounts may have already loaded
+   * get transactions for remaining accounts
+   */
   useEffect(() => {
-    const hasLoaded = Object.keys(loadingMap);
+    const hasLoaded: ItemAccountId[] = Object.keys(loadingMap);
     const needsLoading = allAccounts.filter(
-      ({ id }) => !hasLoaded.includes(id)
+      ({ item_id, id }) => !hasLoaded.includes(formatLoadingKey(item_id, id))
     );
 
-    needsLoading.forEach(({ item_id: itemId, id: accountId }) => {
-      return getTransactionsByAccountId(itemId, accountId);
-    });
+    needsLoading.forEach(({ item_id: itemId, id: accountId }) =>
+      getTransactionsByAccountId(itemId, accountId)
+    );
   }, [allAccounts]);
 
   const formattedTxs: TransactionType[] = useMemo(() => {

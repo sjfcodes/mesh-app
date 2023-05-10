@@ -1,18 +1,21 @@
 @import '../../variables.scss';
 
+$bb:1px;
+
 div.ma-section-header {
   // border: 1px solid orange;
-  height: $section-title-height;
+  height: calc($section-title-height - $bb);
   width: 100%;
   background-color: $theme-color-background-0;
   z-index: 1;
-  
+
   position: fixed;
   top: $header-height;
-
-  padding-left: 2rem;
+  text-align: center;
+  text-transform: capitalize;
+  border-bottom: $bb solid $theme-color-1-0;
   p {
     color: $theme-color-1-0;
-    font-size: 1rem;
+    font-size: 2rem;
   }
 }

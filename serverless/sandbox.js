@@ -40,6 +40,7 @@ const getAccountTransactions = async () => {
   };
   return await plaidHandler(mockApiGwRequestTransformations(request));
 };
+
 const syncTransactionsByItemId = async () => {
   const request = {
     httpMethod: 'PUT',
@@ -52,8 +53,23 @@ const syncTransactionsByItemId = async () => {
   return await plaidHandler(mockApiGwRequestTransformations(request));
 };
 
-(async () => {
-  // const response = await syncTransactionsByItemId();
-  // console.log('sbx response:', response);
-  // console.log(JSON.parse(response.body).data);
-})();
+const getTransactionsByAccountId = async () => {
+  const request = {
+    httpMethod: 'GET',
+    path: config.path.itemAccountTransaction,
+    headers: { Authorization: process.env.AUTH_TOKEN },
+    queryStringParameters: {
+      item_id,
+      account_id,
+      upper_band: '',
+      lower_band: '2023-04-01'
+    },
+  };
+  return await plaidHandler(mockApiGwRequestTransformations(request));
+};
+
+// (async () => {
+//   const response = await getTransactionsByAccountId();
+//   console.log('sbx response:', response);
+//   console.log(JSON.parse(response.body).data);
+// })();

@@ -4,6 +4,7 @@ div.ma-user-card {
   // border: 1px solid purple;
   min-width: 100%;
   position: relative;
+
   &  > div > img {
     position: absolute;
     top: .7rem;
@@ -11,16 +12,20 @@ div.ma-user-card {
     height: 50px;
     width: 50px;
   }
+
   & ul {
     // border: 1px solid yellow;
+    opacity: .5;
     margin: 0 0 0 0;
     height: $header-height;
     padding: 0;
+
     & li {
       display: flex;
       align-items: center;
       line-height: 1.3rem;
       letter-spacing: .01rem;
+
       & h3 {
         // border: 1px solid cyan;
         line-height: inherit;
@@ -34,6 +39,7 @@ div.ma-user-card {
           content: ' : ';
         }
       }
+
       & p {
         // border: 1px solid cyan;
         margin: 0 0 0 0.5rem;

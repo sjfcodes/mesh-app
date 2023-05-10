@@ -1,4 +1,4 @@
-import lambdaConfig from '../../../lambdas/plaid/utils/config.js';
+import lambdaConfig from '../../../lambdas/plaid/src/utils/config.js';
 import dynamoDbConfig from '../../config/dynamoDb.js';
 import mockPlaid from './mockData/plaid.js';
 

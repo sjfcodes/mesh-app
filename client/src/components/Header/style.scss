@@ -4,7 +4,7 @@ header {
   // border: 1px solid red;
   height: $header-height;
   width: 100%;
-  background-color: $theme-color-background-0;
+  background-color: $theme-color-background-1;
   z-index: 1;
   padding-top: calc($device-padding * 0.5);
   padding-inline: $device-padding;
@@ -29,7 +29,7 @@ header {
       right: $device-padding;
       margin: 0 0 0 0;
       font-size: 36px;
-      color: $theme-color-3-0;
+      color: $theme-color-orange-0;
     }
   }
 }
