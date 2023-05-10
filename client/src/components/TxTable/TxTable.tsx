@@ -29,7 +29,7 @@ const TransactionsTable = ({ transactions }: Props) => {
   }
 
   return (
-    <div className="ma-transactions-table">
+    <div className="ma-tx-table">
       {transactions.map((txData) => {
         const { transaction: tx } = txData;
         if (!tx) return null;

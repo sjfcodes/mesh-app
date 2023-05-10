@@ -11,7 +11,7 @@ type Props = {
 
 const TableRow = ({ category, name, amount }: Props) => {
   return (
-    <div className="ma-transactions-table-row">
+    <div className="ma-tx-table-row">
       <div>
         <p className="ma-table-category">
           {Array.isArray(category) ? category.join(', ') : ''}

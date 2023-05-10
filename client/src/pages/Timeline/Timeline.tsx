@@ -1,11 +1,11 @@
 import { lazy, Suspense } from 'react';
 
+import './style.scss'
+
 import useFormattedTransactions from '../../hooks/useFormattedTransactions';
 import SectionLoader from '../../components/SectionLoader/SectionLoader';
 
-const TransactionsTable = lazy(
-  () => import('../../components/TxTable/TxTable')
-);
+const TxTable = lazy(() => import('../../components/TxTable/TxTable'));
 
 const Timeline = () => {
   const { formattedTxs } = useFormattedTransactions();
@@ -13,7 +13,9 @@ const Timeline = () => {
   return (
     <Suspense fallback={<SectionLoader />}>
       {formattedTxs.length ? (
-        <TransactionsTable transactions={formattedTxs} />
+        <main id="ma-tx-table">
+          <TxTable transactions={formattedTxs} />
+        </main>
       ) : (
         <SectionLoader />
       )}
