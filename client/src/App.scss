@@ -5,13 +5,8 @@ button {
 }
 
 /* Base */
-html,
-body,
-div#root,
-footer {
-  &::-webkit-scrollbar {
-    display: none !important;
-  }
+* ::-webkit-scrollbar {
+  display: none;
 }
 
 html,
