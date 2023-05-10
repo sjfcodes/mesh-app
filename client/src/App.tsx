@@ -58,7 +58,7 @@ const App = () => {
                       />
                       <Route path={ROUTE.TRANSACTIONS} element={<TimeLine />} />
                       <Route
-                        path={ROUTE.SPENDING}
+                        path={ROUTE.INSIGHTS}
                         element={<SpendingInsights />}
                       />
                     </Routes>
