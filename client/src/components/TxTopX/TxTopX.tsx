@@ -35,7 +35,7 @@ const TopVendors = ({ filteredTransactions }: Props) => {
   const handleSelectVendorCount = (e: any) =>
     setVendorCount(parseInt(e.target.value));
   return (
-    <div className="top-transactions">
+    <div className="tx-top-x">
       <div className="header">
         <h2>top</h2>
         <select value={vendorCount} onChange={handleSelectVendorCount}>
