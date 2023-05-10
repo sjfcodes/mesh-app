@@ -2,9 +2,9 @@
 
 div.ma-tx-table {
   // border: 1px solid red;
-  width: 100%;
+  width: inherit;
   height: 100%;
-  
+
   overflow-y: scroll;
   vertical-align: text-top;
 
@@ -18,13 +18,4 @@ div.ma-tx-table {
     opacity: $opacity-75;
     letter-spacing: 0.1rem;
   }
-}
-
-div#root > div.ma-transactions-table {
-  // border: 1px solid yellow;
-  position: fixed;
-  top: $header-height;
-  height: $tx-timeline-height;
-  padding-top: $tx-search-filter-height;
-  padding-bottom: $footer-height;
 }
