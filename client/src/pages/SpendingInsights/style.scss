@@ -1,6 +1,14 @@
 @import '../../variables.scss';
 
-main.spending-insights {
+main#ma-spending-insights {
+  // border: 1px solid red;
+  width: inherit;
+  max-width: inherit;
+  height: $tx-timeline-height;
+
+  padding-top: $tx-search-filter-height;
+  padding-bottom: $footer-height;
+
   & > h2 {
     margin-block: 1em;
   }

@@ -4,19 +4,19 @@ $mt: 1vh;
 
 div.ma-tx-search-filter {
   // border: 1px solid red;
+  position: fixed;
+  top: $header-height;
+  z-index: 1;
 
   width: inherit;
   max-width: inherit;
   height: $tx-search-filter-height;
-  background-color: $theme-color-background-1;
+
   border-top: 1px solid $theme-color-1-0;
+  background-color: $theme-color-background-1;
   backdrop-filter: blur(5px);
   padding-inline: $device-padding;
 
-  position: fixed;
-  top: $header-height;
-
-  z-index: 1;
 
   display: flex;
   justify-content: center;

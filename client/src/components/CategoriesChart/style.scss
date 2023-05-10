@@ -2,13 +2,16 @@
 
 div.spending-categories {
   // border: 1px solid yellow;
-  height: $spending-categories-height;
-  width: 100%;
-  background-color: $theme-color-background-0;
-  z-index: 1;
-
   position: fixed;
   top: calc($header-height + $tx-search-filter-height);
+  z-index: 1;
+
+  width: inherit;
+  max-width: inherit;
+  height: $spending-categories-height;
+
+  background-color: $theme-color-background-1;
+  backdrop-filter: blur(5px);
 
   & div.chart-wrapper {
     text-transform: lowercase;

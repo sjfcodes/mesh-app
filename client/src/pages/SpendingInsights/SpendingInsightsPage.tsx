@@ -27,7 +27,7 @@ export default function SpendingInsights() {
   );
 
   return (
-    <main className="spending-insights">
+    <main id="ma-spending-insights">
       {filteredTransactions.length ? (
         <>
           <CategoriesChart filteredTransactions={filteredTransactions} />

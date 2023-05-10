@@ -11,7 +11,7 @@ interface Props {
 const topTxOptions = [8, 16, 24, 32];
 
 const TopVendors = ({ filteredTransactions }: Props) => {
-  const [vendorCount, setVendorCount] = useState(topTxOptions[0]);
+  const [vendorCount, setVendorCount] = useState(topTxOptions[3]);
   const namesObject = useMemo((): Categories => {
     return filteredTransactions.reduce((obj: Categories, txData) => {
       const { transaction: tx } = txData;
@@ -37,9 +37,9 @@ const TopVendors = ({ filteredTransactions }: Props) => {
     setVendorCount(parseInt(e.target.value));
   return (
     <div className="tx-top-x">
-      <div className="header">
+      <div className="ma-top-tx-selector">
         <div>
-          <h2>top</h2>
+          <h2>display</h2>
           <select value={vendorCount} onChange={handleSelectVendorCount}>
             {topTxOptions.map((option) => (
               <option key={option} value={option}>

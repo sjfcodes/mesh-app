@@ -1,5 +1,7 @@
 @import '../../variables.scss';
 
+$selector-height: 4rem;
+
 div.tx-top-x {
   // border: solid 1px red;
   position: fixed;
@@ -11,24 +13,36 @@ div.tx-top-x {
   overflow-y: scroll;
 
 
-  padding-top: calc($tx-search-filter-height + $spending-categories-height);
+  padding-top: calc($tx-search-filter-height + $spending-categories-height + $selector-height);
   padding-bottom: $footer-height;
 
-  & > div.header {
+  & > div.ma-top-tx-selector {
     // border: solid 1px orange;
-    width: 100%;
+    // extended position from: client/src/components/CategoriesChart/style.scss 
+    position: fixed;
+    top: calc($header-height + $tx-search-filter-height + $spending-categories-height);
+    z-index: 1;
+
+    width: inherit;
+    max-width: inherit;
+    height: $selector-height;
+
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+
+    background-color: $theme-color-background-1;
+    backdrop-filter: blur(5px);
+
     & div {
       // border: 1px solid yellow;
       width: fit-content;
+      height: inherit;
+
       display: flex;
-      justify-content: center;
-      margin-left: -3rem;
       padding: 0.5rem;
 
       & > select {
-        margin-inline: 1rem;
+        margin-left: 1rem;
         border-radius: $border-radius-0;
         background-color: $theme-color-background-0;
         padding: 0.5rem 1rem;
