@@ -18,13 +18,12 @@ $opacity-50: 0.5;
 
 // top or bottom page fixtures
 $header-height: 10vh;
-$section-title-height: 5vh;
 $spending-categories-height: 25vh;
 $tx-search-filter-height: 4vh;
 $footer-height: 11vh;
 
 // app mid section
-$body-height: calc((100vh - ($header-height + $section-title-height + $footer-height)));
+$body-height: calc((100vh - ($header-height + $footer-height)));
 
 // item page
 $item-list-height: calc($body-height - $tx-search-filter-height);

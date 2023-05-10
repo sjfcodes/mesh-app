@@ -6,9 +6,9 @@ div.spending-categories {
   width: 100%;
   background-color: $theme-color-background-0;
   z-index: 1;
-  
+
   position: fixed;
-  top: calc($header-height + $section-title-height);
+  top: calc($header-height + $tx-search-filter-height);
 
   & div.chart-wrapper {
     text-transform: lowercase;

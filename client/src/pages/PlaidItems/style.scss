@@ -13,7 +13,7 @@ main#ma-plaid-items-page {
   justify-content: space-between;
 
   position: fixed;
-  top: calc($header-height + $section-title-height);
+  top: $header-height;
 
   & div.add-item {
     margin-block: 1rem;

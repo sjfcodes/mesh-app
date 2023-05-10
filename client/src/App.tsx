@@ -17,11 +17,11 @@ import Header from './components/Header/Header';
 import NavBar from './components/FooterNav/FooterNav';
 
 import { ROUTE } from './util/constants';
-import SectionHeader from './components/SectionHeader/SectionHeader';
-import useAppContext from './hooks/useAppContext';
 
 import './App.scss';
-
+const TxSearchFilter = lazy(
+  () => import('./components/TxSearchFilter/TxSearchFilter')
+);
 const TimeLine = lazy(() => import('./pages/Timeline/Timeline'));
 const PlaidItemsPage = lazy(() => import('./pages/PlaidItems/PlaidItemsPage'));
 const SpendingInsights = lazy(
@@ -31,9 +31,6 @@ const SpendingInsights = lazy(
 Amplify.configure(currentConfig);
 
 const App = () => {
-  const {
-    useSectionHeader: [sectionHeaderText],
-  } = useAppContext();
   // toast.configure({
   //   autoClose: 8000,
   //   draggable: false,
@@ -52,9 +49,7 @@ const App = () => {
                   <div className="toast__body"></div>
                   <Suspense>
                     <Header />
-                    {sectionHeaderText && (
-                      <SectionHeader text={sectionHeaderText} />
-                    )}
+                    <TxSearchFilter />
                     <Routes>
                       <Route path="/" element={<TimeLine />} />
                       <Route

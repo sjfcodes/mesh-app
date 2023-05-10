@@ -1,22 +1,28 @@
 @import '../../variables.scss';
 
 div.top-transactions {
-  // border: solid 1px green;
+  // border: solid 1px red;
   position: absolute;
-  top: calc($header-height + $section-title-height + $spending-categories-height);
+  top: calc(
+    $header-height + $tx-search-filter-height + $spending-categories-height
+  );
+  width: 100%;
+
   & > div.header {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     margin-inline: 0.5rem;
     margin-block: 1rem;
+
     & div {
-      // border: solid 1px yellow;
+      // border: solid 1px orange;
       width: 7rem;
     }
+
     & > select {
+      // border: 1px solid yellow;
       margin-inline: 1rem;
-      border: 1px solid $theme-color-3-0;
       border-radius: $border-radius-0;
       background-color: $theme-color-background-0;
       padding: 0.5rem 1rem;
@@ -24,28 +30,28 @@ div.top-transactions {
       font-size: 1.3rem;
     }
   }
+
   & ol {
     &::-webkit-scrollbar-track {
-      // background-color: red;
+      // background-color: green;
       color: green;
     }
-    & li {
-      & div {
-        // border: 1px solid salmon;
-        border-bottom: 1px solid $theme-color-background-1;
-        padding-bottom: 0.6rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        & p.vendor {
-          // border: 1px solid yellow;
-          text-transform: lowercase;
-        }
-        & p.amount {
-          // border: 1px solid green;
-          margin-right: 1rem;
-          color: $theme-color-red-0;
-        }
+
+    & li div {
+      // border: 1px solid blue;
+      border-bottom: 1px solid $theme-color-background-1;
+      padding-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      & p.vendor {
+        // border: 1px solid purple;
+        text-transform: lowercase;
+      }
+      & p.amount {
+        // border: 1px solid red;
+        margin-right: 1rem;
+        color: $theme-color-red-0;
       }
     }
   }

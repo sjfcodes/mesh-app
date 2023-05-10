@@ -1,3 +1,3 @@
 export interface IAppContext {
-  useSectionHeader: [string, React.Dispatch<string>];
+  useAppContext: [object, React.Dispatch<React.SetStateAction<object>>];
 }

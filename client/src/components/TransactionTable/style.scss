@@ -23,7 +23,7 @@ div.ma-transactions-table {
 
 div#root > div.ma-transactions-table {
   position: fixed;
-  top: calc($header-height + $section-title-height);
+  top: $header-height;
   height: $tx-timeline-height;
   padding-top: $tx-search-filter-height;
   padding-bottom: $footer-height;
