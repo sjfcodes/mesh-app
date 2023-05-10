@@ -3,7 +3,8 @@
 footer {
   // border: 1px solid greenyellow;
 
-  width: 100%;
+  width: inherit;
+  max-width: inherit;
   height: $footer-height;
   background-color: $theme-color-background-1;
   backdrop-filter: blur(5px);

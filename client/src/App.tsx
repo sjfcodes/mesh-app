@@ -46,7 +46,7 @@ const App = () => {
             <TransactionsProvider>
               <ErrorsProvider>
                 <AssetsProvider>
-                  <div className="toast__body"></div>
+                  {/* <div className="toast__body"></div> */}
                   <Suspense>
                     <Header />
                     <TxSearchFilter />

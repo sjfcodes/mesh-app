@@ -2,14 +2,16 @@
 
 header {
   // border: 1px solid red;
+  width: inherit;
+  max-width: inherit;
   height: $header-height;
-  width: 100%;
   background-color: $theme-color-background-1;
   z-index: 1;
   padding-top: calc($device-padding * 0.5);
   padding-inline: $device-padding;
 
   position: fixed;
+  top: 0;
 
   & > div {
     // border: 1px solid orange;
