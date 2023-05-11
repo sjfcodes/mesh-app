@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 
 import { Categories, TransactionType } from '../../types';
-import { currencyFilter } from '../../util/helpers';
 
 import './style.scss';
+import TableRow from '../TxTable/TableRow/TableRow';
 
 interface Props {
   filteredTransactions: TransactionType[];
@@ -15,6 +15,8 @@ const TopVendors = ({ filteredTransactions }: Props) => {
   const namesObject = useMemo((): Categories => {
     return filteredTransactions.reduce((obj: Categories, txData) => {
       const { transaction: tx } = txData;
+      if (!tx.amount || tx.amount < 0) return obj;
+
       tx.name in obj
         ? (obj[tx.name] = tx.amount + obj[tx.name])
         : (obj[tx.name] = tx.amount);
@@ -49,7 +51,17 @@ const TopVendors = ({ filteredTransactions }: Props) => {
           </select>
         </div>
       </div>
-      <ol>
+      <div className="ma-tx-table">
+        {sortedNames.map((vendor: any[], i: number) => (
+          <TableRow
+            key={vendor[0]}
+            category={[`${i + 1}`]}
+            name={vendor[0]}
+            amount={vendor[1] * -1}
+          />
+        ))}
+      </div>
+      {/* <ol>
         {sortedNames.map((vendor: any[], index) => (
           <li key={index}>
             <div>
@@ -58,7 +70,7 @@ const TopVendors = ({ filteredTransactions }: Props) => {
             </div>
           </li>
         ))}
-      </ol>
+      </ol> */}
     </div>
   );
 };
