@@ -1,9 +1,7 @@
-import { TransactionsAction, TransactionsState } from './types';
+import { formatLoadingKey } from '../../../util/helpers';
+import { LoadingMapAction, LoadingMapState, TransactionsAction, TransactionsState } from './types';
 
-/**
- * @desc Handles updates to the Transactions state as dictated by dispatched actions.
- */
-const transactionsReducer = (
+export const transactionsReducer = (
   state: TransactionsState,
   action: TransactionsAction | any
 ) => {
@@ -22,4 +20,10 @@ const transactionsReducer = (
   }
 };
 
-export default transactionsReducer;
+export const loadingMapReducer = (
+  state: LoadingMapState,
+  action: LoadingMapAction
+) => {
+  const key = formatLoadingKey(action.itemId, action.accountId);
+  return { ...state, [key]: action.loading };
+};

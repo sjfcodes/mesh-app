@@ -1,5 +1,8 @@
 import { useEffect, useMemo } from 'react';
-import { AccountType, PlaidTransactionType, TransactionType } from '../../../types';
+import {
+  PlaidTransactionType,
+  TransactionType,
+} from '../../../types';
 import { currencyFilter, formatLoadingKey } from '../../../util/helpers';
 import { ItemAccountId } from '../Items/types';
 import {
@@ -7,20 +10,20 @@ import {
   LoadingMapState,
   TransactionsState,
 } from './types';
+import usePlaidItems from '../../../hooks/usePlaidItems';
 
 type Props = {
-  allAccounts: AccountType[];
   itemAccountTransaction: TransactionsState;
   loadingMap: LoadingMapState;
-  getTransactionsByAccountId: GetTransactionsByAccountId;
+  getTxsByAccountId: GetTransactionsByAccountId;
 };
 
 const useFormatTxs = ({
-  allAccounts,
   itemAccountTransaction,
   loadingMap,
-  getTransactionsByAccountId,
+  getTxsByAccountId,
 }: Props) => {
+  const { allAccounts } = usePlaidItems();
   const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
 
   const formatTransactions = (tx: TransactionType) => {
@@ -57,7 +60,7 @@ const useFormatTxs = ({
     );
 
     needsLoading.forEach(({ item_id: itemId, id: accountId }) =>
-      getTransactionsByAccountId(itemId, accountId)
+      getTxsByAccountId(itemId, accountId)
     );
   }, [allAccounts]);
 
