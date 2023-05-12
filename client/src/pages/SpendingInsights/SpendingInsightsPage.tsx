@@ -2,15 +2,14 @@ import { useMemo, useState } from 'react';
 
 import CategoriesChart from '../../components/CategoriesChart/CategoriesChart';
 import TopVendors from '../../components/TxTopX/TxTopX';
-
-import useFormattedTransactions from '../../hooks/useFormattedTransactions';
 import SectionLoader from '../../components/SectionLoader/SectionLoader';
+import useTransactions from '../../hooks/usePlaidTransactions';
 
 import './style.scss';
 
 export default function SpendingInsights() {
   // grab transactions from most recent month and filter out transfers and payments
-  const { formattedTxs } = useFormattedTransactions();
+  const { formattedTxs } = useTransactions();
 
   const [filterOptions] = useState([/*'Payment', 'Transfer',*/ 'Interest']);
 
@@ -28,13 +27,13 @@ export default function SpendingInsights() {
 
   return (
     <main id="ma-spending-insights">
-      {filteredTransactions.length ? (
+      {!filteredTransactions.length ? (
+        <SectionLoader />
+      ) : (
         <>
           <CategoriesChart filteredTransactions={filteredTransactions} />
           <TopVendors filteredTransactions={filteredTransactions} />
         </>
-      ) : (
-        <SectionLoader />
       )}
     </main>
   );

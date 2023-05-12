@@ -1,14 +1,50 @@
 import { useEffect, useMemo } from 'react';
-import { PlaidTransactionType, TransactionType } from '../types';
-import useTransactions from './usePlaidTransactions';
-import usePlaidItems from './usePlaidItems';
-import { currencyFilter, formatLoadingKey } from '../util/helpers';
-import { ItemAccountId } from '../services/Plaid/Items/types';
+import { AccountType, PlaidTransactionType, TransactionType } from '../../../types';
+import { currencyFilter, formatLoadingKey } from '../../../util/helpers';
+import { ItemAccountId } from '../Items/types';
+import {
+  GetTransactionsByAccountId,
+  LoadingMapState,
+  TransactionsState,
+} from './types';
 
-const useFormattedTransactions = () => {
-  const { allAccounts } = usePlaidItems();
-  const { allTransactions, loadingMap, getTransactionsByAccountId } =
-    useTransactions();
+type Props = {
+  allAccounts: AccountType[];
+  itemAccountTransaction: TransactionsState;
+  loadingMap: LoadingMapState;
+  getTransactionsByAccountId: GetTransactionsByAccountId;
+};
+
+const useFormatTxs = ({
+  allAccounts,
+  itemAccountTransaction,
+  loadingMap,
+  getTransactionsByAccountId,
+}: Props) => {
+  const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
+
+  const formatTransactions = (tx: TransactionType) => {
+    const copy = { ...tx };
+    removePhrases.forEach((phrase) => {
+      if (copy.transaction.name?.includes(phrase)) {
+        copy.transaction.name = copy.transaction.name.split(phrase)[1].trim();
+      }
+    });
+
+    return copy;
+  };
+
+  const allTransactions = Object.values(itemAccountTransaction)
+    .reduce((prev, curr) => {
+      const formatted = curr.map(formatTransactions);
+      return [...prev, ...formatted];
+    }, [])
+    .sort(
+      (
+        { transaction: txA }: TransactionType,
+        { transaction: txB }: TransactionType
+      ) => new Date(txB?.date).getTime() - new Date(txA?.date).getTime()
+    );
 
   /**
    * determine which accounts may have already loaded
@@ -91,4 +127,4 @@ const useFormattedTransactions = () => {
   return { formattedTxs };
 };
 
-export default useFormattedTransactions;
+export default useFormatTxs;

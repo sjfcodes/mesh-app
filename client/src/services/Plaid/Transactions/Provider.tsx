@@ -19,6 +19,7 @@ import { AccountId } from '../Institutions/types';
 import useTxSearchFilter from './useTxSearchFilter';
 import { formatLoadingKey } from '../../../util/helpers';
 import { ItemId } from '../Items/types';
+import useFormatTxs from './useFormatTxs';
 
 const initialState = {};
 
@@ -34,7 +35,7 @@ export const TransactionsContext = createContext<TransactionsContextShape>(
  */
 export function TransactionsProvider(props: any) {
   const [dateBand, setDateBand] = useTxSearchFilter();
-  const { updateAccounts, setUpdateAccounts } = usePlaidItems();
+  const { allAccounts, updateAccounts, setUpdateAccounts } = usePlaidItems();
   const [loadingMap, setLoadingMap] = useReducer(
     (state: LoadingMapState, action: LoadingMapAction) => {
       const key = formatLoadingKey(action.itemId, action.accountId);
@@ -42,6 +43,7 @@ export function TransactionsProvider(props: any) {
     },
     {}
   );
+
   const [itemAccountTransaction, dispatch] = useReducer(
     transactionsReducer,
     initialState
@@ -103,9 +105,16 @@ export function TransactionsProvider(props: any) {
           dateBand.upperBand
         );
 
+        const sorted = transactions.sort(
+          (
+            { transaction: txA }: TransactionType,
+            { transaction: txB }: TransactionType
+          ) => new Date(txB?.date).getTime() - new Date(txA?.date).getTime()
+        );
+
         dispatch({
           type: 'SUCCESSFUL_GET',
-          payload: { transactions, accountId },
+          payload: { accountId, transactions: sorted },
         });
       }
       setLoadingMap({ itemId, accountId, loading: false });
@@ -113,49 +122,32 @@ export function TransactionsProvider(props: any) {
     [dateBand]
   );
 
+  const { formattedTxs } = useFormatTxs({
+    allAccounts,
+    itemAccountTransaction,
+    loadingMap,
+    getTransactionsByAccountId,
+  });
+
   /**
    * @desc Builds a more accessible state shape from the Transactions data. useMemo will prevent
    * these from being rebuilt on every render unless itemAccountTransaction is updated in the reducer.
    */
   const value = useMemo(() => {
-    const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
-
-    const formatTransactions = (tx: TransactionType) => {
-      const copy = { ...tx };
-      removePhrases.forEach((phrase) => {
-        if (copy.transaction.name?.includes(phrase)) {
-          copy.transaction.name = copy.transaction.name.split(phrase)[1].trim();
-        }
-      });
-
-      return copy;
-    };
-
-    const allTransactions = Object.values(itemAccountTransaction)
-      .reduce((prev, curr) => {
-        const formatted = curr.map(formatTransactions);
-        return [...prev, ...formatted];
-      }, [])
-      .sort(
-        (
-          { transaction: txA }: TransactionType,
-          { transaction: txB }: TransactionType
-        ) => new Date(txB?.date).getTime() - new Date(txA?.date).getTime()
-      );
-
     return {
-      loadingMap,
-      allTransactions,
-      itemAccountTransaction,
-      getTransactionsByAccountId,
       dateBand,
+      formattedTxs,
+      itemAccountTransaction,
+      loadingMap,
+      getTransactionsByAccountId,
       setDateBand,
     };
   }, [
+    dateBand,
+    formattedTxs,
     loadingMap,
     itemAccountTransaction,
     getTransactionsByAccountId,
-    dateBand,
     setDateBand,
   ]);
 
