@@ -30,14 +30,14 @@ export default function AccountCard({
   const { id: accountId, item_id: itemId } = account;
   const [selectedAccount, setSelectedAccount] =
     useSelectedAccount || useState('');
-  const { loadingMap, itemAccountTransaction, getTransactionsByAccountId } =
+  const { loadingMap, itemAccountTransaction, getTxsByAccountId } =
     useTransactions();
 
   const toggleShowTransactions = () => {
     setSelectedAccount((current) => (current === accountId ? '' : accountId));
 
     if (!itemAccountTransaction[accountId]) {
-      getTransactionsByAccountId(itemId, accountId);
+      getTxsByAccountId(itemId, accountId);
     }
   };
 

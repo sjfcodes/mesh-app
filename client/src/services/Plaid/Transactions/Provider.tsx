@@ -54,7 +54,7 @@ export function TransactionsProvider(props: any) {
   }, [updateAccounts]);
 
   useEffect(() => {
-    // reload transactions when date bands change
+    // reload account transactions when date bands change
     if (loadingMap) {
       Object.keys(loadingMap)
         .map((itemAccountId) => itemAccountId.split('::'))

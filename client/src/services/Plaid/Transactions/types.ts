@@ -37,7 +37,7 @@ export type LoadingMapAction = {
   accountId: AccountId;
   loading: boolean;
 };
-export type GetTransactionsByAccountId = (
+export type GetTxsByAccountId = (
   itemId: ItemId,
   accountId: AccountId,
   refresh?: boolean
@@ -48,6 +48,6 @@ export interface TransactionsContextShape extends TransactionsState {
   formattedTxs: TransactionType[];
   loadingMap: { [itemAccountId: ItemAccountId]: boolean };
   itemAccountTransaction: { [accountId: AccountId]: TransactionType[] };
-  getTransactionsByAccountId: GetTransactionsByAccountId;
+  getTxsByAccountId: GetTxsByAccountId;
   setDateBand: (action: DateBandStateAction) => void;
 }

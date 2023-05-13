@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { getTransactionsByAccountId as apiGetItemAccountTransactions } from '../../../util/api';
+import { getTransactionsByAccountId as apiGetItemAccountTxs } from '../../../util/api';
 import { ItemId } from '../Items/types';
 import { AccountId } from '../Institutions/types';
 import { TransactionType } from '../../../types';
@@ -18,14 +18,13 @@ const useGetTxsByAccountId = ({
   hasRequested,
   setLoadingMap,
 }: Props) => {
-
   /**
    * Requests transactions within current filter ranges for an account.
    * Skip request if data has already fetched.
    * Use 'refresh' parameter to force a new request.
    */
   const getTxsByAccountId = useCallback(
-    async (itemId: ItemId, accountId: AccountId, refresh?: boolean) => {
+    async (itemId: ItemId, accountId: AccountId, refresh = false) => {
       setLoadingMap({ itemId, accountId, loading: true });
 
       if (!hasRequested.current.byAccount[accountId] || refresh) {
@@ -34,7 +33,7 @@ const useGetTxsByAccountId = ({
           data: {
             data: { transactions },
           },
-        } = await apiGetItemAccountTransactions(
+        } = await apiGetItemAccountTxs(
           itemId,
           accountId,
           dateBand.lowerBand,
@@ -57,7 +56,7 @@ const useGetTxsByAccountId = ({
     },
     [dateBand]
   );
-  return {getTxsByAccountId};
+  return { getTxsByAccountId };
 };
 
 export default useGetTxsByAccountId;
