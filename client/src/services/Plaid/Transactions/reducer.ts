@@ -1,5 +1,10 @@
 import { formatLoadingKey } from '../../../util/helpers';
-import { LoadingMapAction, LoadingMapState, TransactionsAction, TransactionsState } from './types';
+import {
+  LoadingMapAction,
+  LoadingMapState,
+  TransactionsAction,
+  TransactionsState,
+} from './types';
 
 export const transactionsReducer = (
   state: TransactionsState,
