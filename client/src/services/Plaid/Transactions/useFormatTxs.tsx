@@ -1,21 +1,16 @@
 import { useEffect, useMemo } from 'react';
-import {
-  PlaidTransactionType,
-  TransactionType,
-} from '../../../types';
+import { PlaidTransactionType, TransactionType } from '../../../types';
 import { currencyFilter, formatLoadingKey } from '../../../util/helpers';
 import { ItemAccountId } from '../Items/types';
-import {
-  GetTransactionsByAccountId,
-  LoadingMapState,
-  TransactionsState,
-} from './types';
+import { GetTxsByAccountId, LoadingMapState, TransactionsState } from './types';
 import usePlaidItems from '../../../hooks/usePlaidItems';
+import { useLocation } from 'react-router-dom';
+import { ROUTE } from '../../../util/constants';
 
 type Props = {
   itemAccountTransaction: TransactionsState;
   loadingMap: LoadingMapState;
-  getTxsByAccountId: GetTransactionsByAccountId;
+  getTxsByAccountId: GetTxsByAccountId;
 };
 
 const useFormatTxs = ({
@@ -24,6 +19,7 @@ const useFormatTxs = ({
   getTxsByAccountId,
 }: Props) => {
   const { allAccounts } = usePlaidItems();
+  const location = useLocation();
   const removePhrases = ['MEMO=', 'Withdrawal -', 'Deposit -'];
 
   const formatTransactions = (tx: TransactionType) => {
@@ -50,18 +46,22 @@ const useFormatTxs = ({
     );
 
   /**
+   * load all accounts for ages that need all transaction data
+   *
    * determine which accounts may have already loaded
    * get transactions for remaining accounts
    */
   useEffect(() => {
-    const hasLoaded: ItemAccountId[] = Object.keys(loadingMap);
-    const needsLoading = allAccounts.filter(
-      ({ item_id, id }) => !hasLoaded.includes(formatLoadingKey(item_id, id))
-    );
+    if ([ROUTE.INSIGHTS, ROUTE.TRANSACTIONS].includes(location.pathname)) {
+      const hasLoaded: ItemAccountId[] = Object.keys(loadingMap);
+      const needsLoading = allAccounts.filter(
+        ({ item_id, id }) => !hasLoaded.includes(formatLoadingKey(item_id, id))
+      );
 
-    needsLoading.forEach(({ item_id: itemId, id: accountId }) =>
-      getTxsByAccountId(itemId, accountId)
-    );
+      needsLoading.forEach(({ item_id: itemId, id: accountId }) =>
+        getTxsByAccountId(itemId, accountId)
+      );
+    }
   }, [allAccounts]);
 
   const formattedTxs: TransactionType[] = useMemo(() => {
